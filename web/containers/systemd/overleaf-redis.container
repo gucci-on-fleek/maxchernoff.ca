@@ -1,6 +1,6 @@
 [Container]
 Image=docker.io/library/redis:6.2
-Volume=%h/overleaf/redis:/data:Z,U
+Volume=%h/overleaf/redis:/data:Z
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network

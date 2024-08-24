@@ -1,6 +1,6 @@
 [Container]
 Image=docker.io/library/mongo:5.0
-Volume=%h/overleaf/mongo:/data/db:Z,U
+Volume=%h/overleaf/mongo:/data/db:Z
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network

@@ -5,8 +5,8 @@ UserNS=nomap
 
 Volume=%h/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
 Volume=%h/caddy/static:/srv:ro,z
-Volume=%h/caddy/data:/data:rw,Z,U
-Volume=%h/caddy/config:/config:rw,Z,U
+Volume=%h/caddy/data:/data:rw,Z
+Volume=%h/caddy/config:/config:rw,Z
 
 Network=caddy.network
 Network=overleaf.network

@@ -1,6 +1,6 @@
 [Container]
 Image=docker.io/sharelatex/sharelatex:5
-Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,U
+Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
