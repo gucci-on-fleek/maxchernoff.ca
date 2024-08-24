@@ -5,4 +5,4 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-systemctl --user -M web@ list-units --with-dependencies --quiet --all overleaf-pod.service caddy.service
+watch -n1 "systemctl --user -M web@ list-units --with-dependencies --quiet --all overleaf-pod.service caddy.service"

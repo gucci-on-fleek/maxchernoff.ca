@@ -171,39 +171,45 @@ Web Server
     git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
     ```
 
-4. Add the SELinux rules:
+4. Add the scripts to your `$PATH`:
+
+    ```sh
+    fish_add_path ~/maxchernoff.ca/scripts/
+    ```
+
+5. Add the SELinux rules:
 
     ```sh
     sudo semanage fcontext --add -t container_file_t '/var/home/max/maxchernoff.ca/web/Caddyfile'
     sudo semanage fcontext --add -t container_file_t '/var/home/max/maxchernoff.ca/web/static(/.*)?'
     ```
 
-5. Set the Unix permissions:
+6. Set the Unix permissions:
 
     ```sh
     chmod -R a+rX /var/home/max/maxchernoff.ca/web
     chmod -R a=,u=rwX /var/home/max/maxchernoff.ca/.git
     ```
 
-4. Create the `web` user:
+7. Create the `web` user:
 
     ```sh
     sudo useradd --create-home --shell /usr/sbin/nologin web
     ```
 
-5. Allow the `web` user to run services:
+8. Allow the `web` user to run services:
 
     ```sh
     sudo loginctl enable-linger web
     ```
 
-6. Switch to the `web` user:
+9. Switch to the `web` user:
 
     ```sh
     sudo -u web fish
     ```
 
-7. Create the necessary directories:
+10. Create the necessary directories:
 
     ```sh
     # As the `web` user
@@ -211,7 +217,7 @@ Web Server
     mkdir -p overleaf/{overleaf,mongo,redis}
     ```
 
-8. Create the necessary links:
+11. Create the necessary links:
 
     ```sh
     # As the `web` user
@@ -220,23 +226,34 @@ Web Server
     ln -s /var/home/max/maxchernoff.ca/web/static ~/caddy/static
     ```
 
-9. Enable the auto-updater:
+12. Enable the auto-updater:
 
     ```sh
+    # Back to the `max` user
     sudo systemctl --user -M web@ enable podman-auto-update.{service,timer}
     ```
 
-10. Start the services:
+13. Start the services:
 
     ```sh
     sudo ~/maxchernoff.ca/scripts/web-start
     ```
 
-11. If everything looks good, open the firewall:
+14. If everything looks good, open the firewall:
 
     ```sh
     sudo firewall-cmd --permanent --zone=public --add-port=80/tcp --add-port=443/tcp --add-port=443/udp
     sudo firewall-cmd --reload
     ```
 
-12. Reboot to make sure everything starts correctly.
+15. Reboot to make sure everything starts correctly.
+
+
+Updating
+========
+
+```sh
+web-pull
+sudo (type -p web-start)
+sudo (type -p web-status)
+```
