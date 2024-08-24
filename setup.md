@@ -253,7 +253,5 @@ Updating
 ========
 
 ```sh
-web-pull
-sudo (type -p web-start)
-sudo (type -p web-status)
+web-pull && sudo (type -p web-restart) && sudo (type -p web-status)
 ```
