@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+
+systemctl --user -M web@ list-units --with-dependencies --quiet --all overleaf-pod.service caddy.service

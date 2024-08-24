@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+restorecon -Rv /var/home/max/maxchernoff.ca/web
+systemctl --user -M web@ daemon-reload
+systemctl --user -M web@ restart overleaf-network.service overleaf-pod.service caddy-network.service caddy.service
