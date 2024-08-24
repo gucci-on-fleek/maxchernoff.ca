@@ -1,0 +1,29 @@
+[Container]
+Image=docker.io/sharelatex/sharelatex:5
+Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,U
+AutoUpdate=registry
+Pod=overleaf.pod
+Network=overleaf.network
+UserNS=auto
+
+StopTimeout=60
+Environment="EMAIL_CONFIRMATION_DISABLED=true"
+Environment="ENABLE_CONVERSIONS=true"
+Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
+Environment="OVERLEAF_APP_NAME=Overleaf"
+Environment="OVERLEAF_BEHIND_PROXY=true"
+Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex"
+Environment="OVERLEAF_REDIS_HOST=systemd-overleaf-redis"
+Environment="OVERLEAF_RESTRICT_INVITES_TO_EXISTING_ACCOUNTS=true"
+# Environment="OVERLEAF_SECURE_COOKIE=true"
+Environment="OVERLEAF_SITE_URL=https://overleaf.maxchernoff.ca"
+Environment="REDIS_HOST=systemd-overleaf-redis"
+Environment="TEXMFVAR=/var/lib/overleaf/tmp/texmf-var"
+
+[Unit]
+Requires=overleaf-mongo.service overleaf-redis.service
+After=overleaf-mongo.service overleaf-redis.service
+
+[Service]
+Restart=always
+TimeoutStartSec=300

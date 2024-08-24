@@ -1,0 +1,12 @@
+{
+    local_certs
+}
+
+maxchernoff.ca {
+    redir https://www.{host}{uri}
+}
+
+www.maxchernoff.ca {
+    root * /srv
+    file_server
+}

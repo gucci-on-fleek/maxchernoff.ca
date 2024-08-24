@@ -1,0 +1,11 @@
+[Container]
+Image=docker.io/library/redis:6.2
+Volume=%h/overleaf/redis:/data:Z,U
+AutoUpdate=registry
+Pod=overleaf.pod
+Network=overleaf.network
+UserNS=auto
+
+[Service]
+Restart=always
+TimeoutStartSec=300
