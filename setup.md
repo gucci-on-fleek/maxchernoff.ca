@@ -11,7 +11,22 @@ Pre-installation
 
 2. Upload and attach the `.iso` installer to the virtual machine.
 
-3. Configure for UEFI boot.
+3. Configure the VM for UEFI boot.
+
+4. Set the following DNS records:
+
+    | Type  | Hostname   | Value                   |
+    |-------|------------|-------------------------|
+    | A     | —          | `152.53.36.213`         |
+    | A     | `www`      | `152.53.36.213`         |
+    | A     | `overleaf` | `152.53.36.213`         |
+    | AAAA  | —          | `2a0a:4cc0:2000:172::1` |
+    | AAAA  | `www`      | `2a0a:4cc0:2000:172::1` |
+    | AAAA  | `overleaf` | `2a0a:4cc0:2000:172::1` |
+    | HTTPS | —          | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | HTTPS | `www`      | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | HTTPS | `overleaf` | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+
 
 
 Installation
@@ -23,13 +38,13 @@ Installation
 
 3. Partition as follows:
 
-    | Index | Mount Point | Size | Type   |
-    |-------|-------------|------|--------|
-    | 1     | /boot/efi   | 500M | EFI    |
-    | 2     | /boot       | 4G   | ext4   |
-    | 3     | [SWAP]      | 8G   | swap   |
-    | 4     | /           | rest | btrfs  |
-    | 4.1   | /home/      | —    | subvol |
+    | Index | Mount Point | Size      | Type   |
+    |-------|-------------|-----------|--------|
+    | 1     | `/boot/efi` | 500M      | EFI    |
+    | 2     | `/boot`     | 4G        | ext4   |
+    | 3     | `[SWAP]`    | 8G        | swap   |
+    | 4     | `/`         | remaining | btrfs  |
+    | 4.1   | `/home/`    | —         | subvol |
 
 4. Install the system.
 
@@ -98,7 +113,7 @@ Post-installation
 1. Install the needed packages:
 
     ```sh
-    sudo rpm-ostree install vim htop fish git borgbackup fail2ban btrfs-progs
+    sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git htop snapper vim
     ```
 
 2. Switch shell to `fish`:
