@@ -1,5 +1,6 @@
 {
-    local_certs
+    email mseven@telus.net
+    default_sni www.maxchernoff.ca
 }
 
 maxchernoff.ca {
@@ -7,6 +8,8 @@ maxchernoff.ca {
 }
 
 www.maxchernoff.ca {
+    encode zstd gzip
+    templates
     root * /srv
     file_server
 }
