@@ -18,7 +18,6 @@ Environment="OVERLEAF_RESTRICT_INVITES_TO_EXISTING_ACCOUNTS=true"
 Environment="OVERLEAF_SECURE_COOKIE=true"
 Environment="OVERLEAF_SITE_URL=https://overleaf.maxchernoff.ca"
 Environment="REDIS_HOST=systemd-overleaf-redis"
-Environment="TEXMFVAR=/var/lib/overleaf/tmp/texmf-var"
 
 [Unit]
 Requires=overleaf-mongo.service overleaf-redis.service

@@ -190,7 +190,7 @@ Web Server
 
     ```sh
     fish_add_path ~/maxchernoff.ca/scripts/
-    abbr --add refresh 'web-pull && sudo (type -p web-restart) && sudo (type -p web-status)'
+    echo "abbr --add refresh 'web-pull && sudo (type -p web-restart) && sudo (type -p web-status)'" >> ~/.config/fish/config.fish
     ```
 
 5. Add the SELinux rules:
