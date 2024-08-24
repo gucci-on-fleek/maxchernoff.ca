@@ -1,7 +1,7 @@
 [Container]
 Image=docker.io/library/caddy:2
 AutoUpdate=registry
-UserNS=auto
+UserNS=nomap
 
 Volume=%h/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
 Volume=%h/caddy/static:/srv:ro,z

@@ -4,7 +4,7 @@ Volume=%h/overleaf/mongo:/data/db:Z,U
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
-UserNS=auto
+UserNS=nomap
 
 Exec=--replSet overleaf
 HealthCmd=mongosh --quiet --eval 'rs.hello().setName ? rs.hello().setName : rs.initiate({_id: "overleaf",members:[{_id: 0, host:"systemd-overleaf-mongo:27017"}]})'

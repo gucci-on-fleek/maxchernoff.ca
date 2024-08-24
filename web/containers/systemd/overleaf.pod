@@ -3,3 +3,4 @@ Network=overleaf.network
 
 [Install]
 WantedBy=default.target
+After=overleaf-network.service

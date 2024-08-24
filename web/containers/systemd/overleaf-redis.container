@@ -4,7 +4,7 @@ Volume=%h/overleaf/redis:/data:Z,U
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
-UserNS=auto
+UserNS=nomap
 
 [Service]
 Restart=always

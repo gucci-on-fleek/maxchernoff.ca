@@ -4,7 +4,7 @@ Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,U
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
-UserNS=auto
+UserNS=nomap
 
 StopTimeout=60
 Environment="EMAIL_CONFIRMATION_DISABLED=true"
