@@ -175,6 +175,7 @@ Web Server
 
     ```sh
     fish_add_path ~/maxchernoff.ca/scripts/
+    abbr --add refresh 'web-pull && sudo (type -p web-restart) && sudo (type -p web-status)'
     ```
 
 5. Add the SELinux rules:
@@ -252,6 +253,4 @@ Web Server
 Updating
 ========
 
-```sh
-web-pull && sudo (type -p web-restart) && sudo (type -p web-status)
-```
+Just run `refresh` to pull the latest changes and restart the services.
