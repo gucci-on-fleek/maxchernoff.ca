@@ -13,3 +13,8 @@ www.maxchernoff.ca {
     root * /srv
     file_server
 }
+
+overleaf.maxchernoff.ca {
+    encode zstd gzip
+    reverse_proxy systemd-overleaf-overleaf:80
+}
