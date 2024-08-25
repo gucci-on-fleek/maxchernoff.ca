@@ -1,0 +1,15 @@
+{{/* Map the request name to a markdown file */}}
+{{ $path_parts := splitList "/" .OriginalReq.URL.Path }}
+{{ $markdown_filename := default "index" (slice $path_parts 2 | join "/") }}
+{{ $markdown_path := printf "/p/%s.md" $markdown_filename }}
+
+{{/* If the file doesn't exist, return a 404 error */}}
+{{ if not (fileExists $markdown_path) }}
+    {{ httpError 404 }}
+{{ end }}
+
+{{/* Otherwise, parse the markdown file and render it */}}
+{{ $markdown_file := (include $markdown_path | splitFrontMatter) }}
+{{ $title := default $markdown_filename $markdown_file.Meta.title }}
+{{ $body := markdown $markdown_file.Body }}
+{{ include "/includes/base.html" $title $body }}

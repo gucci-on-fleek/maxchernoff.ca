@@ -1,0 +1,3 @@
+{{ $title := cat (placeholder "http.error.status_code") " " (placeholder "http.error.status_text") }}
+{{ $body := "<p>We couldn't process your request, sorry!<p>" }}
+{{ include "/includes/base.html" $title $body }}

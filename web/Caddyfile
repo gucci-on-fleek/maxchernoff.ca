@@ -20,8 +20,10 @@ maxchernoff.ca {
 www.maxchernoff.ca {
 	import default
 
-	header {
-		Link "</style.css>; rel=\"preload\"; as=\"style\""
+	try_files {path}.html {path}
+	root * /srv
+	file_server {
+		hide /includes/
 	}
 
 	@css path *.css
@@ -30,8 +32,17 @@ www.maxchernoff.ca {
 		between /*! !*/
 	}
 
-	root * /srv
-	file_server
+	@p path /p/*
+	header @p Link "</style.css>; rel=\"preload\"; as=\"style\""
+	templates @p
+	rewrite @p /p/index.html
+	rewrite / /p/index
+
+	handle_errors {
+		rewrite * /p/error.html
+		templates
+		file_server
+	}
 }
 
 overleaf.maxchernoff.ca {
