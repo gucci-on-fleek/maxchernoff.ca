@@ -1,6 +1,7 @@
 [Container]
 Image=docker.io/sharelatex/sharelatex:5
 Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z
+Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
@@ -23,6 +24,7 @@ Environment="OVERLEAF_REDIS_HOST=systemd-overleaf-redis"
 Environment="OVERLEAF_RESTRICT_INVITES_TO_EXISTING_ACCOUNTS=true"
 Environment="OVERLEAF_SECURE_COOKIE=true"
 Environment="OVERLEAF_SITE_URL=https://overleaf.maxchernoff.ca"
+Environment="PATH=/usr/local/texlive/2024/bin/x86_64-linux:/bin/:/sbin/"
 Environment="REDIS_HOST=systemd-overleaf-redis"
 
 [Unit]

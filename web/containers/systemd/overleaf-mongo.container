@@ -7,7 +7,7 @@ Network=overleaf.network
 UserNS=nomap
 
 Exec=--replSet overleaf
-HealthCmd=mongosh --quiet --eval 'rs.hello().setName ? rs.hello().setName : rs.initiate({_id: "overleaf",members:[{_id: 0, host:"systemd-overleaf-mongo:27017"}]})'
+HealthCmd=mongosh --quiet --eval 'rs.hello().setName ? rs.hello().setName : rs.initiate({_id: "overleaf",members:[{_id: 0, host:"systemd-overleaf-mongo:27017"}]})' > /dev/null
 HealthInterval=60s
 HealthRetries=5
 HealthTimeout=10s

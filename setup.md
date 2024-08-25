@@ -274,6 +274,12 @@ Web Server
 16. Reboot to make sure everything starts correctly.
 
 
+Updating
+========
+
+Just run `refresh` to pull the latest changes and restart the services.
+
+
 Snapshots
 =========
 
@@ -303,7 +309,52 @@ Snapshots
     sudo systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
     ```
 
-Updating
-========
+Installing TeX Live
+===================
 
-Just run `refresh` to pull the latest changes and restart the services.
+1. Create the `tex` user:
+
+    ```sh
+    sudo useradd --create-home --shell /usr/sbin/nologin tex
+    sudo loginctl enable-linger tex
+    ```
+
+2. Switch to the `tex` user:
+
+    ```sh
+    sudo -u tex fish
+    ```
+
+3. Download the installer:
+
+    ```sh
+    # As the `tex` user
+    mkdir ~/texlive
+    cd (mktemp -d)
+    curl -O 'https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet/install-tl-unx.tar.gz'
+    tar xf install-tl-unx.tar.gz
+    ```
+
+4. Install TeX Live:
+
+    ```sh
+    # As the `tex` user
+    ./install-tl-*/install-tl --repository=https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet --texdir=/var/home/tex/texlive --scheme=full --paper=letter
+    ```
+
+5. Set the Unix permissions:
+
+    ```sh
+    # As the `tex` user
+    chmod -R g-rX,o-rX ~
+    chmod a+X ~
+    chmod -R a+rX ~/texlive
+    ```
+
+6. Add the SELinux rules:
+
+    ```sh
+    # Back to the `max` user
+    sudo semanage fcontext --add -t container_file_t '/var/home/tex/texlive(/.*)?'
+    sudo restorecon -R /var/home/tex/texlive
+    ```
