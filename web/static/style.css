@@ -24,7 +24,7 @@
 }
 
 @media (max-width: 55rem) {
-    :root{
+    :root {
         --margin-width: var(--page-margin);
     }
 }
@@ -332,6 +332,7 @@ p {
         top: 0;
     }
 }
+
 @media (max-width: 70em) {
     span.sidenote {
         display: block;
@@ -396,79 +397,217 @@ summary {
 }
 
 /* Syntax Highlighting */
-code .token.url {
+.chroma .err {
+    color: #a61717;
+    background-color: #e3d2d2;
+}
+
+.chroma :is(.k, .kd, .kn, .kp, .kr, .o, .ow) {
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+.chroma :is(.kt, .nc) {
+    color: #445588;
+    font-weight: bold;
+}
+
+.chroma :is(.na, .no, .nv, .vc, .vg, .vi) {
+    color: #008080;
+}
+
+.chroma .nb {
+    color: #0086b3;
+}
+
+.chroma :is(.bp, .gh) {
+    color: #999999;
+}
+
+.chroma :is(.cs, .cp, .cpf) {
+    color: #999999;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.chroma .nd {
+    color: #3c5d5d;
+    font-weight: bold;
+}
+
+.chroma .ni {
+    color: #800080;
+}
+
+.chroma :is(.ne, .nf, .nl) {
+    color: #990000;
+    font-weight: bold;
+}
+
+.chroma :is(.nn, .gp) {
+    color: #555555;
+}
+
+.chroma .nt {
+    color: #000080;
+}
+
+.chroma .sr {
+    color: #009926;
+}
+
+.chroma :is(.s, .sa, .sb, .sc, .dl, .sd, .s2, .se, .sh, .si, .sx, .s1) {
+    color: #dd1144;
+}
+
+.chroma .ss {
+    color: #990073;
+}
+
+.chroma :is(.m, .mb, .mf, .mh, .mi, .il, .mo) {
+    color: #009999;
+}
+
+
+.chroma :is(.c, .ch, .cm, .c1) {
+    color: #999988;
+    font-style: italic;
+}
+
+.chroma .gd {
+    color: var(--color-text);
+    background-color: #ffdddd;
+}
+
+.chroma .ge {
+    color: var(--color-text);
+    font-style: italic;
+}
+
+.chroma :is(.gr, .gt) {
+    color: #aa0000;
+}
+
+.chroma .gi {
+    color: var(--color-text);
+    background-color: #ddffdd;
+}
+
+.chroma .go {
+    color: #888888;
+}
+
+.chroma .gs {
+    font-weight: bold;
+}
+
+.chroma .gu {
+    color: #aaaaaa;
+}
+
+.chroma .gl {
     text-decoration: underline;
 }
 
-code .token.comment,
-code .token.cdata {
-    color: hsl(210, 13%, 31%);
-}
-
-code .token.punctuation,
-code .token.operator {
-    color: hsl(0, 10%, 33%);
-}
-
-code .token.selector,
-code .token.inserted,
-code .token.string {
-    color: hsl(80, 100%, 17%);
-}
-
-code .token.keyword,
-code .token.variable:not(.parameter),
-code .token.shell-symbol {
-    color: hsl(198, 100%, 23%);
-}
-
-code .token.function,
-code .token.deleted,
-code .token.class-name {
-    color: hsl(348, 100%, 32%);
-}
-
-code .token.bash {
-    font-weight: 500;
-}
-
-code .token.shell-symbol,
-code .token.prefix,
-code .token.coord {
-    font-weight: 700;
-}
-
-code .token.shell-symbol {
-    user-select: none;
+.chroma .w {
+    color: #bbbbbb;
 }
 
 @media (prefers-color-scheme: dark) {
-    code .token.comment,
-    code .token.cdata {
-        color: hsl(210, 13%, 65%);
+.chroma .err {
+        color: #f85149;
     }
 
-    code .token.punctuation,
-    code .token.operator {
-        color: hsl(0, 10%, 66%);
+    .chroma :is(.nc, .ne) {
+        color: #f0883e;
+        font-weight: bold;
     }
 
-    code .token.selector,
-    code .token.inserted,
-    code .token.string {
-        color: hsl(80, 100%, 65%);
+    .chroma .ni {
+        color: #ffa657;
     }
 
-    code .token.keyword,
-    code .token.variable:not(.parameter),
-    code .token.shell-symbol {
-        color: hsl(198, 100%, 67%);
+    .chroma .nf {
+        color: #d2a8ff;
     }
 
-    code .token.function,
-    code .token.deleted,
-    code .token.class-name {
-        color: hsl(348, 100%, 74%);
+    .chroma :is(.nf, .nl) {
+        font-weight: bold;
+    }
+
+    .chroma :is(.nd, .no) {
+        color: #79c0ff;
+        font-weight: bold;
+    }
+
+    .chroma :is(.dl, .gh, .gu, .kc, .kp, .ld, .nl, .nv, .py, .sa, .se, .sh, .sr) {
+        color: #79c0ff;
+    }
+
+    .chroma .gh {
+        font-weight: bold;
+    }
+
+    .chroma .nt {
+        color: #7ee787;
+    }
+
+    .chroma :is(.il, .l, .m, .mb, .mf, .mh, .mi, .mo, .s, .s1, .s2, .sb, .sc, .sd, .si, .ss, .sx) {
+        color: #a5d6ff;
+    }
+
+    .chroma :is(.gt, .k, .kd, .kn, .kr, .kt, .nn) {
+        color: #ff7b72;
+    }
+
+    .chroma :is(.o, .ow) {
+        color: #ff7b72;
+        font-weight: bold;
+    }
+
+    .chroma :is(.go, .gp) {
+        color: #8b949e;
+    }
+
+    .chroma :is(.c, .c1, .ch, .cm) {
+        color: #8b949e;
+        font-style: italic;
+    }
+
+    .chroma :is(.cp, .cpf, .cs) {
+        color: #8b949e;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .chroma :is(.gd, .gr) {
+        color: #ffa198;
+    }
+
+    .chroma .gd {
+        background-color: #490202;
+    }
+
+    .chroma .ge {
+        font-style: italic;
+    }
+
+    .chroma .gi {
+        color: #56d364;
+        background-color: #0f5323;
+    }
+
+    .chroma .gs {
+        font-weight: bold;
+    }
+
+    .chroma .gl {
+        text-decoration: underline;
+    }
+
+    .chroma .w {
+        color: #6e7681;
     }
 }
+
 /** /` "${1}${2}" -!*/
