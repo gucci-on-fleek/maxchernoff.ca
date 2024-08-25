@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Must not run as root"
+    exit 1
+fi
+
+script_dir="$(dirname "$(realpath "$0")")"
+repo_dir="$(realpath "$script_dir/..")"
+cd $repo_dir
+
+caddy run --adapter caddyfile --config ./web/config/local.caddyfile --watch

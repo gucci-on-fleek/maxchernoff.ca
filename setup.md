@@ -15,18 +15,20 @@ Pre-installation
 
 4. Set the following DNS records:
 
-    | Type  | Hostname   | Value                   |
-    |-------|------------|-------------------------|
-    | A     | —          | `152.53.36.213`         |
-    | A     | `www`      | `152.53.36.213`         |
-    | A     | `overleaf` | `152.53.36.213`         |
-    | AAAA  | —          | `2a0a:4cc0:2000:172::1` |
-    | AAAA  | `www`      | `2a0a:4cc0:2000:172::1` |
-    | AAAA  | `overleaf` | `2a0a:4cc0:2000:172::1` |
+    | Type  | Hostname   | Value                       |
+    |-------|------------|-----------------------------|
+    | A     | —          | `152.53.36.213`             |
+    | A     | `www`      | `152.53.36.213`             |
+    | A     | `overleaf` | `152.53.36.213`             |
+    | AAAA  | —          | `2a0a:4cc0:2000:172::1`     |
+    | AAAA  | `www`      | `2a0a:4cc0:2000:172::1`     |
+    | AAAA  | `overleaf` | `2a0a:4cc0:2000:172::1`     |
     | HTTPS | —          | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
     | HTTPS | `www`      | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
     | HTTPS | `overleaf` | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-
+    | CAA   | —          | `0 issue "letsencrypt.org"` |
+    | CAA   | —          | `0 issue "sectigo.com"`     |
+    | CAA   | —          | `0 issuewild ";"`           |
 
 
 Installation
@@ -160,11 +162,13 @@ Post-installation
     bind \f 'clear && commandline -f repaint'
     ```
 
-8. Allow all users to bind to privileged ports:
+8. Network sysctl settings:
 
     ```conf
     # /etc/sysctl.conf
     net.ipv4.ip_unprivileged_port_start=80
+    net.core.wmem_max=7500000
+    net.core.rmem_max=7500000
     ```
 
 9. Adjust your home directory permissions:
@@ -202,7 +206,7 @@ Web Server
 5. Add the SELinux rules:
 
     ```sh
-    sudo semanage fcontext --add -t container_file_t '/var/home/max/maxchernoff.ca/web/Caddyfile'
+    sudo semanage fcontext --add -t container_file_t '/var/home/max/maxchernoff.ca/web/config(/.*)?'
     sudo semanage fcontext --add -t container_file_t '/var/home/max/maxchernoff.ca/web/static(/.*)?'
     ```
 
@@ -235,7 +239,7 @@ Web Server
 
     ```sh
     # As the `web` user
-    mkdir -p ~/caddy/{data,config}
+    mkdir -p ~/caddy/{data,config,etc}
     mkdir -p overleaf/{overleaf,mongo,redis}
     ```
 
@@ -244,7 +248,7 @@ Web Server
     ```sh
     # As the `web` user
     ln -s /var/home/max/maxchernoff.ca/web/containers ~/.config/containers
-    ln -s /var/home/max/maxchernoff.ca/web/Caddyfile ~/caddy/Caddyfile
+    ln -s /var/home/max/maxchernoff.ca/web/config ~/caddy/etc
     ln -s /var/home/max/maxchernoff.ca/web/static ~/caddy/static
     ```
 

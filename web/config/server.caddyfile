@@ -1,0 +1,35 @@
+# Define the default options for all sites
+(default) {
+	# Compress responses
+	encode zstd gzip
+
+	header {
+		# Cache all responses for 1 hour
+		Cache-Control max-age=3600
+		# Security headers
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+	}
+}
+
+# Import the base Caddyfile
+import base.caddyfile
+
+# Redirect maxchernoff.ca to www.maxchernoff.ca
+maxchernoff.ca {
+	import default
+	redir https://www.{host}{uri}
+}
+
+# The main site
+www.maxchernoff.ca {
+	root * /srv
+	import www.maxchernoff.ca
+}
+
+# Overleaf reverse proxy
+overleaf.maxchernoff.ca {
+	import default
+	reverse_proxy systemd-overleaf-overleaf:80
+}

@@ -1,0 +1,22 @@
+# Define the default options for all sites
+(default) {
+	# Compress responses
+	encode zstd gzip
+
+	header {
+		# Don't cache anything
+		Cache-Control no-cache
+		# Security headers
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+	}
+}
+
+# Import the base Caddyfile
+import base.caddyfile
+
+# The main site
+http://localhost:80 {
+	root * ./web/static
+	import www.maxchernoff.ca
+}

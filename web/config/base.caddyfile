@@ -1,0 +1,30 @@
+(www.maxchernoff.ca) {
+	import default
+
+	# Serve static files from /srv
+	try_files {path}.html {path}
+	file_server {
+		hide /includes/
+	}
+
+	# Minify the CSS files
+	@css path *.css
+	templates @css {
+		mime text/css
+		between /*! !*/
+	}
+
+	# Convert Markdown files to HTML
+	@p path /p/*
+	header @p Link "</style.css>; rel=\"preload\"; as=\"style\""
+	templates @p
+	rewrite @p /p/index.html
+	rewrite / /p/index
+
+	# Handle errors
+	handle_errors {
+		rewrite * /p/error.html
+		templates
+		file_server
+	}
+}
