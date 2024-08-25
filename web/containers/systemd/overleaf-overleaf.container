@@ -18,7 +18,7 @@ HealthOnFailure=stop
 Environment="EMAIL_CONFIRMATION_DISABLED=true"
 Environment="ENABLE_CONVERSIONS=true"
 Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
-Environment="OVERLEAF_ADMIN_EMAIL="
+Environment="OVERLEAF_ADMIN_EMAIL=Max Chernoff"
 Environment="OVERLEAF_APP_NAME=Overleaf"
 Environment="OVERLEAF_BEHIND_PROXY=true"
 Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex"
