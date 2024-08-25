@@ -325,24 +325,31 @@ Installing TeX Live
     sudo -u tex fish
     ```
 
-3. Download the installer:
+3. Create the necessary directories:
 
     ```sh
     # As the `tex` user
-    mkdir ~/texlive
+    mkdir -p ~/texlive
+    mkdir -p ~/.config/systemd/user
+    ```
+
+4. Download the installer:
+
+    ```sh
+    # As the `tex` user
     cd (mktemp -d)
     curl -O 'https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet/install-tl-unx.tar.gz'
     tar xf install-tl-unx.tar.gz
     ```
 
-4. Install TeX Live:
+5. Install TeX Live:
 
     ```sh
     # As the `tex` user
     ./install-tl-*/install-tl --repository=https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet --texdir=/var/home/tex/texlive --scheme=full --paper=letter
     ```
 
-5. Set the Unix permissions:
+6. Set the Unix permissions:
 
     ```sh
     # As the `tex` user
@@ -351,10 +358,18 @@ Installing TeX Live
     chmod -R a+rX ~/texlive
     ```
 
-6. Add the SELinux rules:
+7. Add the SELinux rules:
 
     ```sh
     # Back to the `max` user
     sudo semanage fcontext --add -t container_file_t '/var/home/tex/texlive(/.*)?'
     sudo restorecon -R /var/home/tex/texlive
+    ```
+
+8. Enable the auto-updater:
+
+    ```sh
+    sudo ln -s /var/home/max/maxchernoff.ca/tex/services/* ~tex/.config/systemd/user/
+    sudo systemctl --user -M tex@ daemon-reload
+    sudo systemctl --user -M tex@ enable --now update-texlive.{service,timer}
     ```

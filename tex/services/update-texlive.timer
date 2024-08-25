@@ -1,0 +1,10 @@
+[Unit]
+Description="Update TeX Live"
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=8h
+Unit=update-texlive.service
+
+[Install]
+WantedBy=timers.target
