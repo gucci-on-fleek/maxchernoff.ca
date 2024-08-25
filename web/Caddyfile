@@ -1,20 +1,40 @@
 {
-    email mseven@telus.net
-    default_sni www.maxchernoff.ca
+	default_sni www.maxchernoff.ca
+}
+
+(default) {
+	encode zstd gzip
+	header {
+		Cache-Control max-age=3600
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+	}
 }
 
 maxchernoff.ca {
-    redir https://www.{host}{uri}
+	import default
+	redir https://www.{host}{uri}
 }
 
 www.maxchernoff.ca {
-    encode zstd gzip
-    templates
-    root * /srv
-    file_server
+	import default
+
+	header {
+		Link "</style.css>; rel=\"preload\"; as=\"style\""
+	}
+
+	@css path *.css
+	templates @css {
+		mime text/css
+		between /*! !*/
+	}
+
+	root * /srv
+	file_server
 }
 
 overleaf.maxchernoff.ca {
-    encode zstd gzip
-    reverse_proxy systemd-overleaf-overleaf:80
+	import default
+	reverse_proxy systemd-overleaf-overleaf:80
 }

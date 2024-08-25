@@ -9,3 +9,4 @@ script_dir="$(dirname "$(realpath "$0")")"
 cd $script_dir
 git fetch
 git reset --hard origin/master
+restorecon -R /var/home/max/maxchernoff.ca/web

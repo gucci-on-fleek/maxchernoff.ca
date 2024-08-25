@@ -5,6 +5,5 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-restorecon -R /var/home/max/maxchernoff.ca/web
 systemctl --user -M web@ daemon-reload
 systemctl --user -M web@ restart overleaf-pod.service caddy.service
