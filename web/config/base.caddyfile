@@ -1,3 +1,16 @@
+# Define the default options for all sites
+(default-base) {
+	# Compress responses
+	encode zstd gzip
+
+	header {
+		# Security headers
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		?Content-Security-Policy "default-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none';"
+	}
+}
+
 (www.maxchernoff.ca) {
 	import default
 

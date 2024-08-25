@@ -1,20 +1,17 @@
+# Import the base Caddyfile
+import base.caddyfile
+
 # Define the default options for all sites
 (default) {
-	# Compress responses
-	encode zstd gzip
+	import default-base
 
 	header {
 		# Cache all responses for 1 hour
 		Cache-Control max-age=3600
-		# Security headers
+		# Use HSTS
 		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-		X-Content-Type-Options nosniff
-		X-Frame-Options DENY
 	}
 }
-
-# Import the base Caddyfile
-import base.caddyfile
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca
 maxchernoff.ca {
