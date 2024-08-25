@@ -124,6 +124,12 @@ Post-installation
 
 3. Enable `fail2ban`:
 
+    ```ini
+    # /etc/fail2ban/fail2ban.conf
+    logtarget = SYSTEMD-JOURNAL
+    dbfile = :memory:
+    ```
+
     ```sh
     sudo systemctl enable --now fail2ban
     ```
