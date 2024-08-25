@@ -1,43 +1,58 @@
+# Global options
 {
+	# Set the email address for the ACME (certificates) account.
+	email mseven@telus.net
+	# Fallback to www.maxchernoff.ca if no hostname is provided
 	default_sni www.maxchernoff.ca
 }
 
+# Define the default options for all sites
 (default) {
+	# Compress responses
 	encode zstd gzip
+
 	header {
+		# Cache all responses for 1 hour
 		Cache-Control max-age=3600
+		# Security headers
 		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 		X-Content-Type-Options nosniff
 		X-Frame-Options DENY
 	}
 }
 
+# Redirect maxchernoff.ca to www.maxchernoff.ca
 maxchernoff.ca {
 	import default
 	redir https://www.{host}{uri}
 }
 
+# The main site
 www.maxchernoff.ca {
 	import default
 
+	# Serve static files from /srv
 	try_files {path}.html {path}
 	root * /srv
 	file_server {
 		hide /includes/
 	}
 
+	# Minify the CSS files
 	@css path *.css
 	templates @css {
 		mime text/css
 		between /*! !*/
 	}
 
+	# Convert Markdown files to HTML
 	@p path /p/*
 	header @p Link "</style.css>; rel=\"preload\"; as=\"style\""
 	templates @p
 	rewrite @p /p/index.html
 	rewrite / /p/index
 
+	# Handle errors
 	handle_errors {
 		rewrite * /p/error.html
 		templates
@@ -45,6 +60,7 @@ www.maxchernoff.ca {
 	}
 }
 
+# Overleaf reverse proxy
 overleaf.maxchernoff.ca {
 	import default
 	reverse_proxy systemd-overleaf-overleaf:80
