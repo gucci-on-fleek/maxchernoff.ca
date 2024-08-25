@@ -190,7 +190,7 @@ Web Server
 
     ```sh
     fish_add_path ~/maxchernoff.ca/scripts/
-    echo "abbr --add refresh 'web-pull && sudo (type -p web-restart) && sudo (type -p web-status)'" >> ~/.config/fish/config.fish
+    echo "abbr --add refresh 'sudo --validate && web-pull && sudo (type -p web-restart) && sudo (type -p web-status)'" >> ~/.config/fish/config.fish
     ```
 
 5. Add the SELinux rules:
@@ -229,7 +229,7 @@ Web Server
 
     ```sh
     # As the `web` user
-    mkdir -p ~/caddy/{static,data,config}
+    mkdir -p ~/caddy/{data,config}
     mkdir -p overleaf/{overleaf,mongo,redis}
     ```
 
@@ -242,28 +242,66 @@ Web Server
     ln -s /var/home/max/maxchernoff.ca/web/static ~/caddy/static
     ```
 
-12. Enable the auto-updater:
+12. Change the permissions of the data directories to the container
+    user:
+
+    ```sh
+    # Back to the `max` user
+    uid="$(grep web /etc/subuid | cut -d: -f2 /etc/subuid)"
+    sudo chown -R $uid:$uid ~web/overleaf/{overleaf,mongo,redis} ~web/caddy/{data,config}
+    ```
+
+13. Enable the auto-updater:
 
     ```sh
     # Back to the `max` user
     sudo systemctl --user -M web@ enable podman-auto-update.{service,timer}
     ```
 
-13. Start the services:
+14. Start the services:
 
     ```sh
     sudo ~/maxchernoff.ca/scripts/web-start
     ```
 
-14. If everything looks good, open the firewall:
+15. If everything looks good, open the firewall:
 
     ```sh
     sudo firewall-cmd --permanent --zone=public --add-port=80/tcp --add-port=443/tcp --add-port=443/udp
     sudo firewall-cmd --reload
     ```
 
-15. Reboot to make sure everything starts correctly.
+16. Reboot to make sure everything starts correctly.
 
+
+Snapshots
+=========
+
+1. Initialize snapper for the home directories:
+
+    ```sh
+    sudo snapper --config home create-config /var/home/
+    ```
+
+2. Mount the snapshot directory:
+
+    ```conf
+    # /etc/fstab
+    # This line was here originally
+    UUID={uuid}  /home/            btrfs  subvol={subvol},compress=zstd:1             0  0
+    # Add this line
+    UUID={uuid}  /home/.snapshots  btrfs  subvol={subvol}/.snapshots,compress=zstd:1  0  0
+    ```
+    ```sh
+    sudo systemctl daemon-reload
+    sudo mount -av
+    ```
+
+3. Enable automatic snapshots:
+
+    ```sh
+    sudo systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
+    ```
 
 Updating
 ========

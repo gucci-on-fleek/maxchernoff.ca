@@ -11,6 +11,7 @@ HealthCmd=mongosh --quiet --eval 'rs.hello().setName ? rs.hello().setName : rs.i
 HealthInterval=60s
 HealthRetries=5
 HealthTimeout=10s
+HealthOnFailure=stop
 
 [Service]
 Restart=always
