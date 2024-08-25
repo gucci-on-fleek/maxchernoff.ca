@@ -1,6 +1,7 @@
 [Container]
 Image=docker.io/sharelatex/sharelatex:5
 Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z
+Tmpfs=/var/lib/overleaf/tmp
 Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro
 AutoUpdate=registry
 Pod=overleaf.pod
@@ -34,3 +35,4 @@ After=overleaf-mongo.service overleaf-redis.service
 [Service]
 Restart=always
 TimeoutStartSec=300
+TimeoutStopSec=30
