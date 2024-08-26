@@ -7,7 +7,7 @@
 		# Security headers
 		X-Content-Type-Options nosniff
 		X-Frame-Options DENY
-		?Content-Security-Policy "default-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; style-src 'self' 'unsafe-inline';"
+		?Content-Security-Policy "default-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:;"
 	}
 }
 
