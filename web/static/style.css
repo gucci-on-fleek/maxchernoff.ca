@@ -287,21 +287,33 @@ pre.scroll {
     max-height: 90vh;
 }
 
-th {
+.hscroll {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.vscroll {
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+tr:nth-of-type(n + 1) th {
     text-align: right;
     font-weight: normal;
 }
 
 thead th {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 td, th {
     padding: 0 1ch;
+    white-space: nowrap;
 }
 
 li {
     margin-bottom: var(--margin-small);
+    padding-left: var(--margin-small);
 }
 
 figure {
@@ -405,6 +417,11 @@ summary {
     color: var(--color-text);
 }
 
+.chroma .cl:has(.gp) {
+    font-weight: 500;
+}
+
+
 @media not (prefers-color-scheme: dark) {
     .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs) {
         color: #515151;
@@ -434,6 +451,12 @@ summary {
         color: #005b82;
     }
 
+    .chroma .gp {
+        color: #005b82;
+        font-weight: 700;
+        user-select:none;
+    }
+
     .chroma .ge {
         font-style: italic;
     }
@@ -459,6 +482,12 @@ summary {
 
     .chroma :is(.k, .kc, .kd, .kp, .kr, .kt, .no) {
         color: #66d9ef;
+    }
+
+    .chroma .gp {
+        color: #66d9ef;
+        font-weight: 700;
+        user-select:none;
     }
 
     .chroma :is(.il, .l, .m, .mb, .mf, .mh, .mi, .mo, .se) {
