@@ -1,5 +1,5 @@
 ---
-title: Server Installation Guide
+title: Server Installation
 date: "2024-08-26"
 ---
 

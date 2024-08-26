@@ -435,15 +435,15 @@ summary {
         color: #6730c5;
     }
 
-    .chroma :is(.bp, .il, .kt, .l, .ld, .m, .mb, .mf, .mh, .mi, .mo, .nb, .nd, .nl, .vm) {
+    .chroma :is(.bp, .il, .kt, .l, .ld, .m, .mb, .mf, .mh, .mi, .mo, .nd, .nl, .vm) {
         color: #7f4707;
     }
 
-    .chroma :is(.n, .nn, .nx, .pm, .w, .nb) {
+    .chroma :is(.n, .nn, .nx, .pm, .w) {
         color: var(--color-text);
     }
 
-    .chroma :is(.dl, .ni, .o, .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .gi) {
+    .chroma :is(.dl, .ni, .o, .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .gi, .nb) {
         color: #00622f;
     }
 
@@ -494,7 +494,7 @@ summary {
         color: #ae81ff;
     }
 
-    .chroma :is(.bp, .n, .ni, .nl, .nn, .nv, .py, .vc, .vg, .vi, .vm, .w, .nb) {
+    .chroma :is(.bp, .n, .ni, .nl, .nn, .nv, .py, .vc, .vg, .vi, .vm, .w) {
         color: var(--color-text);
     }
 
@@ -506,7 +506,7 @@ summary {
         font-style: italic;
     }
 
-    .chroma :is(.fm, .gi, .na, .nc, .nd, .ne, .nf, .nx) {
+    .chroma :is(.fm, .gi, .na, .nc, .nd, .ne, .nf, .nx, .nb) {
         color: #a6e22e;
     }
 
