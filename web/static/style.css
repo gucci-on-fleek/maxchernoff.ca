@@ -397,217 +397,98 @@ summary {
 }
 
 /* Syntax Highlighting */
-.chroma .err {
-    color: #a61717;
-    background-color: #e3d2d2;
+.chroma .p {
+    color: var(--color-semi);
 }
 
-.chroma :is(.k, .kd, .kn, .kp, .kr, .o, .ow) {
+.chroma .cl {
     color: var(--color-text);
-    font-weight: bold;
 }
 
-.chroma :is(.kt, .nc) {
-    color: #445588;
-    font-weight: bold;
-}
-
-.chroma :is(.na, .no, .nv, .vc, .vg, .vi) {
-    color: #008080;
-}
-
-.chroma .nb {
-    color: #0086b3;
-}
-
-.chroma :is(.bp, .gh) {
-    color: #999999;
-}
-
-.chroma :is(.cs, .cp, .cpf) {
-    color: #999999;
-    font-weight: bold;
-    font-style: italic;
-}
-
-.chroma .nd {
-    color: #3c5d5d;
-    font-weight: bold;
-}
-
-.chroma .ni {
-    color: #800080;
-}
-
-.chroma :is(.ne, .nf, .nl) {
-    color: #990000;
-    font-weight: bold;
-}
-
-.chroma :is(.nn, .gp) {
-    color: #555555;
-}
-
-.chroma .nt {
-    color: #000080;
-}
-
-.chroma .sr {
-    color: #009926;
-}
-
-.chroma :is(.s, .sa, .sb, .sc, .dl, .sd, .s2, .se, .sh, .si, .sx, .s1) {
-    color: #dd1144;
-}
-
-.chroma .ss {
-    color: #990073;
-}
-
-.chroma :is(.m, .mb, .mf, .mh, .mi, .il, .mo) {
-    color: #009999;
-}
-
-
-.chroma :is(.c, .ch, .cm, .c1) {
-    color: #999988;
-    font-style: italic;
-}
-
-.chroma .gd {
-    color: var(--color-text);
-    background-color: #ffdddd;
-}
-
-.chroma .ge {
-    color: var(--color-text);
-    font-style: italic;
-}
-
-.chroma :is(.gr, .gt) {
-    color: #aa0000;
-}
-
-.chroma .gi {
-    color: var(--color-text);
-    background-color: #ddffdd;
-}
-
-.chroma .go {
-    color: #888888;
-}
-
-.chroma .gs {
-    font-weight: bold;
-}
-
-.chroma .gu {
-    color: #aaaaaa;
-}
-
-.chroma .gl {
-    text-decoration: underline;
-}
-
-.chroma .w {
-    color: #bbbbbb;
-}
-
-@media (prefers-color-scheme: dark) {
-.chroma .err {
-        color: #f85149;
+@media not (prefers-color-scheme: dark) {
+    .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs) {
+        color: #515151;
     }
 
-    .chroma :is(.nc, .ne) {
-        color: #f0883e;
-        font-weight: bold;
+    .chroma :is(.err, .gd, .nv, .sr, .vc, .vg, .vi) {
+        color: #a12236;
     }
 
-    .chroma .ni {
-        color: #ffa657;
+    .chroma :is(.k, .kc, .kd, .kn, .kp, .kr, .ne, .ow) {
+        color: #6730c5;
     }
 
-    .chroma .nf {
-        color: #d2a8ff;
+    .chroma :is(.bp, .il, .kt, .l, .ld, .m, .mb, .mf, .mh, .mi, .mo, .nb, .nd, .nl, .vm) {
+        color: #7f4707;
     }
 
-    .chroma :is(.nf, .nl) {
-        font-weight: bold;
+    .chroma :is(.n, .nn, .nx, .pm, .w, .nb) {
+        color: var(--color-text);
     }
 
-    .chroma :is(.nd, .no) {
-        color: #79c0ff;
-        font-weight: bold;
+    .chroma :is(.dl, .ni, .o, .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .gi) {
+        color: #00622f;
     }
 
-    .chroma :is(.dl, .gh, .gu, .kc, .kp, .ld, .nl, .nv, .py, .sa, .se, .sh, .sr) {
-        color: #79c0ff;
-    }
-
-    .chroma .gh {
-        font-weight: bold;
-    }
-
-    .chroma .nt {
-        color: #7ee787;
-    }
-
-    .chroma :is(.il, .l, .m, .mb, .mf, .mh, .mi, .mo, .s, .s1, .s2, .sb, .sc, .sd, .si, .ss, .sx) {
-        color: #a5d6ff;
-    }
-
-    .chroma :is(.gt, .k, .kd, .kn, .kr, .kt, .nn) {
-        color: #ff7b72;
-    }
-
-    .chroma :is(.o, .ow) {
-        color: #ff7b72;
-        font-weight: bold;
-    }
-
-    .chroma :is(.go, .gp) {
-        color: #8b949e;
-    }
-
-    .chroma :is(.c, .c1, .ch, .cm) {
-        color: #8b949e;
-        font-style: italic;
-    }
-
-    .chroma :is(.cp, .cpf, .cs) {
-        color: #8b949e;
-        font-weight: bold;
-        font-style: italic;
-    }
-
-    .chroma :is(.gd, .gr) {
-        color: #ffa198;
-    }
-
-    .chroma .gd {
-        background-color: #490202;
+    .chroma :is(.fm, .gh, .gu, .nc, .nf, .no, .nt, .py, .ss) {
+        color: #005b82;
     }
 
     .chroma .ge {
         font-style: italic;
     }
 
-    .chroma .gi {
-        color: #56d364;
-        background-color: #0f5323;
+    .chroma .gs {
+        font-weight: 700;
+    }
+
+    .chroma .na {
+        color: #912583;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs, .gu) {
+        color: #949076;
+    }
+
+    .chroma .err {
+        background-color: #1e0010;
+        color: #eb0083;
+    }
+
+    .chroma :is(.k, .kc, .kd, .kp, .kr, .kt, .no) {
+        color: #66d9ef;
+    }
+
+    .chroma :is(.il, .l, .m, .mb, .mf, .mh, .mi, .mo, .se) {
+        color: #ae81ff;
+    }
+
+    .chroma :is(.bp, .n, .ni, .nl, .nn, .nv, .py, .vc, .vg, .vi, .vm, .w, .nb) {
+        color: var(--color-text);
+    }
+
+    .chroma :is(.gd, .kn, .nt, .o, .ow) {
+        color: #f94e8a;
+    }
+
+    .chroma .ge {
+        font-style: italic;
+    }
+
+    .chroma :is(.fm, .gi, .na, .nc, .nd, .ne, .nf, .nx) {
+        color: #a6e22e;
     }
 
     .chroma .gs {
-        font-weight: bold;
+        font-weight: 700;
     }
 
-    .chroma .gl {
-        text-decoration: underline;
+    .chroma :is(.dl, .ld, .s, .s1, .s2, .sa, .sb, .sc, .sd, .sh, .si, .sr, .ss, .sx) {
+        color: #e6db74;
     }
 
-    .chroma .w {
-        color: #6e7681;
-    }
 }
 
 /** /` "${1}" -!*/
