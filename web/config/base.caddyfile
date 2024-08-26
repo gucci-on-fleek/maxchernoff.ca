@@ -29,7 +29,7 @@
 
 	# Convert Markdown files to HTML
 	@p path /p/*
-	header @p Link "</style.css>; rel=\"preload\"; as=\"style\""
+	header @p Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
 	templates
 	rewrite @p /includes/index.html
 	rewrite / /includes/index
