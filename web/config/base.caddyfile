@@ -17,7 +17,7 @@
 	# Serve static files from /srv
 	try_files {path}.html {path}
 	file_server {
-		hide /includes/
+		hide /includes/* .gitignore retain-empty-folder
 	}
 
 	# Minify the CSS files
@@ -30,13 +30,13 @@
 	# Convert Markdown files to HTML
 	@p path /p/*
 	header @p Link "</style.css>; rel=\"preload\"; as=\"style\""
-	templates @p
-	rewrite @p /p/index.html
-	rewrite / /p/index
+	templates
+	rewrite @p /includes/index.html
+	rewrite / /includes/index
 
 	# Handle errors
 	handle_errors {
-		rewrite * /p/error.html
+		rewrite * /includes/error.html
 		templates
 		file_server
 	}

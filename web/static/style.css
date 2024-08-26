@@ -1,4 +1,4 @@
-/*!- regexReplaceAll `\n|([^-\w])\s+|\s+([^-\w])|/\*.*?\*\/` `/**/
+/*!- regexReplaceAll `/\*.*?\*\/|\s*\n\s*|([^-\w])\s+` `/**/
 /* We use the above regex to remove all comments and whitespace */
 :root {
     /* All of the colors that we can use */
@@ -610,4 +610,4 @@ summary {
     }
 }
 
-/** /` "${1}${2}" -!*/
+/** /` "${1}" -!*/
