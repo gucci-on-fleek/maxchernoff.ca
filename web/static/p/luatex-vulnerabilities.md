@@ -3,6 +3,11 @@ title: LuaTeX Security Vulnerabilities
 date: "2023-05-20"
 ---
 
+{{/* Source Code for maxchernoff.ca
+     https://github.com/gucci-on-fleek/maxchernoff.ca
+     SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+
 <style>
 th {
   text-align: right;
