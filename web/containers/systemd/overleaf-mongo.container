@@ -11,7 +11,8 @@ Network=overleaf.network
 UserNS=nomap
 
 Exec=--replSet overleaf
-HealthCmd=mongosh --quiet --eval 'rs.hello().setName ? rs.hello().setName : rs.initiate({_id: "overleaf",members:[{_id: 0, host:"systemd-overleaf-mongo:27017"}]})' > /dev/null
+HealthCmd=echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+Environment="MONGODB_REPLICA_SET_MODE=primary"
 HealthInterval=60s
 HealthRetries=5
 HealthTimeout=10s

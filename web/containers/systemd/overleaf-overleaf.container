@@ -22,10 +22,13 @@ HealthOnFailure=stop
 Environment="EMAIL_CONFIRMATION_DISABLED=true"
 Environment="ENABLE_CONVERSIONS=true"
 Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
+Environment="GRACEFUL_SHUTDOWN_DELAY_SECONDS=5"
+Environment="KILL_ALL_PROCESSES_TIMEOUT=15"
+Environment="KILL_PROCESS_TIMEOUT=15"
 Environment="OVERLEAF_ADMIN_EMAIL=Max Chernoff"
 Environment="OVERLEAF_APP_NAME=Overleaf"
 Environment="OVERLEAF_BEHIND_PROXY=true"
-Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex"
+Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex?directConnection=true"
 Environment="OVERLEAF_PASSWORD_VALIDATION_MIN_LENGTH=12"
 Environment="OVERLEAF_REDIS_HOST=systemd-overleaf-redis"
 Environment="OVERLEAF_RESTRICT_INVITES_TO_EXISTING_ACCOUNTS=true"
@@ -41,4 +44,4 @@ After=overleaf-mongo.service overleaf-redis.service
 [Service]
 Restart=always
 TimeoutStartSec=300
-TimeoutStopSec=30
+TimeoutStopSec=20
