@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Firefox Translate Test</title>
+    </head>
+    <body>
+        <select>
+            <option>Red</option>
+            <option>Orange</option>
+            <option>Yellow</option>
+            <option value="Green">Green</option>
+            <option value="Blue">Blue</option>
+            <option value="Purple">Purple</option>
+        </select>
+        <code>[Initial]</code>
+    </body>
+    <script>
+        const color = document.querySelector("select")
+        const result = document.querySelector("code")
+
+        color.addEventListener("change", () => {
+            result.textContent = color.value
+            result.style.color = color.value
+        })
+    </script>
+</html>
