@@ -16,6 +16,11 @@ import base.caddyfile
 		# Use HSTS
 		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 	}
+
+	log {
+		output file /var/log/caddy/access.log
+		format json
+	}
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca

@@ -165,7 +165,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install btrfs-progs fail2ban fish git htop snapper vim
+    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper vim
     ```
 
 2. Switch shell to `fish`:
@@ -174,21 +174,7 @@ Post-installation
     $ chsh -s /usr/bin/fish
     ```
 
-3. Enable `fail2ban`: <span class=sidenote>`rpm-ostree` sets very strict
-   SELinux policies on `/var/`, which prevents `fail2ban` from writing
-    to its database and log files.</span>
-
-    ```ini
-    # /etc/fail2ban/fail2ban.conf
-    logtarget = SYSTEMD-JOURNAL
-    dbfile = :memory:
-    ```
-
-    ```shell-session
-    $ sudo systemctl enable --now fail2ban
-    ```
-
-4. Enable automatic updates:
+3. Enable automatic updates:
 
     ```shell-session
     $ sudo systemctl enable --now rpm-ostreed-automatic.timer
@@ -199,23 +185,23 @@ Post-installation
     AutomaticUpdatePolicy=apply
     ```
 
-5. Fix `/etc/fstab`:
+4. Fix `/etc/fstab`:
 
     Change the options for `/` to `defaults,compress=zstd:1`.
 
-6. Fix `/etc/passwd`: <span class=sidenote>If not done, `podman` will
+5. Fix `/etc/passwd`: <span class=sidenote>If not done, `podman` will
    complain about a mismatched home location.</span>
 
     Change the home for `max` to `/var/home/max`.
 
-7. Fix <kbd>Ctrl</kbd>-<kbd>L</kbd>:
+6. Fix <kbd>Ctrl</kbd>-<kbd>L</kbd>:
 
     ```fish
     # ~/.config/fish/config.fish
     bind \f 'clear && commandline -f repaint'
     ```
 
-8. Set some kernel network parameters: <span class=sidenote>Needed for
+7. Set some kernel network parameters: <span class=sidenote>Needed for
    `caddy`.</span>
 
     ```ini
@@ -225,7 +211,7 @@ Post-installation
     net.core.rmem_max=7500000
     ```
 
-9. Adjust your home directory permissions: <span class=sidenote>Needed
+8. Adjust your home directory permissions: <span class=sidenote>Needed
    for the unprivileged containers to access the Git files.</span>
 
     ```shell-session
@@ -362,7 +348,7 @@ Web Server
 
     ```shell-session
     % mkdir -p ~/caddy/{data,config,etc}  # As the `web` user
-    % mkdir -p overleaf/{overleaf,mongo,redis}
+    % mkdir -p ~/overleaf/{overleaf,mongo,redis}
     ```
 
 11. Create the necessary links:
@@ -378,22 +364,38 @@ Web Server
     ```shell-session
     $ uid="$(grep web /etc/subuid | cut -d: -f2 /etc/subuid)"
     $ sudo chown -R $uid:$uid ~web/overleaf/{overleaf,mongo,redis} \
-    >     ~web/caddy/{data,config}
+    >     ~web/caddy/{data,config,access.log}
     ```
 
-13. Enable the auto-updater:
+13. Enable the analytics processor:
+
+    ```shell-session
+    $ sudo touch ~web/caddy/access.log
+    $ sudo chown $uid:web ~web/caddy/access.log
+    $ sudo chmod a=,ug=rw ~web/caddy/access.log
+
+    $ touch ~/maxchernoff.ca/web/static/analytics
+    $ chgrp web ~/maxchernoff.ca/web/static/analytics
+    $ chmod a=r,ug=rw ~/maxchernoff.ca/web/static/analytics
+
+    $ sudo ln -s /var/home/max/maxchernoff.ca/web/services/* ~web/.config/systemd/user/
+    $ sudo systemctl --user -M web@ daemon-reload
+    $ sudo systemctl --user -M web@ enable --now update-analytics.{service,timer}
+    ```
+
+14. Enable the auto-updater:
 
     ```shell-session
     $ sudo systemctl --user -M web@ enable podman-auto-update.{service,timer}
     ```
 
-14. Start the services:
+15. Start the services:
 
     ```shell-session
     $ sudo ~/maxchernoff.ca/scripts/web-start
     ```
 
-15. If everything looks good, open the firewall:
+16. If everything looks good, open the firewall:
 
     ```shell-session
     $ sudo firewall-cmd --permanent --zone=public \
@@ -401,7 +403,7 @@ Web Server
     $ sudo firewall-cmd --reload
     ```
 
-16. Reboot to make sure everything starts correctly.
+17. Reboot to make sure everything starts correctly.
 
 
 Snapshots

@@ -32,11 +32,17 @@
 		between /*! !*/
 	}
 
+	# Preload some resources
+	header Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
+
+	# Analytics
+	header /analytics {
+		-Content-Security-Policy
+	}
+
 	# Convert Markdown files to HTML
-	@p path /p/*
-	header @p Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
 	templates
-	rewrite @p /includes/index.html
+	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
 
 	# Handle errors
