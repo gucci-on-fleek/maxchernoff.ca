@@ -4,8 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description="Update Analytics"
-Wants=update-analytics-graphs.service update-analytics-requests.service
-After=update-analytics-graphs.service update-analytics-requests.service
+StopWhenUnneeded=true
 
 [Install]
-Also=update-analytics.timer
+Also=update-analytics-graphs.service update-analytics-requests.service

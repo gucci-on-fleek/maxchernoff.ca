@@ -4,7 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description="Update Analytics"
-Wants=update-analytics.target
 
 [Timer]
 OnBootSec=1min
@@ -13,3 +12,4 @@ Unit=update-analytics.target
 
 [Install]
 WantedBy=timers.target
+Also=update-analytics-graphs.service update-analytics-requests.service

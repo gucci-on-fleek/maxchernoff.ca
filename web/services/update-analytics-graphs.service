@@ -4,7 +4,8 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description="Update Analytics Graphs"
-After=network.target
+After=update-analytics.target
+Upholds=update-analytics.target
 
 [Service]
 Type=oneshot
@@ -13,5 +14,4 @@ StandardOutput=truncate:%h/caddy/static/analytics/graphs
 StandardError=journal
 
 [Install]
-WantedBy=default.target
-Also=update-analytics.timer
+WantedBy=update-analytics.target

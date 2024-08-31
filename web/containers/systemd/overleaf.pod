@@ -10,3 +10,4 @@ After=overleaf-network.service
 
 [Install]
 WantedBy=default.target
+Also=overleaf-network.service overleaf-overleaf.service

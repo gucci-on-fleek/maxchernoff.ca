@@ -27,4 +27,4 @@ Wants=overleaf-pod.service
 
 [Install]
 WantedBy=default.target
-
+Also=caddy-network.service
