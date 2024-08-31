@@ -9,7 +9,7 @@ After=network.target
 [Service]
 Type=oneshot
 ExecStart=goaccess --log-format=caddy --anonymize-ip --anonymize-level=3 --log-file=%h/caddy/access.log --output=html
-StandardOutput=truncate:%h/caddy/static/analytics
+StandardOutput=truncate:%h/caddy/static/analytics/graphs
 StandardError=journal
 
 [Install]

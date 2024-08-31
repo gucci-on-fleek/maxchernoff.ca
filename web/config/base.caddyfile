@@ -36,8 +36,11 @@
 	header Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
 
 	# Analytics
-	header /analytics {
+	header /analytics/graphs {
 		-Content-Security-Policy
+	}
+	basic_auth /analytics/* {
+		analytics $2a$14$diUEkE1EKNXh1hSKp8cYKeWq8krwrgmcIta98zesFzQymOVxz0iXq
 	}
 
 	# Convert Markdown files to HTML

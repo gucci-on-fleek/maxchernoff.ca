@@ -374,9 +374,11 @@ Web Server
     $ sudo chown $uid:web ~web/caddy/access.log
     $ sudo chmod a=,ug=rw ~web/caddy/access.log
 
-    $ touch ~/maxchernoff.ca/web/static/analytics
-    $ chgrp web ~/maxchernoff.ca/web/static/analytics
-    $ chmod a=r,ug=rw ~/maxchernoff.ca/web/static/analytics
+    $ mkdir ~/maxchernoff.ca/web/static/analytics
+    $ touch ~/maxchernoff.ca/web/static/analytics/{graphs,requests}
+    $ chmod -R a=r,ug=rwX ~/maxchernoff.ca/web/static/analytics
+    $ chmod g+s ~/maxchernoff.ca/web/static/analytics
+    $ sudo chgrp -R web ~/maxchernoff.ca/web/static/analytics
 
     $ sudo ln -s /var/home/max/maxchernoff.ca/web/services/* ~web/.config/systemd/user/
     $ sudo systemctl --user -M web@ daemon-reload
