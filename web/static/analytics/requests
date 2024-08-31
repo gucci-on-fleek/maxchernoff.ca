@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="requests.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script type="module" src="requests.js" async></script>
+
+  <title>Analytics&hairsp;&mdash;&hairsp;Max Chernoff</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#241504" />
+  <meta name="color-scheme" content="light dark">
+</head>
+
+<body>
+    <header>
+        <h1>Analytics</h1>
+    </header>
+
+    <div id="loading" class="message" role="alert" hidden>Loading…</div>
+    <div id="sort" class="message" role="alert" hidden>Sorting disabled after edit.</div>
+    <div id="saved" class="message" role="alert" hidden>Saved</div>
+    <div id="error" class="message" role="alert" hidden>Error
+        <div>Sorry about that. Please refresh and try again.</div>
+    </div>
+
+    <div>
+        <!-- We need this empty div so that the contents are horizontally centered on the page. Without it, the contents are left aligned to the rest of the page. -->
+        <article hidden id="table_container">
+            <h2>Requests
+                <input id="filter" class="input" placeholder="Filter" title="Filter" type="search"
+                    aria-label="Filter Table"></input>
+            </h2>
+            <button hidden aria-hidden="false" type="button" id="down_button" class="input">Download as
+                TSV</button>
+            <label role="button" aria-hidden="true" for="down_button">Download as
+                <abbr>TSV</abbr></label>
+            <a class="skip-link" href="#after_table">Skip to after the end of the requests table</a>
+        </article>
+    </div>
+
+    <a id="after_table"></a>
+
+    <footer>
+        <ul role="list">
+            <li><a href="/">Home</a></li>
+            <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></li>
+            <li><a href="https://github.com/gucci-on-fleek/maxchernoff.ca">Source</a></li>
+        </ul>
+    </footer>
+
+    <template id="table_base">
+        <table id="item_table" aria-describedby="table_description">
+            <caption hidden aria-hidden="false"><abbr>DVD</abbr> Requests</caption>
+            <thead>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+    </template>
+
+    <template id="header_cell_base">
+        <th tabindex="0"></th>
+    </template>
+
+    <template id="header_base">
+        <tr class="header"></tr>
+    </template>
+
+
+    <template id="link_base">
+        <td><code><a href="https://"></a></code></td>
+    </template>
+</body>
+
+</html>

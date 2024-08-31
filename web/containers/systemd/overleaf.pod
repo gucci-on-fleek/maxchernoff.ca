@@ -5,6 +5,8 @@
 [Pod]
 Network=overleaf.network
 
+[Unit]
+After=overleaf-network.service
+
 [Install]
 WantedBy=default.target
-After=overleaf-network.service

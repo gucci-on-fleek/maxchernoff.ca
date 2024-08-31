@@ -9,4 +9,4 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-watch --color -n1 "SYSTEMD_COLORS=1 systemctl --user -M web@ list-units --with-dependencies --quiet --all overleaf-pod.service caddy.service"
+watch --color -n1 "SYSTEMD_COLORS=1 systemctl --user -M web@ list-units --with-dependencies --quiet --all overleaf-pod.service caddy.service update-analytics.{timer,target}"

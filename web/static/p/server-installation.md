@@ -375,14 +375,14 @@ Web Server
     $ sudo chmod a=,ug=rw ~web/caddy/access.log
 
     $ mkdir ~/maxchernoff.ca/web/static/analytics
-    $ touch ~/maxchernoff.ca/web/static/analytics/{graphs,requests}
-    $ chmod -R a=r,ug=rwX ~/maxchernoff.ca/web/static/analytics
+    $ touch ~/maxchernoff.ca/web/static/analytics/{graphs,requests.tsv}
+    $ chmod -R a=rX,ug=rwX ~/maxchernoff.ca/web/static/analytics
     $ chmod g+s ~/maxchernoff.ca/web/static/analytics
     $ sudo chgrp -R web ~/maxchernoff.ca/web/static/analytics
 
     $ sudo ln -s /var/home/max/maxchernoff.ca/web/services/* ~web/.config/systemd/user/
     $ sudo systemctl --user -M web@ daemon-reload
-    $ sudo systemctl --user -M web@ enable --now update-analytics.{service,timer}
+    $ sudo systemctl --user -M web@ enable --now update-analytics.{target,timer}
     ```
 
 14. Enable the auto-updater:

@@ -22,6 +22,9 @@ PublishPort=443:443/udp
 [Service]
 Restart=always
 
+[Unit]
+Wants=overleaf-pod.service
+
 [Install]
 WantedBy=default.target
-Wants=overleaf-pod.service
+
