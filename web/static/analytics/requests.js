@@ -315,6 +315,13 @@ function cell_text(cell, text) {
 }
 
 
+const time_formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Edmonton",
+    dateStyle: "short",
+    timeStyle: "short",
+})
+
+
 /**
  * Converts the array into the `HTML` table
  * @param {String[][]} array - The array to make into a table
@@ -323,18 +330,20 @@ function cell_text(cell, text) {
  * @effects None
  */
 function make_html_table(array, table) {
-    for (const csv_row of array) {
+    for (const csv_row of array.toReversed()) {
         const table_row = table.insertRow()
 
         for (const [index, csv_cell] of csv_row.entries()) {
             switch (index) {
-                case 0: { // Name
-                    table_row.appendChild(template.row_header_cell(csv_cell))
+                case 0: { // Date
+                    const date = time_formatter.format(new Date(csv_cell))
+                    table_row.appendChild(template.row_header_cell(date))
                     break
                 }
                 case 1: // URL
                 case 2: { // Referrer
-                    table_row.appendChild(template.link(csv_cell))
+                    const url = csv_cell.replace(/^https?:\/\//, "")
+                    table_row.appendChild(template.link(url))
                     break
                 }
                 default: {
