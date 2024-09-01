@@ -1,6 +1,14 @@
 ---
 title: LuaTeX Security Vulnerabilities
 date: "2023-05-20"
+description: >-
+    Any document compiled with older versions of LuaTeX can execute
+    arbitrary shell commands, even with shell escape disabled.
+
+    This affects LuaTeX versions 1.04–1.16.1, which were included in
+    TeX Live 2017–2022 as well as the original release of TeX Live 2023.
+    This issue was fixed in LuaTeX 1.17.0, and is distributed as an
+    update to TeX Live 2023.
 ---
 
 {{/* Source Code for maxchernoff.ca
@@ -424,8 +432,7 @@ Development id: 7581
 <span class="token output">This is LuajitHBTeX, Version 1.17.0 (TeX Live 2023)
 Development id: 7581
 [...]
-</span></code></pre></li>
-</ol>
+</span></code></pre></li></ol>
 
 <h4 id="source">Build from Source</h4>
 

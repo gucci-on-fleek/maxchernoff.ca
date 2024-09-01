@@ -358,9 +358,16 @@ p {
     }
 }
 
+/* Hide the whitespace between elements */
+nav ul {
+    font-size: 0;
+}
+
 nav li {
     list-style: none;
+    font-size: var(--base-font-size);
 }
+/* End hide whitespace */
 
 nav > ul {
     padding-left: 0;
@@ -373,11 +380,23 @@ nav ul ul ul li {
 nav ul ul ul li, ul.inline > li {
     display: inline;
     list-style-type: none;
+    padding-left: 0;
 }
 
 @media (min-width: 55rem) {
     nav ul ul ul li, ul.inline > li {
         white-space: nowrap;
+    }
+}
+
+@media (pointer: coarse) {
+    nav li {
+        line-height: 2;
+    }
+
+    nav li::before {
+        padding-right: 1ch;
+        padding-left: 1ch;
     }
 }
 

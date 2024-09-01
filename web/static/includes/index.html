@@ -18,4 +18,5 @@
 {{- $title := default $markdown_filename $markdown_file.Meta.title -}}
 {{- $body := markdown $markdown_file.Body -}}
 {{- $date := default "" (cat "<time>" $markdown_file.Meta.date "</time>") -}}
-{{- include "/includes/base.html" $title $body $date -}}
+{{- $description := default "" $markdown_file.Meta.description -}}
+{{- include "/includes/base.html" $title $body $date $description -}}

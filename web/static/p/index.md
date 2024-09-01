@@ -1,5 +1,6 @@
 ---
 title: "Home"
+description: "Max Chernoff's personal website"
 ---
 
 {{/* Source Code for maxchernoff.ca

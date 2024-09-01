@@ -1,6 +1,9 @@
 ---
 title: Server Installation
 date: "2024-08-26"
+description: >-
+    A list of commands summarizing how I set up the server for this
+    website.
 ---
 
 {{/* Source Code for maxchernoff.ca
@@ -88,6 +91,8 @@ Installation
 
 3. Partition as follows:
 
+    <div class=hscroll>
+
     | Index | Mount Point | Size      | Type   |
     |-------|-------------|-----------|--------|
     | 1     | `/boot/efi` | 500M      | EFI    |
@@ -95,6 +100,8 @@ Installation
     | 3     | `[SWAP]`    | 8G        | swap   |
     | 4     | `/`         | remaining | btrfs  |
     | 4.1   | `/home/`    | —         | subvol |
+
+    </div>
 
 4. Install the system.
 
