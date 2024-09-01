@@ -7,11 +7,11 @@ Image=docker.io/library/caddy:2
 AutoUpdate=registry
 UserNS=nomap
 
-Volume=%h/caddy/etc:/etc/caddy:ro,z
-Volume=%h/caddy/static:/srv:ro,z
-Volume=%h/caddy/data:/data:rw,Z
-Volume=%h/caddy/access.log:/var/log/caddy/access.log:rw,Z
-Volume=%h/caddy/config:/config:rw,Z
+Volume=%h/caddy/etc:/etc/caddy:ro,z,noexec
+Volume=%h/caddy/static:/srv:ro,z,noexec
+Volume=%h/caddy/data:/data:rw,Z,noexec
+Volume=%h/caddy/access.log:/var/log/caddy/access.log:rw,Z,noexec
+Volume=%h/caddy/config:/config:rw,Z,noexec
 
 Network=caddy.network
 Network=overleaf.network

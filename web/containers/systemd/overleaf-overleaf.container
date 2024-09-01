@@ -4,9 +4,9 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/sharelatex/sharelatex:5
-Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z
+Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,noexec
 Tmpfs=/var/lib/overleaf/tmp
-Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro
+Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro,exec,nosuid
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network

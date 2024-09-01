@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/library/mongo:5.0
-Volume=%h/overleaf/mongo:/data/db:Z
+Volume=%h/overleaf/mongo:/data/db:Z,noexec
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
