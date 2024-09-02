@@ -9,5 +9,5 @@ Network=overleaf.network
 After=overleaf-network.service
 
 [Install]
-WantedBy=default.target
+WantedBy=caddy.service
 Also=overleaf-network.service overleaf-overleaf.service

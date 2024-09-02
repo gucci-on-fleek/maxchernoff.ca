@@ -45,6 +45,8 @@ After=overleaf-mongo.service overleaf-redis.service
 Restart=always
 TimeoutStartSec=300
 TimeoutStopSec=20
+Wants=overleaf-network.service overleaf-mongo.service overleaf-redis.service
+After=overleaf-network.service overleaf-mongo.service overleaf-redis.service
 
 [Install]
 Also=overleaf-network.service overleaf-mongo.service overleaf-redis.service
