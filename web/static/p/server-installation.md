@@ -399,7 +399,9 @@ Web Server
 
     $ sudo ln -s /var/home/max/maxchernoff.ca/web/services/* ~web/.config/systemd/user/
     $ sudo systemctl --user -M web@ daemon-reload
-    $ sudo systemctl --user -M web@ enable --now update-analytics.timer update-analytics-{graphs,requests}.service
+    $ sudo systemctl --user -M web@ enable --now \
+    >     update-analytics-{graphs,requests}.service \
+    >     update-analytics.timer network-ready.service
     ```
 
 15. Enable the auto-updater:

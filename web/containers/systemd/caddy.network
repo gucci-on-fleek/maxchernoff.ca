@@ -6,3 +6,6 @@
 Internal=false
 IPv6=true
 DisableDNS=false
+
+[Unit]
+After=network-ready.service

@@ -2,12 +2,13 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
-[Pod]
-Network=overleaf.network
-
 [Unit]
-After=overleaf-network.service network-ready.service
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=sh -c 'until ping -c 1 -4 example.com && ping -c 1 -6 example.com; do sleep 1; done'
 
 [Install]
-WantedBy=caddy.service
-Also=overleaf-network.service overleaf-overleaf.service
+WantedBy=default.target

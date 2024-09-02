@@ -15,16 +15,21 @@ Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
 Environment="WOODPECKER_SERVER=127.0.0.1:9000"
 Environment="WOODPECKER_MAX_WORKFLOWS=4"
 Environment="WOODPECKER_LOG_LEVEL=trace"
-Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/texlive:ro,exec,nosuid"
+Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/texlive:ro"
 Secret="woodpecker_agent_secret,type=env,target=WOODPECKER_AGENT_SECRET"
 
 [Service]
 Restart=always
+ExecStartPre=podman unshare chgrp 1 %t/podman/podman.sock
+RestartSec=5s
+RestartMaxDelaySec=60s
+RestartSteps=5
 
 [Unit]
 After=podman.socket
 Requires=podman.socket
-ExecStartPre=podman unshare chgrp 1 %t/podman/podman.sock
+StartLimitInterval=300s
+StartLimitBurst=5
 
 [Install]
 WantedBy=default.target

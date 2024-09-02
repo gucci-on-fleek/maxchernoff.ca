@@ -23,6 +23,9 @@ PublishPort=443:443/udp
 [Service]
 Restart=always
 
+[Unit]
+After=network-ready.service
+
 [Install]
 WantedBy=default.target
 Also=caddy-network.service

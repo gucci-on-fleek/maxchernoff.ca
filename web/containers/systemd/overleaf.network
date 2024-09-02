@@ -5,3 +5,6 @@
 [Network]
 Internal=true
 DisableDNS=false
+
+[Unit]
+After=network-ready.service

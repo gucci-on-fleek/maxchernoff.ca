@@ -22,6 +22,9 @@ Secret="woodpecker_github_secret,type=env,target=WOODPECKER_GITHUB_SECRET"
 [Service]
 Restart=always
 
+[Unit]
+After=network-ready.service
+
 [Install]
 WantedBy=caddy.service
 Also=woodpecker-network.service
