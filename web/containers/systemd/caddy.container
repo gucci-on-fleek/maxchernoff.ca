@@ -15,6 +15,7 @@ Volume=%h/caddy/config:/config:rw,Z,noexec
 
 Network=caddy.network
 Network=overleaf.network
+Network=woodpecker.network
 PublishPort=80:80
 PublishPort=443:443
 PublishPort=443:443/udp

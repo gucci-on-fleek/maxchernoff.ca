@@ -1,0 +1,27 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=docker.io/woodpeckerci/woodpecker-server:latest
+AutoUpdate=registry
+UserNS=nomap
+Network=woodpecker.network
+
+Volume=%h/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec
+PublishPort=127.0.0.1:9000:9000
+
+Environment="WOODPECKER_ADMIN=gucci-on-fleek"
+Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
+Environment="WOODPECKER_GITHUB=true"
+Environment="WOODPECKER_HOST=https://woodpecker.maxchernoff.ca"
+Environment="WOODPECKER_OPEN=false"
+Secret="woodpecker_agent_secret,type=env,target=WOODPECKER_AGENT_SECRET"
+Secret="woodpecker_github_secret,type=env,target=WOODPECKER_GITHUB_SECRET"
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=caddy.service
+Also=woodpecker-network.service

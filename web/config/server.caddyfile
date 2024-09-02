@@ -40,3 +40,9 @@ overleaf.maxchernoff.ca {
 	import default
 	reverse_proxy systemd-overleaf-overleaf:80
 }
+
+# Woodpecker reverse proxy
+woodpecker.maxchernoff.ca {
+	import default
+	reverse_proxy systemd-woodpecker-server:8000
+}

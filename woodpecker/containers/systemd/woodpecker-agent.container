@@ -1,0 +1,30 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=docker.io/woodpeckerci/woodpecker-agent:latest
+AutoUpdate=registry
+UserNS=nomap
+Network=pasta:-T,9000
+SecurityLabelDisable=true
+
+Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
+Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
+
+Environment="WOODPECKER_SERVER=127.0.0.1:9000"
+Environment="WOODPECKER_MAX_WORKFLOWS=4"
+Environment="WOODPECKER_LOG_LEVEL=trace"
+Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/texlive:ro,exec,nosuid"
+Secret="woodpecker_agent_secret,type=env,target=WOODPECKER_AGENT_SECRET"
+
+[Service]
+Restart=always
+
+[Unit]
+After=podman.socket
+Requires=podman.socket
+ExecStartPre=podman unshare chgrp 1 %t/podman/podman.sock
+
+[Install]
+WantedBy=default.target

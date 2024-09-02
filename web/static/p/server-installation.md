@@ -65,20 +65,23 @@ Pre-installation
 
     <div class=hscroll>
 
-    | Type    | Hostname   | Value                       |
-    |---------|------------|-----------------------------|
-    | `A`     | —          | `152.53.36.213`             |
-    | `A`     | `www`      | `152.53.36.213`             |
-    | `A`     | `overleaf` | `152.53.36.213`             |
-    | `AAAA`  | —          | `2a0a:4cc0:2000:172::1`     |
-    | `AAAA`  | `www`      | `2a0a:4cc0:2000:172::1`     |
-    | `AAAA`  | `overleaf` | `2a0a:4cc0:2000:172::1`     |
-    | `HTTPS` | —          | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `HTTPS` | `www`      | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `HTTPS` | `overleaf` | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `CAA`   | —          | `0 issue "letsencrypt.org"` |
-    | `CAA`   | —          | `0 issue "sectigo.com"`     |
-    | `CAA`   | —          | `0 issuewild ";"`           |
+    | Type    | Hostname     | Value                       |
+    |---------|--------------|-----------------------------|
+    | `A`     | —            | `152.53.36.213`             |
+    | `A`     | `www`        | `152.53.36.213`             |
+    | `A`     | `overleaf`   | `152.53.36.213`             |
+    | `A`     | `woodpecker` | `152.53.36.213`             |
+    | `AAAA`  | —            | `2a0a:4cc0:2000:172::1`     |
+    | `AAAA`  | `www`        | `2a0a:4cc0:2000:172::1`     |
+    | `AAAA`  | `overleaf`   | `2a0a:4cc0:2000:172::1`     |
+    | `AAAA`  | `woodpecker` | `2a0a:4cc0:2000:172::1`     |
+    | `HTTPS` | —            | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | `HTTPS` | `www`        | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | `HTTPS` | `overleaf`   | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | `HTTPS` | `woodpecker` | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | `CAA`   | —            | `0 issue "letsencrypt.org"` |
+    | `CAA`   | —            | `0 issue "sectigo.com"`     |
+    | `CAA`   | —            | `0 issuewild ";"`           |
 
     </div>
 
@@ -278,7 +281,7 @@ Installing TeX Live
    to be able to access the TeX Live installation.</span>
 
     ```shell-session
-    $ sudo semanage fcontext --add -t container_file_t '/var/home/tex/texlive(/.*)?'
+    $ sudo semanage fcontext --add -t container_share_t '/var/home/tex/texlive(/.*)?'
     $ sudo restorecon -R /var/home/tex/texlive
     ```
 
@@ -320,9 +323,9 @@ Web Server
 5. Add the SELinux rules:
 
     ```shell-session
-    $ sudo semanage fcontext --add -t container_file_t \
+    $ sudo semanage fcontext --add -t container_share_t \
     >     '/var/home/max/maxchernoff.ca/web/config(/.*)?'
-    $ sudo semanage fcontext --add -t container_file_t \
+    $ sudo semanage fcontext --add -t container_share_t \
     >     '/var/home/max/maxchernoff.ca/web/static(/.*)?'
     ```
 
@@ -351,14 +354,21 @@ Web Server
     $ sudo -u web fish
     ```
 
-10. Create the necessary directories:
+10. Set the Unix permissions:
 
     ```shell-session
-    % mkdir -p ~/caddy/{data,config,etc}  # As the `web` user
+    % chmod -R g-rX,o-rX ~  # As the `web` user
+    % chmod a+X ~
+    ```
+
+11. Create the necessary directories:
+
+    ```shell-session
+    % mkdir -p ~/caddy/{data,config,etc}
     % mkdir -p ~/overleaf/{overleaf,mongo,redis}
     ```
 
-11. Create the necessary links:
+12. Create the necessary links:
 
     ```shell-session
     % ln -s /var/home/max/maxchernoff.ca/web/containers ~/.config/containers
@@ -366,15 +376,15 @@ Web Server
     % ln -s /var/home/max/maxchernoff.ca/web/static ~/caddy/static
     ```
 
-12. Change the owner of the data directories to the container user:
+13. Change the owner of the data directories to the container user:
 
     ```shell-session
-    $ uid="$(grep web /etc/subuid | cut -d: -f2 /etc/subuid)"
+    $ uid="$(grep web /etc/subuid | cut -d: -f2)" # Back to `max`
     $ sudo chown -R $uid:$uid ~web/overleaf/{overleaf,mongo,redis} \
     >     ~web/caddy/{data,config,access.log}
     ```
 
-13. Enable the analytics processor:
+14. Enable the analytics processor:
 
     ```shell-session
     $ sudo touch ~web/caddy/access.log
@@ -392,19 +402,19 @@ Web Server
     $ sudo systemctl --user -M web@ enable --now update-analytics.timer update-analytics-{graphs,requests}.service
     ```
 
-14. Enable the auto-updater:
+15. Enable the auto-updater:
 
     ```shell-session
     $ sudo systemctl --user -M web@ enable podman-auto-update.{service,timer}
     ```
 
-15. Start the services:
+16. Start the services:
 
     ```shell-session
-    $ sudo ~/maxchernoff.ca/scripts/web-start
+    $ sudo --user -M web@ start overleaf-pod.service caddy.service
     ```
 
-16. If everything looks good, open the firewall:
+17. If everything looks good, open the firewall:
 
     ```shell-session
     $ sudo firewall-cmd --permanent --zone=public \
@@ -412,7 +422,98 @@ Web Server
     $ sudo firewall-cmd --reload
     ```
 
-17. Reboot to make sure everything starts correctly.
+18. Reboot to make sure everything starts correctly.
+
+
+Woodpecker CI
+-------------
+
+1. Switch to the `web` user:
+
+    ```shell-session
+    $ sudo -u web fish
+    ```
+
+2. Create the necessary directories:
+
+    ```shell-session
+    % mkdir -p ~/woodpecker/data  # As the `web` user
+    ```
+
+3. Add the Woodpecker server Podman secrets:
+
+    ```shell-session
+    % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
+    >     podman secret create woodpecker_github_secret -
+    % head --bytes=36 /dev/urandom | basenc --z85 | tr -d '\n' | \
+    >     tee /dev/stderr | \ # Copy this value for later
+    >     podman secret create woodpecker_agent_secret -
+    ```
+
+4. Create the `woodpecker` user:
+
+    ```shell-session
+    $ sudo useradd --create-home --shell /usr/sbin/nologin woodpecker
+    $ sudo loginctl enable-linger woodpecker
+    ```
+
+5. Switch to the `woodpecker` user:
+
+    ```shell-session
+    $ sudo -u wood fish
+    ```
+
+6. Set the Unix permissions:
+
+    ```shell-session
+    % chmod -R g-rX,o-rX ~  # As the `woodpecker` user
+    % chmod a+X ~
+    ```
+
+7. Add the Woodpecker agent Podman secrets:
+
+    ```shell-session
+    % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
+    >     podman secret create woodpecker_agent_secret -
+    ```
+
+8. Create the necessary directories:
+
+    ```shell-session
+    % mkdir -p ~/woodpecker/config
+    ```
+
+9. Create the necessary links:
+
+    ```shell-session
+    % ln -s /var/home/max/maxchernoff.ca/woodpecker/containers ~/.config/containers
+    ```
+
+10. Change the owner of the data directories to the container user:
+
+    ```shell-session
+    $ uid="$(grep web /etc/subuid | cut -d: -f2)"  # Back to `max`
+    $ sudo chown -R $uid:$uid ~web/woodpecker/data
+
+    $ uid="$(grep woodpecker /etc/subuid | cut -d: -f2)"
+    $ sudo chown -R $uid:$uid ~woodpecker/woodpecker/config
+    ```
+
+11. Enable the auto-updater:
+
+    ```shell-session
+    $ sudo systemctl --user -M woodpecker@ enable podman-auto-update.{service,timer}
+    ```
+
+12. Start the services:
+
+    ```shell-session
+    $ sudo systemctl --user -M web@ daemon-reload
+    $ sudo systemctl --user -M web@ start woodpecker-server.service
+
+    $ sudo systemctl --user -M woodpecker@ daemon-reload
+    $ sudo systemctl --user -M woodpecker@ start woodpecker-agent.service
+    ```
 
 
 Snapshots
