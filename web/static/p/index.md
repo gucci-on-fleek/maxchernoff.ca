@@ -20,6 +20,8 @@ Posts
 
 <nav>
 
+- [Overleaf Instance&emsp;_(2024-09-03)_](/p/overleaf)
+
 - [Server Installation&emsp;_(2024-08-26)_](/p/server-installation)
 
 - [LuaTeX Security Vulnerabilities&emsp;_(2023-05-20)_](/p/luatex-vulnerabilities)
@@ -75,6 +77,4 @@ TeX Projects
 Contact
 -------
 
-```shell-session
-$ echo bXNldmVuIGF0IHRlbHVzIGRvdCBuZXQK | base64 -d
-```
+[`website@maxchernoff.ca`](mailto:website@maxchernoff.ca)
