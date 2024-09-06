@@ -127,25 +127,9 @@ body * {
     background-color: var(--color-faded);
 }
 
-:root,
-pre {
-    /* Style scrollbars (Standards-based, currently Firefox only) */
+* {
     scrollbar-width: thin;
     scrollbar-color: var(--color-faded) var(--color-background);
-}
-
-/* Chrome fallbacks */
-:is(:root, pre)::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-:is(:root, pre)::-webkit-scrollbar-track {
-    background: var(--color-background);
-}
-
-:is(:root, pre)::-webkit-scrollbar-thumb {
-    background-color: var(--color-faded);
 }
 
 h1 {
@@ -246,6 +230,7 @@ footer ul {
 footer ul li {
     display: inline;
     list-style-type: none;
+    padding: 0;
 }
 
 footer ul li:first-of-type {
@@ -440,11 +425,6 @@ summary {
     color: var(--color-text);
 }
 
-.chroma .cl:has(.gp) {
-    font-weight: 500;
-}
-
-
 @media not (prefers-color-scheme: dark) {
     .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs) {
         color: #515151;
@@ -476,7 +456,7 @@ summary {
 
     .chroma .gp {
         color: #005b82;
-        font-weight: 700;
+        font-weight: 500;
         user-select:none;
     }
 
