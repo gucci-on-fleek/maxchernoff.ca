@@ -5,10 +5,10 @@ description: >-
     An introduction to the Overleaf instance hosted on maxchernoff.ca.
 ---
 
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 <style>
      dt {
@@ -19,18 +19,25 @@ description: >-
      }
 </style>
 
+{{- define "overleaf" -}}
+    [`overleaf.maxchernoff.ca`](https://overleaf.maxchernoff.ca)
+{{- end -}}
+
+{{- define "email" -}}
+    [`overleaf@maxchernoff.ca`](mailto:overleaf@maxchernoff.ca?subject=Overleaf%20Registration)
+{{- end }}
+
+
 About
 -----
 
-At [`overleaf.maxchernoff.ca`](https://overleaf.maxchernoff.ca), I'm
-hosting an instance of the open-source [Overleaf Community
-Edition](https://github.com/overleaf/overleaf/). This instance is
-(somewhat) open to the public, but all registrations must be manually
-processed.
+At {{ template "overleaf" }}, I'm hosting an instance of the open-source
+[Overleaf Community Edition](https://github.com/overleaf/overleaf/).
+This instance is (somewhat) open to the public, but all registrations
+must be manually processed.
 
-If you're too lazy to read further, then email
-[`overleaf@maxchernoff.ca`](mailto:overleaf@maxchernoff.ca?subject=Overleaf%20Registration)
-to request an account. But you really should keep reading for some
+If you're too lazy to read further, then email {{ template "email" }} to
+request an account. But you really should keep reading for some
 important caveats.
 
 
@@ -39,38 +46,46 @@ Features and Limitations
 
 <dl>
 <dt>Up-to-date TeX Live
-<dd>The TeX Live distribution at
-    <a href=https://overleaf.maxchernoff.ca><code>overleaf.maxchernoff.ca</code></a>
-    is updated daily, while
-    <a href=https://overleaf.com><code>overleaf.com</code></a>
-    only updates their TeX Live distribution once a year. This
-    means that your documents will always compile using the latest
-    package updates, but it also means that a document that
-    compiled one day might not compile the next.
+<dd>
+
+The TeX Live distribution at {{ template "overleaf" }} is updated daily,
+while [`overleaf.com`](https://overleaf.com) only updates their TeX Live
+distribution once a year. This means that your documents will always
+compile using the latest package updates, but it also means that a
+document that compiled one day might not compile the next.
 
 <dt>Unlimited compile times
-<dd>There is no time limit on the compile time of your documents, so you
-    can easily compile large documents that contain many Ti<em>k</em>Z
-    pictures. This also means that a buggy document might never finish
-    compiling, so you should keep an eye on your compiler progress.
+<dd>
+
+There is no time limit on the compile time of your documents, so you can
+easily compile large documents that contain many Ti*k*Z pictures. This
+also means that a buggy document might never finish compiling, so you
+should keep an eye on your compiler progress.
 
 <dt>Unlimited collaborators
-<dd>There are no restrictions on the number of people that you can share
-    your projects with, provided that everyone has an account on
-    <a href=https://overleaf.maxchernoff.ca><code>overleaf.maxchernoff.ca</code></a>.
+<dd>
+
+There are no restrictions on the number of people that you can share
+your projects with, provided that everyone has an account on {{ template
+"overleaf" }}.
 
 <dt>Ran on a single server
-<dd>All of <a href=https://www.maxchernoff.ca><code>maxchernoff.ca</code></a>
-    is hosted on a single server and isn't backed up anywhere, so if the
-    server goes down, then you're out of luck. That being said, the
-    server is located in a dedicated data center and uses a fairly
-    robust configuration, so you'll <em>probably</em> be fine.
+<dd>
+
+All of [`maxchernoff.ca`](https://www.maxchernoff.ca)
+is hosted on a single server and isn't backed up anywhere, so if the
+server goes down, then you're out of luck. That being said, the
+server is located in a dedicated data center and uses a fairly
+robust configuration, so you'll _probably_ be fine.
 
 <dt>Ran by a single person
-<dd>I'm the only one who has access to the server, so if something
-    breaks while I'm busy with schoolwork, then it might be a while
-    before I have time to fix it. This also means that if I lose
-    interest in maintaining the server, then it might go down forever.
+<dd>
+
+I'm the only one who has access to the server, so if something breaks
+while I'm busy with schoolwork, then it might be a while before I have
+time to fix it. This also means that if I lose interest in maintaining
+the server, then it might go down forever.
+
 </dl>
 
 
@@ -111,8 +126,7 @@ Bitcoin 😀.
 Registration
 ------------
 
-Still interested? To register for an account, please **email me at
-[`overleaf@maxchernoff.ca`](mailto:overleaf@maxchernoff.ca?subject=Overleaf%20Registration)**
-and I'll register an account for you. Keep in mind that I need to
-manually register each account, so it might take a day or two for me to
-get back to you.
+Still interested? To register for an account, please **email me at {{
+template "email" }}** and I'll register an account for you. Keep in mind
+that I need to manually register each account, so it might take a day or
+two for me to get back to you.

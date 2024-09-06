@@ -1,7 +1,7 @@
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 {{/* Map the request name to a markdown file */}}
 {{- $path_parts := splitList "/" .OriginalReq.URL.Path -}}
@@ -15,8 +15,9 @@
 
 {{/* Otherwise, parse the markdown file and render it */}}
 {{- $markdown_file := (include $markdown_path | splitFrontMatter) -}}
-{{- $title := default $markdown_filename $markdown_file.Meta.title -}}
-{{- $body := markdown $markdown_file.Body -}}
-{{- $date := default "" (cat "<time>" $markdown_file.Meta.date "</time>") -}}
-{{- $description := default "" $markdown_file.Meta.description -}}
-{{- include "/includes/base.html" $title $body $date $description -}}
+{{- include "/includes/base.html" (dict
+    "title"       (default $markdown_filename $markdown_file.Meta.title)
+    "body"        (markdown $markdown_file.Body)
+    "date"        (default "" (cat "<time>" $markdown_file.Meta.date "</time>"))
+    "description" (default "" $markdown_file.Meta.description)
+) -}}

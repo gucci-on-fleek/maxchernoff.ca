@@ -3,10 +3,16 @@ title: "Home"
 description: "Max Chernoff's personal website"
 ---
 
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
+
+{{- define "toc-item" -}}
+    {{- $path := printf "/p/%s.md" . -}}
+    {{- $meta := (include $path | splitFrontMatter).Meta -}}
+    - [{{ $meta.title }}&emsp;_({{ $meta.date }})_](/p/{{ . }})
+{{- end -}}
 
 About
 -----
@@ -20,11 +26,11 @@ Posts
 
 <nav>
 
-- [Overleaf Instance&emsp;_(2024-09-03)_](/p/overleaf)
+{{ template "toc-item" "overleaf" }}
 
-- [Server Installation&emsp;_(2024-08-26)_](/p/server-installation)
+{{ template "toc-item" "server-installation" }}
 
-- [LuaTeX Security Vulnerabilities&emsp;_(2023-05-20)_](/p/luatex-vulnerabilities)
+{{ template "toc-item" "luatex-vulnerabilities" }}
 
 </nav>
 

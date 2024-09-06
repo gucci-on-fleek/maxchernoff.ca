@@ -11,10 +11,10 @@ description: >-
     update to TeX Live 2023.
 ---
 
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 <style>
 th {

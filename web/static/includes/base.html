@@ -1,7 +1,9 @@
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
+
+{{- $args := index .Args 0 -}}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,8 +14,8 @@
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <title>{{ index .Args 0 }}&hairsp;&mdash;&hairsp;Max Chernoff</title>
-    <meta name="description" content="{{ index .Args 3 }}">
+    <title>{{ get $args "title" }}&hairsp;&mdash;&hairsp;Max Chernoff</title>
+    <meta name="description" content="{{ get $args "description" }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#241504" />
     <meta name="color-scheme" content="light dark">
@@ -21,12 +23,12 @@
 
 <body>
     <header>
-        <h1>{{ index .Args 0 }}</h1>
-        <p>{{ index .Args 2 }}</p>
+        <h1>{{ get $args "title" }}</h1>
+        <p>{{ get $args "date" }}</p>
     </header>
 
     <article>
-        {{ index .Args 1 }}
+        {{- get $args "body" -}}
     </article>
 
     <footer>

@@ -1,9 +1,12 @@
-{{/* Source Code for maxchernoff.ca
+{{- /* Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff */}}{{- "" -}}
+     SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 {{- $title := cat (placeholder "http.error.status_code") " " (placeholder "http.error.status_text") -}}
-{{- $body := "<p>We couldn't process your request, sorry!<p>" -}}
-{{- $date := "" -}}
-{{- include "/includes/base.html" $title $body $date -}}
+{{- include "/includes/base.html" (dict
+    "title"       $title
+    "body"        "<p>We couldn't process your request, sorry!<p>"
+    "date"        ""
+    "description" ""
+) -}}
