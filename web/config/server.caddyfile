@@ -46,3 +46,8 @@ woodpecker.maxchernoff.ca {
 	import default
 	reverse_proxy systemd-woodpecker-server:8000
 }
+
+# Stardew Valley redirect
+stardew-valley-item-finder.maxchernoff.ca {
+	redir https://www.maxchernoff.ca/tools/Stardew-Valley-Item-Finder{uri} permanent
+}

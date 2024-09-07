@@ -68,17 +68,11 @@ Pre-installation
     | Type    | Hostname     | Value                       |
     |---------|--------------|-----------------------------|
     | `A`     | —            | `152.53.36.213`             |
-    | `A`     | `www`        | `152.53.36.213`             |
-    | `A`     | `overleaf`   | `152.53.36.213`             |
-    | `A`     | `woodpecker` | `152.53.36.213`             |
     | `AAAA`  | —            | `2a0a:4cc0:2000:172::1`     |
-    | `AAAA`  | `www`        | `2a0a:4cc0:2000:172::1`     |
-    | `AAAA`  | `overleaf`   | `2a0a:4cc0:2000:172::1`     |
-    | `AAAA`  | `woodpecker` | `2a0a:4cc0:2000:172::1`     |
     | `HTTPS` | —            | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `HTTPS` | `www`        | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `HTTPS` | `overleaf`   | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `HTTPS` | `woodpecker` | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
+    | `CNAME` | `www`        | `maxchernoff.ca.`           |
+    | `CNAME` | `overleaf`   | `maxchernoff.ca.`           |
+    | `CNAME` | `woodpecker` | `maxchernoff.ca.`           |
     | `CAA`   | —            | `0 issue "letsencrypt.org"` |
     | `CAA`   | —            | `0 issue "sectigo.com"`     |
     | `CAA`   | —            | `0 issuewild ";"`           |
