@@ -1,0 +1,24 @@
+# Fix Ctrl-L
+bind \f 'clear && commandline -f repaint'
+
+# Add the required PATH entries
+fish_add_path ~/maxchernoff.ca/scripts/
+fish_add_path ~tex/texlive/bin/x86_64-linux/
+
+# Refresh the server contents
+function refresh
+    sudo --validate
+
+    # Get the new files
+    web-pull
+
+    # Update the symlinks
+    sudo (type -p web-symlinks)
+
+    # Restart the server
+    sudo systemctl --user -M web@ restart caddy.service
+
+    # Check the status
+    sleep 1
+    sudo (type -p web-status)
+end

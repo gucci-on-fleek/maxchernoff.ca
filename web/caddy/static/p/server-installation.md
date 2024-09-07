@@ -169,7 +169,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper vim
+    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper stow vim
     ```
 
 2. Switch shell to `fish`:
@@ -279,14 +279,6 @@ Installing TeX Live
     $ sudo restorecon -R /var/home/tex/texlive
     ```
 
-8. Enable the auto-updater:
-
-    ```shell-session
-    $ sudo ln -s /var/home/max/maxchernoff.ca/tex/services/* ~tex/.config/systemd/user/
-    $ sudo systemctl --user -M tex@ daemon-reload
-    $ sudo systemctl --user -M tex@ enable --now update-texlive.{service,timer}
-    ```
-
 
 Web Server
 ----------
@@ -318,9 +310,9 @@ Web Server
 
     ```shell-session
     $ sudo semanage fcontext --add -t container_share_t \
-    >     '/var/home/max/maxchernoff.ca/web/config(/.*)?'
+    >     '/var/home/max/maxchernoff.ca/web/caddy/etc(/.*)?'
     $ sudo semanage fcontext --add -t container_share_t \
-    >     '/var/home/max/maxchernoff.ca/web/static(/.*)?'
+    >     '/var/home/max/maxchernoff.ca/web/caddy/static(/.*)?'
     ```
 
 6. Set the Unix permissions:
@@ -362,14 +354,6 @@ Web Server
     % mkdir -p ~/overleaf/{overleaf,mongo,redis}
     ```
 
-12. Create the necessary links:
-
-    ```shell-session
-    % ln -s /var/home/max/maxchernoff.ca/web/containers ~/.config/containers
-    % ln -s /var/home/max/maxchernoff.ca/web/config ~/caddy/etc
-    % ln -s /var/home/max/maxchernoff.ca/web/static ~/caddy/static
-    ```
-
 13. Change the owner of the data directories to the container user:
 
     ```shell-session
@@ -385,17 +369,11 @@ Web Server
     $ sudo chown $uid:web ~web/caddy/access.log
     $ sudo chmod a=,ug=rw ~web/caddy/access.log
 
-    $ mkdir ~/maxchernoff.ca/web/static/analytics
-    $ touch ~/maxchernoff.ca/web/static/analytics/{graphs,requests.tsv}
-    $ chmod -R a=rX,ug=rwX ~/maxchernoff.ca/web/static/analytics
-    $ chmod g+s ~/maxchernoff.ca/web/static/analytics
-    $ sudo chgrp -R web ~/maxchernoff.ca/web/static/analytics
-
-    $ sudo ln -s /var/home/max/maxchernoff.ca/web/services/* ~web/.config/systemd/user/
-    $ sudo systemctl --user -M web@ daemon-reload
-    $ sudo systemctl --user -M web@ enable --now \
-    >     update-analytics-{graphs,requests}.service \
-    >     update-analytics.timer network-ready.service
+    $ mkdir ~/maxchernoff.ca/web/caddy/static/analytics
+    $ touch ~/maxchernoff.ca/web/caddy/static/analytics/{graphs,requests.tsv}
+    $ chmod -R a=rX,ug=rwX ~/maxchernoff.ca/web/caddy/static/analytics
+    $ chmod g+s ~/maxchernoff.ca/web/caddy/static/analytics
+    $ sudo chgrp -R web ~/maxchernoff.ca/web/caddy/static/analytics
     ```
 
 15. Enable the auto-updater:
@@ -477,12 +455,6 @@ Woodpecker CI
 
     ```shell-session
     % mkdir -p ~/woodpecker/config
-    ```
-
-9. Create the necessary links:
-
-    ```shell-session
-    % ln -s /var/home/max/maxchernoff.ca/woodpecker/containers ~/.config/containers
     ```
 
 10. Change the owner of the data directories to the container user:
