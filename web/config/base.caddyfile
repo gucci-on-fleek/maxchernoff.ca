@@ -25,15 +25,19 @@
 		hide /includes/* .gitignore retain-empty-folder
 	}
 
-	# Minify the CSS files
-	@css path *.css
-	templates @css {
+	# Minify responses
+	templates *.css {
 		mime text/css
 		between /*! !*/
 	}
 
+	templates *.xslt {
+		mime application/xslt+xml
+	}
+
 	# Preload some resources
-	header Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
+	@html `{http.request.header.Accept}.contains("text/html")`
+	header @html Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
 
 	# Analytics
 	header /analytics/* {
@@ -42,6 +46,15 @@
 	}
 	basicauth /analytics/* {
 		analytics $2a$14$diUEkE1EKNXh1hSKp8cYKeWq8krwrgmcIta98zesFzQymOVxz0iXq
+	}
+
+	# Stardew Valley
+	header /tools/Stardew-Valley-Item-Finder/* {
+		-Content-Security-Policy
+	}
+	templates /tools/Stardew-Valley-Item-Finder/* {
+		mime text/javascript
+		between /*! !*/
 	}
 
 	# Convert Markdown files to HTML

@@ -1,8 +1,9 @@
-/*!- regexReplaceAll `/\*.*?\*\/|\s*\n\s*|([^-\w])\s+` `/**/
-/* Source Code for maxchernoff.ca                     */
-/* https://github.com/gucci-on-fleek/maxchernoff.ca   */
-/* SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+ */
-/* SPDX-FileCopyrightText: 2024 Max Chernoff          */
+/*!- regexReplaceAll `/\*[^\0]*?\*\/|\s*\n\s*|([^-\w])\s+` `/**/
+/* Source Code for maxchernoff.ca
+ * https://github.com/gucci-on-fleek/maxchernoff.ca
+ * SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+ * SPDX-FileCopyrightText: 2024 Max Chernoff
+ */
 
 :root {
     /* All of the colors that we can use */
@@ -71,7 +72,7 @@
     display: none !important;
 }
 
-[hidden][aria-hidden="false"] {
+[hidden][aria-hidden="false"], .skip-link:not(:focus) {
     /* Make hidden elements with aria-hidden=false only visible to screen readers */
     position: absolute;
     display: initial !important;

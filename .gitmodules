@@ -1,0 +1,3 @@
+[submodule "web/static/tools/Stardew-Valley-Item-Finder"]
+	path = web/static/tools/Stardew-Valley-Item-Finder
+	url = https://github.com/gucci-on-fleek/Stardew-Valley-Item-Finder.git
