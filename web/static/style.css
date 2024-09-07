@@ -1,4 +1,4 @@
-/*!- regexReplaceAll `/\*[^\0]*?\*\/|\s*\n\s*|([^-\w])\s+` `/**/
+/*!- regexReplaceAll `/\*[^\0]*?\*\/|\s*\n\s*|([^-\w)])\s+` `/**/
 /* Source Code for maxchernoff.ca
  * https://github.com/gucci-on-fleek/maxchernoff.ca
  * SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
@@ -285,11 +285,6 @@ pre.scroll {
 .vscroll {
     overflow-y: auto;
     max-height: 90vh;
-}
-
-tr:nth-of-type(n + 1) th {
-    text-align: right;
-    font-weight: normal;
 }
 
 thead th {
