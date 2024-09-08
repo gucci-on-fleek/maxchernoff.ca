@@ -376,16 +376,10 @@ Web Server
     $ sudo chgrp -R web ~/maxchernoff.ca/web/caddy/static/analytics
     ```
 
-15. Enable the auto-updater:
-
-    ```shell-session
-    $ sudo systemctl --user -M web@ enable podman-auto-update.{service,timer}
-    ```
-
 16. Start the services:
 
     ```shell-session
-    $ sudo --user -M web@ start overleaf-pod.service caddy.service
+    $ sudo systemctl --user -M web@ start overleaf-pod.service caddy.service
     ```
 
 17. If everything looks good, open the firewall:
@@ -465,12 +459,6 @@ Woodpecker CI
 
     $ uid="$(grep woodpecker /etc/subuid | cut -d: -f2)"
     $ sudo chown -R $uid:$uid ~woodpecker/woodpecker/config
-    ```
-
-11. Enable the auto-updater:
-
-    ```shell-session
-    $ sudo systemctl --user -M woodpecker@ enable podman-auto-update.{service,timer}
     ```
 
 12. Start the services:

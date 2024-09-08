@@ -4,29 +4,23 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 set -eu
+
+# Check if the user is root
 if [ "$(id -u)" -ne 0 ]; then
-    echo "Please run as root"
-    exit 1
+    sudo="sudo"
+else
+    sudo=""
 fi
 
+# Check to see if we should watch the output
 watch_cmd="watch --color -n1"
 if [ -z ${1+x} ]; then
     watch_cmd="sh -c"
 fi
 
-$watch_cmd "\
-    SYSTEMD_COLORS=1 systemctl --user -M web@ list-units --with-dependencies --quiet --all \
-        caddy.service \
-        overleaf-pod.service \
-        podman-auto-update.{timer,service} \
-        update-analytics.{timer,target} \
-        woodpecker-server.service \
-    | grep --invert-match network-online.target \
-    && SYSTEMD_COLORS=1 systemctl --user -M woodpecker@ list-units --with-dependencies --quiet --all \
-        podman-auto-update.{timer,service} \
-        woodpecker-agent.service \
-    | grep --invert-match network-online.target \
-    && SYSTEMD_COLORS=1 systemctl --user -M tex@ list-units --with-dependencies --quiet --all \
-        update-texlive.{timer,service} \
-    | grep --invert-match network-online.target \
-"
+# Get the command path
+script_dir="$(dirname "$(realpath "$0")")"
+web_status="$script_dir/_web-status"
+
+# Run the command
+$sudo $watch_cmd $web_status

@@ -1,0 +1,34 @@
+#!/bin/sh
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+set -eu
+
+(
+    systemctl --user -M web@ list-units --with-dependencies --quiet --all \
+        caddy.service \
+        overleaf-pod.service \
+        podman-auto-update.service \
+        podman-auto-update.timer \
+        update-analytics.target \
+        update-analytics.timer \
+        woodpecker-server.service \
+    | sed 's/^/\0 web/' \
+    && systemctl --user -M woodpecker@ list-units --with-dependencies --quiet --all \
+        podman-auto-update.service \
+        podman-auto-update.timer \
+        woodpecker-agent.service \
+    | sed 's/^./\0 woodpecker/' \
+    && systemctl --user -M tex@ list-units --with-dependencies --quiet --all \
+        update-texlive.service \
+        update-texlive.timer \
+    | sed 's/^./\0 tex/' \
+) \
+| tr --squeeze-repeats ' ' \
+| cut --delimiter=' ' --fields=1-5 \
+| sort --field-separator=' ' --key=3 \
+| uniq \
+| grep --extended-regexp --invert-match 'network-online.target|app.slice|basic.target|-network.service' \
+| column --table --separator=' ' \
+| grep --color=always --extended-regexp '●|not-found|bad-setting|error|failed|dead|start|reload|stop|$'
