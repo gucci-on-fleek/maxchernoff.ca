@@ -13,4 +13,4 @@ script_dir="$(dirname "$(realpath "$0")")"
 repo_dir="$(realpath "$script_dir/..")"
 cd $repo_dir
 
-caddy run --adapter caddyfile --config ./web/config/local.caddyfile --watch
+caddy run --adapter caddyfile --config ./web/caddy/etc/local.caddyfile --watch

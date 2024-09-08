@@ -1420,8 +1420,5 @@ and wrote this document.</p>
 <p>If you have any questions about LuaTeX 1.17.0, <a
 href="https://www.cve.org/CVERecord?id=CVE-2023-32668">CVE-2023-32668</a>, <a
 href="https://www.cve.org/CVERecord?id=CVE-2023-32700">CVE-2023-32700</a>, this page,
-or these vulnerabilities in general, feel free to email me at:</p>
-
-<pre><code><span class="token command"><span class="token shell-symbol important">$</span> <span class="token bash language-bash"><span class="token builtin class-name">echo</span> bXNldmVuIGF0IHRlbHVzIGRvdCBuZXQK <span class="token operator">|</span> <a href="https://www.dcode.fr/base-64-encoding">base64 <span class="token parameter variable">-d</span></a></span></span>
-</code></pre>
+or these vulnerabilities in general, feel free to email me at <a href="mailto:website@maxchernoff.ca"><code>website@maxchernoff.ca</code></a>.</p>
 

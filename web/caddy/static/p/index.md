@@ -35,6 +35,20 @@ Posts
 </nav>
 
 
+Tools
+-----
+
+<nav>
+
+- [Overleaf](https://overleaf.maxchernoff.ca/login)
+
+- [Woodpecker <abbr>CI</abbr>](https://woodpecker.maxchernoff.ca/login)
+
+- [Stardew Valley Item Finder](/tools/Stardew-Valley-Item-Finder/)
+
+</nav>
+
+
 TeX Projects
 ------------
 
@@ -46,7 +60,16 @@ TeX Projects
 
 ### Packages
 
-- [`lua-widow-control`](//ctan.org/pkg/lua-widow-control)
+- [`lua-widow-control`](https://ctan.org/pkg/lua-widow-control)
+
+- [`extractbb.lua`](https://tug.org/svn/texlive/trunk/Master/texmf-dist/scripts/texlive/extractbb.lua?view=markup)
+
+- [`luatex-syntax-highlighter`](https://github.com/gucci-on-fleek/luatex-syntax-highlighter)&emsp;(unreleased)
+
+- [`luatools`](https://github.com/gucci-on-fleek/luatools)&emsp;(unreleased)
+
+- [`unnamed-emoji`](https://github.com/gucci-on-fleek/unnamed-emoji)&emsp;(unreleased)
+
 
 ### Publications
 
