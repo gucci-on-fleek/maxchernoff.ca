@@ -18,7 +18,8 @@ cd "$root_dir"
 
 # Update the repository
 git fetch --recurse-submodules=yes
-git reset --hard origin/master
+git reset --recurse-submodules --hard origin/master
+git submodule update --init --recursive --checkout --force
 
 # Update the SELinux contexts
 restorecon -R /var/home/max/maxchernoff.ca/
