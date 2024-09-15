@@ -14,6 +14,17 @@
 		X-Frame-Options DENY
 		?Content-Security-Policy "default-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline';"
 	}
+
+	# Well-known URLs
+	header /.well-known/traffic-advice {
+		Content-Type application/trafficadvice+json
+	}
+
+	# Extend the cache lifetime for some files
+	@long-cache file /.well-known/{path} /icons/{path}
+	header @long-cache {
+		Cache-Control max-age=1209600 # 2 weeks
+	}
 }
 
 (www.maxchernoff.ca) {
@@ -57,10 +68,24 @@
 		between /*! !*/
 	}
 
+	redir /tools/Stardew-Valley-Item-Finder/robots.txt /robots.txt permanent
+
 	# Convert Markdown files to HTML
 	templates
 	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
+
+	# Clean up some root-level URLs
+	rewrite /robots.txt /.well-known/robots.txt
+	rewrite /ads.txt /.well-known/ads.txt
+	rewrite /app-ads.txt /.well-known/app-ads.txt
+	rewrite /sitemap.xml /.well-known/sitemap.xml
+
+	rewrite /favicon.ico /icons/favicon.ico
+	rewrite /favicon.svg /icons/favicon.svg
+	rewrite /apple-touch-icon*.png /icons/apple-touch-icon.png
+
+	respond /.well-known/sitemap.xml 410
 
 	# Handle errors
 	handle_errors {

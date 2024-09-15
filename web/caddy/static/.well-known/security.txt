@@ -1,0 +1,23 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+Canonical: https://www.maxchernoff.ca/.well-known/security.txt
+Contact: mailto:security@maxchernoff.ca
+Contact: https://www.maxchernoff.ca/#contact
+Preferred-Languages: en
+Encryption: https://www.maxchernoff.ca/.well-known/openpgpkey/hu/t5s8ztdbon8yzntexy6oz5y48etqsnbb
+Encryption: openpgp4fpr:91a578d584804829b8ba0ca3d51609b9482b5881
+Expires: 2027-12-31
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSdp+0CuOkJ3RhmhsP9G7q65uj7gAUCZuZ+5wAKCRD9G7q65uj7
+gLDHAQCkKx7hd/7DIKX3QVxS08PXpGMfDYIbzdk1J2N9SY/zdAEA0r7+JAlRvgjZ
+Q4IKuaSfpFQfImmu+MJaHOQGoJ3s7gc=
+=4F5E
+-----END PGP SIGNATURE-----

@@ -12,7 +12,7 @@ import base.caddyfile
 
 	header {
 		# Don't cache anything
-		Cache-Control no-cache
+		?Cache-Control no-cache
 	}
 }
 
