@@ -27,12 +27,12 @@ import base.caddyfile
 		format json
 	}
 
-	# Use www.maxchernoff.ca for all "/.well-known" URLs
-	@rewrite-well-known {
+	# Use www.maxchernoff.ca for special URLs
+	@redir-special {
 		not host www.maxchernoff.ca
-		path /.well-known/*
+		path /.well-known/* /favicon.ico /touch-icon*.png /apple-touch-icon*.png
 	}
-	redir @rewrite-well-known https://www.maxchernoff.ca{path} permanent
+	redir @redir-special https://www.maxchernoff.ca{path} permanent
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca
