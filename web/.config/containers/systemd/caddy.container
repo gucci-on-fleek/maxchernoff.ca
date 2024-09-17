@@ -6,6 +6,7 @@
 Image=docker.io/library/caddy:2
 AutoUpdate=registry
 UserNS=nomap
+StopTimeout=10
 
 Volume=%h/caddy/etc:/etc/caddy:ro,z,noexec
 Volume=%h/caddy/static:/srv:ro,z,noexec
@@ -22,6 +23,7 @@ PublishPort=443:443/udp
 
 [Service]
 Restart=always
+TimeoutStopSec=15s
 
 [Unit]
 After=network-ready.service

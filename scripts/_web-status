@@ -33,9 +33,12 @@ echo
         update-texlive.service \
         update-texlive.timer \
     | sed 's/^./\0 tex/' \
-    && systemctl --system list-units --with-dependencies --quiet --all \
+    && systemctl --system list-units --quiet --all \
+        fail2ban.service \
         rpm-ostreed-automatic.service \
         rpm-ostreed-automatic.timer \
+        snapper-cleanup.service \
+        snapper-cleanup.timer \
         snapper-timeline.service \
         snapper-timeline.timer \
     | sed 's/^./\0 system/'

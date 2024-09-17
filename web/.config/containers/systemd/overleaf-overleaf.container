@@ -12,7 +12,7 @@ Pod=overleaf.pod
 Network=overleaf.network
 UserNS=nomap
 
-StopTimeout=60
+StopTimeout=30
 HealthCmd=curl -sfL http://localhost/
 HealthInterval=60s
 HealthRetries=5
@@ -26,7 +26,7 @@ Environment="GRACEFUL_SHUTDOWN_DELAY_SECONDS=5"
 Environment="KILL_ALL_PROCESSES_TIMEOUT=15"
 Environment="KILL_PROCESS_TIMEOUT=15"
 Environment="OVERLEAF_ADMIN_EMAIL=overleaf@maxchernoff.ca"
-Environment="OVERLEAF_APP_NAME=Overleaf at maxchernoff.ca"
+Environment="OVERLEAF_APP_NAME=Overleaf"
 Environment="OVERLEAF_BEHIND_PROXY=true"
 Environment="OVERLEAF_LEFT_FOOTER=[{\"text\": \"<a href='https://www.maxchernoff.ca'>Home</a>\"}]"
 Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex?directConnection=true"
