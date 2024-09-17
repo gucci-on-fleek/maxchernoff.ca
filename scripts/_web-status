@@ -5,6 +5,15 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 set -eu
 
+printf \
+    'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\n' \
+    "$(date '+%A, %-d %B %Y, %-I:%0M%P')" \
+    "$(rpm-ostree status --booted --jsonpath='.deployments[0].version' | grep -oP '[.\d]+')" \
+    "$(uptime --pretty | sed 's/up //')" \
+    $(cat /proc/loadavg) \
+| column --table --separator="$(printf '\t')"
+echo
+
 (
     systemctl --user -M web@ list-units --with-dependencies --quiet --all \
         caddy.service \
@@ -24,6 +33,12 @@ set -eu
         update-texlive.service \
         update-texlive.timer \
     | sed 's/^./\0 tex/' \
+    && systemctl --system list-units --with-dependencies --quiet --all \
+        rpm-ostreed-automatic.service \
+        rpm-ostreed-automatic.timer \
+        snapper-timeline.service \
+        snapper-timeline.timer \
+    | sed 's/^./\0 system/'
 ) \
 | tr --squeeze-repeats ' ' \
 | cut --delimiter=' ' --fields=1-5 \

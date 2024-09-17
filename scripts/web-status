@@ -13,7 +13,7 @@ else
 fi
 
 # Check to see if we should watch the output
-watch_cmd="watch --color -n1"
+watch_cmd="watch --color -n1 --no-title"
 if [ -z ${1+x} ]; then
     watch_cmd="sh -c"
 fi
