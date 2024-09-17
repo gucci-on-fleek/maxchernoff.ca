@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Source Code for maxchernoff.ca
+     https://github.com/gucci-on-fleek/maxchernoff.ca
+     SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+     SPDX-FileCopyrightText: 2024 Max Chernoff -->
+<zone>
+  <short>Public</short>
+  <description>For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <service name="ssh"/>
+  <service name="mdns"/>
+  <service name="dhcpv6-client"/>
+  <port port="80" protocol="tcp"/>
+  <port port="443" protocol="tcp"/>
+  <port port="443" protocol="udp"/>
+  <forward/>
+</zone>

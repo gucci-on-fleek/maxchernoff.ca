@@ -116,45 +116,11 @@ Installation
     % ssh max@maxchernoff.ca
     ```
 
-8. Configure <abbr>SSH</abbr>:
-
-    ```ini
-    # /etc/ssh/sshd_config
-    PasswordAuthentication no
-    PermitRootLogin no
-    AllowUsers max
-    ```
-    ```shell-session
-    $ sudo systemctl restart sshd.service  # From the server
-    ```
-
-9. Disable `zezere`: <span class=sidenote>`zezere` is a web service for
-   the initial configuration of IoT devices, which is unwanted for our
-   server.</span>
-
-    ```shell-session
-    $ sudo systemctl disable --now zezere_ignition.timer
-    ```
-
 10. Enable IPv6:
 
     ```shell-session
     $ sudo nmcli connection modify ens3 ipv6.method manual ipv6.addresses 2a0a:4cc0:2000:172::1/64 ipv6.gateway fe80::1
     $ sudo nmcli connection up ens3
-    ```
-
-11. Fix booting: <span class=sidenote>The server and <abbr>VM</abbr>
-    hosts' timezones are different which can make updates fail if
-    `greenboot` runs before the times are adjusted..</span>
-
-    ```shell-session
-    $ sudo systemctl enable chrony-wait.service
-    $ sudo systemctl edit greenboot-healthcheck.service
-    ```
-    ```ini
-    [Unit]
-    After=time-sync.target
-    Requires=time-sync.target
     ```
 
 12. Reboot.
@@ -178,17 +144,6 @@ Post-installation
     $ chsh -s /usr/bin/fish
     ```
 
-3. Enable automatic updates:
-
-    ```shell-session
-    $ sudo systemctl enable --now rpm-ostreed-automatic.timer
-    ```
-    ```ini
-    # /etc/rpm-ostreed.conf
-    [Daemon]
-    AutomaticUpdatePolicy=apply
-    ```
-
 4. Fix `/etc/fstab`:
 
     Change the options for `/` to `defaults,compress=zstd:1`.
@@ -197,23 +152,6 @@ Post-installation
    complain about a mismatched home location.</span>
 
     Change the home for `max` to `/var/home/max`.
-
-6. Fix <kbd>Ctrl</kbd>-<kbd>L</kbd>:
-
-    ```fish
-    # ~/.config/fish/config.fish
-    bind \f 'clear && commandline -f repaint'
-    ```
-
-7. Set some kernel network parameters: <span class=sidenote>Needed for
-   `caddy`.</span>
-
-    ```ini
-    # /etc/sysctl.conf
-    net.ipv4.ip_unprivileged_port_start=80
-    net.core.wmem_max=7500000
-    net.core.rmem_max=7500000
-    ```
 
 8. Adjust your home directory permissions: <span class=sidenote>Needed
    for the unprivileged containers to access the Git files.</span>
@@ -244,7 +182,6 @@ Installing TeX Live
 
     ```shell-session
     % mkdir -p ~/texlive  # As the `tex` user
-    % mkdir -p ~/.config/systemd/user
     ```
 
 4. Download the installer:
@@ -297,15 +234,6 @@ Web Server
     $ git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
     ```
 
-4. Add the scripts to your `$PATH`:
-
-    ```shell-session
-    $ fish_add_path ~/maxchernoff.ca/scripts/
-    $ echo "abbr --add refresh 'sudo --validate && \
-    >     web-pull && sudo (type -p web-restart) && \
-    >     sudo (type -p web-status)'" >> ~/.config/fish/config.fish
-    ```
-
 5. Add the SELinux rules:
 
     ```shell-session
@@ -350,7 +278,7 @@ Web Server
 11. Create the necessary directories:
 
     ```shell-session
-    % mkdir -p ~/caddy/{data,config,etc}
+    % mkdir -p ~/caddy/{data,config}
     % mkdir -p ~/overleaf/{overleaf,mongo,redis}
     ```
 
@@ -380,14 +308,6 @@ Web Server
 
     ```shell-session
     $ sudo systemctl --user -M web@ start overleaf-pod.service caddy.service
-    ```
-
-17. If everything looks good, open the firewall:
-
-    ```shell-session
-    $ sudo firewall-cmd --permanent --zone=public \
-    >     --add-port=80/tcp --add-port=443/tcp --add-port=443/udp
-    $ sudo firewall-cmd --reload
     ```
 
 18. Reboot to make sure everything starts correctly.
@@ -428,7 +348,7 @@ Woodpecker CI
 5. Switch to the `woodpecker` user:
 
     ```shell-session
-    $ sudo -u wood fish
+    $ sudo -u woodpecker fish
     ```
 
 6. Set the Unix permissions:
@@ -475,12 +395,6 @@ Woodpecker CI
 Snapshots
 ---------
 
-1. Initialize snapper for the home directories:
-
-    ```shell-session
-    $ sudo snapper --config home create-config /var/home/
-    ```
-
 2. Mount the snapshot directory:
 
     ```ini
@@ -493,10 +407,4 @@ Snapshots
     ```shell-session
     $ sudo systemctl daemon-reload
     $ sudo mount -av
-    ```
-
-3. Enable automatic snapshots:
-
-    ```shell-session
-    $ sudo systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
     ```
