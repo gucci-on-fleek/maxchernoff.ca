@@ -109,7 +109,7 @@ class AclEntry[
     perm: P
     id: I
 
-    def __init__(self, tag: int, perm: int, id: int):
+    def __init__(self, tag: T, perm: P, id: I):
         """Create an ACL entry by converting all the parameters to the correct
         subtypes."""
         self.tag = cast(T, AclTags(tag))
