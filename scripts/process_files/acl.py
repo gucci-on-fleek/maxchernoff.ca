@@ -7,15 +7,14 @@
 ### Imports ###
 ###############
 
-from os import listxattr, getxattr, setxattr
-from pathlib import Path
-from struct import Struct
-from enum import IntFlag, IntEnum
-from pwd import getpwall
-from grp import getgrall
 from dataclasses import dataclass, field
+from enum import IntFlag, IntEnum
+from grp import getgrall
+from os import getxattr, setxattr
+from pathlib import Path
+from pwd import getpwall
+from struct import Struct
 from typing import Literal, cast
-from pprint import pprint
 
 
 #################

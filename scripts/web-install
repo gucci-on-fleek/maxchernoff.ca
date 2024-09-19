@@ -8,10 +8,11 @@
 ### Imports ###
 ###############
 
-from sys import argv
 from pathlib import Path
+from sys import argv
 
 import process_files.acl as acl
+import process_files.selinux as selinux
 
 
 ###################
@@ -20,4 +21,4 @@ import process_files.acl as acl
 
 if __name__ == "__main__":
     path = Path(argv[1])
-    acl.process_file(path)
+    selinux.process_file(path)
