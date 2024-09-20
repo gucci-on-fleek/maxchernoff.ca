@@ -25,60 +25,66 @@ SELINUX_XATTR_NAME = "security.selinux"
 ###############
 
 
-class SELinuxUsers(bytes, Enum):
+class Users(bytes, Enum):
     """The possible values that the SELinux user can be on typical systems."""
 
     SYSTEM = b"system_u"
     USER = b"unconfined_u"
 
 
-class SELinuxRoles(bytes, Enum):
+class Roles(bytes, Enum):
     """The possible values that the SELinux role can be on typical systems."""
 
     OBJECT = b"object_r"
 
 
-class SELinuxTypes(bytes):
+class Types(bytes):
     """The possible values that the SELinux type can be."""
 
-    def __new__(cls, value: bytes):
+    def __new__(cls, value: str | bytes):
+        match value:
+            case str():
+                value = value.encode()
+            case bytes():
+                pass
+            case _:
+                raise ValueError("Invalid value")
+
         if not value.endswith(b"_t"):
             value += b"_t"
         return super().__new__(cls, value)
 
     def __repr__(self) -> str:
-        return f"<SELinuxTypes: {super().__repr__()}>"
+        return f"<Types: {super().__repr__()}>"
 
 
-class SELinuxLevels(bytes, Enum):
+class Levels(bytes, Enum):
     """The possible values that the SELinux level can be on typical systems."""
 
     DEFAULT = b"s0"
 
 
 @dataclass
-class SELinuxContext:
+class Context:
     """A class to represent a complete SELinux file context."""
 
-    user: SELinuxUsers
-    role: SELinuxRoles
-    type: SELinuxTypes
-    level: SELinuxLevels
+    user: Users
+    role: Roles
+    type: Types
+    level: Levels
 
     def __init__(
         self,
-        *args: bytes
-        | tuple[SELinuxUsers, SELinuxRoles, SELinuxTypes, SELinuxLevels]
-        | Path,
+        *args: bytes | tuple[Users, Roles, Types, Levels] | Path,
     ):
         """Creates a context object from either a context byte string, a 4-tuple
         of the components, or by extracting the context from a file."""
         match args:
             case (
-                SELinuxUsers(),
-                SELinuxRoles(),
-                SELinuxTypes(),
-                SELinuxLevels(),
+                Users(),
+                Roles(),
+                Types(),
+                Levels(),
             ):
                 self.user, self.role, self.type, self.level = args
             case (bytes() as context,):
@@ -86,13 +92,15 @@ class SELinuxContext:
                     b":"
                 )
                 self.user, self.role, self.type, self.level = (
-                    SELinuxUsers(user),
-                    SELinuxRoles(role),
-                    SELinuxTypes(type),
-                    SELinuxLevels(level),
+                    Users(user),
+                    Roles(role),
+                    Types(type),
+                    Levels(level),
                 )
             case (Path() as path,):
-                self.__init__(getxattr(path, SELINUX_XATTR_NAME))
+                self.__init__(
+                    getxattr(path, SELINUX_XATTR_NAME, follow_symlinks=False)
+                )
             case _:
                 raise ValueError("Invalid arguments")
 
@@ -108,6 +116,6 @@ class SELinuxContext:
 
 def process_file(path: Path):
     """Sets the SELinux context of a file. Just an example for now."""
-    context = SELinuxContext(path)
-    context.type = SELinuxTypes(b"user_home")
-    setxattr(path, SELINUX_XATTR_NAME, bytes(context))
+    context = Context(path)
+    context.type = Types(b"user_home")
+    setxattr(path, SELINUX_XATTR_NAME, bytes(context), follow_symlinks=False)
