@@ -12,21 +12,22 @@ fish_add_path ~tex/texlive/bin/x86_64-linux/
 
 # Refresh the server contents
 function refresh
-    sudo --validate
+    sudo --validate; or return $status
 
     # Get the new files
-    web-pull
+    web-pull; or return $status
 
     # Install the files
-    sudo (type -p web-install)
+    sudo (type -p web-install); or return $status
 
-    # Reload all the user services
+    # Reload all the services
     for user in max tex web woodpecker
         sudo systemctl --user --machine "$user@" daemon-reload
     end
+    sudo systemctl --system daemon-reload
 
     # Restart the server
-    sudo systemctl --user -M web@ restart caddy.service
+    sudo systemctl --user --machine web@ restart caddy.service
 
     # Check the status
     sleep 1

@@ -59,4 +59,7 @@ if geteuid() != 0:
 
 config.verbose = args.verbose
 config.dry_run = args.dry_run
+
+if isinstance(args.config_file, Path):
+    args.config_file = args.config_file.open("rb")
 config.process_config(args.config_file)

@@ -91,7 +91,7 @@ class Context:
             ):
                 self.user, self.role, self.type, self.level = args
             case (bytes() as context,):
-                user, role, type, level = context.removesuffix(b"\0").split(
+                user, role, type, level, *_ = context.removesuffix(b"\0").split(
                     b":"
                 )
                 self.user, self.role, self.type, self.level = (

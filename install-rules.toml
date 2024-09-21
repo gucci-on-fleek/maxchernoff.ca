@@ -22,7 +22,7 @@ woodpecker = "/var/home/woodpecker/"
 
 [[permissions]]
 base = "{repo}/"
-path = [".git*", "install-rules.toml", "scripts/"]
+paths = [".git*", "install-rules.toml", "scripts/"]
 permissions.other = ""
 
 
@@ -38,7 +38,7 @@ permissions.other = "r"
 
 [[permissions]]
 base = "{etc}/"
-paths = ["firewalld/zones/public.xml"]
+paths = ["firewalld/"]
 selinux_type = "firewalld_etc_rw"
 
 [[permissions]]
@@ -48,17 +48,17 @@ selinux_type = "snapperd_conf"
 
 [[permissions]]
 base = "{etc}/"
-paths = ["ssh/sshd_config.d/*", "rpm-ostreed.conf"]
+paths = ["ssh/sshd_config.d/", "rpm-ostreed.conf"]
 selinux_type = "etc"
 
 [[permissions]]
 base = "{etc}/"
-paths = ["sysctl.d/*"]
+paths = ["sysctl.d/"]
 selinux_type = "system_conf"
 
 [[permissions]]
 base = "{etc}/"
-paths = ["systemd/system/**/*"]
+paths = ["systemd/"]
 selinux_type = "systemd_unit_file"
 
 [[permissions]]
@@ -75,6 +75,7 @@ selinux_type = "locale"
 source = "{repo}/max/"
 destination = "{max}/"
 paths = [".ssh/known_hosts", ".config/fish/config.fish"]
+owner = "max"
 
 # [[copy]]
 # source = "{repo}/max/"
@@ -91,6 +92,7 @@ paths = [".ssh/known_hosts", ".config/fish/config.fish"]
 source = "{repo}/tex/"
 destination = "{tex}/"
 paths = [".config/systemd/user/"]
+owner = "tex"
 
 
 ###########
@@ -102,28 +104,57 @@ source = "{repo}/web/"
 destination = "{web}/"
 paths = [".config/containers/", ".config/systemd/user/", "caddy/*/"]
 permissions.web = "r"
+permissions.589824 = "r"                                             # TODO
+owner = "web"
 
 [[folder]]
 base = "{web}"
 paths = [
     "caddy/config/",
     "caddy/data/",
-    "overleaf/mongo/",
     "overleaf/overleaf/",
-    "overleaf/redis/",
     "woodpecker/data/",
 ]
-owner = "web"
+owner = "589824"
+permissions.web = "rw"
+
+[[folder]]
+base = "{web}"
+paths = ["overleaf/redis/", "overleaf/mongo/"]
+owner = "589824"
+permissions.590823 = "rw"
+permissions.589824 = "rw"
+
+[[folder]]
+base = "{web}"
+paths = ["overleaf/overleaf/"]
+permissions.589857 = "rw"
 
 [[permissions]]
 base = "{web}/caddy/"
 paths = ["etc/", "static/"]
 selinux_type = "container_ro_file"
+permissions.589824 = "r"           # TODO
+owner = "web"
+
+[[permissions]]
+base = "{web}/caddy/"
+paths = [
+    "static/analytics/requests.tsv",
+    "static/analytics/graphs",
+    "access.log",
+]
+selinux_type = "container_file"
+permissions.589824 = "rw" # TODO
+permissions.web = "rw"
+owner = "web"
 
 [[permissions]]
 base = "{web}/woodpecker/"
 paths = ["data/"]
-owner = "589824"
+permissions.589824 = "rw"  # TODO
+permissions.web = "rw"
+owner = "web"
 
 
 ##################
@@ -143,4 +174,5 @@ owner = "woodpecker"
 [[permissions]]
 base = "{woodpecker}/woodpecker/"
 paths = ["config/"]
-owner = "720896"
+permissions.720896 = "rw"         # TODO
+owner = "woodpecker"

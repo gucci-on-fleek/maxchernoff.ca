@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Literal, cast
 
 ACL_XATTR_NAME = "system.posix_acl_access"
 OTHER_USER = "other"
+READ_ONLY_FILESYSTEM = 30
 
 
 ###############
@@ -63,7 +64,7 @@ class _Ids(IntEnum):
             obj = cls._extra_members[id]
         except KeyError:
             # Make a new object to hold the ID enum instance
-            obj = object.__new__(cls)
+            obj = int.__new__(cls, id)
             obj._name_ = f"_{id}"
             obj._value_ = id
             cls._extra_members[id] = obj
@@ -323,6 +324,11 @@ class PermissionsMixin(RuleProtocol):
         if not self.permissions:
             return
 
+        if not (
+            destination.resolve().is_file() or destination.resolve().is_dir()
+        ):
+            return
+
         # Get the execution permissions from the source file
         source_acl = Acl(source)
         executable = source_acl.user.perm & Permissions.EXEC
@@ -348,9 +354,17 @@ class PermissionsMixin(RuleProtocol):
         for user, permission in self.permissions.items():
             assert user != OTHER_USER
             entry: Entry[TagUserType, Permissions, UserIds] = Entry(
-                Tags.USER, permission.value, user
+                Tags.USER, permission.value | executable, user
             )
             acl.users.append(entry)
 
         # Set the ACL for the destination file
-        setxattr(destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)
+        try:
+            setxattr(
+                destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True
+            )
+        except OSError as error:
+            if error.errno == READ_ONLY_FILESYSTEM:
+                pass
+            else:
+                raise error

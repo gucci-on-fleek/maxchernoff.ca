@@ -98,7 +98,7 @@ class RuleBase(
         self._paths = paths
         try:
             self.owner = acl.UserIds(int(owner))  # type: ignore
-        except ValueError:
+        except (ValueError, TypeError):
             self.owner = acl.UserIds[owner] if owner else None
         self.selinux_type = (
             selinux.Types(selinux_type) if selinux_type else None
@@ -108,7 +108,7 @@ class RuleBase(
         for user, permission in permissions.items():
             try:
                 user = acl.UserIds(int(user))
-            except ValueError:
+            except (ValueError, TypeError):
                 user = OTHER_USER if user == OTHER_USER else acl.UserIds[user]
             permission = "_" if permission == "" else permission
             self.permissions[user] = FilePermissions[permission]
@@ -142,14 +142,25 @@ class RuleBase(
                     if not dry_run:
                         process_once(self, source, destination)
                 elif process_recurse := cls.__dict__.get("process_recurse"):
-                    for root, _, files in source.walk(follow_symlinks=False):
-                        for file in files:
-                            source = source / root / file
-                            destination = destination / root / file
+                    process_recurse(self, source, destination)
+                    for dest_root, folders, files in source.walk(
+                        follow_symlinks=False
+                    ):
+                        for file in (*folders, *files):
+                            inner_source = dest_root / file
+                            inner_destination = destination / (
+                                inner_source
+                            ).relative_to(source)
                             if verbose:
-                                print(cls.operation, source, destination)
+                                print(
+                                    cls.operation,
+                                    inner_source,
+                                    inner_destination,
+                                )
                             if not dry_run:
-                                process_recurse(self, source, destination)
+                                process_recurse(
+                                    self, inner_source, inner_destination
+                                )
 
 
 @dataclass(kw_only=True)

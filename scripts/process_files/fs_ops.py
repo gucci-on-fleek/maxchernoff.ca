@@ -11,6 +11,7 @@ from os import chown, symlink
 from pathlib import Path
 from pprint import pprint
 from shutil import Error as CopyTreeError
+from shutil import SameFileError
 from shutil import copy2 as copy_file
 from shutil import copytree
 from typing import TYPE_CHECKING
@@ -39,6 +40,10 @@ class OwnerMixin(RuleProtocol):
         """Changes the owner of the file."""
         if self.owner is None:
             return
+
+        for parent in destination.parents:
+            if parent.is_symlink():
+                return
 
         chown(
             path=destination,
@@ -78,7 +83,16 @@ class CopyMixin(RuleProtocol):
                         destination.unlink()
                         symlink(source.readlink(), destination)
         elif source.is_file():
-            copy_file(source, destination, follow_symlinks=False)
+            try:
+                copy_file(source, destination, follow_symlinks=False)
+            except SameFileError:
+                pass
+        elif source.is_symlink():
+            try:
+                symlink(source.readlink(), destination)
+            except FileExistsError:
+                destination.unlink()
+                symlink(source.readlink(), destination)
         else:
             raise ValueError(f"Invalid source type: {source}")
 
@@ -91,10 +105,17 @@ class LinkMixin(RuleProtocol):
     def process_once(self, source: Path, destination: Path) -> None:
         """Creates a symbolic at the destination pointing to the source."""
         try:
+            destination.parent.resolve(strict=True)
+        except FileNotFoundError:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+
+        try:
             symlink(source, destination)
         except FileExistsError:
             if destination.is_symlink():
                 destination.unlink()
                 symlink(source, destination)
             else:
-                raise
+                raise ValueError(
+                    f"Destination exists and is not a symlink: {destination}"
+                )
