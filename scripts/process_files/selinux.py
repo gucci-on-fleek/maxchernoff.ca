@@ -152,5 +152,9 @@ class SELinuxMixin(RuleProtocol):
         context.type = self.selinux_type
 
         # Set the context of the file
-        pprint(context)
-        # setxattr(destination, SELINUX_XATTR_NAME, bytes(context), follow_symlinks=False)  # TODO
+        setxattr(
+            destination,
+            SELINUX_XATTR_NAME,
+            bytes(context),
+            follow_symlinks=False,
+        )

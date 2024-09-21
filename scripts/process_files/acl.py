@@ -320,6 +320,8 @@ class PermissionsMixin(RuleProtocol):
         destination: Path,
     ) -> None:
         """Set the ACL for a file."""
+        if not self.permissions:
+            return
 
         # Get the execution permissions from the source file
         source_acl = Acl(source)
@@ -351,5 +353,4 @@ class PermissionsMixin(RuleProtocol):
             acl.users.append(entry)
 
         # Set the ACL for the destination file
-        pprint(acl)
-        # setxattr(destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)  # TODO
+        setxattr(destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)

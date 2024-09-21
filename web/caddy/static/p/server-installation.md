@@ -212,7 +212,7 @@ Installing TeX Live
    to be able to access the TeX Live installation.</span>
 
     ```shell-session
-    $ sudo semanage fcontext --add -t container_share_t '/var/home/tex/texlive(/.*)?'
+    $ sudo semanage fcontext --add -t container_ro_file_t '/var/home/tex/texlive(/.*)?'
     $ sudo restorecon -R /var/home/tex/texlive
     ```
 
@@ -232,15 +232,6 @@ Web Server
 
     ```shell-session
     $ git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
-    ```
-
-5. Add the SELinux rules:
-
-    ```shell-session
-    $ sudo semanage fcontext --add -t container_share_t \
-    >     '/var/home/max/maxchernoff.ca/web/caddy/etc(/.*)?'
-    $ sudo semanage fcontext --add -t container_share_t \
-    >     '/var/home/max/maxchernoff.ca/web/caddy/static(/.*)?'
     ```
 
 6. Set the Unix permissions:
@@ -275,21 +266,6 @@ Web Server
     % chmod a+X ~
     ```
 
-11. Create the necessary directories:
-
-    ```shell-session
-    % mkdir -p ~/caddy/{data,config}
-    % mkdir -p ~/overleaf/{overleaf,mongo,redis}
-    ```
-
-13. Change the owner of the data directories to the container user:
-
-    ```shell-session
-    $ uid="$(grep web /etc/subuid | cut -d: -f2)" # Back to `max`
-    $ sudo chown -R $uid:$uid ~web/overleaf/{overleaf,mongo,redis} \
-    >     ~web/caddy/{data,config,access.log}
-    ```
-
 14. Enable the analytics processor:
 
     ```shell-session
@@ -297,7 +273,6 @@ Web Server
     $ sudo chown $uid:web ~web/caddy/access.log
     $ sudo chmod a=,ug=rw ~web/caddy/access.log
 
-    $ mkdir ~/maxchernoff.ca/web/caddy/static/analytics
     $ touch ~/maxchernoff.ca/web/caddy/static/analytics/{graphs,requests.tsv}
     $ chmod -R a=rX,ug=rwX ~/maxchernoff.ca/web/caddy/static/analytics
     $ chmod g+s ~/maxchernoff.ca/web/caddy/static/analytics
@@ -320,12 +295,6 @@ Woodpecker CI
 
     ```shell-session
     $ sudo -u web fish
-    ```
-
-2. Create the necessary directories:
-
-    ```shell-session
-    % mkdir -p ~/woodpecker/data  # As the `web` user
     ```
 
 3. Add the Woodpecker server Podman secrets:
@@ -363,22 +332,6 @@ Woodpecker CI
     ```shell-session
     % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
     >     podman secret create woodpecker_agent_secret -
-    ```
-
-8. Create the necessary directories:
-
-    ```shell-session
-    % mkdir -p ~/woodpecker/config
-    ```
-
-10. Change the owner of the data directories to the container user:
-
-    ```shell-session
-    $ uid="$(grep web /etc/subuid | cut -d: -f2)"  # Back to `max`
-    $ sudo chown -R $uid:$uid ~web/woodpecker/data
-
-    $ uid="$(grep woodpecker /etc/subuid | cut -d: -f2)"
-    $ sudo chown -R $uid:$uid ~woodpecker/woodpecker/config
     ```
 
 12. Start the services:

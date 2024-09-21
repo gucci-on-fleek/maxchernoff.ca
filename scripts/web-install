@@ -22,9 +22,6 @@ from process_files import config
 if __name__ != "__main__":
     raise ImportError("This script is not meant to be imported")
 
-# if geteuid() != 0: # TODO
-#     raise PermissionError("This script must be run as root")
-
 script_path = Path(__file__).resolve()
 default_path = script_path.parent.parent / "install-rules.toml"
 
@@ -56,6 +53,10 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+if geteuid() != 0:
+    raise PermissionError("This script must be run as root")
+
 config.verbose = args.verbose
 config.dry_run = args.dry_run
 config.process_config(args.config_file)

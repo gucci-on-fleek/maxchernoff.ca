@@ -17,8 +17,13 @@ function refresh
     # Get the new files
     web-pull
 
-    # Update the symlinks
-    sudo (type -p web-symlinks)
+    # Install the files
+    sudo (type -p web-install)
+
+    # Reload all the user services
+    for user in max tex web woodpecker
+        sudo systemctl --user --machine "$user@" daemon-reload
+    end
 
     # Restart the server
     sudo systemctl --user -M web@ restart caddy.service

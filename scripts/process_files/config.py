@@ -96,14 +96,20 @@ class RuleBase(
     ):
         """Converts the configuration types to the internal types."""
         self._paths = paths
-        self.owner = acl.UserIds[owner] if owner else None
+        try:
+            self.owner = acl.UserIds(int(owner))  # type: ignore
+        except ValueError:
+            self.owner = acl.UserIds[owner] if owner else None
         self.selinux_type = (
             selinux.Types(selinux_type) if selinux_type else None
         )
 
         self.permissions = {}
         for user, permission in permissions.items():
-            user = OTHER_USER if user == OTHER_USER else acl.UserIds[user]
+            try:
+                user = acl.UserIds(int(user))
+            except ValueError:
+                user = OTHER_USER if user == OTHER_USER else acl.UserIds[user]
             permission = "_" if permission == "" else permission
             self.permissions[user] = FilePermissions[permission]
 

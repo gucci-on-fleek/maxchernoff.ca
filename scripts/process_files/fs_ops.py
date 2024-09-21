@@ -40,13 +40,12 @@ class OwnerMixin(RuleProtocol):
         if self.owner is None:
             return
 
-        pprint(("chown", destination, self.owner))
-        # chown(
-        #     path=destination,
-        #     uid=self.owner,
-        #     gid=self.owner,
-        #     follow_symlinks=False,
-        # ) # TODO
+        chown(
+            path=destination,
+            uid=self.owner,
+            gid=self.owner,
+            follow_symlinks=False,
+        )
 
 
 class FolderMixin(RuleProtocol):

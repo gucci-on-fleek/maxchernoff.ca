@@ -1,0 +1,146 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+#################
+### Variables ###
+#################
+
+[variables]
+etc = "/etc/"
+max = "/var/home/max/"
+repo = "/var/home/max/maxchernoff.ca/"
+tex = "/var/home/tex/"
+web = "/var/home/web/"
+woodpecker = "/var/home/woodpecker/"
+
+
+############
+### Repo ###
+############
+
+[[permissions]]
+base = "{repo}/"
+path = [".git*", "install-rules.toml", "scripts/"]
+permissions.other = ""
+
+
+###########
+### etc ###
+###########
+
+[[copy]]
+source = "{repo}/etc/"
+destination = "{etc}/"
+paths = ["**/*"]
+permissions.other = "r"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["firewalld/zones/public.xml"]
+selinux_type = "firewalld_etc_rw"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["snapper/configs/home", "sysconfig/snapper"]
+selinux_type = "snapperd_conf"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["ssh/sshd_config.d/*", "rpm-ostreed.conf"]
+selinux_type = "etc"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["sysctl.d/*"]
+selinux_type = "system_conf"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["systemd/system/**/*"]
+selinux_type = "systemd_unit_file"
+
+[[permissions]]
+base = "{etc}/"
+paths = ["localtime"]
+selinux_type = "locale"
+
+
+###########
+### max ###
+###########
+
+[[link]]
+source = "{repo}/max/"
+destination = "{max}/"
+paths = [".ssh/known_hosts", ".config/fish/config.fish"]
+
+# [[copy]]
+# source = "{repo}/max/"
+# destination = "{max}/"
+# paths = [".ssh/authorized_keys",]
+# owner = "max"
+
+
+###########
+### tex ###
+###########
+
+[[link]]
+source = "{repo}/tex/"
+destination = "{tex}/"
+paths = [".config/systemd/user/"]
+
+
+###########
+### web ###
+###########
+
+[[link]]
+source = "{repo}/web/"
+destination = "{web}/"
+paths = [".config/containers/", ".config/systemd/user/", "caddy/*/"]
+permissions.web = "r"
+
+[[folder]]
+base = "{web}"
+paths = [
+    "caddy/config/",
+    "caddy/data/",
+    "overleaf/mongo/",
+    "overleaf/overleaf/",
+    "overleaf/redis/",
+    "woodpecker/data/",
+]
+owner = "web"
+
+[[permissions]]
+base = "{web}/caddy/"
+paths = ["etc/", "static/"]
+selinux_type = "container_ro_file"
+
+[[permissions]]
+base = "{web}/woodpecker/"
+paths = ["data/"]
+owner = "589824"
+
+
+##################
+### woodpecker ###
+##################
+
+[[link]]
+source = "{repo}/woodpecker/"
+destination = "{woodpecker}/"
+paths = [".config/systemd/user/", ".config/containers/"]
+
+[[folder]]
+base = "{woodpecker}"
+paths = ["woodpecker/config/"]
+owner = "woodpecker"
+
+[[permissions]]
+base = "{woodpecker}/woodpecker/"
+paths = ["config/"]
+owner = "720896"
