@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 from os import getxattr, setxattr
 from pathlib import Path
-
+from typing import TYPE_CHECKING
 
 #################
 ### Constants ###
@@ -109,9 +109,24 @@ class Context:
         return b":".join((self.user, self.role, self.type, self.level))
 
 
-#################
-### Functions ###
-#################
+##############
+### Mixins ###
+##############
+
+if TYPE_CHECKING:
+    from .config import RuleProtocol
+else:
+    RuleProtocol = object
+
+
+class SELinuxMixin(RuleProtocol):
+    """Processes the `selinux_type` configuration option."""
+
+    operation = "selinux"
+
+    def process(self, source: Path, destination: Path) -> None:
+        """Sets the SELinux context type of a file."""
+        return NotImplemented
 
 
 def process_file(path: Path):

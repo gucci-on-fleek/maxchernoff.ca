@@ -7,19 +7,29 @@
 ### Imports ###
 ###############
 
-from enum import Enum, StrEnum
-from typing import Literal, KeysView, ValuesView
 from dataclasses import dataclass, field
+from enum import Enum, StrEnum
 from pathlib import Path
-from tomllib import load as toml_load
 from pprint import pprint
-from abc import abstractmethod
+from tomllib import load as toml_load
+from typing import (
+    TYPE_CHECKING,
+    Iterator,
+    KeysView,
+    Literal,
+    Protocol,
+    ValuesView,
+    runtime_checkable,
+)
 
-from . import acl, selinux
+from . import acl, fs_ops, selinux
 
-#################
-### Constants ###
-#################
+#####################
+### Configuration ###
+#####################
+
+dry_run = False
+verbose = False
 
 
 ###############
@@ -28,21 +38,43 @@ from . import acl, selinux
 
 
 class FilePermissions(Enum):
+    """The possible file modes that you can set from the configuration."""
+
     r = acl.Permissions.READ
     w = acl.Permissions.WRITE
     rw = acl.Permissions.READ | acl.Permissions.WRITE
 
 
 class OtherUsers(StrEnum):
+    """A sentinel value representing all other users."""
+
     OTHER = "other"
 
 
 OtherUser = OtherUsers.OTHER
 
 
+@runtime_checkable
+class RuleProtocol(Protocol):
+    """The operations that a rule must implement."""
+
+    source: Path
+    destination: Path
+    operation: str
+
+    def process(self, source: Path, destination: Path) -> None: ...
+
+
 @dataclass(kw_only=True)
-class Rule:
-    paths: list[Path]
+class RuleBase(
+    fs_ops.OwnerMixin,
+    selinux.SELinuxMixin,
+    acl.PermissionsMixin,
+    RuleProtocol,
+):
+    """A concrete base class for all the rules."""
+
+    paths: Iterator[tuple[Path, Path]]
     owner: acl.UserIds | None = None
     permissions: dict[acl.UserIds | OtherUsers, FilePermissions] = field(
         default_factory=dict
@@ -57,7 +89,8 @@ class Rule:
         permissions: dict[str, Literal["r", "w", "rw"]] = {},
         selinux_type: str | None = None,
     ):
-        self.paths = self.make_paths(paths)
+        """Converts the configuration types to the internal types."""
+        self._paths = paths
         self.owner = acl.UserIds[owner] if owner else None
         self.selinux_type = (
             selinux.Types(selinux_type) if selinux_type else None
@@ -68,59 +101,70 @@ class Rule:
             user = OtherUser if user == OtherUser else acl.UserIds[user]
             self.permissions[user] = FilePermissions[permission]
 
-    def make_paths(self, paths: list[str]) -> list[Path]:
-        base = self.path_base
-        out = []
-        for path in paths:
-            out.extend(sorted(Path(base).glob(path)))
-        return out
-
-    def process(self) -> None:
-        raise NotImplementedError
-
     @property
-    @abstractmethod
-    def path_base(self) -> Path: ...
+    def paths(self) -> Iterator[tuple[Path, Path]]:
+        """Get the source and destination paths for all operations."""
+        for path in self._paths:
+            sources = Path(self.source).resolve(strict=True).glob(path)
+            for source in sources:
+                destination = self.destination / source.relative_to(self.source)
+                yield source, destination
+
+    def process_all(self) -> None:
+        """Execute all of the mixin rule processors."""
+        mro = type(self).mro()
+        for source, destination in self.paths:
+            for cls in mro:
+                if TYPE_CHECKING:
+                    assert isinstance(cls, RuleProtocol)
+
+                if cls is not RuleProtocol and (
+                    process := cls.__dict__.get("process")
+                ):
+                    if verbose:
+                        print(cls.operation, source, destination)
+                    if not dry_run:
+                        process(self, source, destination)
 
 
 @dataclass(kw_only=True)
-class _InstallRule(Rule):
+class _InstallRule(RuleBase):
+    """A base class for the `link` and `copy` rules ."""
+
     source: Path
     destination: Path
 
     def __init__(self, *, source: str, destination: str, **kwargs):
+        """Converts the configuration types to the internal types."""
         self.source = Path(source)
         self.destination = Path(destination)
         super().__init__(**kwargs)
 
-    @property
-    def path_base(self) -> Path:
-        return self.source
+
+class LinkRule(fs_ops.LinkMixin, _InstallRule):
+    """Handles the `link` rule type."""
+
+    pass
 
 
-class LinkRule(_InstallRule):
-    def process(self) -> None:
-        raise NotImplementedError
-        super().process()
+class CopyRule(fs_ops.CopyMixin, _InstallRule):
+    """Handles the `copy` rule type."""
 
-
-class CopyRule(_InstallRule):
-    def process(self) -> None:
-        raise NotImplementedError
-        super().process()
+    pass
 
 
 @dataclass(kw_only=True)
-class PermissionsRule(Rule):
-    base: Path
+class PermissionsRule(RuleBase):
+    """Handles the `permissions` rule type."""
+
+    source: Path
+    destination: Path
 
     def __init__(self, *, base: str, **kwargs):
-        self.base = Path(base)
+        """Converts the configuration types to the internal types."""
+        self.source = Path(base)
+        self.destination = Path(base)
         super().__init__(**kwargs)
-
-    @property
-    def path_base(self) -> Path:
-        return self.base
 
 
 #################
@@ -128,16 +172,20 @@ class PermissionsRule(Rule):
 #################
 
 
-def process_file(path: Path):
+def load_and_process_config(path: Path):
+    """Loads the configuration file and processes all of the rules."""
+
+    # Load the configuration file
     with open(path, "rb") as file:
         data = toml_load(file)
 
-    rules: list[Rule] = []
+    rules: list[RuleBase] = []
     variables = data.get("variables", {})
 
     def expand_recurse[
         T: list | dict
     ](parent: T, keys: range | KeysView, values: list | ValuesView) -> T:
+        """Expands any variables in the configuration."""
         for key, value in zip(keys, values):
             match value:
                 case dict():
@@ -153,6 +201,7 @@ def process_file(path: Path):
 
     data = expand_recurse(data, data.keys(), data.values())
 
+    # Generate the rules
     for link in data.get("link", []):
         rules.append(LinkRule(**link))
 
@@ -162,7 +211,6 @@ def process_file(path: Path):
     for permissions in data.get("permissions", []):
         rules.append(PermissionsRule(**permissions))
 
-    pprint(rules)
-
+    # Process all of the rules
     for rule in rules:
-        rule.process()
+        rule.process_all()

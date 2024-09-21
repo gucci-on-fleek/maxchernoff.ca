@@ -11,8 +11,7 @@
 from pathlib import Path
 from sys import argv
 
-from process_files import acl, config, selinux
-
+from process_files import config
 
 ###################
 ### Entry Point ###
@@ -20,4 +19,6 @@ from process_files import acl, config, selinux
 
 if __name__ == "__main__":
     path = Path(argv[1])
-    config.process_file(path)
+    config.verbose = True
+    config.dry_run = True
+    config.load_and_process_config(path)

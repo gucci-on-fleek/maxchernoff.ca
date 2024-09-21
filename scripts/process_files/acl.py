@@ -8,14 +8,13 @@
 ###############
 
 from dataclasses import dataclass, field
-from enum import IntFlag, IntEnum
+from enum import IntEnum, IntFlag
 from grp import getgrall
 from os import getxattr, setxattr
 from pathlib import Path
 from pwd import getpwall
 from struct import Struct
-from typing import Literal, cast
-
+from typing import TYPE_CHECKING, Literal, cast
 
 #################
 ### Constants ###
@@ -298,9 +297,24 @@ class Acl(Entries):
         return self._to_bytes()
 
 
-#################
-### Functions ###
-#################
+##############
+### Mixins ###
+##############
+
+if TYPE_CHECKING:
+    from .config import RuleProtocol
+else:
+    RuleProtocol = object
+
+
+class PermissionsMixin(RuleProtocol):
+    """Processes the `permissions` configuration option."""
+
+    operation = "permissions"
+
+    def process(self, source: Path, destination: Path) -> None:
+        """Set the ACL for a file."""
+        return NotImplemented
 
 
 def process_file(path: Path):
