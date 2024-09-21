@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 from os import getxattr, setxattr
 from pathlib import Path
+from pprint import pprint
 from typing import TYPE_CHECKING
 
 #################
@@ -18,6 +19,8 @@ from typing import TYPE_CHECKING
 #################
 
 SELINUX_XATTR_NAME = "security.selinux"
+HOME_BASE_DIR = Path("/home/").resolve(strict=True)
+USER_RUN_DIR = Path("/run/user/").resolve(strict=True)
 
 
 ###############
@@ -114,8 +117,9 @@ class Context:
 ##############
 
 if TYPE_CHECKING:
-    from .config import RuleProtocol
+    from .config import RuleBase, RuleProtocol
 else:
+    RuleBase = object
     RuleProtocol = object
 
 
@@ -124,13 +128,29 @@ class SELinuxMixin(RuleProtocol):
 
     operation = "selinux"
 
-    def process(self, source: Path, destination: Path) -> None:
+    def process_recurse(
+        self: RuleBase,  # type: ignore
+        source: Path,
+        destination: Path,
+    ) -> None:
         """Sets the SELinux context type of a file."""
-        return NotImplemented
+        if self.selinux_type is None:
+            return
 
+        # Get the current context of the file
+        context = Context(destination)
 
-def process_file(path: Path):
-    """Sets the SELinux context of a file. Just an example for now."""
-    context = Context(path)
-    context.type = Types(b"user_home")
-    setxattr(path, SELINUX_XATTR_NAME, bytes(context), follow_symlinks=False)
+        # Set the context user
+        if destination.is_relative_to(
+            HOME_BASE_DIR
+        ) or destination.is_relative_to(USER_RUN_DIR):
+            context.user = Users.USER
+        else:
+            context.user = Users.SYSTEM
+
+        # Set the context type
+        context.type = self.selinux_type
+
+        # Set the context of the file
+        pprint(context)
+        # setxattr(destination, SELINUX_XATTR_NAME, bytes(context), follow_symlinks=False)  # TODO

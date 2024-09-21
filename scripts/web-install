@@ -8,8 +8,10 @@
 ### Imports ###
 ###############
 
+from argparse import ArgumentParser, FileType
+from os import geteuid
 from pathlib import Path
-from sys import argv
+from pprint import pprint
 
 from process_files import config
 
@@ -17,8 +19,43 @@ from process_files import config
 ### Entry Point ###
 ###################
 
-if __name__ == "__main__":
-    path = Path(argv[1])
-    config.verbose = True
-    config.dry_run = True
-    config.load_and_process_config(path)
+if __name__ != "__main__":
+    raise ImportError("This script is not meant to be imported")
+
+# if geteuid() != 0: # TODO
+#     raise PermissionError("This script must be run as root")
+
+script_path = Path(__file__).resolve()
+default_path = script_path.parent.parent / "install-rules.toml"
+
+parser = ArgumentParser(
+    prog="web-install",
+    description="Declaratively copies, links, and sets permissions for files.",
+)
+
+parser.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="Print verbose output",
+)
+
+parser.add_argument(
+    "-n",
+    "--dry-run",
+    action="store_true",
+    help="Print what would be done without actually doing it",
+)
+
+parser.add_argument(
+    "config_file",
+    type=FileType("rb"),
+    nargs="?",
+    help="The configuration file to build. (Default: $repo_root/install-rules.toml)",
+    default=default_path,
+)
+
+args = parser.parse_args()
+config.verbose = args.verbose
+config.dry_run = args.dry_run
+config.process_config(args.config_file)

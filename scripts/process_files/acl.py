@@ -12,6 +12,7 @@ from enum import IntEnum, IntFlag
 from grp import getgrall
 from os import getxattr, setxattr
 from pathlib import Path
+from pprint import pprint
 from pwd import getpwall
 from struct import Struct
 from typing import TYPE_CHECKING, Literal, cast
@@ -21,6 +22,7 @@ from typing import TYPE_CHECKING, Literal, cast
 #################
 
 ACL_XATTR_NAME = "system.posix_acl_access"
+OTHER_USER = "other"
 
 
 ###############
@@ -302,9 +304,9 @@ class Acl(Entries):
 ##############
 
 if TYPE_CHECKING:
-    from .config import RuleProtocol
+    from .config import RuleBase, RuleProtocol
 else:
-    RuleProtocol = object
+    RuleBase, RuleProtocol = object, object
 
 
 class PermissionsMixin(RuleProtocol):
@@ -312,16 +314,42 @@ class PermissionsMixin(RuleProtocol):
 
     operation = "permissions"
 
-    def process(self, source: Path, destination: Path) -> None:
+    def process_recurse(
+        self: RuleBase,  # type: ignore
+        source: Path,
+        destination: Path,
+    ) -> None:
         """Set the ACL for a file."""
-        return NotImplemented
 
+        # Get the execution permissions from the source file
+        source_acl = Acl(source)
+        executable = source_acl.user.perm & Permissions.EXEC
 
-def process_file(path: Path):
-    """Set the ACL for a file. Just a simple example for now."""
-    perms = PermissionsMode()
-    perms.user = Permissions.READ
-    perms.group = Permissions.EXEC
-    perms.other = Permissions.EMPTY
-    acl = Acl(perms)
-    setxattr(path, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)
+        # Get the default permissions for all other users
+        try:
+            other = self.permissions.pop(OTHER_USER).value
+        except KeyError:
+            other = Permissions.EMPTY
+
+        # Set the permissions for the destination file from scratch
+        base_permissions = PermissionsMode()
+        # Owner can always read and write
+        base_permissions.user = (
+            Permissions.READ | Permissions.WRITE | executable
+        )
+        # Group and other depend on the configuration
+        base_permissions.group = other | executable
+        base_permissions.other = other | executable
+
+        # Create the ACL object and set the extra permissions
+        acl = Acl(base_permissions)
+        for user, permission in self.permissions.items():
+            assert user != OTHER_USER
+            entry: Entry[TagUserType, Permissions, UserIds] = Entry(
+                Tags.USER, permission.value, user
+            )
+            acl.users.append(entry)
+
+        # Set the ACL for the destination file
+        pprint(acl)
+        # setxattr(destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)  # TODO

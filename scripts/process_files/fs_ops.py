@@ -7,26 +7,22 @@
 ### Imports ###
 ###############
 
+from os import chown, symlink
 from pathlib import Path
+from pprint import pprint
+from shutil import Error as CopyTreeError
+from shutil import copy2 as copy_file
+from shutil import copytree
 from typing import TYPE_CHECKING
-
-#################
-### Constants ###
-#################
-
-
-###############
-### Classes ###
-###############
-
 
 ##############
 ### Mixins ###
 ##############
 
 if TYPE_CHECKING:
-    from .config import RuleProtocol
+    from .config import RuleBase, RuleProtocol
 else:
+    RuleBase = object
     RuleProtocol = object
 
 
@@ -35,9 +31,32 @@ class OwnerMixin(RuleProtocol):
 
     operation = "owner"
 
-    def process(self, source: Path, destination: Path) -> None:
+    def process_recurse(
+        self: RuleBase,  # type: ignore
+        source: Path,
+        destination: Path,
+    ) -> None:
         """Changes the owner of the file."""
-        return NotImplemented
+        if self.owner is None:
+            return
+
+        pprint(("chown", destination, self.owner))
+        # chown(
+        #     path=destination,
+        #     uid=self.owner,
+        #     gid=self.owner,
+        #     follow_symlinks=False,
+        # ) # TODO
+
+
+class FolderMixin(RuleProtocol):
+    """Processes the `folder` rule type."""
+
+    operation = "folder"
+
+    def process_once(self, source: Path, destination: Path) -> None:
+        """Creates a folder at the destination."""
+        destination.mkdir(parents=True, exist_ok=True)
 
 
 class CopyMixin(RuleProtocol):
@@ -45,9 +64,24 @@ class CopyMixin(RuleProtocol):
 
     operation = "copy"
 
-    def process(self, source: Path, destination: Path) -> None:
+    def process_once(self, source: Path, destination: Path) -> None:
         """Copies the file from the source to the destination."""
-        return NotImplemented
+        if source.is_dir():
+            try:
+                copytree(source, destination, symlinks=True, dirs_exist_ok=True)
+            except CopyTreeError as errors:
+                for source, destination, message in errors.args[0]:
+                    if "File exists" not in message:
+                        raise
+
+                    source, destination = Path(source), Path(destination)
+                    if destination.is_symlink():
+                        destination.unlink()
+                        symlink(source.readlink(), destination)
+        elif source.is_file():
+            copy_file(source, destination, follow_symlinks=False)
+        else:
+            raise ValueError(f"Invalid source type: {source}")
 
 
 class LinkMixin(RuleProtocol):
@@ -55,6 +89,13 @@ class LinkMixin(RuleProtocol):
 
     operation = "link"
 
-    def process(self, source: Path, destination: Path) -> None:
+    def process_once(self, source: Path, destination: Path) -> None:
         """Creates a symbolic at the destination pointing to the source."""
-        return NotImplemented
+        try:
+            symlink(source, destination)
+        except FileExistsError:
+            if destination.is_symlink():
+                destination.unlink()
+                symlink(source, destination)
+            else:
+                raise

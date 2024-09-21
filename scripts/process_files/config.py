@@ -8,7 +8,8 @@
 ###############
 
 from dataclasses import dataclass, field
-from enum import Enum, StrEnum
+from enum import Enum
+from io import BufferedReader
 from pathlib import Path
 from pprint import pprint
 from tomllib import load as toml_load
@@ -23,6 +24,14 @@ from typing import (
 )
 
 from . import acl, fs_ops, selinux
+
+
+#################
+### Constants ###
+#################
+
+OTHER_USER = "other"
+
 
 #####################
 ### Configuration ###
@@ -43,15 +52,7 @@ class FilePermissions(Enum):
     r = acl.Permissions.READ
     w = acl.Permissions.WRITE
     rw = acl.Permissions.READ | acl.Permissions.WRITE
-
-
-class OtherUsers(StrEnum):
-    """A sentinel value representing all other users."""
-
-    OTHER = "other"
-
-
-OtherUser = OtherUsers.OTHER
+    _ = acl.Permissions.EMPTY
 
 
 @runtime_checkable
@@ -62,7 +63,11 @@ class RuleProtocol(Protocol):
     destination: Path
     operation: str
 
-    def process(self, source: Path, destination: Path) -> None: ...
+    def process_once(self, source: Path, destination: Path) -> None:
+        """Processes the rule on the top-level paths."""
+
+    def process_recurse(self, source: Path, destination: Path) -> None:
+        """Processes the rule on every path below the top-level paths."""
 
 
 @dataclass(kw_only=True)
@@ -76,7 +81,7 @@ class RuleBase(
 
     paths: Iterator[tuple[Path, Path]]
     owner: acl.UserIds | None = None
-    permissions: dict[acl.UserIds | OtherUsers, FilePermissions] = field(
+    permissions: dict[acl.UserIds | Literal["other"], FilePermissions] = field(
         default_factory=dict
     )
     selinux_type: selinux.Types | None = None
@@ -86,7 +91,7 @@ class RuleBase(
         *,
         paths: list[str],
         owner: str | None = None,
-        permissions: dict[str, Literal["r", "w", "rw"]] = {},
+        permissions: dict[str, Literal["r", "w", "rw", ""]] = {},
         selinux_type: str | None = None,
     ):
         """Converts the configuration types to the internal types."""
@@ -98,17 +103,22 @@ class RuleBase(
 
         self.permissions = {}
         for user, permission in permissions.items():
-            user = OtherUser if user == OtherUser else acl.UserIds[user]
+            user = OTHER_USER if user == OTHER_USER else acl.UserIds[user]
+            permission = "_" if permission == "" else permission
             self.permissions[user] = FilePermissions[permission]
 
     @property
     def paths(self) -> Iterator[tuple[Path, Path]]:
         """Get the source and destination paths for all operations."""
         for path in self._paths:
-            sources = Path(self.source).resolve(strict=True).glob(path)
+            looped = False
+            sources = self.source.absolute().glob(path)
             for source in sources:
+                looped = True
                 destination = self.destination / source.relative_to(self.source)
                 yield source, destination
+            if not looped:
+                yield self.source / path, self.destination / path
 
     def process_all(self) -> None:
         """Execute all of the mixin rule processors."""
@@ -118,13 +128,36 @@ class RuleBase(
                 if TYPE_CHECKING:
                     assert isinstance(cls, RuleProtocol)
 
-                if cls is not RuleProtocol and (
-                    process := cls.__dict__.get("process")
-                ):
+                if cls is RuleProtocol:
+                    continue
+                elif process_once := cls.__dict__.get("process_once"):
                     if verbose:
                         print(cls.operation, source, destination)
                     if not dry_run:
-                        process(self, source, destination)
+                        process_once(self, source, destination)
+                elif process_recurse := cls.__dict__.get("process_recurse"):
+                    for root, _, files in source.walk(follow_symlinks=False):
+                        for file in files:
+                            source = source / root / file
+                            destination = destination / root / file
+                            if verbose:
+                                print(cls.operation, source, destination)
+                            if not dry_run:
+                                process_recurse(self, source, destination)
+
+
+@dataclass(kw_only=True)
+class FolderRule(fs_ops.FolderMixin, RuleBase):
+    """Handles the `folder` rule type."""
+
+    source: Path
+    destination: Path
+
+    def __init__(self, *, base: str, **kwargs):
+        """Converts the configuration types to the internal types."""
+        self.source = Path(base)
+        self.destination = Path(base)
+        super().__init__(**kwargs)
 
 
 @dataclass(kw_only=True)
@@ -172,13 +205,10 @@ class PermissionsRule(RuleBase):
 #################
 
 
-def load_and_process_config(path: Path):
+def process_config(file: BufferedReader):
     """Loads the configuration file and processes all of the rules."""
 
-    # Load the configuration file
-    with open(path, "rb") as file:
-        data = toml_load(file)
-
+    data = toml_load(file)
     rules: list[RuleBase] = []
     variables = data.get("variables", {})
 
@@ -202,6 +232,9 @@ def load_and_process_config(path: Path):
     data = expand_recurse(data, data.keys(), data.values())
 
     # Generate the rules
+    for folder in data.get("folder", []):
+        rules.append(FolderRule(**folder))
+
     for link in data.get("link", []):
         rules.append(LinkRule(**link))
 
