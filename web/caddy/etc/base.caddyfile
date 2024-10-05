@@ -69,6 +69,7 @@
 	}
 
 	redir /tools/Stardew-Valley-Item-Finder/robots.txt /robots.txt permanent
+	redir /tools/stardew-valley-item-finder /tools/Stardew-Valley-Item-Finder/ permanent
 
 	# Convert Markdown files to HTML
 	templates
@@ -84,6 +85,7 @@
 	rewrite /favicon.ico /icons/favicon.ico
 	rewrite /favicon.svg /icons/favicon.svg
 	rewrite /apple-touch-icon*.png /icons/apple-touch-icon.png
+	rewrite /touch-icon*.png /icons/apple-touch-icon.png
 
 	respond /.well-known/sitemap.xml 410
 

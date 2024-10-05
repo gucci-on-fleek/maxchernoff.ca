@@ -51,6 +51,7 @@ www.maxchernoff.ca {
 overleaf.maxchernoff.ca {
 	import default
 	reverse_proxy systemd-overleaf-overleaf:80
+	redir /learn/* https://www.overleaf.com{path} permanent
 }
 
 # Woodpecker reverse proxy
@@ -64,4 +65,11 @@ stardew-valley-item-finder.maxchernoff.ca {
 	import default
 
 	redir https://www.maxchernoff.ca/tools/Stardew-Valley-Item-Finder{uri} permanent
+}
+
+# MTA-STS needs its own subdomain
+mta-sts.maxchernoff.ca {
+	import default
+	rewrite /.well-known/* www.maxchernoff.ca{uri}
+	respond 404 "Not Found"
 }

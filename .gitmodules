@@ -6,6 +6,6 @@
 [submodule "web/caddy/static/tools/Stardew-Valley-Item-Finder"]
 	path = web/caddy/static/tools/Stardew-Valley-Item-Finder
 	url = https://github.com/gucci-on-fleek/Stardew-Valley-Item-Finder.git
-[submodule "web/caddy/static/tlextra"]
-	path = web/caddy/static/tlextra
+[submodule "web/caddy/static/tools/tlextra"]
+	path = web/caddy/static/tools/tlextra
 	url = https://github.com/gucci-on-fleek/tlextra.git
