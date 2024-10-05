@@ -28,17 +28,39 @@ import base.caddyfile
 	}
 
 	# Use www.maxchernoff.ca for special URLs
-	@redir-special {
-		not host www.maxchernoff.ca
-		path /.well-known/* /favicon.ico /touch-icon*.png /apple-touch-icon*.png
+	@rewrite-special {
+		path /.well-known/* /ads.txt /app-ads.txt /apple-touch-icon*.png /favicon.ico /favicon.svg /robots.txt /sitemap.xml /touch-icon*.png
 	}
-	redir @redir-special https://www.maxchernoff.ca{path} permanent
+	handle @rewrite-special {
+		# Serve the files
+		root * /srv
+		file_server
+
+		# Special headers
+		header Cache-Control max-age=1209600 # 2 weeks
+		header /.well-known/traffic-advice {
+			Content-Type application/trafficadvice+json
+		}
+
+		# Clean up some root-level URLs
+		rewrite /ads.txt /.well-known/ads.txt
+		rewrite /app-ads.txt /.well-known/app-ads.txt
+		rewrite /robots.txt /.well-known/robots.txt
+		rewrite /sitemap.xml /.well-known/sitemap.xml
+
+		rewrite /apple-touch-icon*.png /icons/apple-touch-icon.png
+		rewrite /favicon.ico /icons/favicon.ico
+		rewrite /favicon.svg /icons/favicon.svg
+		rewrite /touch-icon*.png /icons/apple-touch-icon.png
+
+		respond /.well-known/sitemap.xml 410
+	}
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca
 maxchernoff.ca {
 	import default
-	redir https://www.{host}{uri}
+	redir https://www.{host}{uri} permanent
 }
 
 # The main site
@@ -70,6 +92,5 @@ stardew-valley-item-finder.maxchernoff.ca {
 # MTA-STS needs its own subdomain
 mta-sts.maxchernoff.ca {
 	import default
-	rewrite /.well-known/* www.maxchernoff.ca{uri}
-	respond 404 "Not Found"
+	respond "Not Found" 404
 }
