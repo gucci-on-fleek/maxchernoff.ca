@@ -9,21 +9,20 @@
 
 from dataclasses import dataclass, field
 from enum import IntEnum, IntFlag
-from grp import getgrall
 from os import getxattr, setxattr
 from pathlib import Path
 from pprint import pprint
-from pwd import getpwall
 from struct import Struct
-from typing import TYPE_CHECKING, Literal, cast
+from typing import Literal, cast, NewType
+
 
 #################
 ### Constants ###
 #################
 
 ACL_XATTR_NAME = "system.posix_acl_access"
-OTHER_USER = "other"
 READ_ONLY_FILESYSTEM = 30
+UNKNOWN_ID: "UnknownId" = 2**32 - 1  # == (uint32_t) -1
 
 
 ###############
@@ -51,60 +50,28 @@ class Permissions(IntFlag):
     READ = 0x04  # Read a file or directory
 
 
-class _Ids(IntEnum):
-    """Base class for the (user|group) IDs used in ACL entries."""
-
-    @classmethod
-    def _missing_(cls, id: int):
-        """It's possible to find an ID that doesn't map to any user or group
-        name, so we'll name those `_<id>`."""
-        # Store the objects so that each ID compares equal to itself
-        cls._extra_members = getattr(cls, "_extra_members", {})
-        try:
-            obj = cls._extra_members[id]
-        except KeyError:
-            # Make a new object to hold the ID enum instance
-            obj = int.__new__(cls, id)
-            obj._name_ = f"_{id}"
-            obj._value_ = id
-            cls._extra_members[id] = obj
-        return obj
-
-
-class UnknownIds(IntEnum):
-    """A singleton enum to hold the “Unknown” ID, which is used for all ACL
-    entries except for the named user and group entries."""
-
-    UNKNOWN = 2**32 - 1  # == (uint32_t) -1
-
-
-# Get the user and group IDs from the system and store them in the enums
-user_ids = {entry.pw_name: entry.pw_uid for entry in getpwall()}
-group_ids = {entry.gr_name: entry.gr_gid for entry in getgrall()}
-
-UserIds = _Ids("UserIds", user_ids)
-GroupIds = _Ids("GroupIds", group_ids)
-UnknownId = UnknownIds.UNKNOWN
+UserId = NewType("UserId", int)
+GroupId = NewType("GroupId", int)
 
 # We need to define these types here to work around a Pyright bug
-UnknownIdType = Literal[UnknownId]
-TagUserObjType = Literal[Tags.USER_OBJ]
-TagUserType = Literal[Tags.USER]
-TagGroupObjType = Literal[Tags.GROUP_OBJ]
-TagGroupType = Literal[Tags.GROUP]
-TagMaskType = Literal[Tags.MASK]
-TagOtherType = Literal[Tags.OTHER]
+UnknownId = Literal[4294967295]
+TagUserObj = Literal[Tags.USER_OBJ]
+TagUser = Literal[Tags.USER]
+TagGroupObj = Literal[Tags.GROUP_OBJ]
+TagGroup = Literal[Tags.GROUP]
+TagMask = Literal[Tags.MASK]
+TagOther = Literal[Tags.OTHER]
 
 
 @dataclass
 class Entry[
     T: Tags,
     P: Permissions,
-    I: UserIds | GroupIds | UnknownIdType,
+    I: UserId | GroupId | UnknownId,
 ]:
     """A single ACL entry, which consists of a tag, a set of permissions, and
     an ID. The ID is only used for user and group entries, and is set to
-    `UnknownIds.UNKNOWN` for all other entry types."""
+    `UNKNOWN_ID` for all other entry types."""
 
     tag: T
     perm: P
@@ -117,11 +84,11 @@ class Entry[
         self.perm = cast(P, Permissions(perm))
         match self.tag:
             case Tags.USER:
-                self.id = cast(I, UserIds(id))
+                self.id = UserId(id)  # type: ignore
             case Tags.GROUP:
-                self.id = cast(I, GroupIds(id))
+                self.id = GroupId(id)  # type: ignore
             case _:
-                self.id = cast(I, UnknownIds.UNKNOWN)
+                self.id = UNKNOWN_ID  # type: ignore
 
 
 @dataclass
@@ -131,19 +98,17 @@ class Entries:
 
     # These entries are mandatory, but we make them optional so that we can
     # set them after the object is created if needed.
-    user: Entry[TagUserObjType, Permissions, UnknownIdType] = field(init=False)
-    group: Entry[TagGroupObjType, Permissions, UnknownIdType] = field(
-        init=False
-    )
-    other: Entry[TagOtherType, Permissions, UnknownIdType] = field(init=False)
+    user: Entry[TagUserObj, Permissions, UnknownId] = field(init=False)
+    group: Entry[TagGroupObj, Permissions, UnknownId] = field(init=False)
+    other: Entry[TagOther, Permissions, UnknownId] = field(init=False)
     # The mask will be dynamically created later on.
-    mask: Entry[TagMaskType, Permissions, UnknownIdType] | None = None
+    mask: Entry[TagMask, Permissions, UnknownId] | None = None
     # The entries above all map to the standard Unix permissions; the entries
     # below are the true ACL entries.
-    users: list[Entry[TagUserType, Permissions, UserIds]] = field(
+    users: list[Entry[TagUser, Permissions, UserId]] = field(
         default_factory=list
     )
-    groups: list[Entry[TagGroupType, Permissions, GroupIds]] = field(
+    groups: list[Entry[TagGroup, Permissions, GroupId]] = field(
         default_factory=list
     )
 
@@ -227,17 +192,17 @@ class Acl(Entries):
                 self.user = Entry(
                     Tags.USER_OBJ,
                     arg.user,
-                    UnknownIds.UNKNOWN,
+                    UNKNOWN_ID,
                 )
                 self.group = Entry(
                     Tags.GROUP_OBJ,
                     arg.group,
-                    UnknownIds.UNKNOWN,
+                    UNKNOWN_ID,
                 )
                 self.other = Entry(
                     Tags.OTHER,
                     arg.other,
-                    UnknownIds.UNKNOWN,
+                    UNKNOWN_ID,
                 )
 
             # Uh oh, invalid arguments
@@ -245,7 +210,7 @@ class Acl(Entries):
                 raise ValueError("Invalid data type")
 
     @property
-    def mask(self) -> Entry[TagMaskType, Permissions, UnknownIdType]:
+    def mask(self) -> Entry[TagMask, Permissions, UnknownId]:
         """The mask entry is a special entry that holds the maximum permissions
         granted by all the named users and groups. We create this dynamically so
         that the user doesn't need to worry about it."""
@@ -253,10 +218,10 @@ class Acl(Entries):
         for entry in [*self.users, *self.groups]:
             mask |= entry.perm
 
-        return Entry(Tags.MASK, mask, UnknownIds.UNKNOWN)
+        return Entry(Tags.MASK, mask, UNKNOWN_ID)
 
     @mask.setter
-    def mask(self, value: Entry[TagMaskType, Permissions, UnknownIdType]):
+    def mask(self, value: Entry[TagMask, Permissions, UnknownId]):
         # We don't need to do anything here, but we need to define the setter
         # to make the dataclass happy.
         pass
@@ -300,71 +265,65 @@ class Acl(Entries):
         return self._to_bytes()
 
 
-##############
-### Mixins ###
-##############
+######################
+### User Interface ###
+######################
+"""Anything from here onwards is part of the public API."""
 
-if TYPE_CHECKING:
-    from .config import RuleBase, RuleProtocol
-else:
-    RuleBase, RuleProtocol = object, object
+# Constants
+OTHER_USER: "OtherUser" = "other"
+PERMISSIONS = {
+    "r": Permissions.READ,
+    "rw": Permissions.READ | Permissions.WRITE,
+    "": Permissions.EMPTY,
+}
+
+# Types
+OtherUser = Literal["other"]
 
 
-class PermissionsMixin(RuleProtocol):
-    """Processes the `permissions` configuration option."""
+# Definitions
+def set_path(
+    path: Path,
+    permissions: dict[int | OtherUser, str],
+    all_execute: bool,
+) -> None:
+    """Set the ACL for a file."""
+    if not (path.resolve().is_file() or path.resolve().is_dir()):
+        return
 
-    operation = "permissions"
+    # Get the execution permission
+    executable = Permissions.EXEC if all_execute else Permissions.EMPTY
 
-    def process_recurse(
-        self: RuleBase,  # type: ignore
-        source: Path,
-        destination: Path,
-    ) -> None:
-        """Set the ACL for a file."""
-        if not self.permissions:
-            return
+    # Get the default permissions for all other users
+    other = PERMISSIONS[permissions.pop(OTHER_USER, "")] | executable
 
-        if not (
-            destination.resolve().is_file() or destination.resolve().is_dir()
-        ):
-            return
+    # Set the permissions for the destination file from scratch
+    base_permissions = PermissionsMode()
 
-        # Get the execution permissions from the source file
-        source_acl = Acl(source)
-        executable = source_acl.user.perm & Permissions.EXEC
+    # Owner can always read and write
+    base_permissions.user = Permissions.READ | Permissions.WRITE | executable
 
-        # Get the default permissions for all other users
-        try:
-            other = self.permissions.pop(OTHER_USER).value
-        except KeyError:
-            other = Permissions.EMPTY
+    # Group and other depend on the configuration
+    base_permissions.group = other
+    base_permissions.other = other
 
-        # Set the permissions for the destination file from scratch
-        base_permissions = PermissionsMode()
-        # Owner can always read and write
-        base_permissions.user = (
-            Permissions.READ | Permissions.WRITE | executable
+    # Create the ACL object and set the extra permissions
+    acl = Acl(base_permissions)
+    for user, perm_str in permissions.items():
+        permission = PERMISSIONS[perm_str]
+        assert user != OTHER_USER
+
+        entry: Entry[TagUser, Permissions, UserId] = Entry(
+            Tags.USER, permission | executable, UserId(user)
         )
-        # Group and other depend on the configuration
-        base_permissions.group = other | executable
-        base_permissions.other = other | executable
+        acl.users.append(entry)
 
-        # Create the ACL object and set the extra permissions
-        acl = Acl(base_permissions)
-        for user, permission in self.permissions.items():
-            assert user != OTHER_USER
-            entry: Entry[TagUserType, Permissions, UserIds] = Entry(
-                Tags.USER, permission.value | executable, user
-            )
-            acl.users.append(entry)
-
-        # Set the ACL for the destination file
-        try:
-            setxattr(
-                destination, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True
-            )
-        except OSError as error:
-            if error.errno == READ_ONLY_FILESYSTEM:
-                pass
-            else:
-                raise error
+    # Set the ACL for the destination file
+    try:
+        setxattr(path, ACL_XATTR_NAME, bytes(acl), follow_symlinks=True)
+    except OSError as error:
+        if error.errno == READ_ONLY_FILESYSTEM:
+            pass
+        else:
+            raise error

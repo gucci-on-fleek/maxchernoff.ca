@@ -7,260 +7,352 @@
 ### Imports ###
 ###############
 
-from dataclasses import dataclass, field
-from enum import Enum
 from io import BufferedReader
+from os import chown, symlink
 from pathlib import Path
 from pprint import pprint
+from pwd import getpwnam
+from shutil import Error as CopyTreeError
+from shutil import SameFileError
+from shutil import copy2 as copy_file
+from shutil import rmtree, copytree
+from subprocess import run as subprocess_run
 from tomllib import load as toml_load
-from typing import (
-    TYPE_CHECKING,
-    Iterator,
-    KeysView,
-    Literal,
-    Protocol,
-    ValuesView,
-    runtime_checkable,
-)
 
-from . import acl, fs_ops, selinux
-
+from . import acl
 
 #################
 ### Constants ###
 #################
 
-OTHER_USER = "other"
+EXECUTABLE_MODE = 0o111
+ROOT = 0
 
 
-#####################
-### Configuration ###
-#####################
+######################
+### Initialization ###
+######################
 
-dry_run = False
-verbose = False
+# Configuration Settings
+dry_run: bool = False
+verbose: bool = False
 
+# Subuids and Subgids
+subuids: dict[int, int] = {}
+subgids: dict[int, int] = {}
 
-###############
-### Classes ###
-###############
+with open("/etc/subuid") as file:
+    for line in file:
+        user, start, count = line.strip().split(":")
+        subuids[getpwnam(user).pw_uid] = int(start)
 
+with open("/etc/subgid") as file:
+    for line in file:
+        user, start, count = line.strip().split(":")
+        subgids[getpwnam(user).pw_gid] = int(start)
 
-class FilePermissions(Enum):
-    """The possible file modes that you can set from the configuration."""
-
-    r = acl.Permissions.READ
-    w = acl.Permissions.WRITE
-    rw = acl.Permissions.READ | acl.Permissions.WRITE
-    _ = acl.Permissions.EMPTY
-
-
-@runtime_checkable
-class RuleProtocol(Protocol):
-    """The operations that a rule must implement."""
-
-    source: Path
-    destination: Path
-    operation: str
-
-    def process_once(self, source: Path, destination: Path) -> None:
-        """Processes the rule on the top-level paths."""
-
-    def process_recurse(self, source: Path, destination: Path) -> None:
-        """Processes the rule on every path below the top-level paths."""
+# All path roots used
+path_roots: set[Path] = set()
 
 
-@dataclass(kw_only=True)
-class RuleBase(
-    fs_ops.OwnerMixin,
-    selinux.SELinuxMixin,
-    acl.PermissionsMixin,
-    RuleProtocol,
-):
-    """A concrete base class for all the rules."""
+########################
+### Helper Functions ###
+########################
 
-    paths: Iterator[tuple[Path, Path]]
-    owner: acl.UserIds | None = None
-    permissions: dict[acl.UserIds | Literal["other"], FilePermissions] = field(
-        default_factory=dict
-    )
-    selinux_type: selinux.Types | None = None
 
-    def __init__(
-        self,
-        *,
-        paths: list[str],
-        owner: str | None = None,
-        permissions: dict[str, Literal["r", "w", "rw", ""]] = {},
-        selinux_type: str | None = None,
-    ):
-        """Converts the configuration types to the internal types."""
-        self._paths = paths
+def x():
+    raise NotImplementedError
+
+
+def _expand_user(user: str) -> tuple[int, int]:
+    """Expands a user to their UID and GID."""
+    user = x(user)
+
+    try:
+        # UID Input
+        return int(user), int(user)
+    except ValueError:
+        # Username Input
         try:
-            self.owner = acl.UserIds(int(owner))  # type: ignore
-        except (ValueError, TypeError):
-            self.owner = acl.UserIds[owner] if owner else None
-        self.selinux_type = (
-            selinux.Types(selinux_type) if selinux_type else None
-        )
-
-        self.permissions = {}
-        for user, permission in permissions.items():
+            passwd = getpwnam(user)
+            return passwd.pw_uid, passwd.pw_gid
+        except KeyError:
+            # Try using /etc/subuid
             try:
-                user = acl.UserIds(int(user))
-            except (ValueError, TypeError):
-                user = OTHER_USER if user == OTHER_USER else acl.UserIds[user]
-            permission = "_" if permission == "" else permission
-            self.permissions[user] = FilePermissions[permission]
+                parent_name, sub_name = user.split("/")
+                parent_uid, parent_gid = _expand_user(parent_name)
+                inner_uid, inner_gid = _expand_user(sub_name)
 
-    @property
-    def paths(self) -> Iterator[tuple[Path, Path]]:
-        """Get the source and destination paths for all operations."""
-        for path in self._paths:
-            looped = False
-            sources = self.source.absolute().glob(path)
-            for source in sources:
-                looped = True
-                destination = self.destination / source.relative_to(self.source)
-                yield source, destination
-            if not looped:
-                yield self.source / path, self.destination / path
-
-    def process_all(self) -> None:
-        """Execute all of the mixin rule processors."""
-        mro = type(self).mro()
-        for source, destination in self.paths:
-            for cls in mro:
-                if TYPE_CHECKING:
-                    assert isinstance(cls, RuleProtocol)
-
-                if cls is RuleProtocol:
-                    continue
-                elif process_once := cls.__dict__.get("process_once"):
-                    if verbose:
-                        print(cls.operation, source, destination)
-                    if not dry_run:
-                        process_once(self, source, destination)
-                elif process_recurse := cls.__dict__.get("process_recurse"):
-                    process_recurse(self, source, destination)
-                    for dest_root, folders, files in source.walk(
-                        follow_symlinks=False
-                    ):
-                        for file in (*folders, *files):
-                            inner_source = dest_root / file
-                            inner_destination = destination / (
-                                inner_source
-                            ).relative_to(source)
-                            if verbose:
-                                print(
-                                    cls.operation,
-                                    inner_source,
-                                    inner_destination,
-                                )
-                            if not dry_run:
-                                process_recurse(
-                                    self, inner_source, inner_destination
-                                )
+                return (
+                    subuids[parent_uid] + inner_uid,
+                    subgids[parent_gid] + inner_gid,
+                )
+            except (ValueError, KeyError):
+                raise ValueError(f"Invalid user: {user}")
 
 
-@dataclass(kw_only=True)
-class FolderRule(fs_ops.FolderMixin, RuleBase):
-    """Handles the `folder` rule type."""
+def _expand_paths(base: str, paths: list[str]) -> list[Path]:
+    """Expands a set of paths relative to a base path."""
+    # Make sure that we have an absolute path in case we `cd` somewhere
+    base: Path = Path(x(base)).absolute()
+    out: list[Path] = []
+    path_roots.add(base)
 
-    source: Path
-    destination: Path
+    # Expand the globs for every path in the list
+    for path in x(paths):
+        out += list(sorted(base.glob(path)))
 
-    def __init__(self, *, base: str, **kwargs):
-        """Converts the configuration types to the internal types."""
-        self.source = Path(base)
-        self.destination = Path(base)
-        super().__init__(**kwargs)
+    # Remove the parent paths
+    for path in out[:]:
+        for parent in path.parents:
+            if parent in out:
+                out.remove(parent)
 
-
-@dataclass(kw_only=True)
-class _InstallRule(RuleBase):
-    """A base class for the `link` and `copy` rules ."""
-
-    source: Path
-    destination: Path
-
-    def __init__(self, *, source: str, destination: str, **kwargs):
-        """Converts the configuration types to the internal types."""
-        self.source = Path(source)
-        self.destination = Path(destination)
-        super().__init__(**kwargs)
+    return out
 
 
-class LinkRule(fs_ops.LinkMixin, _InstallRule):
-    """Handles the `link` rule type."""
+def _process_permissions(item: dict, path: Path, executable: bool = False):
+    # Get the configuration values
+    perms = x(item.get("permissions", {}))
+    owner = x(item.get("owner", None))
 
-    pass
+    # Set the owner
+    if owner is not None:
+        owner_uid, owner_gid = _expand_user(owner)
+        chown(path, owner_uid, owner_gid, follow_symlinks=False)
 
+    # Parse the permissions
+    acl_perms: dict[int | acl.OtherUser, str] = {}
+    acl_perms[acl.OTHER_USER] = perms.pop("other", "")
+    for user, perm in perms.items():
+        uid, _ = _expand_user(user)
+        acl_perms[uid] = perm
 
-class CopyRule(fs_ops.CopyMixin, _InstallRule):
-    """Handles the `copy` rule type."""
-
-    pass
-
-
-@dataclass(kw_only=True)
-class PermissionsRule(RuleBase):
-    """Handles the `permissions` rule type."""
-
-    source: Path
-    destination: Path
-
-    def __init__(self, *, base: str, **kwargs):
-        """Converts the configuration types to the internal types."""
-        self.source = Path(base)
-        self.destination = Path(base)
-        super().__init__(**kwargs)
+    # Set the permissions
+    acl.set_path(path, acl_perms, all_execute=executable)
 
 
-#################
-### Functions ###
-#################
+def _is_executable(path: Path) -> bool:
+    """Determines if the file is executable."""
+    if path.is_file():
+        return bool(path.stat().st_mode & EXECUTABLE_MODE)
+    elif path.is_dir():
+        return True
+    else:
+        return False
+
+
+def _get_source_destination(item: dict) -> tuple[list[Path], list[Path]]:
+    """Gets the source and destination paths for an item."""
+    # Get the path roots
+    source = Path(x(item["source"])).absolute()
+    destination = Path(x(item["destination"])).absolute()
+
+    # Expand the source globs
+    sources = _expand_paths(item["source"], item["paths"])
+    # Get the corresponding destination path for each source path
+    destinations = [destination / src.relative_to(source) for src in sources]
+
+    # Add the path roots
+    path_roots.add(source)
+    path_roots.add(destination)
+
+    return sources, destinations
+
+
+######################
+### Rule Functions ###
+######################
+
+
+def process_permissions(item: dict, paths: list[Path]):
+    """Helper function to process the permissions of an item."""
+
+    # Get all the paths
+    recursive = item.get("recursive_permissions", False)
+    if recursive:
+        for path in paths[:]:
+            for subpath in path.rglob("*"):
+                paths.append(subpath)
+
+    # Process each path
+    for path in paths:
+        executable = _is_executable(path)
+        path_roots.add(path)
+        _process_permissions(item, path, executable)
+
+
+def folder_item(item: dict):
+    """Creates the requested folder if it does not already exist."""
+    paths = _expand_paths(item["base"], item["paths"])
+
+    for path in paths:
+        if path.is_dir() and not path.is_symlink():
+            # If the directory already exists, ignore it
+            continue
+        else:
+            # Otherwise, create it
+            path.mkdir(parents=True, exist_ok=True)
+
+    process_permissions(item, paths)
+
+
+def link_item(item: dict):
+    """Creates a symlink from the source to the destination."""
+    # Get the source and destination paths
+    sources, destinations = _get_source_destination(item)
+
+    # Process each target
+    for source, destination in zip(sources, destinations):
+        # If the symlink is already correct, ignore it
+        if destination.is_symlink():
+            if destination.resolve() == source:
+                continue
+
+        # Otherwise, if there's something else here, remove it
+        if destination.exists():
+            if destination.is_dir() and not destination.is_symlink():
+                rmtree(destination)
+            else:
+                destination.unlink()
+
+        # Create the symlink
+        symlink(source, destination)
+
+    process_permissions(item, destinations)
+
+
+def copy_item(item: dict):
+    """Copies the source files to the destination."""
+    # Get the source and destination paths
+    sources, destinations = _get_source_destination(item)
+
+    # Process each target
+    for source, destination in zip(sources, destinations):
+        if not destination.parent.exists():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+
+        # Process directories
+        if source.is_dir():
+            if destination.is_dir() and not destination.is_symlink():
+                # Already a directory here, remove it
+                rmtree(destination)
+            elif destination.exists():
+                # Something else here, remove it
+                destination.unlink()
+
+            # Now, remove the directory and copy over the new one
+            copytree(source, destination, symlinks=True, dirs_exist_ok=True)
+
+            # Reset the owner
+            for path in destination.rglob("*"):
+                chown(path, ROOT, ROOT, follow_symlinks=False)
+
+        elif source.is_file():
+            try:
+                copy_file(source, destination, follow_symlinks=False)
+            except SameFileError:
+                pass
+
+        elif source.is_symlink():
+            try:
+                symlink(source.readlink(), destination)
+            except FileExistsError:
+                destination.unlink()
+                symlink(source.readlink(), destination)
+        else:
+            raise ValueError(f"Invalid source type: {source}")
+
+        # Reset the owner
+        chown(destination, ROOT, ROOT, follow_symlinks=False)
+
+    process_permissions(item, destinations)
+
+
+def permissions_item(item: dict):
+    """Sets the permissions on a path."""
+    paths = _expand_paths(item["base"], item["paths"])
+    process_permissions(item, paths)
 
 
 def process_config(file: BufferedReader):
     """Loads the configuration file and processes all of the rules."""
+    if dry_run:
+        print('"--dry-run" unsupported, sorry!')
+        exit(1)
 
+    # Load the configuration file
     data = toml_load(file)
-    rules: list[RuleBase] = []
+
+    # Handle the variables
     variables = data.get("variables", {})
 
-    def expand_recurse[
-        T: list | dict
-    ](parent: T, keys: range | KeysView, values: list | ValuesView) -> T:
-        """Expands any variables in the configuration."""
-        for key, value in zip(keys, values):
-            match value:
-                case dict():
-                    value = expand_recurse(value, value.keys(), value.values())
-                case list():
-                    value = expand_recurse(value, range(len(value)), value)
-                case str():
-                    value = value.format(**variables)
-                case _:
-                    pass
-            parent[key] = value
-        return parent
+    global x
 
-    data = expand_recurse(data, data.keys(), data.values())
+    def x[
+        T: str | list[str] | dict[str, str | bool | int] | bool | int | None
+    ](value: T) -> T:
+        """Expands the variables in the value."""
+        match value:
+            case dict():
+                return {x(k): x(v) for k, v in value.items()}  # type: ignore
+            case list():
+                return [x(v) for v in value]  # type: ignore
+            case str():
+                return value.format_map(variables)
+            case bool() | int() | None:
+                return value  # type: ignore
+            case _:
+                raise ValueError(f"Invalid value type: {type(value)}")
 
-    # Generate the rules
+    # Process the rules
     for folder in data.get("folder", []):
-        rules.append(FolderRule(**folder))
+        folder_item(folder)
 
     for link in data.get("link", []):
-        rules.append(LinkRule(**link))
+        link_item(link)
 
     for copy in data.get("copy", []):
-        rules.append(CopyRule(**copy))
+        copy_item(copy)
 
     for permissions in data.get("permissions", []):
-        rules.append(PermissionsRule(**permissions))
+        permissions_item(permissions)
 
-    # Process all of the rules
-    for rule in rules:
-        rule.process_all()
+    # Clean up the path roots
+    for path in path_roots.copy():
+        for parent in path.parents:
+            if parent in path_roots:
+                try:
+                    path_roots.remove(parent)
+                except KeyError:
+                    pass
+
+    # Process the SELinux rules
+    try:
+        rules: str = x(data["selinux"]["rules"])
+        subprocess_run(
+            ["/usr/sbin/semanage", "import"],
+            input=rules.encode(),
+            check=True,
+        )
+        subprocess_run(
+            # fmt: off
+            [
+                "/usr/sbin/restorecon",
+                "-R",  # Recursive
+                "-T", "0",  # Multithreaded
+                "-D", # Use hashes, maybe quicker?
+                "-e", "/var/home/.snapshots",  # Exclude snapshots
+                "-e", "/sysroot",  # Exclude OSTree sysroot
+                # Exclude containers
+                "-e", "/var/home/web/.local/share/containers",
+                "-e", "/var/home/max/.local/share/containers",
+                "-e", "/var/home/woodpecker/.local/share/containers",
+                *path_roots, # All path roots
+            ],
+            # fmt: on
+            check=True,
+            capture_output=True,
+        )
+    except KeyError:
+        pass

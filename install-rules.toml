@@ -16,6 +16,19 @@ web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
 
+###############
+### SELinux ###
+###############
+
+[selinux]
+rules = """
+fcontext --deleteall
+fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
+fcontext --add --type container_ro_file_t '/var/home/max/maxchernoff.ca/web/caddy(/.*)?'
+fcontext --add --type container_file_t    '{web}caddy/access.log'
+"""
+
+
 ############
 ### Repo ###
 ############
@@ -23,7 +36,9 @@ woodpecker = "/var/home/woodpecker/"
 [[permissions]]
 base = "{repo}/"
 paths = [".git*", "install-rules.toml", "scripts/"]
+owner = "max"
 permissions.other = ""
+recursive_permissions = true
 
 
 ###########
@@ -34,37 +49,8 @@ permissions.other = ""
 source = "{repo}/etc/"
 destination = "{etc}/"
 paths = ["**/*"]
+owner = "root"
 permissions.other = "r"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["firewalld/"]
-selinux_type = "firewalld_etc_rw"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["snapper/configs/home", "sysconfig/snapper"]
-selinux_type = "snapperd_conf"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["ssh/sshd_config.d/", "rpm-ostreed.conf"]
-selinux_type = "etc"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["sysctl.d/"]
-selinux_type = "system_conf"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["systemd/"]
-selinux_type = "systemd_unit_file"
-
-[[permissions]]
-base = "{etc}/"
-paths = ["localtime"]
-selinux_type = "locale"
 
 
 ###########
@@ -102,9 +88,17 @@ owner = "tex"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = [".config/containers/", ".config/systemd/user/", "caddy/*/"]
+paths = [".config/containers/", ".config/systemd/user/"]
 permissions.web = "r"
-permissions.589824 = "r"                                             # TODO
+owner = "root"
+
+[[link]]
+source = "{repo}/web/"
+destination = "{web}/"
+paths = ["caddy/*/"]
+permissions.web = "r"
+permissions."web/root" = "r"
+permissions.max = "rw"
 owner = "web"
 
 [[folder]]
@@ -115,27 +109,29 @@ paths = [
     "overleaf/overleaf/",
     "woodpecker/data/",
 ]
-owner = "589824"
+owner = "web/root"
 permissions.web = "rw"
 
 [[folder]]
 base = "{web}"
 paths = ["overleaf/redis/", "overleaf/mongo/"]
-owner = "589824"
-permissions.590823 = "rw"
-permissions.589824 = "rw"
+owner = "web/root"
+permissions."web/999" = "rw"
+permissions."web/root" = "rw"
 
 [[folder]]
 base = "{web}"
 paths = ["overleaf/overleaf/"]
-permissions.589857 = "rw"
+owner = "web"
+permissions."web/33" = "rw"
 
 [[permissions]]
 base = "{web}/caddy/"
 paths = ["etc/", "static/"]
-selinux_type = "container_ro_file"
-permissions.589824 = "r"           # TODO
-owner = "web"
+permissions."web/root" = "r"
+permissions."web" = "r"
+owner = "max"
+recursive_permissions = true
 
 [[permissions]]
 base = "{web}/caddy/"
@@ -144,15 +140,15 @@ paths = [
     "static/analytics/graphs",
     "access.log",
 ]
-selinux_type = "container_file"
-permissions.589824 = "rw" # TODO
+permissions."web/root" = "rw"
 permissions.web = "rw"
 owner = "web"
+recursive_permissions = true
 
 [[permissions]]
 base = "{web}/woodpecker/"
 paths = ["data/"]
-permissions.589824 = "rw"  # TODO
+permissions."web/root" = "rw"
 permissions.web = "rw"
 owner = "web"
 
@@ -165,6 +161,7 @@ owner = "web"
 source = "{repo}/woodpecker/"
 destination = "{woodpecker}/"
 paths = [".config/systemd/user/", ".config/containers/"]
+permissions.woodpecker = "r"
 
 [[folder]]
 base = "{woodpecker}"
@@ -174,5 +171,5 @@ owner = "woodpecker"
 [[permissions]]
 base = "{woodpecker}/woodpecker/"
 paths = ["config/"]
-permissions.720896 = "rw"         # TODO
+permissions."woodpecker/root" = "rw"
 owner = "woodpecker"

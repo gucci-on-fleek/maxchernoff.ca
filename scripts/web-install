@@ -9,7 +9,6 @@
 ###############
 
 from argparse import ArgumentParser, FileType
-from os import geteuid
 from pathlib import Path
 from pprint import pprint
 
@@ -53,9 +52,6 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-
-if geteuid() != 0:
-    raise PermissionError("This script must be run as root")
 
 config.verbose = args.verbose
 config.dry_run = args.dry_run
