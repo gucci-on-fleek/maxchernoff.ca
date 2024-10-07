@@ -92,5 +92,19 @@ stardew-valley-item-finder.maxchernoff.ca {
 # MTA-STS needs its own subdomain
 mta-sts.maxchernoff.ca {
 	import default
+	handle / {
+		header Content-Type text/html
+		respond `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>MTA-STS Policy</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>MTA-STS Policy</h1>
+		<p>See <a href="https://datatracker.ietf.org/doc/html/rfc8461#section-3.2">RFC 8461, §3.2</a> and this site’s <a href="/.well-known/mta-sts.txt">MTA-STS policy</a>.
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		` 200
+	}
 	respond "Not Found" 404
 }
