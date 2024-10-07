@@ -3,8 +3,17 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
-set -eu
 
+# shellcheck disable=SC3040
+set -euo pipefail
+
+# Define some text styles
+STYLE_RESET="$(printf '\e[0m')"
+STYLE_OK="$(printf '\e[32m')"
+STYLE_BAD="$(printf '\e[91m')"
+STYLE_FADED="$(printf '\e[2m')"
+
+# Header
 printf \
     'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\n' \
     "$(date '+%A, %-d %B %Y, %-I:%0M%P')" \
@@ -14,6 +23,7 @@ printf \
 | column --table --separator="$(printf '\t')"
 echo
 
+# Body
 (
     systemctl --user -M web@ list-units --with-dependencies --quiet --all \
         caddy.service \
@@ -51,8 +61,12 @@ echo
 ) \
 | tr --squeeze-repeats ' ' \
 | cut --delimiter=' ' --fields=1-5 \
-| sort --field-separator=' ' --key=3 \
+| sort --field-separator=' ' --key=3 --key=2 \
 | uniq \
 | grep --extended-regexp --invert-match 'network-online.target|app.slice|basic.target|-network.service' \
-| column --table --separator=' ' \
+| sed --regexp-extended "s/ (\S+) (\S+)\$/ $STYLE_BAD\1 \2$STYLE_RESET/" \
+| sed --regexp-extended "s/ \S*(loaded) (active|inactive)\S*\$/ ${STYLE_OK}ok$STYLE_RESET $STYLE_FADED\2$STYLE_RESET/" \
+| sed --regexp-extended "s/ (system|tex|web|woodpecker) / $STYLE_FADED\1$STYLE_RESET /" \
+| sed --regexp-extended "s/\.(service|timer) /$STYLE_FADED.\1$STYLE_RESET /" \
+| column --table --separator=' ' --table-right=2 \
 | grep --color=always --extended-regexp '●|not-found|bad-setting|error|failed|dead|start|reload|stop|$'
