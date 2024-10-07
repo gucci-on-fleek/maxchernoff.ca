@@ -51,6 +51,7 @@ echo
     | sed 's/^./\0 tex/' \
     && systemctl --system list-units --quiet --all \
         fail2ban.service \
+        greenboot-healthcheck.service \
         rpm-ostreed-automatic.service \
         rpm-ostreed-automatic.timer \
         snapper-cleanup.service \
@@ -67,6 +68,6 @@ echo
 | sed --regexp-extended "s/ (\S+) (\S+)\$/ $STYLE_BAD\1 \2$STYLE_RESET/" \
 | sed --regexp-extended "s/ \S*(loaded) (active|inactive)\S*\$/ ${STYLE_OK}ok$STYLE_RESET $STYLE_FADED\2$STYLE_RESET/" \
 | sed --regexp-extended "s/ (system|tex|web|woodpecker) / $STYLE_FADED\1$STYLE_RESET /" \
-| sed --regexp-extended "s/\.(service|timer) /$STYLE_FADED.\1$STYLE_RESET /" \
+| sed --regexp-extended "s/\.(service|timer|socket) /$STYLE_FADED.\1$STYLE_RESET /" \
 | column --table --separator=' ' --table-right=2 \
 | grep --color=always --extended-regexp '●|not-found|bad-setting|error|failed|dead|start|reload|stop|$'

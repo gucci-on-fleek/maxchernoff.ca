@@ -96,7 +96,6 @@ def _expand_paths(base: str, paths: list[str]) -> list[Path]:
     # Make sure that we have an absolute path in case we `cd` somewhere
     base: Path = Path(x(base)).absolute()
     out: list[Path] = []
-    path_roots.add(base)
 
     # Expand the globs for every path in the list
     for path in x(paths):
@@ -131,6 +130,9 @@ def _process_permissions(item: dict, path: Path, executable: bool = False):
     # Set the permissions
     acl.set_path(path, acl_perms, all_execute=executable)
 
+    # Add to the path roots
+    path_roots.add(path)
+
 
 def _is_executable(path: Path) -> bool:
     """Determines if the file is executable."""
@@ -154,7 +156,6 @@ def _get_source_destination(item: dict) -> tuple[list[Path], list[Path]]:
     destinations = [destination / src.relative_to(source) for src in sources]
 
     # Add the path roots
-    path_roots.add(source)
     path_roots.add(destination)
 
     return sources, destinations
@@ -178,7 +179,6 @@ def process_permissions(item: dict, paths: list[Path]):
     # Process each path
     for path in paths:
         executable = _is_executable(path)
-        path_roots.add(path)
         _process_permissions(item, path, executable)
 
 
@@ -322,11 +322,17 @@ def process_config(file: BufferedReader):
         permissions_item(permissions)
 
     # Clean up the path roots
+    for variable in variables.values():
+        try:
+            path_roots.remove(Path(variable))
+        except (KeyError, ValueError):
+            pass
+
     for path in path_roots.copy():
         for parent in path.parents:
             if parent in path_roots:
                 try:
-                    path_roots.remove(parent)
+                    path_roots.remove(path)
                 except KeyError:
                     pass
 

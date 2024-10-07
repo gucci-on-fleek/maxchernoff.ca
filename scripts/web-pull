@@ -19,4 +19,4 @@ cd "$root_dir"
 # Update the repository
 git fetch --recurse-submodules=yes
 git reset --recurse-submodules --hard origin/master
-git submodule update --init --recursive --checkout --force
+git submodule update --init --recursive --checkout --force --jobs=4
