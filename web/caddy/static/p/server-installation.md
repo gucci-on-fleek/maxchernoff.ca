@@ -135,7 +135,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper stow vim
+    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper vim
     ```
 
 2. Switch shell to `fish`:
@@ -152,14 +152,6 @@ Post-installation
    complain about a mismatched home location.</span>
 
     Change the home for `max` to `/var/home/max`.
-
-8. Adjust your home directory permissions: <span class=sidenote>Needed
-   for the unprivileged containers to access the Git files.</span>
-
-    ```shell-session
-    $ chmod -R g-rX,o-rX ~
-    $ chmod a+X ~
-    ```
 
 
 Installing TeX Live
@@ -200,22 +192,6 @@ Installing TeX Live
     >     --texdir=/var/home/tex/texlive --scheme=full --paper=letter
     ```
 
-6. Set the Unix permissions:
-
-    ```shell-session
-    % chmod -R g-rX,o-rX ~
-    % chmod a+X ~
-    % chmod -R a+rX ~/texlive
-    ```
-
-7. Add the SELinux rules: <span class=sidenote>Needed for the containers
-   to be able to access the TeX Live installation.</span>
-
-    ```shell-session
-    $ sudo semanage fcontext --add -t container_ro_file_t '/var/home/tex/texlive(/.*)?'
-    $ sudo restorecon -R /var/home/tex/texlive
-    ```
-
 
 Web Server
 ----------
@@ -232,13 +208,6 @@ Web Server
 
     ```shell-session
     $ git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
-    ```
-
-6. Set the Unix permissions:
-
-    ```shell-session
-    $ chmod -R a+rX /var/home/max/maxchernoff.ca/web
-    $ chmod -R a=,u=rwX /var/home/max/maxchernoff.ca/.git
     ```
 
 7. Create the `web` user:
@@ -259,30 +228,11 @@ Web Server
     $ sudo -u web fish
     ```
 
-10. Set the Unix permissions:
-
-    ```shell-session
-    % chmod -R g-rX,o-rX ~  # As the `web` user
-    % chmod a+X ~
-    ```
-
 14. Enable the analytics processor:
 
     ```shell-session
     $ sudo touch ~web/caddy/access.log
-    $ sudo chown $uid:web ~web/caddy/access.log
-    $ sudo chmod a=,ug=rw ~web/caddy/access.log
-
     $ touch ~/maxchernoff.ca/web/caddy/static/analytics/{graphs,requests.tsv}
-    $ chmod -R a=rX,ug=rwX ~/maxchernoff.ca/web/caddy/static/analytics
-    $ chmod g+s ~/maxchernoff.ca/web/caddy/static/analytics
-    $ sudo chgrp -R web ~/maxchernoff.ca/web/caddy/static/analytics
-    ```
-
-16. Start the services:
-
-    ```shell-session
-    $ sudo systemctl --user -M web@ start overleaf-pod.service caddy.service
     ```
 
 18. Reboot to make sure everything starts correctly.
@@ -332,16 +282,6 @@ Woodpecker CI
     ```shell-session
     % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
     >     podman secret create woodpecker_agent_secret -
-    ```
-
-12. Start the services:
-
-    ```shell-session
-    $ sudo systemctl --user -M web@ daemon-reload
-    $ sudo systemctl --user -M web@ start woodpecker-server.service
-
-    $ sudo systemctl --user -M woodpecker@ daemon-reload
-    $ sudo systemctl --user -M woodpecker@ start woodpecker-agent.service
     ```
 
 

@@ -29,9 +29,24 @@ fcontext --add --type container_file_t    '{web}caddy/access.log'
 """
 
 
-############
-### Repo ###
-############
+########################
+### Base Permissions ###
+########################
+
+# max
+[[permissions]]
+base = "{max}"
+paths = ["*"]
+owner = "max"
+permissions.other = ""
+recursive_permissions = false
+
+[[permissions]]
+base = "{repo}"
+paths = ["*"]
+owner = "max"
+permissions.other = ""
+recursive_permissions = true
 
 [[permissions]]
 base = "{repo}/"
@@ -39,6 +54,22 @@ paths = [".git*", "install-rules.toml", "scripts/"]
 owner = "max"
 permissions.other = ""
 recursive_permissions = true
+
+# web
+[[permissions]]
+base = "{web}"
+paths = ["*"]
+owner = "web"
+permissions.other = ""
+recursive_permissions = false
+
+# woodpecker
+[[permissions]]
+base = "{woodpecker}"
+paths = ["*"]
+owner = "woodpecker"
+permissions.other = ""
+recursive_permissions = false
 
 
 ###########
@@ -79,6 +110,13 @@ source = "{repo}/tex/"
 destination = "{tex}/"
 paths = [".config/systemd/user/"]
 owner = "tex"
+
+[[permissions]]
+base = "{tex}"
+paths = ["texlive/"]
+owner = "tex"
+permissions.other = "r"
+recursive_permissions = false
 
 
 ###########
