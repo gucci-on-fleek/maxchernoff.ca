@@ -65,6 +65,10 @@
 	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
 
+	# Remove query parameters
+	@has-query expression `{query} != ""`
+	redir @has-query {path} temporary
+
 	# Handle errors
 	handle_errors {
 		rewrite * /includes/error.html
