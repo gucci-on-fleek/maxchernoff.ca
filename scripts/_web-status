@@ -18,6 +18,8 @@ echo
     systemctl --user -M web@ list-units --with-dependencies --quiet --all \
         caddy.service \
         overleaf-pod.service \
+        podman-auto-prune.service \
+        podman-auto-prune.timer \
         podman-auto-update.service \
         podman-auto-update.timer \
         update-analytics.target \
@@ -25,6 +27,8 @@ echo
         woodpecker-server.service \
     | sed 's/^/\0 web/' \
     && systemctl --user -M woodpecker@ list-units --with-dependencies --quiet --all \
+        podman-auto-prune.service \
+        podman-auto-prune.timer \
         podman-auto-update.service \
         podman-auto-update.timer \
         woodpecker-agent.service \
