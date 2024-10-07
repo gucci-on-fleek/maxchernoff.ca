@@ -9,7 +9,8 @@ set -eu
 # Install the necessary packages
 dnf_packages=(
     # Base dependencies
-    # (nothing)
+    git
+    libxcrypt-compat  # For `biber`
 
     # gucci-on-fleek/lua-widow-control
     curl

@@ -8,8 +8,13 @@ ImageTag=localhost/fedora-local:latest
 Pull=always
 
 [Unit]
-After=podman.socket network-online.target
-Requires=podman.socket network-online.target
+After=podman.socket network-ready.service
+Requires=podman.socket
 
 [Install]
 WantedBy=default.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStartPost=sh -c "{ sleep 1; systemctl --user stop --no-block fedora-local-build.service; } & disown"
