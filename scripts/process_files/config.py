@@ -233,7 +233,7 @@ def copy_item(item: dict):
             destination.parent.mkdir(parents=True, exist_ok=True)
 
         # Process directories
-        if source.is_dir():
+        if source.is_dir() and not source.is_symlink():
             if destination.is_dir() and not destination.is_symlink():
                 # Already a directory here, remove it
                 rmtree(destination)
@@ -248,7 +248,7 @@ def copy_item(item: dict):
             for path in destination.rglob("*"):
                 chown(path, ROOT, ROOT, follow_symlinks=False)
 
-        elif source.is_file():
+        elif source.is_file() and not source.is_symlink():
             try:
                 copy_file(source, destination, follow_symlinks=False)
             except SameFileError:
