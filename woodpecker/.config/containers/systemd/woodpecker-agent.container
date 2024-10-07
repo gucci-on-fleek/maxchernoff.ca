@@ -28,7 +28,7 @@ RestartSteps=5
 [Unit]
 After=podman.socket
 Requires=podman.socket
-StartLimitInterval=300s
+StartLimitIntervalSec=300s
 StartLimitBurst=5
 
 [Install]

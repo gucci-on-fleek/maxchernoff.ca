@@ -228,7 +228,7 @@ owner = "web"
 [[link]]
 source = "{repo}/woodpecker/"
 destination = "{woodpecker}/"
-paths = [".config/systemd/user/", ".config/containers/"]
+paths = [".config/systemd/user/", ".config/containers/", "fedora-local/"]
 permissions.woodpecker = "r"
 
 [[folder]]

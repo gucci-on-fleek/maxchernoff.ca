@@ -217,7 +217,10 @@ def link_item(item: dict):
                 destination.unlink()
 
         # Create the symlink
-        symlink(source, destination)
+        try:
+            symlink(source, destination)
+        except FileNotFoundError:
+            destination.parent.mkdir(parents=True, exist_ok=True)
 
     process_permissions(item, destinations)
 

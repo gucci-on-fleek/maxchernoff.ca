@@ -27,10 +27,12 @@ echo
         woodpecker-server.service \
     | sed 's/^/\0 web/' \
     && systemctl --user -M woodpecker@ list-units --with-dependencies --quiet --all \
+        fedora-local-build.service \
         podman-auto-prune.service \
         podman-auto-prune.timer \
         podman-auto-update.service \
         podman-auto-update.timer \
+        update-fedora-local.timer \
         woodpecker-agent.service \
     | sed 's/^./\0 woodpecker/' \
     && systemctl --user -M tex@ list-units --with-dependencies --quiet --all \

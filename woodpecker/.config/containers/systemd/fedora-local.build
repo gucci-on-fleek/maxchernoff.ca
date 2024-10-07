@@ -1,0 +1,15 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Build]
+SetWorkingDirectory=%h/fedora-local/
+ImageTag=localhost/fedora-local:latest
+Pull=always
+
+[Unit]
+After=podman.socket network-online.target
+Requires=podman.socket network-online.target
+
+[Install]
+WantedBy=default.target
