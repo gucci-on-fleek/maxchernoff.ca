@@ -28,8 +28,6 @@ echo
     systemctl --user -M web@ list-units --with-dependencies --quiet --all \
         caddy.service \
         overleaf-pod.service \
-        podman-auto-prune.service \
-        podman-auto-prune.timer \
         podman-auto-update.service \
         podman-auto-update.timer \
         update-analytics.target \
@@ -38,8 +36,6 @@ echo
     | sed 's/^/\0 web/' \
     && systemctl --user -M woodpecker@ list-units --with-dependencies --quiet --all \
         fedora-local-build.service \
-        podman-auto-prune.service \
-        podman-auto-prune.timer \
         podman-auto-update.service \
         podman-auto-update.timer \
         update-fedora-local.timer \
