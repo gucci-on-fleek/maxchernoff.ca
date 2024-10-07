@@ -17,6 +17,7 @@ root_dir="$(realpath "$script_dir/..")"
 cd "$root_dir"
 
 # Update the repository
-git fetch --recurse-submodules=yes
-git reset --recurse-submodules --hard origin/master
-git submodule update --init --recursive --checkout --force --jobs=4
+git fetch --recurse-submodules=yes --jobs=4 --quiet
+git reset --recurse-submodules --hard origin/master | grep 'HEAD is now at'
+git submodule update --init --recursive --checkout --force --jobs=4 --quiet
+echo ""
