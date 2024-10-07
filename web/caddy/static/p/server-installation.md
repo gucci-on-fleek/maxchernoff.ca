@@ -270,13 +270,6 @@ Woodpecker CI
     $ sudo -u woodpecker fish
     ```
 
-6. Set the Unix permissions:
-
-    ```shell-session
-    % chmod -R g-rX,o-rX ~  # As the `woodpecker` user
-    % chmod a+X ~
-    ```
-
 7. Add the Woodpecker agent Podman secrets:
 
     ```shell-session
@@ -288,7 +281,7 @@ Woodpecker CI
 Snapshots
 ---------
 
-2. Mount the snapshot directory:
+1. Mount the snapshot directory:
 
     ```ini
     # /etc/fstab
