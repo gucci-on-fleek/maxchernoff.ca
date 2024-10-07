@@ -135,7 +135,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup btrfs-progs fail2ban fish git goaccess htop snapper vim
+    $ sudo rpm-ostree install borgbackup btrfs-progs busybox fail2ban fish git goaccess htop snapper vim
     ```
 
 2. Switch shell to `fish`:
@@ -192,6 +192,24 @@ Installing TeX Live
     >     --texdir=/var/home/tex/texlive --scheme=full --paper=letter
     ```
 
+6. Download and run the ConTeXt installer:
+
+    ```shell-session
+    % mkdir -p ~/context-installer
+    % cd ~/context-installer
+    % curl -O 'https://lmtx.pragma-ade.com/install-lmtx/context-linux-64.zip'
+    % busybox unzip context-linux-64.zip
+    % chmod a+x install.sh
+    % ./install.sh
+    % ln -s ~/context-installer/tex ~/context
+    ```
+
+7. Install the ConTeXt modules:
+
+    ```shell-session
+    % cd ~/context
+    % ./texmf-linux-64/bin/mtxrun --script install-modules --install --all
+    ```
 
 Web Server
 ----------

@@ -6,8 +6,8 @@
 Description="Update TeX Live"
 
 [Timer]
-OnBootSec=5min
-OnUnitActiveSec=8h
+OnBootSec=10min
+OnUnitActiveSec=1d
 Unit=update-texlive.service
 
 [Install]

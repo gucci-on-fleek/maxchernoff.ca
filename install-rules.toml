@@ -24,6 +24,7 @@ woodpecker = "/var/home/woodpecker/"
 rules = """
 fcontext --deleteall
 fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
+fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '/var/home/max/maxchernoff.ca/web/caddy(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
 """
@@ -142,10 +143,10 @@ owner = "tex"
 
 [[permissions]]
 base = "{tex}"
-paths = ["texlive/"]
+paths = ["texlive/", "context-installer/tex/", "context/"]
 owner = "tex"
 permissions.other = "r"
-recursive_permissions = false
+recursive_permissions = false                              # Too slow to set permissions on all files
 
 
 ###########
