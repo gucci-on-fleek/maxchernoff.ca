@@ -63,6 +63,13 @@ owner = "web"
 permissions.other = ""
 recursive_permissions = false
 
+[[permissions]]
+base = "{repo}"
+paths = ["web/"]
+owner = "max"
+permissions.web = "r"
+recursive_permissions = true
+
 # woodpecker
 [[permissions]]
 base = "{woodpecker}"
@@ -70,6 +77,28 @@ paths = ["*"]
 owner = "woodpecker"
 permissions.other = ""
 recursive_permissions = false
+
+[[permissions]]
+base = "{repo}"
+paths = ["woodpecker/"]
+owner = "max"
+permissions.woodpecker = "r"
+recursive_permissions = true
+
+# tex
+[[permissions]]
+base = "{tex}"
+paths = ["*"]
+owner = "tex"
+permissions.other = ""
+recursive_permissions = false
+
+[[permissions]]
+base = "{repo}"
+paths = ["tex/"]
+owner = "max"
+permissions.tex = "r"
+recursive_permissions = true
 
 
 ###########
