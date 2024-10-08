@@ -66,7 +66,10 @@
 	rewrite / /includes/index
 
 	# Remove query parameters
-	@has-query expression `{query} != ""`
+	@has-query {
+		expression `{query} != ""`
+		not path /.well-known/*
+	}
 	redir @has-query {path} temporary
 
 	# Handle errors
