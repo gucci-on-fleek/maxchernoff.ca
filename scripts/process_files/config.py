@@ -211,6 +211,14 @@ def folder_item(item: dict):
     process_permissions(item, paths)
 
 
+def touch_item(item: dict):
+    """Touches a path."""
+    paths = _expand_paths(item["base"], item["paths"])
+    for path in paths:
+        path.touch(exist_ok=True)
+    process_permissions(item, paths)
+
+
 def link_item(item: dict):
     """Creates a symlink from the source to the destination."""
     # Get the source and destination paths
@@ -325,6 +333,9 @@ def process_config(file: BufferedReader):
     # Process the rules
     for folder in data.get("folder", []):
         folder_item(folder)
+
+    for path in data.get("touch", []):
+        touch_item(path)
 
     for link in data.get("link", []):
         link_item(link)

@@ -42,7 +42,6 @@ base = "{max}"
 paths = ["*"]
 owner = "max"
 permissions.other = ""
-recursive_permissions = false
 
 # repo
 [[permissions]]
@@ -50,14 +49,12 @@ base = "{repo-user}"
 paths = ["*"]
 owner = "repo"
 permissions.other = ""
-recursive_permissions = false
 
 [[permissions]]
 base = "/var/home/"
 paths = ["repo/", "repo/maxchernoff.ca/"]
 owner = "repo"
 permissions.other = "r"
-recursive_permissions = false
 
 [[permissions]]
 base = "{repo}"
@@ -96,7 +93,6 @@ base = "{web}"
 paths = ["*"]
 owner = "web"
 permissions.other = ""
-recursive_permissions = false
 
 [[permissions]]
 base = "{repo}"
@@ -111,7 +107,6 @@ base = "{woodpecker}"
 paths = ["*"]
 owner = "woodpecker"
 permissions.other = ""
-recursive_permissions = false
 
 [[permissions]]
 base = "{repo}"
@@ -126,7 +121,6 @@ base = "{tex}"
 paths = ["*"]
 owner = "tex"
 permissions.other = ""
-recursive_permissions = false
 
 [[permissions]]
 base = "{repo}"
@@ -235,7 +229,7 @@ permissions."web" = "r"
 owner = "repo"
 recursive_permissions = true
 
-[[permissions]]
+[[touch]]
 base = "{web}/caddy/"
 paths = [
     "static/analytics/requests.tsv",
@@ -245,7 +239,6 @@ paths = [
 permissions."web/root" = "rw"
 permissions.web = "rw"
 owner = "web"
-recursive_permissions = true
 
 [[permissions]]
 base = "{web}/woodpecker/"

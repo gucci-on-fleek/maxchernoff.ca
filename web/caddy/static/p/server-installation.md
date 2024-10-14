@@ -246,13 +246,6 @@ Web Server
     $ sudo -u web fish
     ```
 
-14. Enable the analytics processor:
-
-    ```shell-session
-    $ sudo touch ~web/caddy/access.log
-    $ touch ~/maxchernoff.ca/web/caddy/static/analytics/{graphs,requests.tsv}
-    ```
-
 18. Reboot to make sure everything starts correctly.
 
 
