@@ -11,9 +11,6 @@ Pull=always
 After=podman.socket network-ready.service
 Requires=podman.socket
 
-[Install]
-WantedBy=default.target
-
 [Service]
 Type=oneshot
 RemainAfterExit=no
