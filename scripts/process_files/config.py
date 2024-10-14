@@ -110,10 +110,13 @@ def _expand_paths(base: str, paths: list[str]) -> list[Path]:
     return out
 
 
-def _process_permissions(item: dict, path: Path, executable: bool = False):
+def _process_permissions(item: dict, path: Path):
     # Get the configuration values
     perms = x(item.get("permissions", {}))
     owner = x(item.get("owner", None))
+
+    # Determine if the file is executable
+    everyone_executable = _is_executable(path)
 
     # Set the owner
     if owner is not None:
@@ -125,10 +128,21 @@ def _process_permissions(item: dict, path: Path, executable: bool = False):
     acl_perms[acl.OTHER_USER] = perms.pop("other", "")
     for user, perm in perms.items():
         uid, _ = _expand_user(user)
+
+        # If the path is a directory, then "X" adds the executable bit;
+        # otherwise, it does nothing. In addition, if the path is a directory
+        # and you have read permissions, you also get execute permissions.
+        if path.is_dir():
+            perm = perm.replace("X", "x")
+            if "r" in perm and "x" not in perm:
+                perm = perm + "x"
+        else:
+            perm = perm.replace("X", "")
+
         acl_perms[uid] = perm
 
     # Set the permissions
-    acl.set_path(path, acl_perms, all_execute=executable)
+    acl.set_path(path, acl_perms, everyone_executable=everyone_executable)
 
     # Add to the path roots
     path_roots.add(path)
@@ -178,8 +192,7 @@ def process_permissions(item: dict, paths: list[Path]):
 
     # Process each path
     for path in paths:
-        executable = _is_executable(path)
-        _process_permissions(item, path, executable)
+        _process_permissions(item, path)
 
 
 def folder_item(item: dict):

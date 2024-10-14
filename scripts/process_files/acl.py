@@ -273,9 +273,12 @@ class Acl(Entries):
 # Constants
 OTHER_USER: "OtherUser" = "other"
 PERMISSIONS = {
+    "": Permissions.EMPTY,
     "r": Permissions.READ,
     "rw": Permissions.READ | Permissions.WRITE,
-    "": Permissions.EMPTY,
+    "rwx": Permissions.READ | Permissions.WRITE | Permissions.EXEC,
+    "rx": Permissions.READ | Permissions.EXEC,
+    "x": Permissions.EXEC,
 }
 
 # Types
@@ -286,14 +289,14 @@ OtherUser = Literal["other"]
 def set_path(
     path: Path,
     permissions: dict[int | OtherUser, str],
-    all_execute: bool,
+    everyone_executable: bool,
 ) -> None:
     """Set the ACL for a file."""
     if not (path.resolve().is_file() or path.resolve().is_dir()):
         return
 
     # Get the execution permission
-    executable = Permissions.EXEC if all_execute else Permissions.EMPTY
+    executable = Permissions.EXEC if everyone_executable else Permissions.EMPTY
 
     # Get the default permissions for all other users
     other = PERMISSIONS[permissions.pop(OTHER_USER, "")] | executable

@@ -10,7 +10,8 @@
 [variables]
 etc = "/etc/"
 max = "/var/home/max/"
-repo = "/var/home/max/maxchernoff.ca/"
+repo = "/var/home/repo/maxchernoff.ca/"
+repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
@@ -25,7 +26,7 @@ rules = """
 fcontext --deleteall
 fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
-fcontext --add --type container_ro_file_t '/var/home/max/maxchernoff.ca/web/caddy(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
 """
 
@@ -40,19 +41,27 @@ base = "{max}"
 paths = ["*"]
 owner = "max"
 permissions.other = ""
+recursive_permissions = true
+
+# repo
+[[permissions]]
+base = "{repo-user}"
+paths = ["*"]
+owner = "repo"
+permissions.other = ""
 recursive_permissions = false
 
 [[permissions]]
 base = "{repo}"
-paths = ["*"]
-owner = "max"
-permissions.other = ""
-recursive_permissions = true
+paths = ["..", ".", "*"]
+owner = "repo"
+permissions.other = "X"
+recursive_permissions = false
 
 [[permissions]]
 base = "{repo}/"
 paths = [".git*", "install-rules.toml", "scripts/"]
-owner = "max"
+owner = "repo"
 permissions.other = ""
 recursive_permissions = true
 
@@ -67,7 +76,7 @@ recursive_permissions = false
 [[permissions]]
 base = "{repo}"
 paths = ["web/"]
-owner = "max"
+owner = "repo"
 permissions.web = "r"
 recursive_permissions = true
 
@@ -82,7 +91,7 @@ recursive_permissions = false
 [[permissions]]
 base = "{repo}"
 paths = ["woodpecker/"]
-owner = "max"
+owner = "repo"
 permissions.woodpecker = "r"
 recursive_permissions = true
 
@@ -97,7 +106,7 @@ recursive_permissions = false
 [[permissions]]
 base = "{repo}"
 paths = ["tex/"]
-owner = "max"
+owner = "repo"
 permissions.tex = "r"
 recursive_permissions = true
 
@@ -198,7 +207,7 @@ base = "{web}/caddy/"
 paths = ["etc/", "static/"]
 permissions."web/root" = "r"
 permissions."web" = "r"
-owner = "max"
+owner = "repo"
 recursive_permissions = true
 
 [[permissions]]
