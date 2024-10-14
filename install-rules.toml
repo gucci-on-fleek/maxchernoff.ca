@@ -13,6 +13,7 @@ max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
+usrlocal = "/var/usrlocal/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
@@ -41,7 +42,7 @@ base = "{max}"
 paths = ["*"]
 owner = "max"
 permissions.other = ""
-recursive_permissions = true
+recursive_permissions = false
 
 # repo
 [[permissions]]
@@ -52,8 +53,15 @@ permissions.other = ""
 recursive_permissions = false
 
 [[permissions]]
+base = "/var/home/"
+paths = ["repo/"]
+owner = "repo"
+permissions.other = "r"
+recursive_permissions = false
+
+[[permissions]]
 base = "{repo}"
-paths = ["..", ".", "*"]
+paths = ["*"]
 owner = "repo"
 permissions.other = "X"
 recursive_permissions = false
@@ -64,6 +72,23 @@ paths = [".git*", "install-rules.toml", "scripts/"]
 owner = "repo"
 permissions.other = ""
 recursive_permissions = true
+
+
+# scripts
+[[copy]]
+source = "{repo}/scripts/"
+destination = "{usrlocal}/sbin/"
+paths = ["web-install"]
+owner = "root"
+permissions.other = "r"
+
+[[copy]]
+source = "{repo}/scripts/"
+destination = "{usrlocal}/lib/python3.12/site-packages/"
+paths = ["process_files/"]
+owner = "root"
+permissions.other = "r"
+
 
 # web
 [[permissions]]

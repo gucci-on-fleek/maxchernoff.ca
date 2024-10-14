@@ -1,0 +1,23 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Unit]
+Description=Pulls the files from the server Git repository
+After=network-ready.service
+Before=install-repo.service
+
+[Service]
+# Limit the permissions to the minimum necessary
+User=repo
+
+Type=oneshot
+WorkingDirectory=%h/maxchernoff.ca
+ExecStart=/usr/bin/git fetch --recurse-submodules=yes --jobs=4 --quiet
+ExecStart=/bin/bash -c "\
+    set -euo pipefail && \
+    /usr/bin/git verify-commit FETCH_HEAD --raw 2>&1 | \
+    /usr/bin/grep --quiet 'VALIDSIG 5C696408F561E6C2A12A2BA08FD44004DB2B757E'"
+ExecStart=/usr/bin/git reset --recurse-submodules --hard FETCH_HEAD
+ExecStart=/usr/bin/git submodule update --init --recursive --checkout --force --jobs=4 --quiet
+

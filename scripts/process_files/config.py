@@ -123,22 +123,23 @@ def _process_permissions(item: dict, path: Path):
         owner_uid, owner_gid = _expand_user(owner)
         chown(path, owner_uid, owner_gid, follow_symlinks=False)
 
-    # Parse the permissions
-    acl_perms: dict[int | acl.OtherUser, str] = {}
-    acl_perms[acl.OTHER_USER] = perms.pop("other", "")
+    # If the path is a directory, then "X" adds the executable bit;
+    # otherwise, it does nothing. In addition, if the path is a directory
+    # and you have read permissions, you also get execute permissions.
     for user, perm in perms.items():
-        uid, _ = _expand_user(user)
-
-        # If the path is a directory, then "X" adds the executable bit;
-        # otherwise, it does nothing. In addition, if the path is a directory
-        # and you have read permissions, you also get execute permissions.
         if path.is_dir():
             perm = perm.replace("X", "x")
             if "r" in perm and "x" not in perm:
                 perm = perm + "x"
         else:
             perm = perm.replace("X", "")
+        perms[user] = perm
 
+    # Parse the permissions
+    acl_perms: dict[int | acl.OtherUser, str] = {}
+    acl_perms[acl.OTHER_USER] = perms.pop("other", "")
+    for user, perm in perms.items():
+        uid, _ = _expand_user(user)
         acl_perms[uid] = perm
 
     # Set the permissions
@@ -232,7 +233,7 @@ def link_item(item: dict):
         # Create the symlink
         try:
             symlink(source, destination)
-        except FileNotFoundError:
+        except (FileNotFoundError, FileExistsError):
             destination.parent.mkdir(parents=True, exist_ok=True)
 
     process_permissions(item, destinations)
