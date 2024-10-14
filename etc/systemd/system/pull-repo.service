@@ -5,14 +5,13 @@
 [Unit]
 Description=Pulls the files from the server Git repository
 After=network-ready.service
-Before=install-repo.service
 
 [Service]
 # Limit the permissions to the minimum necessary
 User=repo
 
 Type=oneshot
-WorkingDirectory=%h/maxchernoff.ca
+WorkingDirectory=/home/repo/maxchernoff.ca
 ExecStart=/usr/bin/git fetch --recurse-submodules=yes --jobs=4 --quiet
 ExecStart=/bin/bash -c "\
     set -euo pipefail && \

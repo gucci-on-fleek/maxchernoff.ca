@@ -13,7 +13,7 @@ max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
-usrlocal = "/var/usrlocal/"
+usrlocal = "/usr/local/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
@@ -54,7 +54,7 @@ recursive_permissions = false
 
 [[permissions]]
 base = "/var/home/"
-paths = ["repo/"]
+paths = ["repo/", "repo/maxchernoff.ca/"]
 owner = "repo"
 permissions.other = "r"
 recursive_permissions = false
@@ -63,12 +63,12 @@ recursive_permissions = false
 base = "{repo}"
 paths = ["*"]
 owner = "repo"
-permissions.other = "X"
-recursive_permissions = false
+permissions.other = "r"
+recursive_permissions = true
 
 [[permissions]]
 base = "{repo}/"
-paths = [".git*", "install-rules.toml", "scripts/"]
+paths = [".git*", "install-rules.toml"]
 owner = "repo"
 permissions.other = ""
 recursive_permissions = true

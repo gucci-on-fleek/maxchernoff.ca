@@ -233,7 +233,7 @@ def link_item(item: dict):
         # Create the symlink
         try:
             symlink(source, destination)
-        except (FileNotFoundError, FileExistsError):
+        except FileNotFoundError:
             destination.parent.mkdir(parents=True, exist_ok=True)
 
     process_permissions(item, destinations)
@@ -375,7 +375,6 @@ def process_config(file: BufferedReader):
             ],
             # fmt: on
             check=True,
-            capture_output=True,
         )
     except KeyError:
         pass
