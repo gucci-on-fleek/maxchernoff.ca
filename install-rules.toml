@@ -75,7 +75,7 @@ recursive_permissions = true
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/sbin/"
-paths = ["web-install"]
+paths = ["web-install", "web-status"]
 owner = "root"
 permissions.other = "r"
 
