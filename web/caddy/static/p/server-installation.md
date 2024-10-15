@@ -154,6 +154,36 @@ Post-installation
     Change the home for `max` to `/var/home/max`.
 
 
+Downloading the repository
+--------------------------
+
+1. Create the `repo` user:
+
+    ```shell-session
+    $ sudo useradd --create-home --shell /usr/sbin/nologin repo
+    ```
+
+2. Switch to the `repo` user:
+
+    ```
+    $ sudo -u repo fish
+    ```
+
+1. Generate a new <abbr>SSH</abbr> key:
+
+    ```shell-session
+    % ssh-keygen -t ed25519
+    ```
+
+2. Add this new key as a single-repo deploy key on GitHub.
+
+3. Clone the repository:
+
+    ```shell-session
+    % git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
+    ```
+
+
 Installing TeX Live
 -------------------
 
@@ -214,21 +244,8 @@ Installing TeX Live
 Web Server
 ----------
 
-1. Generate a new <abbr>SSH</abbr> key:
 
-    ```shell-session
-    $ ssh-keygen -t ed25519
-    ```
-
-2. Add this new key as a single-repo deploy key on GitHub.
-
-3. Clone the repository:
-
-    ```shell-session
-    $ git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
-    ```
-
-7. Create the `web` user:
+1. Create the `web` user:
 
     ```shell-session
     $ sudo useradd --create-home --shell /usr/sbin/nologin web
@@ -291,6 +308,12 @@ Woodpecker CI
 
 Snapshots
 ---------
+
+1. Create subvolumes for the `.local` and `.cache` directories for every user:
+
+    ```shell-session
+    $ btrfs subvolume create {.local,.cache}
+    ```
 
 1. Mount the snapshot directory:
 
