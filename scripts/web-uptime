@@ -1,0 +1,14 @@
+#!/bin/bash
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+set -euo pipefail
+
+printf \
+    'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\n' \
+    "$(date '+%A, %-d %B %Y, %-I:%0M%P')" \
+    "$(rpm-ostree status --booted --jsonpath='.deployments[0].version' | grep -oP '[.\d]+')" \
+    "$(uptime --pretty | sed 's/up //')" \
+    $(cat /proc/loadavg) \
+| column --table --separator="$(printf '\t')"

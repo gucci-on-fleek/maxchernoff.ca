@@ -81,6 +81,13 @@ permissions.other = "r"
 
 [[copy]]
 source = "{repo}/scripts/"
+destination = "{usrlocal}/bin/"
+paths = ["web-uptime"]
+owner = "root"
+permissions.other = "r"
+
+[[copy]]
+source = "{repo}/scripts/"
 destination = "{usrlocal}/lib/python3.12/site-packages/"
 paths = ["process_files/"]
 owner = "root"
