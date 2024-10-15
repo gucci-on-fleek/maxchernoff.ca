@@ -334,9 +334,6 @@ def process_config(file: BufferedReader):
     for folder in data.get("folder", []):
         folder_item(folder)
 
-    for path in data.get("touch", []):
-        touch_item(path)
-
     for link in data.get("link", []):
         link_item(link)
 
@@ -345,6 +342,9 @@ def process_config(file: BufferedReader):
 
     for permissions in data.get("permissions", []):
         permissions_item(permissions)
+
+    for path in data.get("touch", []):
+        touch_item(path)
 
     # Clean up the path roots
     for variable in variables.values():

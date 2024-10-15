@@ -10,8 +10,9 @@
 
 from argparse import ArgumentParser, FileType
 from dataclasses import dataclass
-from datetime import date
+from datetime import datetime
 from functools import cache, cached_property
+from os import seteuid
 from pprint import pprint
 from pwd import getpwnam
 from typing import TYPE_CHECKING, Callable, Literal, overload
@@ -50,7 +51,7 @@ Styler = Callable[[str], str]
 #################
 
 # Base constants
-DATE_FORMAT = "%b %d, %-I:%M%P"
+DATE_FORMAT = "%b %d %I:%M%P"
 SOCKET_PREFIX = b"unix:path="
 SYSTEM_USER = "system"
 
@@ -59,6 +60,28 @@ STYLE_BAD = "\x1B[91m"
 STYLE_FADED = "\x1B[2m"
 STYLE_OK = "\x1B[32m"
 STYLE_RESET = "\x1B[0m"
+
+
+############################
+### Function Definitions ###
+############################
+
+
+def format_date(unix_int: int) -> str:
+    """Formats a Unix timestamp as a date."""
+    if not unix_int:
+        return "Never"
+    else:
+        return datetime.fromtimestamp(unix_int // 1e6).strftime(DATE_FORMAT)
+
+
+@cache
+def get_user_id(user_name: str) -> int:
+    """Gets the user ID for a given user name."""
+    if user_name == SYSTEM_USER:
+        return 0
+    else:
+        return getpwnam(user_name).pw_uid
 
 
 #########################
@@ -100,11 +123,12 @@ class _SystemdUser:
         if self.user_name == SYSTEM_USER:
             path = "/run/dbus/system_bus_socket"
         else:
-            uid = getpwnam(self.user_name).pw_uid
+            uid = get_user_id(self.user_name)
             path = f"/run/user/{uid}/bus"
 
         bus = dbus.DBusAddress(SOCKET_PREFIX + path.encode(), False)
         bus.open()
+
         return bus
 
     @cached_property
@@ -123,8 +147,15 @@ class _SystemdUser:
 
 
 @cache
-def User(user_name: str) -> _SystemdUser:
+def _User(user_name: str) -> _SystemdUser:
     return _SystemdUser(user_name)
+
+
+def User(user_name: str) -> _SystemdUser:
+    """Switch to a user and get the user's Systemd units."""
+    seteuid(0)
+    seteuid(get_user_id(user_name))
+    return _User(user_name)
 
 
 # The maximum widths for each field in `UnitStatus`.
@@ -185,28 +216,15 @@ class UnitStatus:
         if self.load_state == "loaded" and (
             self.state == "active" or self.state == "inactive"
         ):
-            line.insert(1, Style.ok("·"))
+            line.insert(0, Style.ok("·"))
             line.append(self._fmt("substate", "<", Style.faded))
         else:
-            line.insert(1, Style.bad("●"))
+            line.insert(0, Style.bad("●"))
             line.append(self._fmt("substate", "<", Style.bad))
 
         line.append(self._fmt("since", "<", Style.faded))
 
         return "  ".join(line)
-
-
-############################
-### Function Definitions ###
-############################
-
-
-def format_date(unix_int: int) -> str:
-    """Formats a Unix timestamp as a date."""
-    if not unix_int:
-        return "Never"
-    else:
-        return date.fromtimestamp(unix_int // 1e6).strftime(DATE_FORMAT)
 
 
 ###################
@@ -231,7 +249,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Process the configuration file
-unit_statuses: list[str] = []
+unit_statuses: list[UnitStatus] = []
 
 for line in args.config_file.readlines():
     # Remove comments and whitespace
@@ -241,7 +259,7 @@ for line in args.config_file.readlines():
 
     # Get the user and unit name
     unit_name, user_name = line.split()
-    unit_statuses.append(str(UnitStatus(user_name, unit_name)))
+    unit_statuses.append(UnitStatus(user_name, unit_name))
 
 # Print the unit statuses
-print("\n".join(unit_statuses))
+print("\n".join(map(str, unit_statuses)))

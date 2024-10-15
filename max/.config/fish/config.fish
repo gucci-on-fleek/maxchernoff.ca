@@ -7,5 +7,4 @@
 bind \f 'clear && commandline -f repaint'
 
 # Add the required PATH entries
-fish_add_path ~repo/maxchernoff.ca/scripts/
 fish_add_path ~tex/texlive/bin/x86_64-linux/
