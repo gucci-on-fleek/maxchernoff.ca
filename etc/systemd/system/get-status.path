@@ -8,3 +8,7 @@ Description=Triggers get-status.service
 [Path]
 Unit=get-status.service
 PathModified=/var/home/repo/triggers/get-status.trigger
+
+[Install]
+WantedBy=multi-user.target
+

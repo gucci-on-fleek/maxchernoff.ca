@@ -8,3 +8,6 @@ Description=Triggers install-repo.service
 [Path]
 Unit=install-repo.service
 PathModified=/var/home/repo/triggers/install-repo.trigger
+
+[Install]
+WantedBy=multi-user.target

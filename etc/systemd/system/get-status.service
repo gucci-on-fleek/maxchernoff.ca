@@ -7,10 +7,14 @@ Description=Gets the server status
 
 [Service]
 User=root
-StandardOutput=truncate:/var/home/repo/triggers/get-status.output
+StandardOutput=append:/var/home/repo/triggers/get-status.output
 StandardError=journal
 
 Type=oneshot
+ExecStartPre=/usr/bin/truncate --size 0 /var/home/repo/triggers/get-status.output
 ExecStart=/usr/local/bin/web-uptime
 ExecStart=/usr/bin/echo
 ExecStart=/usr/local/sbin/web-status /var/home/repo/maxchernoff.ca/unit-status.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -18,5 +18,7 @@ ExecStart=/usr/bin/systemctl --user --machine "repo@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "web@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "woodpecker@" daemon-reload
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/
+ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/ /var/usrlocal/bin/
 
+[Install]
+WantedBy=multi-user.target

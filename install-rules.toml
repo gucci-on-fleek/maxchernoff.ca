@@ -29,6 +29,7 @@ fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
+fcontext --add --type var_log_t           '{repo-user}triggers(/.*)?'
 """
 
 
