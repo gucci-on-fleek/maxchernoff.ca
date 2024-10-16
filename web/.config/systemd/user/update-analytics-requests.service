@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
-Description="Update Analytics Requests"
+Description=Update Analytics Requests
 After=update-analytics.target
 Upholds=update-analytics.target
 
