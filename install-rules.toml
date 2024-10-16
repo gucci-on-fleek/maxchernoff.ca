@@ -32,18 +32,10 @@ fcontext --add --type container_file_t    '{web}caddy/access.log'
 """
 
 
-########################
-### Base Permissions ###
-########################
+############
+### repo ###
+############
 
-# max
-[[permissions]]
-base = "{max}"
-paths = ["*"]
-owner = "max"
-permissions.other = ""
-
-# repo
 [[permissions]]
 base = "{repo-user}"
 paths = ["*"]
@@ -71,7 +63,22 @@ permissions.other = ""
 recursive_permissions = true
 
 
-# scripts
+###########
+### etc ###
+###########
+
+[[copy]]
+source = "{repo}/etc/"
+destination = "{etc}/"
+paths = ["**/*"]
+owner = "root"
+permissions.other = "r"
+
+
+#################
+### usr/local ###
+#################
+
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/sbin/"
@@ -94,35 +101,34 @@ owner = "root"
 permissions.other = "r"
 
 
-# web
+###########
+### max ###
+###########
+
 [[permissions]]
-base = "{web}"
+base = "{max}"
 paths = ["*"]
-owner = "web"
+owner = "max"
 permissions.other = ""
 
-[[permissions]]
-base = "{repo}"
-paths = ["web/"]
-owner = "repo"
-permissions.web = "r"
-recursive_permissions = true
+[[link]]
+source = "{repo}/max/"
+destination = "{max}/"
+paths = [".ssh/known_hosts", ".config/fish/config.fish"]
+owner = "max"
 
-# woodpecker
-[[permissions]]
-base = "{woodpecker}"
-paths = ["*"]
-owner = "woodpecker"
-permissions.other = ""
+# Risky, so we keep this commented out most of the time
+# [[copy]]
+# source = "{repo}/max/"
+# destination = "{max}/"
+# paths = [".ssh/authorized_keys",]
+# owner = "max"
 
-[[permissions]]
-base = "{repo}"
-paths = ["woodpecker/"]
-owner = "repo"
-permissions.woodpecker = "r"
-recursive_permissions = true
 
-# tex
+###########
+### tex ###
+###########
+
 [[permissions]]
 base = "{tex}"
 paths = ["*"]
@@ -136,40 +142,6 @@ owner = "repo"
 permissions.tex = "r"
 recursive_permissions = true
 
-
-###########
-### etc ###
-###########
-
-[[copy]]
-source = "{repo}/etc/"
-destination = "{etc}/"
-paths = ["**/*"]
-owner = "root"
-permissions.other = "r"
-
-
-###########
-### max ###
-###########
-
-[[link]]
-source = "{repo}/max/"
-destination = "{max}/"
-paths = [".ssh/known_hosts", ".config/fish/config.fish"]
-owner = "max"
-
-# [[copy]]
-# source = "{repo}/max/"
-# destination = "{max}/"
-# paths = [".ssh/authorized_keys",]
-# owner = "max"
-
-
-###########
-### tex ###
-###########
-
 [[link]]
 source = "{repo}/tex/"
 destination = "{tex}/"
@@ -181,12 +153,25 @@ base = "{tex}"
 paths = ["texlive/", "context-installer/tex/", "context/"]
 owner = "tex"
 permissions.other = "r"
-recursive_permissions = false                              # Too slow to set permissions on all files
+recursive_permissions = false # Too slow to set permissions on all files
 
 
 ###########
 ### web ###
 ###########
+
+[[permissions]]
+base = "{web}"
+paths = ["*"]
+owner = "web"
+permissions.other = ""
+
+[[permissions]]
+base = "{repo}"
+paths = ["web/"]
+owner = "repo"
+permissions.web = "r"
+recursive_permissions = true
 
 [[link]]
 source = "{repo}/web/"
@@ -258,6 +243,19 @@ owner = "web"
 ##################
 ### woodpecker ###
 ##################
+
+[[permissions]]
+base = "{woodpecker}"
+paths = ["*"]
+owner = "woodpecker"
+permissions.other = ""
+
+[[permissions]]
+base = "{repo}"
+paths = ["woodpecker/"]
+owner = "repo"
+permissions.woodpecker = "r"
+recursive_permissions = true
 
 [[link]]
 source = "{repo}/woodpecker/"
