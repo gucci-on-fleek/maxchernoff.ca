@@ -99,7 +99,7 @@ def _expand_paths(base: str, paths: list[str]) -> list[Path]:
 
     # Expand the globs for every path in the list
     for path in x(paths):
-        out += list(sorted(base.glob(path)))
+        out += list(sorted(base.glob(path))) or [base / path]
 
     # Remove the parent paths
     for path in out[:]:

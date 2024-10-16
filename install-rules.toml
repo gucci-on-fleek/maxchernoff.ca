@@ -44,7 +44,7 @@ permissions.other = ""
 
 [[permissions]]
 base = "/var/home/"
-paths = ["repo/", "repo/maxchernoff.ca/"]
+paths = ["repo/", "repo/maxchernoff.ca/", "repo/triggers/"]
 owner = "repo"
 permissions.other = "r"
 
@@ -61,6 +61,20 @@ paths = [".git*", "install-rules.toml"]
 owner = "repo"
 permissions.other = ""
 recursive_permissions = true
+
+[[folder]]
+base = "{repo-user}"
+paths = ["triggers"]
+owner = "repo"
+permissions.other = "r"
+
+[[touch]]
+base = "{repo-user}/triggers/"
+paths = ["install-repo.trigger", "get-status.trigger", "get-status.output"]
+owner = "repo"
+permissions.max = "rw"
+permissions.root = "rw"
+permissions.other = ""
 
 
 ###########

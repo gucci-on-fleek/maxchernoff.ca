@@ -11,15 +11,13 @@ fish_add_path ~tex/texlive/bin/x86_64-linux/
 
 # Aliases
 function ok
-    sudo --validate
-    web-uptime
-    echo
-    sudo web-status ~repo/maxchernoff.ca/unit-status.conf
+    echo "$(date)" > ~repo/triggers/get-status.trigger
+    sleep 0.50
+    cat ~repo/triggers/get-status.output
 end
 
 function refresh
-    sudo systemctl start install-repo.service
-    ok
+    echo "$(date)" > ~repo/triggers/install-repo.trigger
 end
 
 function reboot

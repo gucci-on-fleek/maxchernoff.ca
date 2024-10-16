@@ -1,0 +1,16 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Unit]
+Description=Gets the server status
+
+[Service]
+User=root
+StandardOutput=truncate:/var/home/repo/triggers/get-status.output
+StandardError=journal
+
+Type=oneshot
+ExecStart=/usr/local/bin/web-uptime
+ExecStart=/usr/bin/echo
+ExecStart=/usr/local/sbin/web-status /var/home/repo/maxchernoff.ca/unit-status.conf
