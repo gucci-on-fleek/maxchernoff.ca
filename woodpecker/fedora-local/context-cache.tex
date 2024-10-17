@@ -1,0 +1,35 @@
+% Source Code for maxchernoff.ca
+% https://github.com/gucci-on-fleek/maxchernoff.ca
+% SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+% SPDX-FileCopyrightText: 2024 Max Chernoff
+
+% See https://wiki.contextgarden.net/Fonts/ConTeXt_distribution's_Fonts#Overview
+
+\starttext
+    \startbuffer[line]
+        \tf The quick brown fox jumps over the lazy dog. $\sqrt{x^2} \mathbb{R}_0$ \par
+        \it The quick brown fox jumps over the lazy dog. $\sqrt{x^2} \mathbb{R}_0$ \par
+        \bf The quick brown fox jumps over the lazy dog. $\sqrt{x^2} \mathbb{R}_0$ \par
+        \bi The quick brown fox jumps over the lazy dog. $\sqrt{x^2} \mathbb{R}_0$ \par
+    \stopbuffer
+                                            \getbuffer[line] \par
+    \switchtobodyfont[modern,ss]            \getbuffer[line] \par
+    \switchtobodyfont[modern,tt]            \getbuffer[line] \par
+    \switchtobodyfont[adventor]             \getbuffer[line] \par
+    \switchtobodyfont[bonum]                \getbuffer[line] \par
+    \switchtobodyfont[chorus]               \getbuffer[line] \par
+    \switchtobodyfont[cursor]               \getbuffer[line] \par
+    \switchtobodyfont[heros]                \getbuffer[line] \par
+    \switchtobodyfont[pagella]              \getbuffer[line] \par
+    \switchtobodyfont[schola]               \getbuffer[line] \par
+    \switchtobodyfont[termes]               \getbuffer[line] \par
+    \switchtobodyfont[dejavu]               \getbuffer[line] \par
+    \switchtobodyfont[dejavu,ss]            \getbuffer[line] \par
+    \switchtobodyfont[dejavu,tt]            \getbuffer[line] \par
+    \switchtobodyfont[libertinus]           \getbuffer[line] \par
+    \switchtobodyfont[libertinus,ss]        \getbuffer[line] \par
+    \switchtobodyfont[libertinus,tt]        \getbuffer[line] \par
+    \switchtobodyfont[plex]                 \getbuffer[line] \par
+    \switchtobodyfont[plex,ss]              \getbuffer[line] \par
+    \switchtobodyfont[plex,tt]              \getbuffer[line] \par
+\stoptext

@@ -6,9 +6,15 @@
 # Base image
 FROM registry.fedoraproject.org/fedora-minimal:40
 
-# Run the install script
-COPY container-build.sh /usr/local/sbin/container-build.sh
-RUN /usr/local/sbin/container-build.sh
+# Add the files
+COPY ["tex-cache.sh", "package-install.sh", "/usr/local/sbin/"]
+COPY ["context-cache.tex", "latex-cache.tex", "/root/"]
 
 # Set the environment variables
 ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+
+# Generate the TeX caches
+RUN /usr/local/sbin/tex-cache.sh
+
+# Install the packages
+RUN /usr/local/sbin/package-install.sh

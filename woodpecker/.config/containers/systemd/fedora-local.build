@@ -6,6 +6,8 @@
 SetWorkingDirectory=%h/fedora-local/
 ImageTag=localhost/fedora-local:latest
 Pull=always
+Volume=/var/home/tex/texlive:/opt/texlive:ro
+Volume=/var/home/tex/context:/opt/context:ro
 
 [Unit]
 After=podman.socket network-ready.service

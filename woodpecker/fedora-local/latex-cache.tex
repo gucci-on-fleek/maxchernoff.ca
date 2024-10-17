@@ -1,0 +1,43 @@
+% Source Code for maxchernoff.ca
+% https://github.com/gucci-on-fleek/maxchernoff.ca
+% SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+% SPDX-FileCopyrightText: 2024 Max Chernoff
+\documentclass{article}
+\usepackage{unicode-math}
+
+\def\sample{%
+    The quick brown fox jumps over the lazy dog. \par
+    \textit{The quick brown fox jumps over the lazy dog.} \par
+    \textbf{The quick brown fox jumps over the lazy dog.} \par
+    \textit{\textbf{The quick brown fox jumps over the lazy dog.}} \par%
+}
+
+\def\samplemath{$\sqrt{x^2} \mathbb{R}_0$}
+
+\begin{document}
+    {\rmfamily \sample \par}
+    {\sffamily \sample \par}
+    {\ttfamily \sample \par}
+    {\fontspec{TeX Gyre Adventor} \sample \par}
+    {\fontspec{TeX Gyre Bonum} \sample \par}
+    {\fontspec{TeX Gyre Chorus} \sample \par}
+    {\fontspec{TeX Gyre Cursor} \sample \par}
+    {\fontspec{TeX Gyre Heros} \sample \par}
+    {\fontspec{TeX Gyre Pagella} \sample \par}
+    {\fontspec{TeX Gyre Schola} \sample \par}
+    {\fontspec{TeX Gyre Termes} \sample \par}
+    {\fontspec{DejaVu Serif} \sample \par}
+    {\fontspec{DejaVu Sans} \sample \par}
+    {\fontspec{DejaVu Sans Mono} \sample \par}
+    {\fontspec{Libertinus Serif} \sample \par}
+    {\fontspec{Libertinus Sans} \sample \par}
+    {\fontspec{Libertinus Mono} \sample \par}
+    {\fontspec{IBM Plex Serif} \sample \par}
+    {\fontspec{IBM Plex Sans} \sample \par}
+    {\fontspec{IBM Plex Mono} \sample \par}
+
+    \setmathfont{Latin Modern Math} \samplemath \par
+    \setmathfont{TeX Gyre Bonum Math} \samplemath \par
+    \setmathfont{TeX Gyre Pagella Math} \samplemath \par
+    \setmathfont{TeX Gyre Termes Math} \samplemath \par
+\end{document}
