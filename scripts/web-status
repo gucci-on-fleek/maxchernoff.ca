@@ -51,7 +51,7 @@ Styler = Callable[[str], str]
 #################
 
 # Base constants
-DATE_FORMAT = "%b %d %I:%M%P"
+DATE_FORMAT = "%a %l:%M%P"
 SOCKET_PREFIX = b"unix:path="
 SYSTEM_USER = "system"
 

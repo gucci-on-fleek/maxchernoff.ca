@@ -4,10 +4,14 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description=Triggers get-status.service
+StartLimitIntervalSec=10
+StartLimitBurst=20
 
 [Path]
 Unit=get-status.service
 PathModified=/var/home/repo/triggers/get-status.trigger
+TriggerLimitIntervalSec=10
+TriggerLimitBurst=20
 
 [Install]
 WantedBy=multi-user.target

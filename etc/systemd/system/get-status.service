@@ -4,6 +4,8 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description=Gets the server status
+StartLimitIntervalSec=10
+StartLimitBurst=20
 
 [Service]
 User=root
