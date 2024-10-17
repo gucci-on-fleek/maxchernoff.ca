@@ -1,4 +1,4 @@
 version: STSv1
-mode: testing
+mode: enforce
 mx: *.migadu.com
-max_age: 86401
+max_age: 1209600

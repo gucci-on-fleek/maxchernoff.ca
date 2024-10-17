@@ -254,6 +254,15 @@ permissions."web/root" = "rw"
 permissions.web = "rw"
 owner = "web"
 
+[[permissions]] # For scp
+base = "{repo}"
+paths = ["web/caddy/static/files"]
+owner = "repo"
+permissions.max = "rw"
+permissions.web = "r"
+permissions."web/root" = "r"
+recursive_permissions = true
+
 
 ##################
 ### woodpecker ###
