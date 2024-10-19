@@ -9,6 +9,9 @@ bind \f 'clear && commandline -f repaint'
 # Add the required PATH entries
 fish_add_path ~tex/texlive/bin/x86_64-linux/
 
+# Theme
+fish_config theme choose max
+
 # Aliases
 function ok
     echo "$(date)" > ~repo/triggers/get-status.trigger
