@@ -151,7 +151,13 @@ Post-installation
 5. Fix `/etc/passwd`: <span class=sidenote>If not done, `podman` will
    complain about a mismatched home location.</span>
 
-    Change the home for `max` to `/var/home/max`.
+   Change the home for `max` to `/var/home/max`.
+
+6. Disable `authselect`:
+
+    ```shell-session
+    $ sudo authselect opt-out
+    ```
 
 
 Downloading the repository
