@@ -135,7 +135,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup btrfs-progs busybox fail2ban fish git goaccess htop python3-pystemd snapper vim
+    $ sudo rpm-ostree install borgbackup btrfs-progs busybox fish git goaccess htop python3-pystemd snapper vim
     ```
 
 2. Switch shell to `fish`:
