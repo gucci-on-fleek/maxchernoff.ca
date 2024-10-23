@@ -10,9 +10,25 @@ import base.caddyfile
 (default) {
 	import default-base
 
+	# Debug logging
+	log {
+		level DEBUG
+		output stderr
+		format console
+	}
+
 	header {
 		# Don't cache anything
 		?Cache-Control no-cache
+	}
+}
+
+# Global options
+{
+	log {
+		level DEBUG
+		output stderr
+		format console
 	}
 }
 
