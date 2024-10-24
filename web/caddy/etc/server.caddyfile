@@ -86,3 +86,9 @@ http://152.53.36.213, http://[2a0a:4cc0:2000:172::1] {
 
 	redir https://www.maxchernoff.ca{uri} permanent
 }
+
+# Flask reverse proxy
+api.maxchernoff.ca {
+	import default
+	reverse_proxy systemd-flask:8080
+}

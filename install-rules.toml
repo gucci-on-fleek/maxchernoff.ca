@@ -28,6 +28,7 @@ fcontext --deleteall
 fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
 fcontext --add --type var_log_t           '{repo-user}triggers(/.*)?'
 """
@@ -198,9 +199,10 @@ owner = "root"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = ["caddy/*/"]
+paths = ["caddy/*/", "flask"]
 permissions.web = "r"
 permissions."web/root" = "r"
+permissions."web/1000" = "r"
 permissions.max = "rw"
 owner = "web"
 
@@ -253,6 +255,14 @@ paths = ["data/"]
 permissions."web/root" = "rw"
 permissions.web = "rw"
 owner = "web"
+
+[[permissions]]
+base = "{web}/flask/"
+paths = ["python"]
+owner = "repo"
+permissions."web/1000" = "r"
+permissions.web = "rw"
+recursive_permissions = true
 
 [[permissions]] # For scp
 base = "{repo}"
