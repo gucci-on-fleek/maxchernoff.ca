@@ -13,5 +13,16 @@ ExecStart=goaccess --log-format=caddy --anonymize-ip --anonymize-level=3 --log-f
 StandardOutput=truncate:%h/caddy/static/analytics/graphs
 StandardError=journal
 
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateNetwork=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectHome=read-only
+ProtectProc=invisible
+ProtectSystem=strict
+SystemCallFilter=@system-service
+
 [Install]
 WantedBy=update-analytics.target

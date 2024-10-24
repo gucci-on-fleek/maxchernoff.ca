@@ -14,5 +14,16 @@ ExecStart=sh -c "jq --raw-output --slurp '.[-10000:] | .[] | [(.ts | todateiso86
 StandardOutput=truncate:%h/caddy/static/analytics/requests.tsv
 StandardError=journal
 
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateNetwork=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectHome=true
+ProtectProc=invisible
+ProtectSystem=strict
+SystemCallFilter=@system-service
+
 [Install]
 WantedBy=update-analytics.target

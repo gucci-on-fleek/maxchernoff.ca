@@ -23,4 +23,12 @@ ExecStart=%h/context/texmf-linux-64/bin/mtxrun --script fonts --reload
 ExecStart=%h/context/texmf-linux-64/bin/mtxrun --luatex --script fonts --reload
 ExecStart=sh -c "cd %h/context/ && %h/context/texmf-linux-64/bin/mtxrun --script install-modules --install --all"
 
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectProc=invisible
+ProtectSystem=strict
+
 ExecStart=restorecon -R %h/texlive %h/context-installer/tex
