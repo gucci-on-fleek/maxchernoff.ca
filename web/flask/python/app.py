@@ -9,9 +9,17 @@
 ###############
 
 from traceback import format_exception
+from datetime import datetime
 
 from flask import Flask, Response, request
 from waitress import serve
+
+#################
+### Constants ###
+#################
+
+ZONE = datetime.now().astimezone().tzinfo
+
 
 ######################
 ### Initialization ###
@@ -37,11 +45,13 @@ def error_handler(error):
 @app.route("/status")
 def status():
     """A basic health check endpoint."""
-    return Response(
-        response="ok",
-        status=200,
-        mimetype="text/plain",
-    )
+    now = datetime.now(ZONE)
+    return {
+        "status": "ok",
+        "local_time": now.strftime("%Y-%m-%d %l:%M%P %Z"),
+        "unix_time": int(now.timestamp()),
+        "service": "flask",
+    }
 
 
 ##########################

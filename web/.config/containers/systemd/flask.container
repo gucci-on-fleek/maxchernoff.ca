@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
-Image=flask-local.build
-AutoUpdate=registry
+Image=localhost/flask-local:latest
+AutoUpdate=local
 Network=flask.network
 
 Volume=%h/flask/python:/srv:ro,exec
@@ -20,7 +20,8 @@ UserNS=nomap
 Restart=always
 
 [Unit]
-After=network-ready.service
+After=network-ready.service flask-local-build.service
+Wants=flask-local-build.service
 
 [Install]
 WantedBy=caddy.service

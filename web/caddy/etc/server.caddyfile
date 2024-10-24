@@ -90,5 +90,7 @@ http://152.53.36.213, http://[2a0a:4cc0:2000:172::1] {
 # Flask reverse proxy
 api.maxchernoff.ca {
 	import default
+
+	header Cache-Control max-age=60
 	reverse_proxy systemd-flask:8080
 }
