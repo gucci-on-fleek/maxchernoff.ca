@@ -1,0 +1,5 @@
+{
+     "status": "ok",
+     "local_time": "{{ now | date `2006-01-02 3:04pm MST` }}",
+     "unix_time": {{ now | unixEpoch }}
+}

@@ -91,6 +91,15 @@
 		hide /includes/* .gitignore retain-empty-folder
 	}
 
+	# Status page
+	handle /status {
+		header Content-Type "application/json; charset=utf-8"
+		header Cache-Control max-age=5
+		templates {
+			mime application/json
+		}
+	}
+
 	# Minify responses
 	templates *.css {
 		mime text/css
