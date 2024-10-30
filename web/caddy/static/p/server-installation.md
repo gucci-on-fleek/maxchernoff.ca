@@ -42,7 +42,7 @@ Preliminaries
 - Commands that start with `$` are ran as the `max` user on the server,
   while commands that start with `%` are ran as some other user.
 
-- This guide was tested with Fedora IoT 40.
+- This guide was tested with Fedora IoT versions 40–41.
 
 Pre-installation
 ----------------
@@ -135,7 +135,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup btrfs-progs busybox fish git goaccess htop python3-pystemd snapper vim
+    $ sudo rpm-ostree install borgbackup fish git-core goaccess htop perl-File-Find python3-pystemd snapper vim
     ```
 
 2. Switch shell to `fish`:

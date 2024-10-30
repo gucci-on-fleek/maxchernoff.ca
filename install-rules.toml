@@ -111,7 +111,7 @@ permissions.other = "r"
 
 [[copy]]
 source = "{repo}/scripts/"
-destination = "{usrlocal}/lib/python3.12/site-packages/"
+destination = "{usrlocal}/lib/python3.13/site-packages/"
 paths = ["process_files/"]
 owner = "root"
 permissions.other = "r"
