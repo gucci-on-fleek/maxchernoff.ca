@@ -12,6 +12,9 @@ fish_add_path ~tex/texlive/bin/x86_64-linux/
 # Theme
 fish_config theme choose max
 
+# Colours
+set --global fish_color_user --bold yellow
+
 # Aliases
 function ok
     echo "$(date)" > ~repo/triggers/get-status.trigger
