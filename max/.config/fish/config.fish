@@ -15,6 +15,10 @@ fish_config theme choose max
 # Colours
 set --global fish_color_user --bold yellow
 
+if set --query TOOLBOX_PATH
+    set --global fish_color_user --reverse --bold --dim yellow
+end
+
 # Aliases
 function ok
     argparse loop -- $argv
