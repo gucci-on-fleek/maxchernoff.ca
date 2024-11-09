@@ -127,7 +127,7 @@ paths = ["*"]
 owner = "max"
 permissions.other = ""
 
-[[link]]
+[[copy]]
 source = "{repo}/max/"
 destination = "{max}/"
 paths = [".ssh/known_hosts", ".config/fish/config.fish"]
