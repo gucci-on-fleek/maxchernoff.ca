@@ -17,8 +17,24 @@ set --global fish_color_user --bold yellow
 
 # Aliases
 function ok
+    argparse loop -- $argv
+    if set --query _flag_loop
+        set --local time 0
+        while sleep $time
+            _ok
+            set time 1
+        end
+    else
+        _ok
+    end
+end
+
+function _ok
+    truncate --size=0 ~repo/triggers/get-status.output
     echo "$(date)" > ~repo/triggers/get-status.trigger
-    sleep 0.50
+    while not grep --quiet "service" ~repo/triggers/get-status.output
+        sleep 0.1
+    end
     cat ~repo/triggers/get-status.output
 end
 
