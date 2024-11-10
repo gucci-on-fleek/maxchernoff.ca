@@ -26,7 +26,8 @@ dnf5 install \
     coreutils-single \
     fedora-iot-config \
     glibc-minimal-langpack \
-    rpm-ostree
+    rpm-ostree \
+    selinux-policy-targeted
 
 # Unlink the cache
 rm $root/var/cache/libdnf5

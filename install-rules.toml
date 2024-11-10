@@ -330,7 +330,7 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/containers/"
 destination = "{containers}/"
-paths = [".config/systemd/user/", ".config/containers/", "build/"]
+paths = [".config/systemd/user/", ".config/containers/", "*-build"]
 permissions.containers = "r"
 
 [[folder]]

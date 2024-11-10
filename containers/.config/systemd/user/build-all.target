@@ -6,4 +6,4 @@
 Description=Rebuilds all containers
 StopWhenUnneeded=true
 
-Wants=container@minimal.service
+Wants=container@minimal-build.service

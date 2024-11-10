@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Build]
-SetWorkingDirectory=%h/build/%i/
+SetWorkingDirectory=%h/%i/
 ImageTag=maxchernoff.ca/%i:latest
 Pull=always
 PodmanArgs=--no-cache --disable-compression=false
@@ -18,5 +18,8 @@ Requires=podman.socket
 [Service]
 Type=oneshot
 RemainAfterExit=no
-ExecStartPost=podman push maxchernoff.ca/%i:latest docker://localhost:23719/%i:latest
+ExecStartPost=podman push --tls-verify=false maxchernoff.ca/%i:latest docker://localhost:23719/%i:latest
 ExecStartPost=sh -c "{ sleep 1; systemctl --user stop --no-block %N-build.service; } & disown"
+
+[Install]
+WantedBy=build-all.target

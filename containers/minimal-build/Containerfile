@@ -22,7 +22,7 @@ COPY ["container-build.sh", "/usr/local/sbin/"]
 RUN /usr/local/sbin/container-build.sh
 
 # Pull in the created image
-FROM oci-archive:./image.tar
+FROM oci-archive:/var/home/containers/.cache/image-out/image.tar
 
 # Remove the image tarball
 RUN --mount=type=bind,from=builder,src=/root/,target=/root/ \
