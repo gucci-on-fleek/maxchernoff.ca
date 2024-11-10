@@ -36,8 +36,13 @@ end
 function _ok
     truncate --size=0 ~repo/triggers/get-status.output
     echo "$(date)" > ~repo/triggers/get-status.trigger
+    set --local count 0
     while not grep --quiet "service" ~repo/triggers/get-status.output
         sleep 0.1
+        set --local count (math $count + 1 % 5)
+        if test $count = 0
+            echo "$(date)" > ~repo/triggers/get-status.trigger
+        end
     end
     cat ~repo/triggers/get-status.output
 end
