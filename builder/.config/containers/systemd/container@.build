@@ -1,0 +1,22 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Build]
+SetWorkingDirectory=%h/%i/
+ImageTag=maxchernoff.ca/%i:latest
+Pull=always
+Volume=%h/.cache/podman-dnf:/var/cache/libdnf5/:rw,z
+PodmanArgs=--no-cache
+
+[Unit]
+After=podman.socket network-ready.service
+Requires=podman.socket
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStartPost=sh -c "{ sleep 1; systemctl --user stop --no-block %N-build.service; } & disown"
+
+[Install]
+WantedBy=build-all.target
