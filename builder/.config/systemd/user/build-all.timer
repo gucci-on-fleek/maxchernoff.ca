@@ -6,8 +6,7 @@
 Description=Builds all containers
 
 [Timer]
-OnBootSec=1h
-OnUnitActiveSec=6h
+OnCalendar=01:15:00 America/Edmonton
 Unit=build-all.target
 
 [Install]

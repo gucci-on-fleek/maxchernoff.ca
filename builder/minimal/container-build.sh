@@ -24,8 +24,9 @@ dnf5 install \
     --setopt=keepcache=true \
     --use-host-config \
     coreutils-single \
-    generic-release \
-    glibc-minimal-langpack
+    fedora-iot-config \
+    glibc-minimal-langpack \
+    rpm-ostree
 
 # Unlink the cache
 rm $root/var/cache/libdnf5
