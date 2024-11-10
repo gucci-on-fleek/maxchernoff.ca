@@ -1,0 +1,22 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=docker.io/library/registry:2
+AutoUpdate=registry
+UserNS=nomap
+Network=registry.network
+
+PublishPort=127.0.0.1:23719:23719
+Environment="REGISTRY_HTTP_ADDR=0.0.0.0:23719"
+Environment="REGISTRY_STORAGE_MAINTENANCE_UPLOADPURGING={interval: 12h, age: 12h, enabled: true, dryrun: false}"
+
+[Service]
+Restart=always
+RestartSec=5s
+RestartMaxDelaySec=60s
+RestartSteps=5
+
+[Install]
+WantedBy=default.target

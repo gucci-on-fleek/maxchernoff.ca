@@ -50,4 +50,4 @@ printf 'container: true\nrepos:\n  - ignored\n' > /root/treefile.yaml
 rpm-ostree compose commit --repo=$repo --write-commitid-to=/root/commitid --unified-core /root/treefile.yaml $root
 
 # Export the image
-rpm-ostree compose container-encapsulate --repo=$repo "$(cat /root/commitid)" oci-archive:/out/image.tar
+rpm-ostree compose container-encapsulate --repo=$repo "$(cat /root/commitid)" oci-archive:/var/out/image.tar

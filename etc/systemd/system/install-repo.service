@@ -13,6 +13,7 @@ Type=oneshot
 ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/
 ExecStart=/usr/local/sbin/web-install /home/repo/maxchernoff.ca/install-rules.toml
 ExecStart=/usr/bin/systemctl --system daemon-reload
+ExecStart=/usr/bin/systemctl --user --machine "containers@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "max@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "repo@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload

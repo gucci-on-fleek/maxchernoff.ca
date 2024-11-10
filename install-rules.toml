@@ -8,6 +8,7 @@
 #################
 
 [variables]
+containers = "/var/home/containers/"
 etc = "/etc/"
 max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
@@ -307,3 +308,32 @@ base = "{woodpecker}/woodpecker/"
 paths = ["config/"]
 permissions."woodpecker/root" = "rw"
 owner = "woodpecker"
+
+
+##################
+### containers ###
+##################
+
+[[permissions]]
+base = "{containers}"
+paths = ["*"]
+owner = "containers"
+permissions.other = ""
+
+[[permissions]]
+base = "{repo}"
+paths = ["containers/"]
+owner = "repo"
+permissions.containers = "r"
+recursive_permissions = true
+
+[[link]]
+source = "{repo}/containers/"
+destination = "{containers}/"
+paths = [".config/systemd/user/", ".config/containers/", "build/"]
+permissions.containers = "r"
+
+[[folder]]
+base = "{containers}"
+paths = [".cache/podman-dnf/", ".cache/image-out/"]
+owner = "containers"

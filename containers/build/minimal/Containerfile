@@ -19,13 +19,11 @@ RUN dnf5 install \
 COPY ["container-build.sh", "/usr/local/sbin/"]
 
 # Run the build script
-RUN --mount=type=bind,rw=true,src=.,target=/out/,z \
-    /usr/local/sbin/container-build.sh
+RUN /usr/local/sbin/container-build.sh
 
 # Pull in the created image
 FROM oci-archive:./image.tar
 
 # Remove the image tarball
-RUN --mount=type=bind,rw=true,src=.,target=/out/,z \
-    --mount=type=bind,from=builder,src=/root/,target=/root/ \
-    rm /out/image.tar
+RUN --mount=type=bind,from=builder,src=/root/,target=/root/ \
+    rm /var/out/image.tar
