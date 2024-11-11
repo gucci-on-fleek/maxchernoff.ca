@@ -8,7 +8,10 @@ AutoUpdate=registry
 Network=flask.network
 
 Volume=%h/flask/:/srv:ro,exec
+Volume=/var/home/repo/triggers/:/root/triggers:rw
 Exec=/srv/app.py
+
+Secret="webhook_secret,type=env,target=WEBHOOK_SECRET"
 
 DropCapability=all
 NoNewPrivileges=true

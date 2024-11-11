@@ -31,7 +31,7 @@ fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
-fcontext --add --type var_log_t           '{repo-user}triggers(/.*)?'
+fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
 """
 
 
@@ -77,6 +77,7 @@ paths = ["install-repo.trigger", "get-status.trigger", "get-status.output"]
 owner = "repo"
 permissions.max = "rw"
 permissions.root = "rw"
+permissions."web/1000" = "rw"
 permissions.other = ""
 
 
