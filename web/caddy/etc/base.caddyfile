@@ -144,8 +144,22 @@
 	@has-query {
 		expression `{query} != ""`
 		not path /.well-known/*
+		not path /v2/*
 	}
 	redir @has-query {path} temporary
+
+	# Container Registry reverse proxy
+	handle /v2/* {
+		@get-head method GET HEAD
+		handle @get-head {
+			reverse_proxy systemd-container-registry:8000
+		}
+
+		handle {
+			# Fallback
+			respond "403 Forbidden" 403
+		}
+	}
 
 	# Handle errors
 	handle_errors {
