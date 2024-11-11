@@ -3,12 +3,11 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
-Description=Update fedora-local container image
+Description=Updates all containers
 
 [Timer]
-OnBootSec=10min
-OnUnitActiveSec=1d
-Unit=fedora-local-build.service
+OnCalendar=00:15:00 America/Edmonton
+Unit=update-all.target
 
 [Install]
 WantedBy=timers.target

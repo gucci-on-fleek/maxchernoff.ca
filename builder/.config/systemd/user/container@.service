@@ -1,0 +1,29 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Unit]
+After=podman.socket network-ready.service
+Requires=podman.socket
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+
+ExecStart=podman build \
+    --disable-compression=false \
+    --no-cache \
+    --pull-always \
+    --tag=maxchernoff.ca/%i:latest \
+    --volume=%h/.cache/podman-dnf:/var/cache/libdnf5/:rw,z \
+    %h/containers/%i/
+
+ExecStart=podman push \
+    --tls-verify=false \
+    --compression-format=zstd:chunked \
+    --compression-level=5 \
+    maxchernoff.ca/%i:latest \
+    docker://localhost:23719/%i:latest
+
+[Install]
+WantedBy=update-all.target

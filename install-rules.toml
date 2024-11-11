@@ -8,7 +8,7 @@
 #################
 
 [variables]
-containers = "/var/home/containers/"
+builder = "/var/home/builder/"
 etc = "/etc/"
 max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
@@ -193,7 +193,7 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = [".config/containers/", ".config/systemd/user/"]
+paths = [".config/builder/", ".config/systemd/user/"]
 permissions.web = "r"
 owner = "root"
 
@@ -295,7 +295,7 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/woodpecker/"
 destination = "{woodpecker}/"
-paths = [".config/systemd/user/", ".config/containers/", "fedora-local/"]
+paths = [".config/systemd/user/", ".config/builder/"]
 permissions.woodpecker = "r"
 
 [[folder]]
@@ -310,30 +310,30 @@ permissions."woodpecker/root" = "rw"
 owner = "woodpecker"
 
 
-##################
-### containers ###
-##################
+###############
+### builder ###
+###############
 
 [[permissions]]
-base = "{containers}"
+base = "{builder}"
 paths = ["*"]
-owner = "containers"
+owner = "builder"
 permissions.other = ""
 
 [[permissions]]
 base = "{repo}"
-paths = ["containers/"]
+paths = ["builder/"]
 owner = "repo"
-permissions.containers = "r"
+permissions.builder = "r"
 recursive_permissions = true
 
 [[link]]
-source = "{repo}/containers/"
-destination = "{containers}/"
-paths = [".config/systemd/user/", ".config/containers/", "*-build"]
-permissions.containers = "r"
+source = "{repo}/builder/"
+destination = "{builder}/"
+paths = [".config/systemd/user/", "containers/"]
+permissions.builder = "r"
 
 [[folder]]
-base = "{containers}"
-paths = [".cache/podman-dnf/", ".cache/image-out/"]
-owner = "containers"
+base = "{builder}"
+paths = [".cache/podman-dnf/"]
+owner = "builder"

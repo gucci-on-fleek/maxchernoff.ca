@@ -2,8 +2,10 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
-[Unit]
-Description=Rebuilds all containers
-StopWhenUnneeded=true
+[Network]
+Internal=true
+IPv6=true
+DisableDNS=false
 
-Wants=container@minimal-build.service
+[Unit]
+After=network-ready.service

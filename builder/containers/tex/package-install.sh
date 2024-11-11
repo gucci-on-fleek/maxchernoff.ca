@@ -20,4 +20,4 @@ dnf_packages=(
     poppler-utils
 )
 
-microdnf install --assumeyes --setopt=install_weak_deps=False "${dnf_packages[@]}"
+dnf install --assumeyes --nodocs --setopt=install_weak_deps=False "${dnf_packages[@]}"

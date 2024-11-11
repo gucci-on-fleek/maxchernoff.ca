@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
-Image=localhost/flask-local:latest
+Image=maxchernoff.ca/flask:latest
 AutoUpdate=local
 Network=flask.network
 
-Volume=%h/flask/python:/srv:ro,exec
+Volume=%h/flask/:/srv:ro,exec
 Exec=/srv/app.py
 
 DropCapability=all
