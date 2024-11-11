@@ -152,7 +152,7 @@
 	handle /v2/* {
 		@get-head method GET HEAD
 		handle @get-head {
-			reverse_proxy systemd-container-registry:8000
+			reverse_proxy systemd-container-registry:23719
 		}
 
 		handle {

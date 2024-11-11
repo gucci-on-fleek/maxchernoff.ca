@@ -258,8 +258,8 @@ permissions.web = "rw"
 owner = "web"
 
 [[permissions]]
-base = "{web}/flask/"
-paths = ["python"]
+base = "{web}/"
+paths = ["flask"]
 owner = "repo"
 permissions."web/1000" = "r"
 permissions.web = "rw"

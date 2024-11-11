@@ -20,4 +20,9 @@ dnf_packages=(
     poppler-utils
 )
 
-dnf install --assumeyes --nodocs --setopt=install_weak_deps=False "${dnf_packages[@]}"
+dnf install \
+    --assumeyes \
+    --nodocs \
+    --setopt=install_weak_deps=False \
+    --setopt=keepcache=true \
+     "${dnf_packages[@]}"

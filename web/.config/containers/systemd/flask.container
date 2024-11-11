@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=maxchernoff.ca/flask:latest
-AutoUpdate=local
+AutoUpdate=registry
 Network=flask.network
 
 Volume=%h/flask/:/srv:ro,exec
@@ -20,8 +20,8 @@ UserNS=nomap
 Restart=always
 
 [Unit]
-After=network-ready.service flask-local-build.service
-Wants=flask-local-build.service
+After=network-ready.service
+After=container-registry.service
 
 [Install]
 WantedBy=caddy.service

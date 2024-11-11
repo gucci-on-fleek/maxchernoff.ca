@@ -1,10 +1,9 @@
 #!/bin/bash
-set -euo pipefail
-
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
+set -euo pipefail
 
 # Generate the TeX caches
 tl=/opt/texlive/bin/x86_64-linux

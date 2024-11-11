@@ -10,18 +10,26 @@ root=/mnt/build/
 mkdir -p $root
 cd $root
 
+# Link the cache to the host
+mkdir -p $root/var/cache/
+ln -s /var/cache/libdnf5 $root/var/cache/libdnf5
+
 # Install the base packages
 dnf5 install \
     --assumeyes \
     --installroot=$root \
     --nodocs \
     --setopt=install_weak_deps=false \
+    --setopt=keepcache=true \
     --use-host-config \
     coreutils-single \
     generic-release \
     glibc-minimal-langpack \
     python3-flask \
     python3-waitress
+
+# Unlink the cache from the host
+rm $root/var/cache/libdnf5
 
 # Remove the caches, part 1
 dnf5 clean all --installroot=$root

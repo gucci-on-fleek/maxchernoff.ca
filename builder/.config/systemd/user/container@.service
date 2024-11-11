@@ -15,7 +15,9 @@ ExecStart=podman build \
     --no-cache \
     --pull-always \
     --tag=maxchernoff.ca/%i:latest \
-    --volume=%h/.cache/podman-dnf:/var/cache/libdnf5/:rw,z \
+    --volume=/var/home/tex/context:/opt/context:ro \
+    --volume=/var/home/tex/texlive:/opt/texlive:ro \
+    --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
     %h/containers/%i/
 
 ExecStart=podman push \
