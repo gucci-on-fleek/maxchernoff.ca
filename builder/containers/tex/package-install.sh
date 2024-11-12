@@ -18,6 +18,9 @@ dnf_packages=(
     moreutils
     pandoc
     poppler-utils
+
+    # gucci-on-fleek/extractbb
+    diffutils
 )
 
 dnf install \
