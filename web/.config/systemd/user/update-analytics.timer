@@ -7,7 +7,7 @@ Description=Update Analytics
 
 [Timer]
 OnBootSec=1min
-OnUnitActiveSec=15min
+OnUnitActiveSec=10min
 Unit=update-analytics.target
 
 [Install]

@@ -30,6 +30,7 @@ fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/goaccess(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
 fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
 """
@@ -201,7 +202,7 @@ owner = "root"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = ["caddy/*/", "flask"]
+paths = ["caddy/*/", "flask", "goaccess"]
 permissions.web = "r"
 permissions."web/root" = "r"
 permissions."web/1000" = "r"
@@ -273,6 +274,14 @@ owner = "repo"
 permissions.max = "rw"
 permissions.web = "r"
 permissions."web/root" = "r"
+recursive_permissions = true
+
+[[permissions]]
+base = "{web}/"
+paths = ["goaccess"]
+owner = "repo"
+permissions."web/root" = "r"
+permissions.web = "r"
 recursive_permissions = true
 
 

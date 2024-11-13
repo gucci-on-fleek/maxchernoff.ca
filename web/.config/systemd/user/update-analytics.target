@@ -6,5 +6,8 @@
 Description=Update Analytics
 StopWhenUnneeded=true
 
+Wants=update-analytics-requests.service
+Wants=update-analytics-graphs.service
+
 [Install]
-Also=update-analytics-graphs.service update-analytics-requests.service
+Also=update-analytics-requests.service

@@ -1,0 +1,61 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=docker.io/allinurl/goaccess:latest
+AutoUpdate=registry
+UserNS=nomap
+Network=none
+
+Volume=%h/caddy/access.log:/root/access.log:ro,z
+Volume=%h/caddy/static/analytics/graphs:/root/out.html:rw,z
+Volume=%h/goaccess/GeoLite2-City.mmdb:/root/GeoLite2-City.mmdb:ro
+
+Exec=\
+    --agent-list \
+    --anonymize-ip \
+    --anonymize-level=1 \
+    --enable-panel=BROWSERS \
+    --enable-panel=CACHE_STATUS \
+    --enable-panel=GEO_LOCATION \
+    --enable-panel=HOSTS \
+    --enable-panel=KEYPHRASES \
+    --enable-panel=MIME_TYPE \
+    --enable-panel=NOT_FOUND \
+    --enable-panel=OS \
+    --enable-panel=REFERRERS \
+    --enable-panel=REFERRING_SITES \
+    --enable-panel=REMOTE_USER \
+    --enable-panel=REQUESTS \
+    --enable-panel=REQUESTS_STATIC \
+    --enable-panel=STATUS_CODES \
+    --enable-panel=TLS_TYPE \
+    --enable-panel=VIRTUAL_HOSTS \
+    --enable-panel=VISIT_TIMES \
+    --enable-panel=VISITORS \
+    --geoip-database=/root/GeoLite2-City.mmdb \
+    --http-method=no \
+    --http-protocol=no \
+    --jobs=4 \
+    --log-file=/root/access.log \
+    --log-format=CADDY \
+    --no-parsing-spinner \
+    --no-query-string \
+    --output=/root/out.html \
+    --real-os \
+    --tz=America/Edmonton \
+    /root/access.log
+
+[Unit]
+Description=Update Analytics Graphs
+After=update-analytics.target network-ready.service
+Upholds=update-analytics.target
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=no
+
+[Install]
+WantedBy=update-analytics.target
