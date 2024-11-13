@@ -347,6 +347,7 @@ nav ul {
 nav li {
     list-style: none;
     font-size: var(--base-font-size);
+    padding-left: 0;
 }
 /* End hide whitespace */
 
