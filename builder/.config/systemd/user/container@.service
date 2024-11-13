@@ -18,6 +18,8 @@ ExecStart=podman build \
     --volume=/var/home/tex/context:/opt/context:ro \
     --volume=/var/home/tex/texlive:/opt/texlive:ro \
     --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
+    --volume=%h/.cache/go-build/:/root/.cache/go-build/:rw,z \
+    --volume=%h/.cache/go-modules/:/go/:rw,z \
     %h/containers/%i/
 
 ExecStart=podman push \

@@ -9,6 +9,16 @@ import base.caddyfile
 # Root options
 {
 	email acme-certificates@maxchernoff.ca
+
+	auto_https disable_redirects
+
+	default_bind fd/4 {
+		protocols h1 h2
+	}
+	default_bind fdgram/5 {
+		protocols h3
+	}
+	admin fd/6
 }
 
 # Define the default options for all sites
@@ -33,6 +43,11 @@ import base.caddyfile
 		# I might as well set the minimum to version to 1.3.
 		protocols tls1.3
 	}
+}
+
+http:// {
+	bind fd/3
+	redir https://{host}{uri} permanent
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca

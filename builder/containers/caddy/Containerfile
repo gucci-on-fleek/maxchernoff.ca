@@ -1,0 +1,14 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+FROM docker.io/library/caddy:2.9-builder AS builder
+
+RUN xcaddy build \
+    --with github.com/caddyserver/cache-handler \
+    --with github.com/mholt/caddy-l4
+
+FROM docker.io/library/caddy:2.9
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy

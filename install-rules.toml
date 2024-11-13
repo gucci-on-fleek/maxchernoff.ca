@@ -250,7 +250,7 @@ paths = [
 ]
 permissions."web/root" = "rw"
 permissions.web = "rw"
-owner = "web"
+owner = "web/root"
 
 [[permissions]]
 base = "{web}/woodpecker/"
@@ -345,5 +345,5 @@ permissions.builder = "r"
 
 [[folder]]
 base = "{builder}"
-paths = [".cache/podman-dnf/"]
+paths = [".cache/podman-dnf/", ".cache/go-build/", ".cache/go-modules/"]
 owner = "builder"
