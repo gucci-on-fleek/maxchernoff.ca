@@ -13,6 +13,9 @@
 		X-Content-Type-Options nosniff
 		Cross-Origin-Resource-Policy same-origin
 		?Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; form-action 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; script-src 'self'; script-src-elem 'self';"
+
+		# Prerendering
+		Supports-Loading-Mode credentialed-prerender uncredentialed-prerender
 	}
 
 	# Use www.maxchernoff.ca for special URLs
@@ -79,13 +82,6 @@
 			header Content-Type "text/html; charset=utf-8"
 			rewrite * /files/login.html.gz
 		}
-	}
-
-	# TLS options
-	tls {
-		# My analytics show that almost no one except for bots uses TLS 1.2, so
-		# I might as well set the minimum to version to 1.3.
-		protocols tls1.3
 	}
 }
 
@@ -157,6 +153,12 @@
 
 	# Container Registry
 	redir /v2/* https://registry.maxchernoff.ca{uri} temporary
+
+	# Prefetch
+	header ?Speculation-Rules `"/assets/speculation-rules.json"`
+	header /assets/speculation-rules.json {
+		Content-Type application/speculationrules+json
+	}
 
 	# Handle errors
 	handle_errors {

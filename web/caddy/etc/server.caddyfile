@@ -26,6 +26,13 @@ import base.caddyfile
 		output file /var/log/caddy/access.log
 		format json
 	}
+
+	# TLS options
+	tls {
+		# My analytics show that almost no one except for bots uses TLS 1.2, so
+		# I might as well set the minimum to version to 1.3.
+		protocols tls1.3
+	}
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca

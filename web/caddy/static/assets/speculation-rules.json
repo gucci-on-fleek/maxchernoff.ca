@@ -1,0 +1,30 @@
+{
+    "prerender": [
+        {
+            "source": "document",
+            "where": {
+                "href_matches": "/*",
+                "relative_to": "document"
+            },
+            "eagerness": "eager"
+        },
+        {
+            "source": "document",
+            "where": {
+                "href_matches": "https://*",
+                "relative_to": "document"
+            },
+            "eagerness": "moderate"
+        }
+    ],
+    "prefetch": [
+        {
+            "source": "document",
+            "where": {
+                "href_matches": "https://*",
+                "relative_to": "document"
+            },
+            "eagerness": "eager"
+        }
+    ]
+}
