@@ -148,18 +148,8 @@
 	}
 	redir @has-query {path} temporary
 
-	# Container Registry reverse proxy
-	handle /v2/* {
-		@get-head method GET HEAD
-		handle @get-head {
-			reverse_proxy systemd-container-registry:23719
-		}
-
-		handle {
-			# Fallback
-			respond "403 Forbidden" 403
-		}
-	}
+	# Container Registry
+	redir /v2/* https://registry.maxchernoff.ca{uri} temporary
 
 	# Handle errors
 	handle_errors {

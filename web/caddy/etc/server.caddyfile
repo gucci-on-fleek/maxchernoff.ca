@@ -94,3 +94,18 @@ api.maxchernoff.ca {
 	header Cache-Control max-age=60
 	reverse_proxy systemd-flask:8080
 }
+
+# Container registry reverse proxy
+registry.maxchernoff.ca {
+	import default
+
+	@get-head method GET HEAD
+	handle @get-head {
+		reverse_proxy systemd-container-registry:23719
+	}
+
+	# Fallback
+	handle {
+		respond "403 Forbidden" 403
+	}
+}
