@@ -80,13 +80,6 @@ mta-sts.maxchernoff.ca {
 	respond "Not Found" 404
 }
 
-# Add redirects for the bare IP addresses
-http://152.53.36.213, http://[2a0a:4cc0:2000:172::1] {
-	import default
-
-	redir https://www.maxchernoff.ca{uri} permanent
-}
-
 # Flask reverse proxy
 api.maxchernoff.ca {
 	import default

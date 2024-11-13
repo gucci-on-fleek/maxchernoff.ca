@@ -135,7 +135,7 @@ Post-installation
 1. Install the needed packages:
 
     ```shell-session
-    $ sudo rpm-ostree install borgbackup fish git-core goaccess htop perl-File-Find python3-pystemd qemu-guest-agent snapper vim
+    $ sudo rpm-ostree install borgbackup fish git-core htop perl-File-Find python3-pystemd qemu-guest-agent snapper vim
     ```
 
 2. Switch shell to `fish`:

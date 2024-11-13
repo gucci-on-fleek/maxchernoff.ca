@@ -11,8 +11,8 @@
 	header {
 		# Security headers
 		X-Content-Type-Options nosniff
-		X-Frame-Options DENY
-		?Content-Security-Policy "default-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline';"
+		Cross-Origin-Resource-Policy same-origin
+		?Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; form-action 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; script-src 'self'; script-src-elem 'self';"
 	}
 
 	# Use www.maxchernoff.ca for special URLs
@@ -80,6 +80,13 @@
 			rewrite * /files/login.html.gz
 		}
 	}
+
+	# TLS options
+	tls {
+		# My analytics show that almost no one except for bots uses TLS 1.2, so
+		# I might as well set the minimum to version to 1.3.
+		protocols tls1.3
+	}
 }
 
 (www.maxchernoff.ca) {
@@ -119,7 +126,7 @@
 		-Content-Security-Policy
 		-Link
 	}
-	basicauth /analytics/* {
+	basic_auth /analytics/* {
 		analytics $2a$14$diUEkE1EKNXh1hSKp8cYKeWq8krwrgmcIta98zesFzQymOVxz0iXq
 	}
 
