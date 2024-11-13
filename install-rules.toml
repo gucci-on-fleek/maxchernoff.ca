@@ -101,7 +101,7 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/sbin/"
-paths = ["web-install", "web-status"]
+paths = ["web-install", "web-status", "notify-all"]
 owner = "root"
 permissions.other = "r"
 
