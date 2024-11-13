@@ -58,7 +58,14 @@
 	# Zip-bomb any requests to malicious URLs
 	@bad-url {
 		expression `
-		(path("*/.git/*", "/.*", "*.php", "/*.yml", "/cgi-bin/*") &&
+		(path(
+		"*/.git/*",
+		"/.*",
+		"*.php",
+		"/*.yml",
+		"/cgi-bin/*",
+		"/actuator/*"
+		) &&
 		!path("/.well-known/*")) ||
 		header({"User-Agent": "Go-http-client/*"})
 		`
@@ -68,7 +75,9 @@
 	}
 	handle @bad-url {
 		root * /srv
-		file_server
+		file_server {
+			status 418
+		}
 
 		header Cache-Control max-age=31536000 # 1 year
 
