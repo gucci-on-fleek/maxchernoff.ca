@@ -31,6 +31,7 @@ fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/goaccess(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/knot(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/access.log'
 fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
 """
@@ -202,10 +203,11 @@ owner = "root"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = ["caddy/*/", "flask", "goaccess"]
+paths = ["caddy/*/", "flask", "goaccess", "knot/*/"]
 permissions.web = "r"
 permissions."web/root" = "r"
 permissions."web/1000" = "r"
+permissions."web/53" = "r"
 permissions.max = "rw"
 owner = "web"
 
@@ -282,6 +284,23 @@ paths = ["goaccess"]
 owner = "repo"
 permissions."web/root" = "r"
 permissions.web = "r"
+recursive_permissions = true
+
+[[folder]]
+base = "{web}"
+paths = ["knot/storage/"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/53" = "rw"
+permissions."web/root" = "rw"
+
+[[permissions]]
+base = "{repo}/web/knot/"
+paths = ["config"]
+owner = "repo"
+permissions.web = "r"
+permissions."web/53" = "r"
+permissions."web/root" = "r"
 recursive_permissions = true
 
 

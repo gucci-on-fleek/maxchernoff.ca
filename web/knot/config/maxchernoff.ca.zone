@@ -1,0 +1,23 @@
+$TTL 1
+
+@       SOA     (
+                        whoami.domain.example.          ; MNAME
+                        hostmaster.domain.example.      ; RNAME
+                        2016051300                      ; SERIAL
+                        86400                           ; REFRESH
+                        86400                           ; RETRY
+                        86400                           ; EXPIRE
+                        1                               ; MINIMUM
+                )
+
+$TTL 86400
+
+@       NS      ns1.whoami.domain.example.
+@       NS      ns2.whoami.domain.example.
+@       NS      ns3.whoami.domain.example.
+@       NS      ns4.whoami.domain.example.
+
+ns1     A       198.51.100.53
+ns2     A       192.0.2.53
+ns3     A       203.0.113.53
+ns4     A       198.19.123.53

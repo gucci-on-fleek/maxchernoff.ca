@@ -2,6 +2,10 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
-net.ipv4.ip_unprivileged_port_start=53
-net.core.wmem_max=7500000
-net.core.rmem_max=7500000
+[Network]
+Internal=false
+IPv6=true
+DisableDNS=false
+
+[Unit]
+After=network-ready.service
