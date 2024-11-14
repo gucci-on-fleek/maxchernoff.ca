@@ -3,28 +3,25 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
-Image=docker.io/cznic/knot:latest
+Image=ghcr.io/stackexchange/dnscontrol
 AutoUpdate=registry
 UserNS=nomap
 
 Network=knot.network
-IP=10.15.15.15
-PublishPort=53:53
-PublishPort=53:53/udp
+IP=10.15.15.222
+Volume=%h/dnscontrol:/dns:ro,z
 
-Volume=%h/knot/config:/config:ro,z
-Volume=%h/knot/storage:/storage:rw,Z
-Volume=%t/knot:/rundir:rw,Z,U
-
-Entrypoint=/usr/sbin/knotd
-Exec=
+Exec=push --full
 
 [Unit]
+After=knot.service
+Wants=knot.service
 After=network-ready.service
 
 [Service]
-ExecStartPre=mkdir -p %t/knot
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=no
 
 [Install]
-WantedBy=default.target
 Also=knot-network.service

@@ -26,14 +26,15 @@ woodpecker = "/var/home/woodpecker/"
 [selinux]
 rules = """
 fcontext --deleteall
-fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
-fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
+fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
+fcontext --add --type container_file_t    '{web}caddy/access.log'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/goaccess(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/knot(/.*)?'
-fcontext --add --type container_file_t    '{web}caddy/access.log'
-fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
+fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
+fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 """
 
 
@@ -203,7 +204,7 @@ owner = "root"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = ["caddy/*/", "flask", "goaccess", "knot/*/"]
+paths = ["caddy/*/", "flask", "goaccess", "knot/*/", "dnscontrol"]
 permissions.web = "r"
 permissions."web/root" = "r"
 permissions."web/1000" = "r"
@@ -309,6 +310,14 @@ paths = ["access.log"]
 owner = "repo"
 permissions.web = "rw"
 permissions."web/root" = "rw"
+
+[[permissions]]
+base = "{repo}/web/"
+paths = ["dnscontrol"]
+owner = "repo"
+permissions.web = "r"
+permissions."web/root" = "r"
+recursive_permissions = true
 
 
 ##################
