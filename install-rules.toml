@@ -303,6 +303,13 @@ permissions."web/53" = "r"
 permissions."web/root" = "r"
 recursive_permissions = true
 
+[[permissions]]
+base = "{web}/caddy/"
+paths = ["access.log"]
+owner = "repo"
+permissions.web = "rw"
+permissions."web/root" = "rw"
+
 
 ##################
 ### woodpecker ###

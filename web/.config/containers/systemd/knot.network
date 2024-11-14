@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Network]
+Subnet=10.15.15.0/24
+Subnet=fd00:15:15::/64
 Internal=false
 IPv6=true
 DisableDNS=false

@@ -8,6 +8,7 @@ AutoUpdate=registry
 UserNS=nomap
 
 Network=knot.network
+IP=10.15.15.1
 PublishPort=53:53
 PublishPort=53:53/udp
 
