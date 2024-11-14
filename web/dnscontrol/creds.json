@@ -9,7 +9,7 @@
     },
     "knot": {
         "TYPE": "AXFRDDNS",
-        "master": "10.15.15.15",
+        "master": "127.0.0.1:5377",
         "update-mode": "tcp",
         "transfer-mode": "tcp",
     },
