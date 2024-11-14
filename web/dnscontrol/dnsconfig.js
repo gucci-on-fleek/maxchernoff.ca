@@ -17,8 +17,22 @@ var IPv6 = "2a0a:4cc0:2000:172::1"
 
 // Begin the domain
 D("maxchernoff.ca", REG_MONITOR,
-    DnsProvider(DSP_KNOT),
+    DnsProvider(DSP_KNOT, 0),
     DefaultTTL("1h"),
+
+    ////////////////////
+    /// Name Servers ///
+    ////////////////////
+
+    // The master nameserver
+    CNAME("ns.maxchernoff.ca.", "@"),
+    NAMESERVER("ns.maxchernoff.ca."),
+
+    // Use Hurricane Electric for the public nameservers
+    NAMESERVER("ns2.he.net."),
+    NAMESERVER("ns3.he.net."),
+    NAMESERVER("ns4.he.net."),
+    NAMESERVER("ns5.he.net."),
 
     ////////////////////
     /// IP Addresses ///
