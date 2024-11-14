@@ -82,6 +82,7 @@ D("maxchernoff.ca", REG_MONITOR,
     /// Certificates ///
     ////////////////////
 
+    // Limits the CAs permitted to issue certificates
     CAA_BUILDER({
         label: "@", // Apply this to the root domain
         iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
@@ -91,6 +92,13 @@ D("maxchernoff.ca", REG_MONITOR,
         iodef_critical: true,
         issuewild_critical: true,
     }),
+
+    // SSH fingerprint
+    SSHFP("@",
+        4, // Key Algorithm: Ed25519
+        2, // Hash Algorithm: SHA-256
+        "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
+    ),
 
     /////////////
     /// Email ///
