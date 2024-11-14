@@ -4,14 +4,10 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description=Runs dnscontrol
-StartLimitIntervalSec=15
-StartLimitBurst=1
 
 [Path]
 Unit=dnscontrol.service
 PathChanged=%h/dnscontrol/dnsconfig.js
-TriggerLimitIntervalSec=15
-TriggerLimitBurst=1
 
 [Install]
 WantedBy=default.target

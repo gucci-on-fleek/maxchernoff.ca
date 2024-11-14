@@ -18,6 +18,10 @@ After=knot.service
 Wants=knot.service
 After=network-ready.service
 
+StartLimitIntervalSec=15
+StartLimitBurst=1
+StartLimitAction=none
+
 [Service]
 Restart=on-failure
 Type=oneshot

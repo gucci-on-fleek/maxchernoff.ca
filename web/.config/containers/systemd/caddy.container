@@ -26,7 +26,7 @@ Network=container-registry.network
 Network=flask.network
 Network=overleaf.network
 Network=woodpecker.network
-# Network=knot.network
+Network=knot.network
 
 [Service]
 Restart=always
