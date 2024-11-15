@@ -7,6 +7,8 @@ Image=ghcr.io/stackexchange/dnscontrol
 AutoUpdate=registry
 UserNS=nomap
 
+Secret="dnscontrol_tsig,type=env,target=DNSCONTROL_TSIG"
+
 Network=pasta:-T,5377
 Volume=%h/dnscontrol:/dns:ro,z
 Exec=push --full

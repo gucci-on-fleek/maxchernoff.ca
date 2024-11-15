@@ -56,28 +56,6 @@ Pre-installation
 
 3. Configure the <abbr>VM</abbr> for <abbr>UEFI</abbr> boot.
 
-4. Set the following <abbr>DNS</abbr> records:
-
-    <span class=sidenote>The `CAA` records make sure that only
-    <cite>Let's Encrypt</cite> and <cite>Zero<abbr>SSL</abbr></cite> can
-    issue certificates for the domain, and the `HTTPS` records can
-    sometimes speed up the initial connection times.</span>
-
-    <div class=hscroll>
-
-    | Type    | Hostname     | Value                       |
-    |---------|--------------|-----------------------------|
-    | `A`     | —            | `152.53.36.213`             |
-    | `AAAA`  | —            | `2a0a:4cc0:2000:172::1`     |
-    | `HTTPS` | —            | `1 . alpn="h3,h2" ipv4hint="152.53.36.213" ipv6hint="2a0a:4cc0:2000:172::1"` |
-    | `CNAME` | `www`        | `maxchernoff.ca.`           |
-    | `CNAME` | `overleaf`   | `maxchernoff.ca.`           |
-    | `CNAME` | `woodpecker` | `maxchernoff.ca.`           |
-    | `CAA`   | —            | `0 issue "letsencrypt.org"` |
-    | `CAA`   | —            | `0 issue "sectigo.com"`     |
-    | `CAA`   | —            | `0 issuewild ";"`           |
-
-    </div>
 
 Installation
 ------------
@@ -269,6 +247,43 @@ Web Server
     $ sudo -u web fish
     ```
 
+10. Add the GitHub webhook shared secret:
+
+    ```shell-session
+    % cat /dev/urandom | head --bytes=21 | base64 | tr -d '\n' \
+        | podman secret create webhook_secret -
+
+    % podman secret inspect webhook_secret --showsecret
+    (then paste into the GitHub webhook secret field)
+    ```
+
+11. Add the DNS shared secrets:
+
+    - A Podman secret `dnscontrol_tsig` that looks like
+
+        ```text
+        hmac-sha256:dnscontrol:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+        ```
+
+    - A file `web/knot/config/secrets.conf` that looks like
+
+        ```yaml
+        key:
+          - id: dnscontrol
+            algorithm: hmac-sha256
+            secret: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+
+        key:
+          - id: maxchernoff-he
+            algorithm: hmac-sha256
+            secret: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=
+
+        key:
+          - id: red-deer
+            algorithm: hmac-sha256
+            secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
+        ```
+
 18. Reboot to make sure everything starts correctly.
 
 
@@ -310,6 +325,22 @@ Woodpecker CI
     % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
     >     podman secret create woodpecker_agent_secret -
     ```
+
+
+Container Builders
+------------------
+
+Sometimes there aren't any pre-built containers for the software that
+you want to run, so we'll need to add a container builder.
+
+1. Create the `builder` user:
+
+    ```shell-session
+    $ sudo useradd --create-home --shell /usr/sbin/nologin builder
+    $ sudo loginctl enable-linger builder
+    ```
+
+2. That's pretty much it.
 
 
 Snapshots

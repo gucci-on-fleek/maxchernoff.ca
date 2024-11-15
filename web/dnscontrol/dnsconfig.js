@@ -61,9 +61,6 @@ D("maxchernoff.ca", REG_MONITOR,
     // Hosts an Overleaf instance
     CNAME("overleaf", "@"),
 
-    // Dynamic DNS to home router
-    CNAME("red-deer", "gucci-on-fleek.duckdns.org."),
-
     // Container Registry
     CNAME("registry", "maxchernoff.ca."),
 

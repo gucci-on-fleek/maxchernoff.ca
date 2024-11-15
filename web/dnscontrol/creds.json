@@ -12,5 +12,7 @@
         "master": "127.0.0.1:5377",
         "update-mode": "tcp",
         "transfer-mode": "tcp",
+        "transfer-key": "$DNSCONTROL_TSIG",
+        "update-key": "$DNSCONTROL_TSIG",
     },
 }
