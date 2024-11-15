@@ -156,4 +156,7 @@ D("maxchernoff.ca", REG_MONITOR,
     // Google Search Console ownership verification
     TXT("@",
         "google-site-verification=gWIJ3Mg-zy1MuwAJHw8PkhOEENqOmLxUNslbQ4ZPfAE"),
+
+    // Dynamic DNS to home router
+    IGNORE("red-deer", "A,AAAA"),
 END);
