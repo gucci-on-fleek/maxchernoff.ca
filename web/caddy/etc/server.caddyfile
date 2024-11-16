@@ -19,6 +19,26 @@ import base.caddyfile
 		protocols h3
 	}
 	admin fd/6
+
+	# Proxy DNS-over-TLS
+	layer4 {
+		fd/7 {
+			@dot tls {
+				alpn dot
+			}
+			route @dot {
+				tls {
+					connection_policy {
+						alpn dot
+						fallback_sni ns.maxchernoff.ca
+					}
+				}
+				proxy {
+					upstream tcp/152.53.36.213:53
+				}
+			}
+		}
+	}
 }
 
 # Define the default options for all sites
@@ -123,4 +143,12 @@ registry.maxchernoff.ca {
 	handle {
 		respond "403 Forbidden" 403
 	}
+}
+
+# DNS Nameserver
+ns.maxchernoff.ca {
+	import default
+
+	# We need to define a server here for Caddy to fetch a certificate for the
+	# layer4 DNS-over-TLS proxy, but otherwise this block serves no purpose.
 }

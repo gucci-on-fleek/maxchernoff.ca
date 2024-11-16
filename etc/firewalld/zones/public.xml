@@ -24,6 +24,9 @@
     <port port="53" protocol="tcp"/>
     <port port="53" protocol="udp"/>
 
+    <!-- DNS-over-TLS -->
+    <port port="853" protocol="tcp"/>
+
     <!-- Apply the allowlist -->
     <forward/>
 </zone>
