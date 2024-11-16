@@ -25,5 +25,10 @@ ProtectProc=invisible
 ProtectSystem=strict
 SystemCallFilter=@system-service
 
+Restart=on-failure
+RestartSec=1min
+StartLimitIntervalSec=4min
+StartLimitBurst=3
+
 [Install]
 WantedBy=update-analytics.target
