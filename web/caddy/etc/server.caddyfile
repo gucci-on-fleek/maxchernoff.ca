@@ -34,7 +34,7 @@ import base.caddyfile
 					}
 				}
 				proxy {
-					upstream tcp/152.53.36.213:53
+					upstream tcp/systemd-knot:53
 				}
 			}
 		}

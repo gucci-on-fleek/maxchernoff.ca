@@ -7,9 +7,7 @@ Image=docker.io/cznic/knot:latest
 AutoUpdate=registry
 UserNS=nomap
 
-Network=pasta
-PublishPort=127.0.0.1:5377:53
-PublishPort=127.0.0.1:5377:53/udp
+Network=dns.network
 PublishPort=152.53.36.213:53:53
 PublishPort=152.53.36.213:53:53/udp
 PublishPort=[2a0a:4cc0:2000:172::1]:53:53
