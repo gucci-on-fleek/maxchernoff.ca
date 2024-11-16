@@ -27,19 +27,23 @@ if [ "${1:-}" = "knot" ]; then
 fi
 
 if [ "${1:-}" = "caddy" ]; then
-    podman run \
-        --pull=newer \
-        --network=host \
-        --rm \
-        --interactive \
-        --tty \
-        --volume=./web/caddy/etc/:/etc/caddy:z,ro \
-        --volume=./web/caddy/static:/srv/:z,ro \
-        maxchernoff.ca/caddy:latest \
-        caddy run \
+    # podman run \
+    #     --pull=newer \
+    #     --network=host \
+    #     --rm \
+    #     --interactive \
+    #     --tty \
+    #     --volume=./web/caddy/etc/:/etc/caddy:z,ro \
+    #     --volume=./web/caddy/static:/srv/:z,ro \
+    #     maxchernoff.ca/caddy:latest \
+    #     caddy run \
+    #     --watch \
+    #     --adapter caddyfile \
+    #     --config /etc/caddy/local.caddyfile
+    caddy run \
         --watch \
         --adapter caddyfile \
-        --config /etc/caddy/local.caddyfile
+        --config ./web/caddy/etc/local.caddyfile
     exit 0
 fi
 

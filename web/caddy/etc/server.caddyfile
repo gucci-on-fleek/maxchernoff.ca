@@ -8,8 +8,13 @@ import base.caddyfile
 
 # Root options
 {
+	# For the minifier
+	order replace after encode
+
+	# For the ACME challenge
 	email acme-certificates@maxchernoff.ca
 
+	# Handle socket activation
 	auto_https disable_redirects
 
 	default_bind fd/4 {

@@ -25,6 +25,10 @@ import base.caddyfile
 
 # Global options
 {
+	# For the minifier
+	order replace after encode
+
+	# Debug logging
 	log {
 		level DEBUG
 		output stderr

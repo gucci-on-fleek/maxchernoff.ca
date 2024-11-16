@@ -3,9 +3,35 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
-# Global options
-{
-	order replace after encode
+# Define the minifier
+(minify) {
+	# JavaScript/JSON
+	replace {
+		match {
+			header Content-Type "text/javascript*"
+			header Content-Type "application/json*"
+			header Content-Type "*+json*"
+		}
+		re `^//.*\n|/\s*\*[^\0]*?\*\/\s*|\s*(\n)\s*|\s+([^-\w])` "${1}${2}"
+	}
+
+	# CSS
+	replace {
+		match {
+			header Content-Type "text/css*"
+		}
+		re `/\*[^\0]*?\*\/|\s*\n\s*|([^-\w)])\s+` "${1}"
+	}
+
+	# XML
+	replace {
+		match {
+			header Content-Type "text/xml*"
+			header Content-Type "application/xml*"
+			header Content-Type "*+xml*"
+		}
+		re `<![-]-[^\0]*?[-]->\s*|\s*(\n)\s*|([^-\w<!])\s+([^-\w<!])` "${1}${2}${3}"
+	}
 }
 
 # Define the default options for all sites
@@ -32,6 +58,9 @@
 		root * /srv
 		file_server
 
+		# Minify
+		import minify
+
 		# Special headers
 		header Cache-Control max-age=1209600 # 2 weeks
 		header /.well-known/traffic-advice {
@@ -43,10 +72,14 @@
 		rewrite /app-ads.txt /.well-known/app-ads.txt
 		rewrite /robots.txt /.well-known/robots.txt
 
-		rewrite /apple-touch-icon*.png /icons/apple-touch-icon.png
-		rewrite /favicon.ico /icons/favicon.ico
-		rewrite /favicon.svg /icons/favicon.svg
-		rewrite /touch-icon*.png /icons/apple-touch-icon.png
+		rewrite /apple-touch-icon*.png /assets/apple-touch-icon.png
+		rewrite /favicon.ico /assets/favicon.ico
+		rewrite /favicon.svg /assets/favicon.svg
+		rewrite /touch-icon*.png /assets/apple-touch-icon.png
+	}
+
+	header /assets/* {
+		Cache-Control max-age=86400 # 1 day
 	}
 
 	# No sitemaps, so cache the response for a long time
@@ -117,19 +150,9 @@
 		}
 	}
 
-	# Minify responses
-	templates *.css {
-		mime text/css
-		between /*! !*/
-	}
-
-	templates *.xslt {
-		mime application/xslt+xml
-	}
-
 	# Preload some resources
 	@html `{http.request.header.Accept}.contains("text/html")`
-	header @html Link "</style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
+	header @html Link "</assets/style.css>; rel=\"preload\"; as=\"style\", </favicon.svg>; rel=\"icon\"; type=\"image/svg+xml\""
 
 	# Analytics
 	header /analytics/* {
@@ -173,6 +196,9 @@
 	header /assets/speculation-rules.json {
 		Content-Type application/speculationrules+json
 	}
+
+	# Minify
+	import minify
 
 	# Handle errors
 	handle_errors {
