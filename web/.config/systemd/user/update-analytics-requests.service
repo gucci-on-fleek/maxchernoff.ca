@@ -9,6 +9,7 @@ Upholds=update-analytics.target
 
 [Service]
 Type=oneshot
+ExecStartPre=-chmod g+rw %h/caddy/access.log
 StandardInput=file:%h/caddy/access.log
 ExecStart=sh -c "jq --raw-output --slurp '.[-10000:] | .[] | [(.ts | todateiso8601), (.request | .host + .uri, .headers.Referer[0], .headers.\"User-Agent\"[0]), .status] | @tsv' | grep -Fv 'woodpecker.maxchernoff.ca/api/'"
 StandardOutput=truncate:%h/caddy/static/analytics/requests.tsv
@@ -27,8 +28,8 @@ SystemCallFilter=@system-service
 
 Restart=on-failure
 RestartSec=1min
-StartLimitIntervalSec=4min
-StartLimitBurst=3
+StartLimitIntervalSec=5min
+StartLimitBurst=2
 
 [Install]
 WantedBy=update-analytics.target
