@@ -128,11 +128,42 @@ api.maxchernoff.ca {
 
 	header Cache-Control max-age=60
 	reverse_proxy systemd-flask:8080
+
+	handle / {
+		header Content-Type text/html
+		respond `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>API Gateway</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>API Gateway</h1>
+		<p>This is a Flask-based web server that responds to certain requests. You probably shouldn’t be here.
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		` 200
+	}
 }
 
 # Container registry reverse proxy
 registry.maxchernoff.ca {
 	import default
+
+	handle / {
+		header Content-Type text/html
+		respond `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>Container Registry</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>Container Registry</h1>
+		<p>This is a container registry for various projects. The catalog is
+		available at <a href="https://registry.maxchernoff.ca/v2/_catalog"><code>/v2/_catalog</code></a>.
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		` 200
+	}
 
 	@get-head method GET HEAD
 	handle @get-head {
@@ -150,5 +181,24 @@ ns.maxchernoff.ca {
 	import default
 
 	# We need to define a server here for Caddy to fetch a certificate for the
-	# layer4 DNS-over-TLS proxy, but otherwise this block serves no purpose.
+	# layer4 DNS-over-TLS proxy, but otherwise this block serves no purpose, so
+	# we might as well show a landing page.
+	handle / {
+		header Content-Type text/html
+		respond `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>DNS Server</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>DNS Server</h1>
+		<p>This is the DNS server (AKA nameserver) for <code>maxchernoff.ca</code>.
+		There might be a DoH (DNS-over-HTTPS) server here in the future, but for
+		now, you'll need to access it over DNS (TCP/UDP port 53) or DNS-over-TLS
+		(TCP port 853).
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		` 200
+	}
+	respond "Not Found" 404
 }
