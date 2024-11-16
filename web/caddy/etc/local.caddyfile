@@ -33,7 +33,7 @@ import base.caddyfile
 }
 
 # The main site
-http://localhost:80 {
+localhost {
 	root * ./web/caddy/static
 	import www.maxchernoff.ca
 }
