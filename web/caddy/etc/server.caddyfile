@@ -104,6 +104,7 @@ overleaf.maxchernoff.ca {
 # Woodpecker reverse proxy
 woodpecker.maxchernoff.ca {
 	import default
+	header ?Content-Security-Policy ""
 	reverse_proxy systemd-woodpecker-server:8000
 }
 
