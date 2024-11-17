@@ -47,7 +47,9 @@ import base.caddyfile
 	}
 
 	# Cache some responses server-side
-	cache
+	cache {
+		otter
+	}
 }
 
 # Define the default options for all sites
@@ -138,6 +140,7 @@ api.maxchernoff.ca {
 
 	header Cache-Control max-age=5
 	cache
+
 	reverse_proxy systemd-flask:8080
 
 	handle / {
@@ -159,6 +162,7 @@ api.maxchernoff.ca {
 # Container registry reverse proxy
 registry.maxchernoff.ca {
 	import default
+	cache
 
 	handle / {
 		header Content-Type text/html
@@ -175,6 +179,10 @@ registry.maxchernoff.ca {
 		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
 		` 200
 	}
+
+	@manifest path /v2/*/manifests/* /v2/_catalog
+	header @manifest Cache-Control max-age=15
+	header ?Cache-Control max-age=3600 # Cache all responses for 1 hour
 
 	@get-head method GET HEAD
 	handle @get-head {

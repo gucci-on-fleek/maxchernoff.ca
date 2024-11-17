@@ -37,7 +37,9 @@ import base.caddyfile
 	}
 
 	# Cache some responses server-side
-	cache
+	cache {
+		otter
+	}
 }
 
 # The main site
