@@ -25,8 +25,9 @@ import base.caddyfile
 
 # Global options
 {
-	# For the minifier
+	# Directive ordering
 	order replace after encode
+	order cache before header
 
 	# Debug logging
 	log {
@@ -34,6 +35,9 @@ import base.caddyfile
 		output stderr
 		format console
 	}
+
+	# Cache some responses server-side
+	cache
 }
 
 # The main site

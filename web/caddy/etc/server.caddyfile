@@ -8,8 +8,9 @@ import base.caddyfile
 
 # Root options
 {
-	# For the minifier
+	# Directive ordering
 	order replace after encode
+	order cache before header
 
 	# For the ACME challenge
 	email acme-certificates@maxchernoff.ca
@@ -44,6 +45,9 @@ import base.caddyfile
 			}
 		}
 	}
+
+	# Cache some responses server-side
+	cache
 }
 
 # Define the default options for all sites
@@ -84,6 +88,7 @@ maxchernoff.ca {
 # The main site
 www.maxchernoff.ca {
 	root * /srv
+	cache
 	import www.maxchernoff.ca
 }
 
@@ -131,7 +136,8 @@ mta-sts.maxchernoff.ca {
 api.maxchernoff.ca {
 	import default
 
-	header Cache-Control max-age=60
+	header Cache-Control max-age=5
+	cache
 	reverse_proxy systemd-flask:8080
 
 	handle / {
