@@ -62,7 +62,7 @@ TeX Projects
 
 - [`lua-widow-control`](https://ctan.org/pkg/lua-widow-control)
 
-- [`extractbb.lua`](https://github.com/gucci-on-fleek/extractbb)
+- [`extractbb.lua`](https://www.ctan.org/pkg/extractbb)
 
 - [`luatex-syntax-highlighter`](https://github.com/gucci-on-fleek/luatex-syntax-highlighter)&emsp;(unreleased)
 
