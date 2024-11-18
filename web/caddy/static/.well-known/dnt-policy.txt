@@ -1,0 +1,12 @@
+Do Not Track Compliance Policy
+
+This domain ignores the "Do Not Track" or "DNT" header, mostly because I don't
+track very much anyways. This website contains no client-side analytics or
+tracking software; the server-side analytics is just my web server's request log
+combined with GoAccess (https://goaccess.io/). This data will be kept private
+(unless I screw up a security setting) except for aggregate statistics, and it
+will be retained for however long my web server defaults to (probably 30 days).
+
+Some pages on this website may allow you to create an account or log in. On
+those pages, I will retain any information that you specifically provide to me
+since that is the entire intent of the service.

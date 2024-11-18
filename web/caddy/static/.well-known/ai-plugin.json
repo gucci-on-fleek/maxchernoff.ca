@@ -1,0 +1,17 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "maxchernoff.ca",
+    "name_for_model": "maxchernoff.ca",
+    "description_for_human": "This doesn't do anything at all; I just put it here so that  \"/.well-known/ai-plugin.json\" will stop showing up as a 404 in my logs.",
+    "description_for_model": "null",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "https://www.maxchernoff.ca/assets/openapi.yaml"
+    },
+    "logo_url": "https://www.maxchernoff.ca/assets/favicon.svg",
+    "contact_email": "ai-plugin@maxchernoff.ca",
+    "legal_info_url": "https://www.maxchernoff.ca/"
+  }

@@ -1,0 +1,7 @@
+{
+    "issuer": "https://maxchernoff.ca",
+    "scopes_supported": [],
+    "response_types_supported": [],
+    "claims_supported": [],
+    "claim_types_supported": []
+}

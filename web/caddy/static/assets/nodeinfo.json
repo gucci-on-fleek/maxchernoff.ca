@@ -1,0 +1,22 @@
+{
+    "$schema": "http://nodeinfo.diaspora.software/ns/schema/2.1",
+    "version": "2.1",
+    "software": {
+        "name": "maxchernoff-ca",
+        "version": "v1.0.0"
+    },
+    "protocols": [],
+    "services": {
+        "inbound": ["imap"],
+        "outbound": ["smtp"]
+    },
+    "openRegistrations": false,
+    "usage": {
+        "users": {
+            "total": 1
+        }
+    },
+    "metadata": {
+        "description": "This is just a personal statically-generated website. I'm putting this file here so that \"/.well-known/nodeinfo\" will stop showing up as a 404 in my logs."
+    }
+}

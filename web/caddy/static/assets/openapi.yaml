@@ -1,0 +1,13 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+# This file doesn't do anything at all; I just put it here so that
+# "/.well-known/ai-plugin.json" will stop showing up as a 404 in my logs.
+
+openapi: 3.1.1
+info:
+    title: maxchernoff.ca
+    version: 1.0.0
+paths: {}
