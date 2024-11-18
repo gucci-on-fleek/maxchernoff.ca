@@ -120,6 +120,7 @@ D("maxchernoff.ca", REG_MONITOR,
         "v=spf1 " + // Version (always 1)
         "include:spf.migadu.com " + // Allow Migadu to send mail
         "mx:tug.org " + // Also allow the TUG Mailman to forward my emails
+        "mx:ntg.nl " + // Also allow the NTG Mailman to forward my emails
         "-all" // Reject all other mail
     ),
 
