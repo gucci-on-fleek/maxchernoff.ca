@@ -19,21 +19,7 @@ if set --query TOOLBOX_PATH
     set --global fish_color_user --reverse --bold --dim yellow
 end
 
-# Aliases
 function ok
-    argparse loop -- $argv
-    if set --query _flag_loop
-        set --local time 0
-        while sleep $time
-            _ok
-            set time 1
-        end
-    else
-        _ok
-    end
-end
-
-function _ok
     truncate --size=0 ~repo/triggers/get-status.output
     echo "$(date)" > ~repo/triggers/get-status.trigger
     set --local count 0
@@ -45,6 +31,12 @@ function _ok
         end
     end
     cat ~repo/triggers/get-status.output
+end
+
+function container
+    # podman run --name=fedora -it --network=host --volume=/var/home/max:/home/max --security-opt=label=disable fedora:latest
+    podman start fedora
+    podman exec -lit /usr/bin/fish
 end
 
 function refresh
