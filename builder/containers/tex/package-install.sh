@@ -21,6 +21,8 @@ dnf_packages=(
 
     # gucci-on-fleek/extractbb
     diffutils
+    groff-perl
+    perl-Compress-Zlib
 )
 
 dnf install \
