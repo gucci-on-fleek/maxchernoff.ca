@@ -40,4 +40,9 @@ ctx=/opt/context/texmf-linux-64/bin
     $ctx/context --luatex /root/context-cache.tex || exit 1
 } &
 
+# And the Wine caches
+{
+    wine64 "$(type -p texlua.exe)" --help
+} &
+
 wait

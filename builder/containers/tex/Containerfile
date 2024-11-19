@@ -11,7 +11,7 @@ COPY ["tex-cache.sh", "package-install.sh", "/usr/local/sbin/"]
 COPY ["context-cache.tex", "latex-cache.tex", "/root/"]
 
 # Set the environment variables
-ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/opt/texlive/bin/windows:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 
 # Generate the TeX caches
 RUN /usr/local/sbin/tex-cache.sh
