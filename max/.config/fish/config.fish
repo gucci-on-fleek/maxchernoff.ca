@@ -46,3 +46,7 @@ end
 function reboot
     sudo systemctl reboot
 end
+
+function journalctl
+    command journalctl --exclude-identifier='sshd-session' --grep='^(?!k?audit|{"t":{)((?!system_u:system_r:sshd_t|container health_status).)+$' $argv
+end
