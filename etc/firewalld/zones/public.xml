@@ -27,6 +27,9 @@
     <!-- DNS-over-TLS -->
     <port port="853" protocol="tcp"/>
 
+    <!-- Extra DNS -->
+    <port port="25108" protocol="tcp"/>
+
     <!-- Apply the allowlist -->
     <forward/>
 </zone>
