@@ -18,15 +18,26 @@ var IPv6 = "2a0a:4cc0:2000:172::1"
 // Begin the domain
 D("maxchernoff.ca", REG_MONITOR,
     DnsProvider(DSP_KNOT, 0),
-    DefaultTTL("1h"),
+    DefaultTTL("1d"),
 
     ////////////////////
     /// Name Servers ///
     ////////////////////
 
     // The master nameserver
-    CNAME("ns.maxchernoff.ca.", "@"),
     NAMESERVER("ns.maxchernoff.ca."),
+
+    // Master nameserver configuration
+    A("ns", IPv4),
+    AAAA("ns", IPv6),
+    SVCB(
+        "_dns.ns",                 // Domain + Protocol
+        1,                         // Priority
+        "ns.maxchernoff.ca.",      // Target Domain (this domain)
+        "alpn=dot " +              // Protocols supported (DNS-over-TLS)
+        "ipv4hint=" + IPv4 + " " + // IPv4 Address
+        "ipv6hint=" + IPv6         // IPv6 Address
+    ),
 
     // Use Hurricane Electric for the public nameservers
     NAMESERVER("ns2.he.net."),

@@ -4,12 +4,12 @@
 ; SPDX-FileCopyrightText: 2024 Max Chernoff
 
 $ORIGIN maxchernoff.ca.
-$TTL 3600
+$TTL 86400
 
 @ SOA (
     ns.maxchernoff.ca.   ; Primary nameserver location.
     dns.maxchernoff.ca.  ; Email address.
-    1                    ; Serial number: will be replaced by dnscontrol.
+    2000010100           ; Serial number: will be replaced by dnscontrol.
     14400                ; Refresh: How often secondary nameservers should check
                          ;          for updates. (4h)
     900                  ; Retry: How often secondary nameservers should retry
