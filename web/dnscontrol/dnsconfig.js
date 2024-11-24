@@ -15,6 +15,36 @@ var REG_MONITOR = NewRegistrar("DoH");
 var IPv4 = "152.53.36.213"
 var IPv6 = "2a0a:4cc0:2000:172::1"
 
+// Handle the DANE TLSA records
+function dane(name) {
+    return [
+        TLSA(
+            name, // Port + Protocol + Domain
+            0,    // Certificate Usage: CA Constraint
+            1,    // Selector: Public Key
+            1,    // Matching Type: SHA-256
+                  // ISRG Root X1 (Let's Encrypt RSA)
+            "0b9fa5a59eed715c26c1020c711b4f6ec42d58b0015e14337a39dad301c5afc3"
+        ),
+        TLSA(
+            name, // Port + Protocol + Domain
+            0,    // Certificate Usage: CA Constraint
+            1,    // Selector: Public Key
+            1,    // Matching Type: SHA-256
+                  // ISRG Root X2 (Let's Encrypt ECDSA)
+            "762195c225586ee6c0237456e2107dc54f1efc21f61a792ebd515913cce68332"
+        ),
+    ]
+}
+
+// Handle the CNAME records for the web servers
+function web(name) {
+    return [
+        dane("_443._tcp." + name),
+        CNAME(name, "maxchernoff.ca."),
+    ]
+}
+
 // Begin the domain
 D("maxchernoff.ca", REG_MONITOR,
     DnsProvider(DSP_KNOT, 0),
@@ -38,6 +68,7 @@ D("maxchernoff.ca", REG_MONITOR,
         "ipv4hint=" + IPv4 + " " + // IPv4 Address
         "ipv6hint=" + IPv6         // IPv6 Address
     ),
+    dane("_853._tcp.ns"),
 
     // Use Hurricane Electric for the public nameservers
     NAMESERVER("ns2.he.net."),
@@ -67,24 +98,29 @@ D("maxchernoff.ca", REG_MONITOR,
     //////////////////
 
     // Generic Flask API backend
-    CNAME("api", "maxchernoff.ca."),
+    web("api"),
 
     // Hosts an Overleaf instance
-    CNAME("overleaf", "@"),
+    web("overleaf"),
 
     // Container Registry
-    CNAME("registry", "maxchernoff.ca."),
+    web("registry"),
 
     // Needed for GitHub to offer a server-side redirect from GitHub Pages
-    CNAME("stardew-valley-item-finder", "maxchernoff.ca."),
+    web("stardew-valley-item-finder"),
     TXT("_github-pages-challenge-gucci-on-fleek",
         "66b26f150db40469b0d311fdc9dc79"),
 
     // Woodpecker CI instance
-    CNAME("woodpecker", "maxchernoff.ca."),
+    web("woodpecker"),
 
     // The primary web domain
-    CNAME("www", "@"),
+    web("www"),
+
+    // Test domain
+    web("test"),
+    web("test2"),
+    web("test3"),
 
     ////////////////////
     /// Certificates ///
@@ -107,6 +143,9 @@ D("maxchernoff.ca", REG_MONITOR,
         2, // Hash Algorithm: SHA-256
         "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
     ),
+
+    // DANE
+    dane("_443._tcp"),
 
     /////////////
     /// Email ///
@@ -152,7 +191,7 @@ D("maxchernoff.ca", REG_MONITOR,
     }),
 
     // MTA-STS (tells receiving servers to use TLS)
-    CNAME("mta-sts", "maxchernoff.ca."),
+    web("mta-sts"),
     TXT("_mta-sts", "v=STSv1; id=2"),
     TXT("_smtp._tls", "v=TLSRPTv1; rua=mailto:tls-reports@maxchernoff.ca"),
 
