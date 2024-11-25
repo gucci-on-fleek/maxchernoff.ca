@@ -15,6 +15,10 @@ import base.caddyfile
 	# For the ACME challenge
 	email acme-certificates@maxchernoff.ca
 
+	# Default to maxchernoff.ca if the host is not specified
+	default_sni maxchernoff.ca
+	fallback_sni maxchernoff.ca
+
 	# Handle socket activation
 	auto_https disable_redirects
 
@@ -221,4 +225,38 @@ ns.maxchernoff.ca {
 		` 200
 	}
 	respond "Not Found" 404
+}
+
+# Fallback hosts
+152.53.36.213, [2a0a:4cc0:2000:172::1], * {
+	# I've set the security options here to be as strict as possible since
+	# there's no valid reason for anyone to be here.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		Content-Security-Policy "default-src 'self'; sandbox;"
+		Content-Type text/html
+	}
+	tls {
+		protocols tls1.3
+	}
+
+	# I've intentionally omitted the logging here since all that shows up here
+	# is bots probing for vulnerabilities.
+
+	# Do nothing except for sending an informative error message.
+	respond 421 {
+		body `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>Misdirected Request</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>Misdirected Request</h1>
+		<p>Your request was either missing or had an unknown <code>Host</code>
+		header. Please try again with a valid hostname.
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		`
+		close
+	}
 }
