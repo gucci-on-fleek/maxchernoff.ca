@@ -37,11 +37,28 @@ function dane(name) {
     ]
 }
 
-// Handle the CNAME records for the web servers
+// Create the DNS records needed for a web server hosted on this server
 function web(name) {
     return [
-        dane("_443._tcp." + name),
-        CNAME(name, "maxchernoff.ca."),
+        A(name, IPv4),    // IPv4 Address
+        AAAA(name, IPv6), // IPv6 Address
+
+        // HTTPS Records
+        HTTPS(
+            name,                      // Domain
+            1,                         // Priority
+            ".",                       // Target Domain (this domain)
+            "alpn=h3,h2 " +            // Protocols supported (HTTP/2 and HTTP/3)
+            "ipv4hint=" + IPv4 + " " + // IPv4 Address
+            "ipv6hint=" + IPv6         // IPv6 Address
+        ),
+
+        // DANE
+        dane(
+            name == "@" ?
+            "_443._tcp" :
+            "_443._tcp." + name
+        ),
     ]
 }
 
@@ -54,16 +71,17 @@ D("maxchernoff.ca", REG_MONITOR,
     /// Name Servers ///
     ////////////////////
 
+    NAMESERVER_TTL("1d"),
+
     // The master nameserver
     NAMESERVER("ns.maxchernoff.ca."),
 
     // Master nameserver configuration
-    A("ns", IPv4),
-    AAAA("ns", IPv6),
+    web("ns"),
     SVCB(
         "_dns.ns",                 // Domain + Protocol
         1,                         // Priority
-        "ns.maxchernoff.ca.",      // Target Domain (this domain)
+        ".",                       // Target Domain (this domain)
         "alpn=dot " +              // Protocols supported (DNS-over-TLS)
         "ipv4hint=" + IPv4 + " " + // IPv4 Address
         "ipv6hint=" + IPv6         // IPv6 Address
@@ -76,26 +94,12 @@ D("maxchernoff.ca", REG_MONITOR,
     NAMESERVER("ns4.he.net."),
     NAMESERVER("ns5.he.net."),
 
-    ////////////////////
-    /// IP Addresses ///
-    ////////////////////
-
-    A("@", IPv4), // IPv4
-    AAAA("@", IPv6), // IPv6
-
-    // HTTPS Records
-    HTTPS(
-        "@", // Domain
-        1,   // Priority
-        ".", // Target Domain (this domain)
-        "alpn=h3,h2 " +            // Protocols supported (HTTP/2 and HTTP/3)
-        "ipv4hint=" + IPv4 + " " + // IPv4 Address
-        "ipv6hint=" + IPv6         // IPv6 Address
-    ),
-
     //////////////////
     /// Web Server ///
     //////////////////
+
+    // Root domain
+    web("@"),
 
     // Generic Flask API backend
     web("api"),
@@ -116,11 +120,6 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // The primary web domain
     web("www"),
-
-    // Test domain
-    web("test"),
-    web("test2"),
-    web("test3"),
 
     ////////////////////
     /// Certificates ///
@@ -144,9 +143,6 @@ D("maxchernoff.ca", REG_MONITOR,
         "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
     ),
 
-    // DANE
-    dane("_443._tcp"),
-
     /////////////
     /// Email ///
     /////////////
@@ -157,8 +153,6 @@ D("maxchernoff.ca", REG_MONITOR,
     // Mailbox receiving servers
     MX("@", 10, "aspmx1.migadu.com."),
     MX("@", 20, "aspmx2.migadu.com."),
-    MX("*", 10, "aspmx1.migadu.com."),
-    MX("*", 20, "aspmx2.migadu.com."),
 
     // DKIM (signs outgoing mail)
     CNAME("key1._domainkey", "key1.maxchernoff.ca._domainkey.migadu.com."),
@@ -199,6 +193,7 @@ D("maxchernoff.ca", REG_MONITOR,
     SRV("_autodiscover._tcp", 0, 1, 443, "autodiscover.migadu.com."),
     SRV("_imaps._tcp", 0, 1, 993, "imap.migadu.com."),
     SRV("_submissions._tcp", 0, 1, 465, "smtp.migadu.com."),
+    SRV("_sieve._tcp", 0, 1, 4190, "imap.migadu.com."),
 
     /////////////////////
     /// Miscellaneous ///
