@@ -121,7 +121,9 @@
 		"*.php",
 		"/*.yml",
 		"/cgi-bin/*",
-		"/actuator/*"
+		"/actuator/*",
+		"*/.env",
+		"/wp-*"
 		) &&
 		!path("/.well-known/*")) ||
 		header({"User-Agent": "Go-http-client/*"})
