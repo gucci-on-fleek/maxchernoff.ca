@@ -39,7 +39,7 @@ function dane(name) {
 
 // Create the DNS records needed for a web server hosted on this server
 function web(name) {
-    return [
+    var out = [
         A(name, IPv4),    // IPv4 Address
         AAAA(name, IPv6), // IPv6 Address
 
@@ -51,15 +51,102 @@ function web(name) {
             "alpn=h3,h2 " +            // Protocols supported (HTTP/2 and HTTP/3)
             "ipv4hint=" + IPv4 + " " + // IPv4 Address
             "ipv6hint=" + IPv6         // IPv6 Address
-        ),
-
-        // DANE
-        dane(
-            name == "@" ?
-            "_443._tcp" :
-            "_443._tcp." + name
+            // "tls-supported-groups=29,23" // x25519, secp256r1 // TODO: Enable this when DNSControl supports it
         ),
     ]
+
+    // DANE
+    if (name == "@") {
+        out.push(dane("_443._tcp"))
+        out.push(dane("_443._quic"))
+    } else {
+        out.push(dane("_443._tcp." + name))
+        out.push(dane("_443._quic." + name))
+    }
+
+    // DNS Service Discovery (DNS-SD), because why not?
+    if (name == "@") {
+        // Just add the raw SRV records for the root domain
+        out.push(SRV(
+            "_https._tcp", // Service Name
+            0,             // Priority
+            1,             // Weight
+            443,           // Port
+            name           // Target Domain
+        ))
+        out.push(SRV(
+            "_https._udp", // Service Name
+            0,             // Priority
+            1,             // Weight
+            443,           // Port
+            name           // Target Domain
+        ))
+        out.push(SRV(
+            "_http._tcp",  // Service Name
+            0,             // Priority
+            1,             // Weight
+            80,            // Port
+            name           // Target Domain
+        ))
+    } else {
+        // List the service names that are available
+        out.push(PTR("_https._tcp", name + "._https._tcp.maxchernoff.ca."))
+        out.push(PTR("_http._udp",  name + "._http._tcp.maxchernoff.ca."))
+        out.push(PTR("_http._tcp",  name + "._http._tcp.maxchernoff.ca."))
+
+        // Map the service names to the actual services
+        out.push(SRV(
+            name + "._https._tcp", // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            443,                   // Port
+            name                   // Target Domain
+        ))
+        out.push(SRV(
+            name + "._https._udp", // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            443,                   // Port
+            name                   // Target Domain
+        ))
+        out.push(SRV(
+            name + "._http._tcp",  // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            80,                    // Port
+            name                   // Target Domain
+        ))
+
+        // Add the mandatory TXT records
+        out.push(TXT(name + "._https._tcp", "txtvers=1 path=/"))
+        out.push(TXT(name + "._https._udp", "txtvers=1 path=/"))
+        out.push(TXT(name + "._http._tcp",  "txtvers=1 path=/"))
+
+        // And also add the raw SRV records
+        out.push(SRV(
+            "_https._tcp." + name, // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            443,                   // Port
+            name                   // Target Domain
+        ))
+        out.push(SRV(
+            "_https._udp." + name, // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            443,                   // Port
+            name                   // Target Domain
+        ))
+        out.push(SRV(
+            "_http._tcp." + name,  // Service Name
+            0,                     // Priority
+            1,                     // Weight
+            80,                    // Port
+            name                   // Target Domain
+        ))
+    }
+
+    return out
 }
 
 // Begin the domain
@@ -159,6 +246,19 @@ D("maxchernoff.ca", REG_MONITOR,
     CNAME("key2._domainkey", "key2.maxchernoff.ca._domainkey.migadu.com."),
     CNAME("key3._domainkey", "key3.maxchernoff.ca._domainkey.migadu.com."),
 
+    // DKIM reporting
+    TXT("_report._domainkey",
+        "ra=mail-reports; " + // Send reports to this address
+        "rr=all; "            // Report on all emails
+    ),
+
+    // DKIM ADSP
+    TXT("_adsp._domainkey",
+        "dkim=unknown; " +    // Mailman will break any DKIM signatures
+        "ra=mail-reports; " + // Send reports to this address
+        "rr=all;"              // Report on all emails
+    ),
+
     // SPF (restricts outgoing mail's IP addresses)
     TXT("@",
         "v=spf1 " + // Version (always 1)
@@ -205,4 +305,30 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // Dynamic DNS to home router
     IGNORE("red-deer", "A,AAAA"),
+
+    // dnssecuritytxt, see https://github.com/disclose/dnssecuritytxt/
+    TXT("@", "security_contact=mailto:security@maxchernoff.ca"),
+    TXT("@", "security_contact=https://www.maxchernoff.ca/#contact"),
+
+    // Geographical location of the server
+    // TODO: Enable once DNSControl supports LOC records for AXFR zones
+    // LOC_BUILDER_DD({
+    //     label: "@",
+    //     x: 38.747494,
+    //     y: -77.531749,
+    //     alt: 70.48,
+    //     horizontal_precision: 100,
+    //     vertical_precision: 10,
+    //     size: 100,
+    // }),
+    //
+    // LOC_BUILDER_DD({
+    //     label: "red-deer",
+    //     x: 52.3,
+    //     y: -113.8,
+    //     alt: 800,
+    //     horizontal_precision: 20e3,
+    //     vertical_precision: 100,
+    //     size: 10,
+    // }),
 END);
