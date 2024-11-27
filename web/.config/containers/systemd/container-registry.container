@@ -20,6 +20,7 @@ Environment="REGISTRY_STORAGE_MAINTENANCE_UPLOADPURGING={interval: 12h, age: 72h
 Restart=always
 
 [Unit]
+Wants=network-ready.service
 After=network-ready.service
 
 [Install]

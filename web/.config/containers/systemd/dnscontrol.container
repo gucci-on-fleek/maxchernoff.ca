@@ -16,6 +16,7 @@ Exec=push --full
 [Unit]
 After=knot.service
 Wants=knot.service
+Wants=network-ready.service
 After=network-ready.service
 
 

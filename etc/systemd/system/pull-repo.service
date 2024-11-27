@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description=Pulls the files from the server Git repository
+Wants=network-ready.service
 After=network-ready.service
 
 [Service]

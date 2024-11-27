@@ -23,6 +23,7 @@ UserNS=nomap
 Restart=always
 
 [Unit]
+Wants=network-ready.service
 After=network-ready.service
 After=container-registry.service
 

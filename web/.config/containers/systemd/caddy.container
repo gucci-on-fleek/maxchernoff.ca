@@ -33,6 +33,7 @@ Restart=always
 TimeoutStopSec=15s
 
 [Unit]
+Wants=network-ready.service
 After=network-ready.service
 Requires=caddy.socket
 After=caddy.socket

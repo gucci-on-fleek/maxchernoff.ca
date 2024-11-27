@@ -7,4 +7,5 @@ Internal=true
 DisableDNS=false
 
 [Unit]
+Wants=network-ready.service
 After=network-ready.service
