@@ -252,7 +252,7 @@ D("maxchernoff.ca", REG_MONITOR,
         "rr=all; "            // Report on all emails
     ),
 
-    // DKIM ADSP
+    // DKIM ADSP (Obsolete, but maybe still used somewhere)
     TXT("_adsp._domainkey",
         "dkim=unknown; " +    // Mailman will break any DKIM signatures
         "ra=mail-reports; " + // Send reports to this address
@@ -261,17 +261,17 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // SPF (restricts outgoing mail's IP addresses)
     TXT("@",
-        "v=spf1 " + // Version (always 1)
+        "v=spf1 " +     // Version (always 1)
         "include:spf.migadu.com " + // Allow Migadu to send mail
         "mx:tug.org " + // Also allow the TUG Mailman to forward my emails
-        "mx:ntg.nl " + // Also allow the NTG Mailman to forward my emails
-        "-all" // Reject all other mail
+        "mx:ntg.nl " +  // Also allow the NTG Mailman to forward my emails
+        "~all"          // Send all other mail to spam (soft fail)
     ),
 
     // DMARC (tells receiving servers to reject spoofed emails)
     DMARC_BUILDER({
-        // Reject anything that fails DMARC
-        policy: "reject",
+        // Send anything that fails to spam
+        policy: "quarantine",
         subdomainPolicy: "reject",
 
         // Send reports to these addresses
