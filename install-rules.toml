@@ -33,6 +33,7 @@ fcontext --add --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/goaccess(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/knot(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}web/maddy(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 """
@@ -204,7 +205,14 @@ owner = "root"
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = ["caddy/*/", "flask", "goaccess", "knot/*/", "dnscontrol"]
+paths = [
+    "caddy/*/",
+    "flask",
+    "goaccess",
+    "knot/*/",
+    "dnscontrol",
+    "maddy/maddy.conf",
+]
 permissions.web = "r"
 permissions."web/root" = "r"
 permissions."web/1000" = "r"
@@ -318,6 +326,20 @@ owner = "repo"
 permissions.web = "r"
 permissions."web/root" = "r"
 recursive_permissions = true
+
+[[folder]]
+base = "{web}"
+paths = ["maddy/data/"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/1000" = "rw"
+
+[[permissions]]
+base = "{web}/maddy/"
+paths = ["maddy.conf"]
+permissions."web/1000" = "r"
+permissions."web" = "r"
+owner = "repo"
 
 
 ##################

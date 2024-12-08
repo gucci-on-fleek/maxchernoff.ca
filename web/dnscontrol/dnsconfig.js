@@ -320,6 +320,25 @@ D("maxchernoff.ca", REG_MONITOR,
 
     MX("noreply", 0, "."), // Prevent receiving email
 
+    TXT("default._domainkey.noreply", "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnT+imAGiJsBFdKU16lCvOwSsTOxEnQHrbr5JYvJYcdcYD+D5zYb7o6E6NvEYih7+BEQkAXA5viwABQFD5PQ/6d76w2z/UFB76jN2H2HMRhH/GxCK0RN5SPZNHfsLkGQKrZWsgm4UI4YHTDxqO1N1ILazVFiDOqsxIe3Z6EufZfayfjbaSYl66ZXu0ZDyYgsH7BjhoYggStvsbFnd100FbSx+8Oc66JSr5PRxThJoBBX0Ranr/R/+hhk2/oQH2W2Nnsc6VHHgVhPvV1o3pGFyCNDmP+vsxX4GozsgUEVIGvJ6CEbEBkqEjN/sHSY2bCuLsPoG+NO+AKKmAWthQNl+JQIDAQAB"),
+
+    DMARC_BUILDER({
+        "label": "noreply",
+        // Send anything that fails to spam
+        policy: "reject",
+        subdomainPolicy: "reject",
+
+        // Send reports to these addresses
+        rua: ["mailto:mail-reports@maxchernoff.ca"],
+        ruf: ["mailto:mail-reports@maxchernoff.ca"],
+        failureOptions: "1", // Report if any part of DMARC fails
+
+        // Require strict SPF and DKIM matching
+        alignmentSPF: "relaxed",
+        alignmentDKIM: "strict",
+    }),
+    TXT("noreply.maxchernoff.ca._report._dmarc", "v=DMARC1"),
+
     /////////////////////
     /// Miscellaneous ///
     /////////////////////

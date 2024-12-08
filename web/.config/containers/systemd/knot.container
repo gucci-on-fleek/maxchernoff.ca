@@ -30,6 +30,7 @@ After=network-ready.service
 
 [Service]
 ExecStartPre=mkdir -p %t/knot
+Restart=always
 
 [Install]
 WantedBy=default.target

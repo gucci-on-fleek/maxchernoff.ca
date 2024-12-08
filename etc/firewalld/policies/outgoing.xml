@@ -41,7 +41,4 @@
 
     <!-- SMTP -->
     <service name="smtp"/>
-
-    <!-- Apply the allowlist -->
-    <accept/>
 </policy>
