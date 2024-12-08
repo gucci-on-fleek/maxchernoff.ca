@@ -227,6 +227,30 @@ ns.maxchernoff.ca {
 	respond "Not Found" 404
 }
 
+# Outgoing mail server
+noreply.maxchernoff.ca {
+	import default
+
+	handle / {
+		header Content-Type text/html
+		respond `
+		<!DOCTYPE html>
+		<html lang="en">
+		<meta charset="UTF-8">
+		<title>Mail Server</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="color-scheme" content="light dark">
+		<h1>Mail Server</h1>
+		<p>This is a send-only mail server for <code>maxchernoff.ca</code>. It
+		should only ever email you if you've specifically requested it, but if
+		something goes wrong, please email me at
+		<a href="mailto:website@maxchernoff.ca"><code>website@maxchernoff.ca</code></a>.
+		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
+		` 200
+	}
+	respond "Not Found" 404
+}
+
 # Fallback hosts
 152.53.36.213, [2a0a:4cc0:2000:172::1], * {
 	# I've set the security options here to be as strict as possible since

@@ -37,6 +37,19 @@ function dane(name) {
     ]
 }
 
+// Configure subdomains to not have email
+var MAIL_ALLOWED = ["@", "noreply"]
+function no_mail(name) {
+    if (!(MAIL_ALLOWED.indexOf(name) >= 0)) {
+        return [
+            TXT(name, "v=spf1 -all"), // Prevent sending email
+            MX(name, 0, "."),         // Prevent receiving email
+        ]
+    } else {
+        return []
+    }
+}
+
 // Create the DNS records needed for a web server hosted on this server
 function web(name) {
     var out = [
@@ -145,6 +158,9 @@ function web(name) {
             name                   // Target Domain
         ))
     }
+
+    // Prevent email on this domain
+    out.push(no_mail(name))
 
     return out
 }
@@ -256,7 +272,7 @@ D("maxchernoff.ca", REG_MONITOR,
     TXT("_adsp._domainkey",
         "dkim=unknown; " +    // Mailman will break any DKIM signatures
         "ra=mail-reports; " + // Send reports to this address
-        "rr=all;"              // Report on all emails
+        "rr=all;"             // Report on all emails
     ),
 
     // SPF (restricts outgoing mail's IP addresses)
@@ -264,7 +280,6 @@ D("maxchernoff.ca", REG_MONITOR,
         "v=spf1 " +     // Version (always 1)
         "include:spf.migadu.com " + // Allow Migadu to send mail
         "mx:tug.org " + // Also allow the TUG Mailman to forward my emails
-        "mx:ntg.nl " +  // Also allow the NTG Mailman to forward my emails
         "~all"          // Send all other mail to spam (soft fail)
     ),
 
@@ -295,6 +310,16 @@ D("maxchernoff.ca", REG_MONITOR,
     SRV("_submissions._tcp", 0, 1, 465, "smtp.migadu.com."),
     SRV("_sieve._tcp", 0, 1, 4190, "imap.migadu.com."),
 
+    // Outgoing transactional email server
+    web("noreply"),
+    TXT("noreply",
+        "v=spf1 " + // Version (always 1)
+        "a " +      // Allow the IP address of this server
+        "-all"      // Reject all other mail
+    ),
+
+    MX("noreply", 0, "."), // Prevent receiving email
+
     /////////////////////
     /// Miscellaneous ///
     /////////////////////
@@ -304,7 +329,8 @@ D("maxchernoff.ca", REG_MONITOR,
         "google-site-verification=gWIJ3Mg-zy1MuwAJHw8PkhOEENqOmLxUNslbQ4ZPfAE"),
 
     // Dynamic DNS to home router
-    IGNORE("red-deer", "A,AAAA"),
+    IGNORE("red-deer", "A, AAAA"),
+    no_mail("red-deer"),
 
     // dnssecuritytxt, see https://github.com/disclose/dnssecuritytxt/
     TXT("@", "security_contact=mailto:security@maxchernoff.ca"),
