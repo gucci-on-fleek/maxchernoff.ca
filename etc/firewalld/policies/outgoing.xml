@@ -3,21 +3,27 @@
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
      SPDX-FileCopyrightText: 2024 Max Chernoff -->
-<zone>
+
+<!-- Reject everything NOT listed -->
+<policy target="REJECT">
     <!-- Metadata -->
-    <short>Public</short>
+    <short>Outgoing</short>
     <description>
-        Allow incoming traffic only from the specified ports.
+        Allow outgoing traffic only to the specified ports.
     </description>
+
+    <!-- Target Interfaces -->
+    <ingress-zone name="HOST"/>
+    <egress-zone name="ANY"/>
 
     <!-- Defaults -->
     <service name="mdns"/>
     <service name="dhcpv6-client"/>
 
-    <!-- SSH -->
+    <!-- SSH (for Git) -->
     <service name="ssh"/>
 
-    <!-- Web Server -->
+    <!-- Websites -->
     <service name="http"/>
     <service name="https"/>
     <service name="http3"/>
@@ -25,8 +31,14 @@
     <!-- DNS -->
     <service name="dns"/>
     <service name="dns-over-tls"/>
-    <port port="25108" protocol="tcp"/>
+
+    <!-- NTP -->
+    <service name="ntp"/>
+
+    <!-- ICMP -->
+    <protocol value="icmp"/>
+    <protocol value="ipv6-icmp"/>
 
     <!-- Apply the allowlist -->
-    <forward/>
-</zone>
+    <accept/>
+</policy>
