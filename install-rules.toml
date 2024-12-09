@@ -211,7 +211,7 @@ paths = [
     "goaccess",
     "knot/*/",
     "dnscontrol",
-    "maddy/maddy.conf",
+    "maddy/config",
 ]
 permissions.web = "r"
 permissions."web/root" = "r"
@@ -336,10 +336,11 @@ permissions."web/1000" = "rw"
 
 [[permissions]]
 base = "{web}/maddy/"
-paths = ["maddy.conf"]
+paths = ["config"]
 permissions."web/1000" = "r"
 permissions."web" = "r"
 owner = "repo"
+recursive_permissions = true
 
 
 ##################

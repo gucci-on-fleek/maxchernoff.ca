@@ -265,7 +265,7 @@ Web Server
         hmac-sha256:dnscontrol:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
         ```
 
-    - A file `web/knot/config/secrets.conf` that looks like
+    - A file `~web/knot/config/secrets.conf` that looks like
 
         ```yaml
         key:
@@ -283,6 +283,14 @@ Web Server
             algorithm: hmac-sha256
             secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
         ```
+
+    - A file `~web/maddy/config/users.conf` that looks like
+
+        ```yaml
+        user-a@noreply.maxchernoff.ca: argon2:AAAAAAAAAAAAAAAAAAAAAAAAAA
+        user-b@noreply.maxchernoff.ca: argon2:BBBBBBBBBBBBBBBBBBBBBBBBBB
+        ```
+
 
 18. Reboot to make sure everything starts correctly.
 
