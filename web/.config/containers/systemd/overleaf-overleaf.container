@@ -10,6 +10,7 @@ Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro,exec,nosuid
 AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
+Network=email.network
 UserNS=nomap
 
 StopTimeout=30
