@@ -284,11 +284,23 @@ Web Server
             secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
         ```
 
+12. Add the email secrets:
+
+    - A Podman secret `overleaf_smtp_password`:
+
+        ```shell-session
+        % cat /dev/urandom | head --bytes=21 | base64 | tr -d '\n' \
+            | podman secret create overleaf_smtp_password -
+
+        % podman secret inspect overleaf_smtp_password --showsecret \
+            | podman run --rm -i --entrypoint=/bin/maddy \
+            docker.io/foxcpp/maddy hash --hash argon2
+        ```
+
     - A file `~web/maddy/config/users.conf` that looks like
 
         ```yaml
-        user-a@noreply.maxchernoff.ca: argon2:AAAAAAAAAAAAAAAAAAAAAAAAAA
-        user-b@noreply.maxchernoff.ca: argon2:BBBBBBBBBBBBBBBBBBBBBBBBBB
+        overleaf@noreply.maxchernoff.ca: argon2:AAAAAAAAAAAAAAAAAAAAAAAA
         ```
 
 

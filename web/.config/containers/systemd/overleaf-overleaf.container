@@ -20,7 +20,6 @@ HealthRetries=5
 HealthTimeout=10s
 HealthOnFailure=stop
 
-Environment="EMAIL_CONFIRMATION_DISABLED=true"
 Environment="ENABLE_CONVERSIONS=true"
 Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
 Environment="GRACEFUL_SHUTDOWN_DELAY_SECONDS=5"
@@ -40,6 +39,16 @@ Environment="OVERLEAF_SECURE_COOKIE=true"
 Environment="OVERLEAF_SITE_URL=https://overleaf.maxchernoff.ca"
 Environment="PATH=/usr/local/texlive/2024/bin/x86_64-linux:/bin/:/sbin/"
 Environment="REDIS_HOST=systemd-overleaf-redis"
+
+Environment="EMAIL_CONFIRMATION_DISABLED=false"
+Environment="OVERLEAF_EMAIL_FROM_ADDRESS=overleaf@noreply.maxchernoff.ca"
+Environment="OVERLEAF_EMAIL_REPLY_TO=overleaf@maxchernoff.ca"
+Environment="OVERLEAF_EMAIL_SMTP_HOST=systemd-maddy"
+Environment="OVERLEAF_EMAIL_SMTP_PORT=587"
+Environment="OVERLEAF_EMAIL_SMTP_USER=overleaf@noreply.maxchernoff.ca"
+Secret="overleaf_smtp_password,type=env,target=OVERLEAF_EMAIL_SMTP_PASS"
+Environment="OVERLEAF_EMAIL_SMTP_IGNORE_TLS=true"
+Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
 
 [Unit]
 Requires=overleaf-mongo.service overleaf-redis.service
