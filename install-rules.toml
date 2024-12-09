@@ -84,6 +84,13 @@ permissions.root = "rw"
 permissions."web/1000" = "rw"
 permissions.other = ""
 
+[[folder]]
+base = "{repo-user}"
+paths = ["credentials"]
+owner = "repo"
+permissions.other = "r"
+recursive_permissions = true
+
 
 ###########
 ### etc ###
@@ -111,7 +118,7 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/bin/"
-paths = ["web-uptime"]
+paths = ["web-uptime", "email-failure"]
 owner = "root"
 permissions.other = "r"
 

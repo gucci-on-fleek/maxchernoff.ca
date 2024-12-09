@@ -294,13 +294,24 @@ Web Server
 
         % podman secret inspect overleaf_smtp_password --showsecret \
             | podman run --rm -i --entrypoint=/bin/maddy \
-            docker.io/foxcpp/maddy hash --hash argon2
+                docker.io/foxcpp/maddy hash --hash argon2
         ```
+
+    - A global service failure file:
+
+        ```shell-session
+        % cat /dev/urandom | head --bytes=21 | base64 \
+            | tee ~repo/credentials/server@noreply.maxchernoff.ca \
+            | podman run --rm -i --entrypoint=/bin/maddy \
+                docker.io/foxcpp/maddy hash --hash argon2
+        ```
+
 
     - A file `~web/maddy/config/users.conf` that looks like
 
         ```yaml
         overleaf@noreply.maxchernoff.ca: argon2:AAAAAAAAAAAAAAAAAAAAAAAA
+        server@noreply.maxchernoff.ca: argon2:BBBBBBBBBBBBBBBBBBBBBBBBBB
         ```
 
 
