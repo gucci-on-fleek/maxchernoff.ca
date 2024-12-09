@@ -9,7 +9,7 @@ UserNS=nomap
 
 Secret="dnscontrol_tsig,type=env,target=DNSCONTROL_TSIG"
 
-Network=dns.network
+Network=private
 Volume=%h/dnscontrol:/dns:ro,z
 Exec=push --full
 

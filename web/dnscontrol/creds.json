@@ -9,7 +9,7 @@
     },
     "knot": {
         "TYPE": "AXFRDDNS",
-        "master": "systemd-knot:53",
+        "master": "host.containers.internal:53",
         "update-mode": "tcp",
         "transfer-mode": "tcp",
         "transfer-key": "$DNSCONTROL_TSIG",

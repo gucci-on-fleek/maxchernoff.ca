@@ -22,7 +22,6 @@ Volume=%h/caddy/access.log:/var/log/caddy/access.log:rw,z,noexec
 Volume=%h/caddy/config:/config:rw,Z,noexec
 
 Network=caddy.network
-Network=dns.network
 Network=container-registry.network
 Network=flask.network
 Network=overleaf.network
