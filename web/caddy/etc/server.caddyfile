@@ -252,7 +252,7 @@ noreply.maxchernoff.ca {
 }
 
 # Fallback hosts
-152.53.36.213, [2a0a:4cc0:2000:172::1] {
+152.53.36.213, [2a0a:4cc0:2000:172::1], * {
 	# I've set the security options here to be as strict as possible since
 	# there's no valid reason for anyone to be here.
 	header {
@@ -260,7 +260,7 @@ noreply.maxchernoff.ca {
 		Content-Security-Policy "default-src 'self'; sandbox;"
 		Content-Type text/html
 	}
-	tls {
+	tls internal {
 		protocols tls1.3
 	}
 
