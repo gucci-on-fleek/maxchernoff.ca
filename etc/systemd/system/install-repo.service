@@ -20,5 +20,4 @@ ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "web@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "woodpecker@" daemon-reload
 ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/ /var/usrlocal/bin/
-ExecStart=/usr/bin/chmod g+rw /var/home/web/caddy/access.log
 ExecStart=/usr/local/sbin/notify-all
