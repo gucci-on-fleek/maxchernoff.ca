@@ -378,10 +378,13 @@ def process_config(file: BufferedReader):
                 "-D", # Use hashes, maybe quicker?
                 "-e", "/var/home/.snapshots",  # Exclude snapshots
                 "-e", "/sysroot",  # Exclude OSTree sysroot
-                # Exclude containers
-                "-e", "/var/home/web/.local/share/containers",
-                "-e", "/var/home/max/.local/share/containers",
-                "-e", "/var/home/woodpecker/.local/share/containers",
+                # Exclude local directories
+                "-e", "/var/home/builder/.local/",
+                "-e", "/var/home/max/.local/",
+                "-e", "/var/home/repo/.local/",
+                "-e", "/var/home/tex/.local/",
+                "-e", "/var/home/web/.local/",
+                "-e", "/var/home/woodpecker/.local/",
                 *path_roots, # All path roots
             ],
             # fmt: on
