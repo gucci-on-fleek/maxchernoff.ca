@@ -8,26 +8,52 @@
 ### Imports ###
 ###############
 
-from smtplib import SMTP
-from email.message import EmailMessage
 from argparse import ArgumentParser
+from email.headerregistry import Address
+from email.message import EmailMessage
 from getpass import getuser
+from re import sub as replace
+from smtplib import SMTP
+from subprocess import run
 
 
 #################
 ### Constants ###
 #################
 
-SMTP_SERVER = "localhost"
-SMTP_PORT = 587
 EMAIL_FROM = "server@noreply.maxchernoff.ca"
 EMAIL_TO = "server-status@maxchernoff.ca"
+EMAIL_TO_NAME = "Max Chernoff"
+HTML_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>{title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+<meta name="color-scheme" content="light dark">
+<style>pre {{overflow-x: auto;}}</style>
+<pre><code>{body}</code></pre>
+"""
 PASSWORD_FILE = f"/var/home/repo/credentials/{EMAIL_FROM}"
+SMTP_PORT = 587
+SMTP_SERVER = "localhost"
+SYSTEMCTL_REGEX_FIND = r" M[SD]T [^:]*: "
+SYSTEMCTL_REGEX_REPLACE = r": "
 
 
-###################
-### Entry Point ###
-###################
+#################
+### Variables ###
+#################
+
+with open(PASSWORD_FILE, "r") as f:
+    smtp_password = f.read().strip()
+
+unix_username = getuser()
+
+
+#########################
+### Argument Handling ###
+#########################
 
 if __name__ != "__main__":
     raise ImportError("This script is not meant to be imported")
@@ -45,15 +71,40 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-msg = EmailMessage()
-msg["Subject"] = f"Service Failure: {args.service} ({getuser()})"
-msg["From"] = EMAIL_FROM
-msg["To"] = EMAIL_TO
-msg.set_content(f'The service "{args.service}" has failed.')
 
-with open(PASSWORD_FILE, "r") as f:
-    password = f.read().strip()
+#################
+### Execution ###
+#################
+
+title = f"Service Failure: {args.service} ({getuser()})"
+body = replace(
+    SYSTEMCTL_REGEX_FIND,
+    SYSTEMCTL_REGEX_REPLACE,
+    run(
+        [
+            "systemctl",
+            "status",
+            ("--user" if unix_username != "root" else "--system"),
+            "--all",
+            "--full",
+            "--no-pager",
+            "--lines=100",
+            "--output=short-full",
+            args.service,
+        ],
+        capture_output=True,
+        text=True,
+    ).stdout,
+)
+
+msg = EmailMessage()
+msg["Subject"] = title
+msg["From"] = Address(
+    display_name=f"Server ({unix_username})", addr_spec=EMAIL_FROM
+)
+msg["To"] = Address(display_name=EMAIL_TO_NAME, addr_spec=EMAIL_TO)
+msg.set_content(HTML_TEMPLATE.format(title=title, body=body), subtype="html")
 
 with SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
-    smtp.login(EMAIL_FROM, password)
+    smtp.login(EMAIL_FROM, smtp_password)
     smtp.send_message(msg)
