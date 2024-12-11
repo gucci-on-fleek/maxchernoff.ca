@@ -10,5 +10,5 @@ StartLimitBurst=1
 [Service]
 Type=oneshot
 RemainAfterExit=no
-ExecCondition=systemctl list-jobs | grep -vE 'shutdown|reboot|poweroff'
+ExecCondition=sh -c 'systemctl list-jobs | grep -vE "shutdown|reboot|poweroff"'
 ExecStart=/usr/local/bin/email-failure %i
