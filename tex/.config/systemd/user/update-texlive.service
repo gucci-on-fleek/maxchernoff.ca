@@ -16,6 +16,7 @@ ExecStart=%h/texlive/bin/x86_64-linux/context --luatex --make
 ExecStart=%h/texlive/bin/x86_64-linux/mtxrun --script fonts --reload
 ExecStart=%h/texlive/bin/x86_64-linux/mtxrun --luatex --script fonts --reload
 
+WorkingDirectory=%h/context-installer/
 ExecStart=%h/context-installer/install.sh
 ExecStart=%h/context/texmf-linux-64/bin/context --make
 ExecStart=%h/context/texmf-linux-64/bin/context --luatex --make
