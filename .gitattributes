@@ -1,0 +1,44 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+# Show (almost) all files in the repository language summary
+* linguist-detectable
+*.md -linguist-detectable
+
+# systemd unit files
+*.conf      linguist-language=desktop
+*.container linguist-language=desktop
+*.network   linguist-language=desktop
+*.path      linguist-language=desktop
+*.pod       linguist-language=desktop
+*.service   linguist-language=desktop
+*.socket    linguist-language=desktop
+*.target    linguist-language=desktop
+*.timer     linguist-language=desktop
+*.volume    linguist-language=desktop
+
+# Knot
+knot.conf linguist-language=yaml
+
+# Maddy
+maddy.conf linguist-language=caddyfile
+
+# dnscontrol
+**/dnscontrol/*.json linguist-language=jsonc
+
+# unit-status.conf
+unit-status.conf linguist-language=gitattributes
+
+# tmux
+.tmux.conf linguist-language=shell
+
+# fish
+*.theme linguist-language=fish
+
+# /etc/
+**/sysconfig/* linguist-language=shell
+**/sshd_config.d/* linguist-language=ssh-config
+**/snapper/configs/* linguist-language=shell
+**/pam.d/* linguist-language=gitattributes
