@@ -32,6 +32,8 @@ Environment="OVERLEAF_LEFT_FOOTER=[{\"text\": \"<a href='https://www.maxchernoff
 Environment="OVERLEAF_MONGO_URL=mongodb://systemd-overleaf-mongo/sharelatex?directConnection=true"
 Environment="OVERLEAF_NAV_HIDE_POWERED_BY=true"
 Environment="OVERLEAF_PASSWORD_VALIDATION_MIN_LENGTH=12"
+Environment="OVERLEAF_PASSWORD_VALIDATION_MAX_LENGTH=64"
+Environment="OVERLEAF_PASSWORD_VALIDATION_PATTERN=aaaaaaaaaaaa"
 Environment="OVERLEAF_REDIS_HOST=systemd-overleaf-redis"
 Environment="OVERLEAF_RESTRICT_INVITES_TO_EXISTING_ACCOUNTS=true"
 Environment="OVERLEAF_RIGHT_FOOTER=[{\"text\": \"<a href='https://www.maxchernoff.ca/p/overleaf'>About & Contact</a>\"}]"
