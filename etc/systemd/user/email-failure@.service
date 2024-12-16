@@ -11,4 +11,7 @@ StartLimitBurst=1
 Type=oneshot
 RemainAfterExit=no
 ExecCondition=sh -c 'systemctl list-jobs | grep -vE "shutdown|reboot|poweroff"'
+ExecCondition=sh -c 'systemctl is-system-running | grep -E "running|degraded"'
+ExecCondition=sh -c 'systemctl --user show --value --property=ActiveState podman-auto-update.service | grep -E "inactive|failed"'
+ExecCondition=sh -c 'systemctl show --value --property=ActiveState rpm-ostreed-automatic.service | grep -E "inactive|failed""'
 ExecStart=/usr/local/bin/email-failure %i
