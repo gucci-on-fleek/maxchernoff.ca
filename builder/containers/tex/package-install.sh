@@ -23,7 +23,6 @@ dnf_packages=(
     diffutils
     groff-perl
     perl-Compress-Zlib
-    wine-core
 )
 
 dnf install \
