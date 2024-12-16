@@ -1,0 +1,82 @@
+#!/bin/bash
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+set -euo pipefail
+
+# Create a mount point for the container
+root=/mnt/build/
+mkdir -p $root
+cd $root
+
+# Link the cache to the host
+mkdir -p $root/var/cache/
+ln -s /var/cache/libdnf5 $root/var/cache/libdnf5
+
+# Install the builder packages
+dnf5 install \
+    --assumeyes \
+    --nodocs \
+    --setopt=install_weak_deps=false \
+    --setopt=keepcache=true \
+    gzip \
+    tar
+
+# Install the base packages
+dnf5 install \
+    --assumeyes \
+    --installroot=$root \
+    --nodocs \
+    --setopt=install_weak_deps=false \
+    --setopt=keepcache=true \
+    --use-host-config \
+    coreutils-single \
+    generic-release \
+    glibc-minimal-langpack \
+    python3-subversion \
+    python3-waitress
+
+# Install ViewVC
+mkdir -p ~/viewvc
+cd ~/viewvc
+
+curl -L https://github.com/viewvc/viewvc/archive/refs/heads/master.tar.gz | tar xz
+
+python_version="$(basename "$(realpath $root/usr/bin/python3)")"
+mkdir -p $root/usr/local/lib/$python_version/site-packages/
+cp -r ./viewvc-*/lib/* $root/usr/local/lib/$python_version/site-packages/
+
+
+
+mkdir -p $root/usr/local/share/viewvc/
+cp -r ./viewvc-*/templates/default/* $root/usr/local/share/viewvc/
+
+mkdir -p $root/etc/viewvc/
+for name in viewvc mimetypes; do
+    cp ./viewvc-*/conf/$name.conf.dist $root/etc/viewvc/$name.conf
+done
+
+# Patch ViewVC
+cp /root/cgi.py $root/usr/local/lib/$python_version/site-packages/cgi.py
+sed -i '/self.closed = 0/d' $root/usr/local/lib/$python_version/site-packages/sapi.py
+
+# Links
+mkdir -p \
+    $root/etc/caddy \
+    $root/etc/viewvc \
+    $root/root/.config/caddy \
+    $root/root/.local/share/caddy
+
+ln -sf /srv/Caddyfile $root/etc/caddy/Caddyfile
+ln -sf /srv/data/caddy-config $root/root/.config/caddy
+ln -sf /srv/data/caddy-data $root/root/.local/share/caddy
+ln -sf /srv/mimetypes.conf $root/etc/viewvc/mimetypes.conf
+ln -sf /srv/viewvc.conf $root/etc/viewvc/viewvc.conf
+
+# Unlink the cache from the host
+rm $root/var/cache/libdnf5
+
+# Remove the caches
+dnf5 clean all --installroot=$root
+rm -rf $root/var/{cache,log}/*
