@@ -14,7 +14,7 @@ StartLimitBurst=2
 
 [Service]
 Type=oneshot
-StandardInput=file:%h/caddy/access.log
+StandardInput=file:%h/caddy/logs/access.log
 ExecStart=sh -c "jq --raw-output --slurp '.[-10000:] | .[] | [(.ts | todateiso8601), (.request | .host + .uri, .headers.Referer[0], .headers.\"User-Agent\"[0]), .status] | @tsv' | grep -Fv 'woodpecker.maxchernoff.ca/api/' | awk -F'\\t' '!($5==301 || $5==418)'"
 StandardOutput=truncate:%h/caddy/static/analytics/requests.tsv
 StandardError=journal

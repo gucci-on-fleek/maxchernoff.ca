@@ -8,7 +8,7 @@ Before=update-analytics-requests.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/podman unshare chmod g+rw %h/caddy/access.log
+ExecStart=/usr/bin/podman unshare chmod g+rw %h/caddy/logs/access.log
 
 [Install]
 WantedBy=update-analytics-requests.service

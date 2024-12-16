@@ -27,7 +27,7 @@ woodpecker = "/var/home/woodpecker/"
 rules = """
 fcontext --deleteall
 fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
-fcontext --add --type container_file_t    '{web}caddy/access.log'
+fcontext --add --type container_file_t    '{web}caddy/logs(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
@@ -232,6 +232,7 @@ base = "{web}"
 paths = [
     "caddy/config/",
     "caddy/data/",
+    "caddy/logs/",
     "overleaf/overleaf/",
     "woodpecker/data/",
 ]
@@ -264,7 +265,7 @@ base = "{web}/caddy/"
 paths = [
     "static/analytics/requests.tsv",
     "static/analytics/graphs",
-    "access.log",
+    "logs/access.log",
 ]
 permissions."web/root" = "rw"
 permissions.web = "rw"
@@ -321,10 +322,11 @@ recursive_permissions = true
 
 [[permissions]]
 base = "{web}/caddy/"
-paths = ["access.log"]
-owner = "repo"
+paths = ["logs/"]
+owner = "web"
 permissions.web = "rw"
 permissions."web/root" = "rw"
+recursive_permissions = true
 
 [[permissions]]
 base = "{repo}/web/"

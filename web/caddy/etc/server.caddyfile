@@ -68,7 +68,10 @@ import base.caddyfile
 	}
 
 	log {
-		output file /var/log/caddy/access.log
+		output file /var/log/caddy/access.log {
+			roll_keep_for 1000d
+			roll_keep 100
+		}
 		format json
 	}
 

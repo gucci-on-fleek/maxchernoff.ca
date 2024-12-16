@@ -8,7 +8,7 @@ AutoUpdate=registry
 UserNS=nomap
 Network=none
 
-Volume=%h/caddy/access.log:/root/access.log:ro,z
+Volume=%h/caddy/logs/access.log:/root/access.log:ro,z
 Volume=%h/caddy/static/analytics/graphs:/root/out.html:rw,z
 Volume=%h/goaccess/GeoLite2-City.mmdb:/root/GeoLite2-City.mmdb:ro
 
