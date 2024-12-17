@@ -8,7 +8,7 @@ FROM registry.fedoraproject.org/fedora-minimal:41 AS build
 
 # Add the files
 COPY ["container-build.sh", "/usr/local/sbin/"]
-COPY ["cgi.py", "/root/"]
+COPY --chmod=644 ["cgi.py", "/root/"]
 
 # Run the build script
 RUN /usr/local/sbin/container-build.sh
@@ -21,6 +21,7 @@ FROM scratch
 
 COPY --from=build /mnt/build/ /
 COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
-COPY ["start.py", "/usr/local/bin/"]
+COPY --chmod=755 ["start.py", "/usr/local/bin/"]
 
+USER 1000:1000
 CMD ["/usr/local/bin/start.py"]

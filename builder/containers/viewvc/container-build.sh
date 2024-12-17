@@ -47,8 +47,6 @@ python_version="$(basename "$(realpath $root/usr/bin/python3)")"
 mkdir -p $root/usr/local/lib/$python_version/site-packages/
 cp -r ./viewvc-*/lib/* $root/usr/local/lib/$python_version/site-packages/
 
-
-
 mkdir -p $root/usr/local/share/viewvc/
 cp -r ./viewvc-*/templates/default/* $root/usr/local/share/viewvc/
 
@@ -61,16 +59,19 @@ done
 cp /root/cgi.py $root/usr/local/lib/$python_version/site-packages/cgi.py
 sed -i '/self.closed = 0/d' $root/usr/local/lib/$python_version/site-packages/sapi.py
 
+# Create the ViewVC user
+useradd --root=$root viewvc
+
 # Links
 mkdir -p \
     $root/etc/caddy \
     $root/etc/viewvc \
-    $root/root/.config/caddy \
-    $root/root/.local/share/caddy
+    $root/home/viewvc/.config/ \
+    $root/home/viewvc/.local/share/
 
 ln -sf /srv/Caddyfile $root/etc/caddy/Caddyfile
-ln -sf /srv/data/caddy-config $root/root/.config/caddy
-ln -sf /srv/data/caddy-data $root/root/.local/share/caddy
+ln -sfT /srv/data/caddy-config $root/home/viewvc/.config/caddy
+ln -sfT /srv/data/caddy-data $root/home/viewvc/.local/share/caddy
 ln -sf /srv/mimetypes.conf $root/etc/viewvc/mimetypes.conf
 ln -sf /srv/viewvc.conf $root/etc/viewvc/viewvc.conf
 

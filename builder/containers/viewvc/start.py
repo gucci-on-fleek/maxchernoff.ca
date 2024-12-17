@@ -10,6 +10,7 @@ import sapi
 import viewvc
 
 
+# Runs the ViewVC application
 def application(environ, start_response):
     server = sapi.WsgiServer(environ, start_response)
     cfg = viewvc.load_config("/etc/viewvc/viewvc.conf", server)
@@ -17,6 +18,7 @@ def application(environ, start_response):
     return []
 
 
+# Start the Caddy server
 Popen(
     [
         "/usr/local/bin/caddy",
@@ -28,4 +30,9 @@ Popen(
     ]
 )
 
-serve(application, listen="127.0.0.1:43219")
+# Start the Waitress server, which runs the ViewVC application
+serve(
+    application,
+    listen="127.0.0.1:43219",
+    threads=4,
+)

@@ -1,4 +1,10 @@
 #! /usr/local/bin/python
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: Python-2.0
+
+# This file was copied from the Python 3.10 source code: the last non-deprecated
+# version of cgi.py.
 
 # NOTE: the above "/usr/local/bin/python" is NOT a mistake.  It is
 # intentionally NOT "/usr/bin/env python".  On many systems
