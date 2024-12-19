@@ -41,4 +41,7 @@
 
     <!-- SMTP -->
     <service name="smtp"/>
+
+    <!-- svn.tug.org web interface -->
+    <port port="8369" protocol="tcp"/>
 </policy>
