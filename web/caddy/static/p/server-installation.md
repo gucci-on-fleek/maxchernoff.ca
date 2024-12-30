@@ -300,8 +300,8 @@ Web Server
     - A global service failure file:
 
         ```shell-session
-        % cat /dev/urandom | head --bytes=21 | base64 \
-            | tee ~repo/credentials/server@noreply.maxchernoff.ca \
+        $ cat /dev/urandom | head --bytes=21 | base64 \
+            | sudo tee ~repo/credentials/server@noreply.maxchernoff.ca \
             | podman run --rm -i --entrypoint=/bin/maddy \
                 docker.io/foxcpp/maddy hash --hash argon2
         ```
