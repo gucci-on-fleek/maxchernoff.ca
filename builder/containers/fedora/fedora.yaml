@@ -1,0 +1,107 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+# Use the newer treefile defaults
+edition: "2024"
+
+# What to call our container
+ref: maxchernoff.ca/fedora/latest
+
+# Use the host's Fedora repos
+releasever: 41
+repos:
+  - fedora
+  - updates
+
+# Keep the security attributes
+selinux: true
+ima: true
+readonly-executables: true
+
+# Global package installation options
+recommends: false
+documentation: true
+
+# Set the installed locales
+install-langs:
+  - en_CA
+
+# /etc/passwd settings
+etc-group-members:
+  - wheel
+ignore-removed-users:
+  - root
+ignore-removed-groups:
+  - root
+
+# Packages to install
+packages:
+  - acl # getfacl/setfacl
+  - authselect # PAM configuration
+  - bootc
+  - borgbackup
+  - btrfs-progs # /usr/bin/btrfs
+  - chrony
+  - curl
+  - dosfstools # fsck for the EFI partition
+  - dracut-config-generic # Creates a non-host-specific initramfs
+  - efibootmgr
+  - fedora-release-iot
+  - firewalld
+  - fish
+  - fwupd-efi
+  - git-core
+  - glibc-langpack-en
+  - glibc-minimal-langpack
+  - gnupg2 # GPG
+  - greenboot-default-health-checks
+  - grub2-efi-x64
+  - htop
+  - ima-evm-utils # Needed for IMA security attributes
+  - iproute # /usr/bin/ip
+  - iputils # ping, etc.
+  - kernel
+  - less
+  - microcode_ctl
+  - NetworkManager
+  - nss-altfiles # Also allows /usr/etc/passwd
+  - openssh-clients
+  - openssh-server
+  - openssl
+  - perl-File-Find # Needed for TeX Live
+  - perl-interpreter
+  - podman
+  - python3-pystemd
+  - qemu-guest-agent # Recommended for a VM guest
+  - selinux-policy-targeted
+  - snapper
+  - sudo
+  - systemd
+  - systemd-container # systemd-nspawn
+  - systemd-resolved
+  - tmux
+  - traceroute
+  - vim-enhanced
+  - zram-generator-defaults
+
+# systemd units to enable
+units:
+  - NetworkManager.service
+  - firewalld.service
+  - sshd.service
+  - greenboot-grub2-set-counter.service
+  - greenboot-grub2-set-success.service
+  - greenboot-healthcheck.service
+  - greenboot-rpm-ostree-grub2-check-fallback.service
+  - greenboot-status.service
+  - greenboot-task-runner.service
+
+# From https://pagure.io/fedora-iot/ostree/blob/f41/f/treecompose-post.sh
+postprocess:
+  - |
+    rm -rf /etc/systemd/system/*
+    systemctl preset-all
+    rm -rf /etc/systemd/user/*
+    systemctl --user --global preset-all

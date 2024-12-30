@@ -1,0 +1,21 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+
+# Base image
+FROM registry.fedoraproject.org/fedora-minimal:41 AS builder
+
+# Add the files
+COPY ["container-build.sh", "/usr/local/sbin/"]
+COPY ["fedora.yaml", "/root/fedora.yaml"]
+
+# Run the build script
+RUN /usr/local/sbin/container-build.sh
+
+# Pull in the created image
+FROM oci-archive:/var/home/builder/.cache/image-out/image.tar
+
+# Remove the image tarball
+RUN --mount=type=bind,from=builder,src=.,target=/var/tmp \
+    rm /var/image-out/image.tar

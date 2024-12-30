@@ -28,6 +28,7 @@ rules = """
 fcontext --deleteall
 fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
 fcontext --add --type container_file_t    '{web}caddy/logs(/.*)?'
+fcontext --add --type container_ro_file_t '{repo}builder/containers(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --type container_ro_file_t '{repo}web/flask(/.*)?'
@@ -411,6 +412,6 @@ paths = [".config/systemd/user/", "containers/"]
 permissions.builder = "r"
 
 [[folder]]
-base = "{builder}"
-paths = [".cache/podman-dnf/", ".cache/go-build/", ".cache/go-modules/"]
+base = "{builder}/.cache/"
+paths = ["podman-dnf/", "go-build/", "go-modules/", "rpm-ostree/", "image-out/"]
 owner = "builder"
