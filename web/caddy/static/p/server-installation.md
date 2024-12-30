@@ -124,7 +124,7 @@ Post-installation
 
 4. Fix `/etc/fstab`:
 
-    Change the options for `/` to `defaults,compress=zstd:1`.
+    Change the options for `/` to `defaults,compress=zstd:1,noatime`.
 
 5. Fix `/etc/passwd`: <span class=sidenote>If not done, `podman` will
    complain about a mismatched home location.</span>
@@ -317,6 +317,13 @@ Web Server
 
 18. Reboot to make sure everything starts correctly.
 
+19. Once all the containers have been built, switch to `bootc`:
+
+    ```shell-session
+    $ sudo bootc switch maxchernoff.ca/fedora:latest
+    $ reboot
+    ```
+
 
 Woodpecker CI
 -------------
@@ -388,9 +395,9 @@ Snapshots
     ```ini
     # /etc/fstab
     # This line was here originally
-    UUID={uuid}  /home/            btrfs  subvol={subvol},compress=zstd:1             0  0
+    UUID={uuid}  /home/            btrfs  subvol={subvol},compress=zstd:1,noatime             0  0
     # Add this line
-    UUID={uuid}  /home/.snapshots  btrfs  subvol={subvol}/.snapshots,compress=zstd:1  0  0
+    UUID={uuid}  /home/.snapshots  btrfs  subvol={subvol}/.snapshots,compress=zstd:1,noatime  0  0
     ```
     ```shell-session
     $ sudo systemctl daemon-reload

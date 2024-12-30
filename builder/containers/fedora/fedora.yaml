@@ -64,12 +64,12 @@ packages:
   - iputils # ping, etc.
   - kernel
   - less
+  - man-db # man pages
   - microcode_ctl
   - NetworkManager
   - nss-altfiles # Also allows /usr/etc/passwd
   - openssh-clients
   - openssh-server
-  - openssl
   - perl-File-Find # Needed for TeX Live
   - perl-interpreter
   - podman
