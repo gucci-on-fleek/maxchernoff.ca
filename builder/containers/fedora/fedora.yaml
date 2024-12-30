@@ -73,6 +73,7 @@ packages:
   - perl-File-Find # Needed for TeX Live
   - perl-interpreter
   - podman
+  - policycoreutils-python-utils # semanage
   - python3-pystemd
   - qemu-guest-agent # Recommended for a VM guest
   - selinux-policy-targeted
@@ -98,10 +99,16 @@ units:
   - greenboot-status.service
   - greenboot-task-runner.service
 
-# From https://pagure.io/fedora-iot/ostree/blob/f41/f/treecompose-post.sh
 postprocess:
   - |
+    # From https://pagure.io/fedora-iot/ostree/blob/f41/f/treecompose-post.sh
     rm -rf /etc/systemd/system/*
     systemctl preset-all
     rm -rf /etc/systemd/user/*
     systemctl --user --global preset-all
+
+    # # Enable composefs
+    # cat <<EOF > /etc/ostree/prepare-root.conf
+    # sysroot.readonly=true
+    # composefs.enabled=yes
+    # EOF

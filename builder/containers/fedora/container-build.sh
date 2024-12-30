@@ -28,6 +28,12 @@ repo=/root/repo/
 mkdir -p $repo
 ostree --repo=$repo init --mode=bare-user
 
+# ostree config settings
+ostree config --repo=$repo set ex-integrity.composefs true
+ostree config --repo=$repo set ex-integrity.readonly true
+ostree config --repo=$repo set sysroot.bootloader none
+
+
 # Install the artifact container packages
 ln -s /etc/yum.repos.d/fedora*.repo /root/  # Use the host's repositories
 rpm-ostree compose install \
@@ -51,10 +57,11 @@ rpm-ostree compose commit \
     $root/rootfs
 
 # Get the previous container manifest
-skopeo inspect --tls-verify=false docker://localhost:23719/fedora:latest > /root/manifest.json || true
+skopeo inspect docker://maxchernoff.ca/fedora:latest > /root/manifest.json || true
+cat /root/manifest.json
 
 # Export the image
-if [ -s /root/manifest.json ]; then
+if false; then # [ -s /root/manifest.json ]
     rpm-ostree compose container-encapsulate \
         --repo=$repo \
         --previous-build-manifest=/root/manifest.json \
