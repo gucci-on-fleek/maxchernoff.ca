@@ -6,9 +6,12 @@
 set -euo pipefail
 
 printf \
-    'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\n' \
+    'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\t(%2.0f%%)\nDisk Usage:\t%s / %s\t(%2.0f%%)\nMemory Usage:\t%s / %s\t(%2.0f%%)\n' \
     "$(date '+%A, %-d %B %Y, %-I:%0M%P')" \
-    "$(rpm-ostree status --booted --jsonpath='.deployments[0].version' | grep -oP '[.\d]+')" \
+    "$(date '+%b %-d, %-I:%0M:%0S%P' --date="@$(rpm-ostree status --booted --jsonpath='.deployments[0].timestamp' | grep -oP '[.\d]+')")" \
     "$(uptime --pretty | sed 's/up //')" \
     $(cat /proc/loadavg) \
+    "$(cat /proc/loadavg | awk '{ print $1/4*100 }')" \
+    $(df --human-readable --output="used,size,pcent" /sysroot/ | tr --squeeze-repeats '[:space:]' '\n' | tr --delete '%' | tail -3) \
+    $(free --human | sed -n '2p' | awk '{ print ($2 - $7) "Gi\n" $2 "\n" ($2 - $7)/$2*100 }') \
 | column --table --separator="$(printf '\t')"
