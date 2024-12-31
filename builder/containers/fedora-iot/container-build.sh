@@ -8,23 +8,6 @@ set -euxo pipefail
 # Keep a cache to speed up the build
 cache=/var/cache/rpm-ostree
 
-# Create a mount point for the container
-root=$cache/root/
-rm -rf $root || true
-mkdir -p $root
-cd $root
-
-# Initialize the ostree repository
-repo=$cache/repo/
-rm -rf $repo || true
-mkdir -p $repo
-ostree --repo=$repo init --mode=bare-user
-
-# ostree config settings
-ostree config --repo=$repo set ex-integrity.composefs true
-ostree config --repo=$repo set ex-integrity.readonly true
-ostree config --repo=$repo set sysroot.bootloader none
-
 # Build and push the container
 rpm-ostree compose image \
     --initialize-mode=query \

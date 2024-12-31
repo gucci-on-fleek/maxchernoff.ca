@@ -14,7 +14,7 @@ ExecStart=podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
     --device=/dev/fuse \
-    --env=CONTAINERS_CONF_OVERRIDE=/root/containers.conf \
+    --env=CONTAINERS_CONF_OVERRIDE=/root/source/containers.conf \
     --network=pasta:-T,23719 \
     --pull=always \
     --rm \
