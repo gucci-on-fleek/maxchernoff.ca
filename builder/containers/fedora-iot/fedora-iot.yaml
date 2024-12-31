@@ -7,7 +7,7 @@
 edition: "2024"
 
 # What to call our container
-ref: maxchernoff.ca/fedora/latest
+ref: maxchernoff.ca/fedora-iot
 
 # Use the host's Fedora repos
 releasever: 41
@@ -71,7 +71,7 @@ packages:
   - openssh-clients
   - openssh-server
   - perl-File-Find # Needed for TeX Live
-  - perl-interpreter
+  - perl-interpreter # Needed for TeX Live
   - podman
   - policycoreutils-python-utils # semanage
   - python3-pystemd
@@ -82,9 +82,11 @@ packages:
   - systemd
   - systemd-container # systemd-nspawn
   - systemd-resolved
+  - tar # Needed for TeX Live
   - tmux
   - traceroute
   - vim-enhanced
+  - xz # Needed for TeX Live
   - zram-generator-defaults
 
 # systemd units to enable
@@ -107,8 +109,13 @@ postprocess:
     rm -rf /etc/systemd/user/*
     systemctl --user --global preset-all
 
-    # # Enable composefs
-    # cat <<EOF > /etc/ostree/prepare-root.conf
-    # sysroot.readonly=true
-    # composefs.enabled=yes
-    # EOF
+    # vi -> vim
+    ln -s /usr/bin/vim /usr/bin/vi
+
+    # Enable composefs
+    cat <<EOF > /etc/ostree/prepare-root.conf
+    [sysroot]
+    readonly = true
+    [composefs]
+    enabled = yes
+    EOF

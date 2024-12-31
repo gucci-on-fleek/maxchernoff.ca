@@ -320,7 +320,7 @@ Web Server
 19. Once all the containers have been built, switch to `bootc`:
 
     ```shell-session
-    $ sudo bootc switch maxchernoff.ca/fedora:latest
+    $ sudo bootc switch maxchernoff.ca/fedora-iot:latest
     $ reboot
     ```
 
