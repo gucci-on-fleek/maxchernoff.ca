@@ -211,7 +211,7 @@ class UnitStatus:
         unit = self._fmt("unit", "<", Style.normal).split(".")
         unit_name = ".".join(unit[:-1])
         unit_type = Style.faded(unit[-1])
-        line.append(f"{unit_name}.{unit_type}")
+        line.append(f"{unit_name}{Style.faded('.')}{unit_type}")
 
         if self.load_state == "loaded" and (
             self.state == "active" or self.state == "inactive"

@@ -5,13 +5,41 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 set -euo pipefail
 
+# Style constants
+STYLE_BOLD=$'\x1B[1m'
+STYLE_FADED=$'\x1B[2m'
+STYLE_RESET=$'\x1B[0m'
+
+# Output path
+output="/var/home/repo/triggers/get-status.output"
+echo -n > "$output"
+
+# Get the unit statuses
+status="$(mktemp)"
+/usr/local/sbin/web-status ~repo/maxchernoff.ca/unit-status.conf > "$status"
+
+# Successful units
+printf '\t%sSuccessful Units%s\n' "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
+grep --invert-match '●' "$status" >> "$output" || true
+
+# Print the failed units
+printf '\n\t%sFailed Units%s\n'  "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
+grep '●' "$status" >> "$output" || \
+    echo "${STYLE_FADED}(none)${STYLE_RESET}\n" >> "$output"
+
+# Print the system status
+printf '\n\t%sSystem Status%s\n'  "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
 printf \
-    'Date:\t%s\nVersion:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\t(%2.0f%%)\nDisk Usage:\t%s / %s\t(%2.0f%%)\nMemory Usage:\t%s / %s\t(%2.0f%%)\n' \
-    "$(date '+%A, %-d %B %Y, %-I:%0M%P')" \
-    "$(date '+%b %-d, %-I:%0M:%0S%P' --date="@$(rpm-ostree status --booted --jsonpath='.deployments[0].timestamp' | grep -oP '[.\d]+')")" \
+    'Date:\t%s\nImage Built:\t%s\nUptime:\t%s\nLoad Average:\t%s, %s, %s%.0s%.0s\t(%2.0f%%)\nDisk Usage:\t%s / %s\t(%2.0f%%)\nMemory Usage:\t%s / %s\t(%2.0f%%)\n' \
+    "$(date '+%b %-d, %-I:%0M:%0S%P')" \
+    "$(systemd-analyze --quiet timestamp "@$(rpm-ostree status --booted --jsonpath='.deployments[0].timestamp' | grep -oP '[.\d]+')" | awk --field-separator=': ' '/From now/ { print $2 }')" \
     "$(uptime --pretty | sed 's/up //')" \
     $(cat /proc/loadavg) \
     "$(cat /proc/loadavg | awk '{ print $1/4*100 }')" \
     $(df --human-readable --output="used,size,pcent" /sysroot/ | tr --squeeze-repeats '[:space:]' '\n' | tr --delete '%' | tail -3) \
     $(free --human | sed -n '2p' | awk '{ print ($2 - $7) "Gi\n" $2 "\n" ($2 - $7)/$2*100 }') \
-| column --table --separator="$(printf '\t')"
+| column --table --separator=$'\t' --output-separator='@' \
+| sed --regexp-extended \
+    --expression "s/^([^@]*)@/${STYLE_FADED}\1${STYLE_RESET}  /" \
+    --expression "s/@/  /g" \
+>> "$output"

@@ -23,7 +23,7 @@ function ok
     truncate --size=0 ~repo/triggers/get-status.output
     echo "$(date)" > ~repo/triggers/get-status.trigger
     set --local count 0
-    while not grep --quiet "service" ~repo/triggers/get-status.output
+    while not grep --quiet "Memory Usage" ~repo/triggers/get-status.output
         sleep 0.1
         set --local count (math $count + 1 % 5)
         if test $count = 0
