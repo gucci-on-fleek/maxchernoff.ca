@@ -16,7 +16,10 @@ cd $repo_dir
 if [ "${1:-}" = "knot" ]; then
     podman run \
         --pull=newer \
-        --network=host \
+        --publish=127.0.0.1:53:53/tcp \
+        --publish=[::1]:53:53/tcp \
+        --publish=127.0.0.1:53:53/udp \
+        --publish=[::1]:53:53/udp \
         --rm \
         --interactive \
         --tty \

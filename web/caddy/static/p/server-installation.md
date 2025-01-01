@@ -273,15 +273,15 @@ Web Server
             algorithm: hmac-sha256
             secret: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 
-        key:
           - id: maxchernoff-he
             algorithm: hmac-sha256
             secret: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=
 
-        key:
           - id: red-deer
             algorithm: hmac-sha256
             secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
+
+          # Plus some DNSControl stuff...
         ```
 
 12. Add the email secrets:
