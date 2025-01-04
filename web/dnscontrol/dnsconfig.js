@@ -8,8 +8,8 @@
 /////////////
 
 // Select our DNS providers
-var DSP_KNOT = NewDnsProvider("knot");
-var REG_MONITOR = NewRegistrar("DoH");
+var DSP_KNOT = NewDnsProvider("knot")
+var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
 var IPv4 = "152.53.36.213"
@@ -264,15 +264,15 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // DKIM reporting
     TXT("_report._domainkey",
-        "ra=mail-reports; " + // Send reports to this address
-        "rr=all; "            // Report on all emails
+        "ra=mail-reports " + // Send reports to this address
+        "rr=all "            // Report on all emails
     ),
 
     // DKIM ADSP (Obsolete, but maybe still used somewhere)
     TXT("_adsp._domainkey",
-        "dkim=unknown; " +    // Mailman will break any DKIM signatures
-        "ra=mail-reports; " + // Send reports to this address
-        "rr=all;"             // Report on all emails
+        "dkim=unknown " +    // Mailman will break any DKIM signatures
+        "ra=mail-reports " + // Send reports to this address
+        "rr=all"             // Report on all emails
     ),
 
     // SPF (restricts outgoing mail's IP addresses)
@@ -301,8 +301,8 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // MTA-STS (tells receiving servers to use TLS)
     web("mta-sts"),
-    TXT("_mta-sts", "v=STSv1; id=2"),
-    TXT("_smtp._tls", "v=TLSRPTv1; rua=mailto:tls-reports@maxchernoff.ca"),
+    TXT("_mta-sts", "v=STSv1 id=2"),
+    TXT("_smtp._tls", "v=TLSRPTv1 rua=mailto:tls-reports@maxchernoff.ca"),
 
     // Mail server access (IMAP, SMTP, etc.)
     SRV("_autodiscover._tcp", 0, 1, 443, "autodiscover.migadu.com."),
@@ -320,7 +320,7 @@ D("maxchernoff.ca", REG_MONITOR,
 
     MX("noreply", 0, "."), // Prevent receiving email
 
-    TXT("default._domainkey.noreply", "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnT+imAGiJsBFdKU16lCvOwSsTOxEnQHrbr5JYvJYcdcYD+D5zYb7o6E6NvEYih7+BEQkAXA5viwABQFD5PQ/6d76w2z/UFB76jN2H2HMRhH/GxCK0RN5SPZNHfsLkGQKrZWsgm4UI4YHTDxqO1N1ILazVFiDOqsxIe3Z6EufZfayfjbaSYl66ZXu0ZDyYgsH7BjhoYggStvsbFnd100FbSx+8Oc66JSr5PRxThJoBBX0Ranr/R/+hhk2/oQH2W2Nnsc6VHHgVhPvV1o3pGFyCNDmP+vsxX4GozsgUEVIGvJ6CEbEBkqEjN/sHSY2bCuLsPoG+NO+AKKmAWthQNl+JQIDAQAB"),
+    TXT("default._domainkey.noreply", "v=DKIM1 k=rsa p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnT+imAGiJsBFdKU16lCvOwSsTOxEnQHrbr5JYvJYcdcYD+D5zYb7o6E6NvEYih7+BEQkAXA5viwABQFD5PQ/6d76w2z/UFB76jN2H2HMRhH/GxCK0RN5SPZNHfsLkGQKrZWsgm4UI4YHTDxqO1N1ILazVFiDOqsxIe3Z6EufZfayfjbaSYl66ZXu0ZDyYgsH7BjhoYggStvsbFnd100FbSx+8Oc66JSr5PRxThJoBBX0Ranr/R/+hhk2/oQH2W2Nnsc6VHHgVhPvV1o3pGFyCNDmP+vsxX4GozsgUEVIGvJ6CEbEBkqEjN/sHSY2bCuLsPoG+NO+AKKmAWthQNl+JQIDAQAB"),
 
     DMARC_BUILDER({
         "label": "noreply",
@@ -356,24 +356,23 @@ D("maxchernoff.ca", REG_MONITOR,
     TXT("@", "security_contact=https://www.maxchernoff.ca/#contact"),
 
     // Geographical location of the server
-    // TODO: Enable once DNSControl supports LOC records for AXFR zones
-    // LOC_BUILDER_DD({
-    //     label: "@",
-    //     x: 38.747494,
-    //     y: -77.531749,
-    //     alt: 70.48,
-    //     horizontal_precision: 100,
-    //     vertical_precision: 10,
-    //     size: 100,
-    // }),
-    //
-    // LOC_BUILDER_DD({
-    //     label: "red-deer",
-    //     x: 52.3,
-    //     y: -113.8,
-    //     alt: 800,
-    //     horizontal_precision: 20e3,
-    //     vertical_precision: 100,
-    //     size: 10,
-    // }),
-END);
+    LOC_BUILDER_DD({
+        label: "@",
+        x: 38.747494,
+        y: -77.531749,
+        alt: 70.48,
+        horizontal_precision: 100,
+        vertical_precision: 10,
+        size: 100,
+    }),
+
+    LOC_BUILDER_DD({
+        label: "red-deer",
+        x: 52.3,
+        y: -113.8,
+        alt: 800,
+        horizontal_precision: 20e3,
+        vertical_precision: 100,
+        size: 10,
+    }),
+)
