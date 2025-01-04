@@ -1,1 +1,1 @@
-/usr/lib/systemd/system/bootc-fetch-apply-updates.timer
+../bootc-fetch-apply-updates.timer
