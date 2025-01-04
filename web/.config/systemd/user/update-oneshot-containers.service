@@ -1,0 +1,14 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Unit]
+Description=Update the oneshot containers
+After=podman-auto-update.service
+
+[Service]
+Type=oneshot
+ExecStart=sh -c 'podman image pull $(podman image list --filter="reference=docker.io/allinurl/goaccess" --filter="reference=ghcr.io/stackexchange/dnscontrol" --format="{{ index .Names 0 }}")'
+
+[Install]
+WantedBy=podman-auto-update.service
