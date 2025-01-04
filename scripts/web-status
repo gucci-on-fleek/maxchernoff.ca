@@ -213,9 +213,10 @@ class UnitStatus:
         unit_type = Style.faded(unit[-1])
         line.append(f"{unit_name}{Style.faded('.')}{unit_type}")
 
-        if self.load_state == "loaded" and (
-            self.state == "active" or self.state == "inactive"
-        ):
+        if (
+            self.load_state == "loaded"
+            and (self.state == "active" or self.state == "inactive")
+        ) or self.substate == "start-post":
             line.insert(0, Style.ok("·"))
             line.append(self._fmt("substate", "<", Style.faded))
         else:

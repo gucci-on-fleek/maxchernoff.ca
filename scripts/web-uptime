@@ -25,7 +25,7 @@ grep --invert-match '●' "$status" >> "$output" || true
 # Print the failed units
 printf '\n\t%sFailed Units%s\n'  "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
 grep '●' "$status" >> "$output" || \
-    echo "${STYLE_FADED}(none)${STYLE_RESET}\n" >> "$output"
+    printf "${STYLE_FADED}(none)${STYLE_RESET}\n" >> "$output"
 
 # Print the system status
 printf '\n\t%sSystem Status%s\n'  "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
