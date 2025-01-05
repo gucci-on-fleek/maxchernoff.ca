@@ -27,7 +27,8 @@ Popen(
         "/etc/caddy/Caddyfile",
         "--adapter",
         "caddyfile",
-    ]
+    ],
+    pass_fds=[3, 4],  # Socket activation
 )
 
 # Start the Waitress server, which runs the ViewVC application
