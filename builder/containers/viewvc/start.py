@@ -35,5 +35,13 @@ Popen(
 serve(
     application,
     listen="127.0.0.1:43219",
-    threads=4,
+    threads=8,
+    backlog=8,
+    outbuf_overflow=20 * 1024**2,
+    inbuf_overflow=20 * 1024**2,
+    connection_limit=20,
+    cleanup_interval=10,
+    channel_timeout=10,
+    max_request_body_size=10 * 1024,
+    channel_request_lookahead=2,
 )

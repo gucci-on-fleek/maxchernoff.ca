@@ -8,6 +8,7 @@ FROM docker.io/library/caddy:2.9-builder AS builder
 RUN xcaddy build \
     --with github.com/caddyserver/cache-handler \
     --with github.com/caddyserver/replace-response \
+    --with github.com/caddyserver/transform-encoder \
     --with github.com/darkweak/storages/otter/caddy \
     --with github.com/mholt/caddy-l4 \
     --with github.com/mholt/caddy-ratelimit
