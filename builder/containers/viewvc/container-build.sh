@@ -77,6 +77,10 @@ ln -sfT /srv/data/caddy-data $root/home/viewvc/.local/share/caddy
 ln -sf /srv/mimetypes.conf $root/etc/viewvc/mimetypes.conf
 ln -sf /srv/viewvc.conf $root/etc/viewvc/viewvc.conf
 
+# GeoIP folder
+mkdir -p $root/usr/share/GeoIP/
+chmod -R a+rX $root/usr/share/GeoIP/
+
 # Unlink the cache from the host
 rm $root/var/cache/libdnf5
 

@@ -22,6 +22,7 @@ FROM scratch
 COPY --from=build /mnt/build/ /
 COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
 COPY --chmod=755 ["start.py", "/usr/local/bin/"]
+COPY --chmod=644 ["dbip-asn-lite.mmdb", "/usr/local/share/GeoIP/"]
 
 USER 1000:1000
 CMD ["/usr/local/bin/start.py"]
