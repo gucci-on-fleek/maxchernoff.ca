@@ -32,6 +32,7 @@ dnf5 install \
     --setopt=keepcache=true \
     --use-host-config \
     coreutils-single \
+    curl \
     diffutils \
     generic-release \
     glibc-minimal-langpack \
