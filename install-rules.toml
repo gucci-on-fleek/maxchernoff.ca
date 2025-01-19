@@ -11,6 +11,7 @@
 builder = "/var/home/builder/"
 etc = "/etc/"
 max = "/var/home/max/"
+physics = "/var/home/physics/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
@@ -416,3 +417,30 @@ permissions.builder = "r"
 base = "{builder}/.cache/"
 paths = ["podman-dnf/", "go-build/", "go-modules/", "rpm-ostree/"]
 owner = "builder"
+
+
+###############
+### physics ###
+###############
+
+[[permissions]]
+base = "/var/home/"
+paths = ["physics/"]
+owner = "root" # Argh, sshd requires root to own the chroot
+permissions.other = ""
+permissions.physics = "r"
+permissions.max = "r"
+
+[[permissions]]
+base = "{physics}"
+paths = ["*"]
+owner = "physics"
+permissions.other = ""
+permissions.max = "rw"
+
+[[folder]]
+base = "{physics}"
+paths = ["phys-581/"]
+owner = "physics"
+permissions.other = ""
+permissions.max = "rw"
