@@ -245,6 +245,11 @@ D("maxchernoff.ca", REG_MONITOR,
         2, // Hash Algorithm: SHA-256
         "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
     ),
+    SSHFP("@",
+        3, // Key Algorithm: ECDSA
+        2, // Hash Algorithm: SHA-256
+        "6301e3dc245a97d6ba54931ef1febcdbc1dc353371ed57532d60b0829cabe952"
+    ),
 
     /////////////
     /// Email ///
