@@ -277,9 +277,10 @@ owner = "web/root"
 [[permissions]]
 base = "{web}/woodpecker/"
 paths = ["data/"]
-permissions."web/root" = "rw"
+permissions."web/1000" = "rw"
 permissions.web = "rw"
-owner = "web"
+owner = "web/1000"
+recursive_permissions = true
 
 [[permissions]]
 base = "{web}/"
@@ -386,8 +387,10 @@ owner = "woodpecker"
 [[permissions]]
 base = "{woodpecker}/woodpecker/"
 paths = ["config/"]
-permissions."woodpecker/root" = "rw"
-owner = "woodpecker"
+permissions."woodpecker/1000" = "rw"
+permissions.woodpecker = "rw"
+owner = "woodpecker/1000"
+recursive_permissions = true
 
 
 ###############
