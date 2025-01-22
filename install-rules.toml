@@ -114,7 +114,7 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/sbin/"
-paths = ["web-install", "web-status", "notify-all"]
+paths = ["web-install", "web-status", "notify-all", "ssh-restrict.sh"]
 owner = "root"
 permissions.other = "r"
 
@@ -424,23 +424,8 @@ owner = "builder"
 ###############
 
 [[permissions]]
-base = "/var/home/"
-paths = ["physics/"]
-owner = "root" # Argh, sshd requires root to own the chroot
-permissions.other = ""
-permissions.physics = "r"
-permissions.max = "r"
-
-[[permissions]]
 base = "{physics}"
 paths = ["*"]
-owner = "physics"
-permissions.other = ""
-permissions.max = "rw"
-
-[[folder]]
-base = "{physics}"
-paths = ["phys-581/"]
 owner = "physics"
 permissions.other = ""
 permissions.max = "rw"
