@@ -114,7 +114,13 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/sbin/"
-paths = ["web-install", "web-status", "notify-all", "ssh-restrict.sh"]
+paths = [
+    "web-install",
+    "web-status",
+    "notify-all",
+    "ssh-restrict.sh",
+    "console-colors.sh",
+]
 owner = "root"
 permissions.other = "r"
 
