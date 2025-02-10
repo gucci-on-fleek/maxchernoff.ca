@@ -202,6 +202,14 @@
 	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
 
+	# Block internal paths
+	@internal-url {
+		expression `{http.request.orig_uri.path}.matches("^/(includes/?|p/?$)")`
+	}
+	handle @internal-url {
+		error 404
+	}
+
 	# Remove query parameters
 	@has-query {
 		expression `{query} != ""`
