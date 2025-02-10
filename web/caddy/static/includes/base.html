@@ -4,19 +4,22 @@
      SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 {{- $args := index .Args 0 -}}
+{{- $root := default "/" (get $args "root") -}}
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/assets/style.css" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="{{ $root }}assets/style.css" />
+    <link rel="icon" href="{{ $root }}favicon.ico" sizes="32x32" />
+    <link rel="icon" href="{{ $root }}favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="{{ $root }}apple-touch-icon.png">
 
-    <title>{{ get $args "title" }}&hairsp;&mdash;&hairsp;Max Chernoff</title>
-    <meta name="description" content="{{ get $args "description" }}">
+    <title>{{ cat (get $args "title") (get $args "title-trailer") }}</title>
+    {{- if ne (get $args "description") "" -}}
+        <meta name="description" content="{{ get $args "description" }}">
+    {{- end -}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#241504" />
     <meta name="color-scheme" content="light dark">
@@ -34,7 +37,7 @@
 
     <footer>
         <ul role="list">
-            <li><a href="/">Home</a></li>
+            <li><a href="{{ $root }}">Home</a></li>
             <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></li>
             <li><a href="https://github.com/gucci-on-fleek/maxchernoff.ca">Source</a></li>
         </ul>

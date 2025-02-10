@@ -4,9 +4,7 @@
      SPDX-FileCopyrightText: 2024 Max Chernoff */ -}}
 
 {{/* Map the request name to a markdown file */}}
-{{- $path_parts := splitList "/" .OriginalReq.URL.Path -}}
-{{- $markdown_filename := default "index" (slice $path_parts 2 | join "/") -}}
-{{- $markdown_path := printf "/p/%s.md" $markdown_filename -}}
+{{- $markdown_path := printf "/domains/%s.md" .Host -}}
 
 {{/* If the file doesn't exist, return a 404 error */}}
 {{- if not (fileExists $markdown_path) -}}
@@ -16,9 +14,7 @@
 {{/* Otherwise, parse the markdown file and render it */}}
 {{- $markdown_file := (include $markdown_path | splitFrontMatter) -}}
 {{- include "/includes/base.html" (dict
-    "title"         (default $markdown_filename $markdown_file.Meta.title)
-    "title-trailer" ("&hairsp;&mdash;&hairsp;Max Chernoff")
-    "body"          (markdown $markdown_file.Body)
-    "date"          (default "" (cat "<time>" $markdown_file.Meta.date "</time>"))
-    "description"   (default "" $markdown_file.Meta.description)
+    "title"       (default .Host $markdown_file.Meta.title)
+    "body"        (markdown $markdown_file.Body)
+    "root"        ("https://www.maxchernoff.ca/")
 ) -}}

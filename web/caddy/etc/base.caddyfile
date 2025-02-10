@@ -42,7 +42,7 @@
 	header {
 		# Security headers
 		X-Content-Type-Options nosniff
-		Cross-Origin-Resource-Policy same-origin
+		?Cross-Origin-Resource-Policy same-origin
 		?Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; form-action 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; script-src 'self'; script-src-elem 'self';"
 
 		# Prerendering
@@ -99,6 +99,15 @@
 
 	header /assets/* {
 		Cache-Control max-age=86400 # 1 day
+	}
+
+	# Allow access to the icons and CSS from other sites
+	@cross-origin {
+		path /assets/style.css /favicon.svg /favicon.ico /apple-touch-icon.png
+		header_regexp Referer "^https://(.*)\.maxchernoff\.ca"
+	}
+	header @cross-origin {
+		Cross-Origin-Resource-Policy cross-origin
 	}
 
 	# No sitemaps, so cache the response for a long time
@@ -204,7 +213,7 @@
 
 	# Block internal paths
 	@internal-url {
-		expression `{http.request.orig_uri.path}.matches("^/(includes/?|p/?$)")`
+		expression `{http.request.orig_uri.path}.matches("^/(includes/?|p/?$|domains/?)")`
 	}
 	handle @internal-url {
 		error 404

@@ -54,6 +54,13 @@ import base.caddyfile
 	cache {
 		otter
 	}
+
+	# Configure (non-request) logging
+	log {
+		output stderr
+		format console
+		level DEBUG
+	}
 }
 
 # Define the default options for all sites
@@ -71,6 +78,7 @@ import base.caddyfile
 		output file /var/log/caddy/access.log {
 			roll_keep_for 1000d
 			roll_keep 100
+			mode 640
 		}
 		format json
 	}
@@ -86,6 +94,20 @@ import base.caddyfile
 http:// {
 	bind fd/3
 	redir https://{host}{uri} permanent
+}
+
+# Domain information pages
+(domain-info) {
+	handle / {
+		file_server {
+			root /srv
+		}
+		header {
+			Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; form-action 'none'; style-src https://www.maxchernoff.ca; img-src https://www.maxchernoff.ca;"
+		}
+		templates
+		rewrite /includes/domains.html
+	}
 }
 
 # Redirect maxchernoff.ca to www.maxchernoff.ca
@@ -125,68 +147,26 @@ stardew-valley-item-finder.maxchernoff.ca {
 # MTA-STS needs its own subdomain
 mta-sts.maxchernoff.ca {
 	import default
-	handle / {
-		header Content-Type text/html
-		respond `
-		<!DOCTYPE html>
-		<html lang="en">
-		<meta charset="UTF-8">
-		<title>MTA-STS Policy</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-		<meta name="color-scheme" content="light dark">
-		<h1>MTA-STS Policy</h1>
-		<p>See <a href="https://datatracker.ietf.org/doc/html/rfc8461#section-3.2">RFC 8461, §3.2</a> and this site’s <a href="/.well-known/mta-sts.txt">MTA-STS policy</a>.
-		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
-		` 200
-	}
+	import domain-info
 	respond "Not Found" 404
 }
 
 # Flask reverse proxy
 api.maxchernoff.ca {
 	import default
+	import domain-info
 
 	header Cache-Control max-age=5
 	cache
 
 	reverse_proxy systemd-flask:8080
-
-	handle / {
-		header Content-Type text/html
-		respond `
-		<!DOCTYPE html>
-		<html lang="en">
-		<meta charset="UTF-8">
-		<title>API Gateway</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-		<meta name="color-scheme" content="light dark">
-		<h1>API Gateway</h1>
-		<p>This is a Flask-based web server that responds to certain requests. You probably shouldn’t be here.
-		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
-		` 200
-	}
 }
 
 # Container registry reverse proxy
 registry.maxchernoff.ca {
 	import default
+	import domain-info
 	cache
-
-	handle / {
-		header Content-Type text/html
-		respond `
-		<!DOCTYPE html>
-		<html lang="en">
-		<meta charset="UTF-8">
-		<title>Container Registry</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-		<meta name="color-scheme" content="light dark">
-		<h1>Container Registry</h1>
-		<p>This is a container registry for various projects. The catalog is
-		available at <a href="https://registry.maxchernoff.ca/v2/_catalog"><code>/v2/_catalog</code></a>.
-		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
-		` 200
-	}
 
 	@manifest path /v2/*/manifests/* /v2/_catalog
 	header @manifest Cache-Control max-age=15
@@ -210,47 +190,14 @@ ns.maxchernoff.ca {
 	# We need to define a server here for Caddy to fetch a certificate for the
 	# layer4 DNS-over-TLS proxy, but otherwise this block serves no purpose, so
 	# we might as well show a landing page.
-	handle / {
-		header Content-Type text/html
-		respond `
-		<!DOCTYPE html>
-		<html lang="en">
-		<meta charset="UTF-8">
-		<title>DNS Server</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-		<meta name="color-scheme" content="light dark">
-		<h1>DNS Server</h1>
-		<p>This is the DNS server (AKA nameserver) for <code>maxchernoff.ca</code>.
-		There might be a DoH (DNS-over-HTTPS) server here in the future, but for
-		now, you'll need to access it over DNS (TCP/UDP port 53) or DNS-over-TLS
-		(TCP port 853).
-		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
-		` 200
-	}
+	import domain-info
 	respond "Not Found" 404
 }
 
 # Outgoing mail server
 noreply.maxchernoff.ca {
 	import default
-
-	handle / {
-		header Content-Type text/html
-		respond `
-		<!DOCTYPE html>
-		<html lang="en">
-		<meta charset="UTF-8">
-		<title>Mail Server</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-		<meta name="color-scheme" content="light dark">
-		<h1>Mail Server</h1>
-		<p>This is a send-only mail server for <code>maxchernoff.ca</code>. It
-		should only ever email you if you've specifically requested it, but if
-		something goes wrong, please email me at
-		<a href="mailto:website@maxchernoff.ca"><code>website@maxchernoff.ca</code></a>.
-		<p><a href="https://www.maxchernoff.ca">Return to the main site.</a>
-		` 200
-	}
+	import domain-info
 	respond "Not Found" 404
 }
 
