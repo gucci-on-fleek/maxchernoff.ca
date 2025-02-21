@@ -66,7 +66,6 @@ packages:
   - less
   - man-db # man pages
   - microcode_ctl
-  - NetworkManager
   - nss-altfiles # Also allows /usr/etc/passwd
   - openssh-clients
   - openssh-server
@@ -81,6 +80,7 @@ packages:
   - sudo
   - systemd
   - systemd-container # systemd-nspawn
+  - systemd-networkd
   - systemd-resolved
   - tar # Needed for TeX Live
   - tmux
@@ -91,15 +91,15 @@ packages:
 
 # systemd units to enable
 units:
-  - NetworkManager.service
   - firewalld.service
-  - sshd.service
   - greenboot-grub2-set-counter.service
   - greenboot-grub2-set-success.service
   - greenboot-healthcheck.service
   - greenboot-rpm-ostree-grub2-check-fallback.service
   - greenboot-status.service
   - greenboot-task-runner.service
+  - sshd.service
+  - systemd-networkd.service
 
 postprocess:
   - |

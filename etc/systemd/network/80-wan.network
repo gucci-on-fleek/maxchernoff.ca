@@ -1,0 +1,27 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Match]
+Name=ens3
+
+[Network]
+Description=WAN Interface
+DHCP=no
+
+# IPv4
+Address=152.53.36.213/22
+Gateway=152.53.36.1
+DNS=1.1.1.1 1.0.0.1
+
+# IPv6
+Address=2a0a:4cc0:2000:172::1/64
+Gateway=fe80::1
+DNS=2606:4700:4700::1111 2606:4700:4700::1001
+
+# Traffic shaping
+[CAKE]
+Bandwidth=0.95G
+FlowIsolationMode=triple
+PriorityQueueingPreset=besteffort
+SplitGSO=false

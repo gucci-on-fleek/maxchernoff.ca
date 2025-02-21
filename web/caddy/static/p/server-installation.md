@@ -94,13 +94,6 @@ Installation
     % ssh max@maxchernoff.ca
     ```
 
-10. Enable IPv6:
-
-    ```shell-session
-    $ sudo nmcli connection modify ens3 ipv6.method manual ipv6.addresses 2a0a:4cc0:2000:172::1/64 ipv6.gateway fe80::1
-    $ sudo nmcli connection up ens3
-    ```
-
 12. Reboot.
 
     ```shell-session
