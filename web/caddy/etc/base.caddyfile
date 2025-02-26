@@ -104,7 +104,7 @@
 	# Allow access to the icons and CSS from other sites
 	@cross-origin {
 		path /assets/style.css /favicon.svg /favicon.ico /apple-touch-icon.png
-		header_regexp Referer "^https://(.*)\.maxchernoff\.ca"
+		header_regexp Referer "^https://(.*\.)?(maxchernoff\.ca|duck\.tel)/"
 	}
 	header @cross-origin {
 		Cross-Origin-Resource-Policy cross-origin

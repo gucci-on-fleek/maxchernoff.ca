@@ -38,7 +38,7 @@ function dane(name) {
 }
 
 // Configure subdomains to not have email
-var MAIL_ALLOWED = ["@", "noreply"]
+var MAIL_ALLOWED = []
 function no_mail(name) {
     if (!(MAIL_ALLOWED.indexOf(name) >= 0)) {
         return [
@@ -77,95 +77,14 @@ function web(name) {
         out.push(dane("_443._quic." + name))
     }
 
-    // DNS Service Discovery (DNS-SD), because why not?
-    if (name == "@") {
-        // Just add the raw SRV records for the root domain
-        out.push(SRV(
-            "_https._tcp", // Service Name
-            0,             // Priority
-            1,             // Weight
-            443,           // Port
-            name           // Target Domain
-        ))
-        out.push(SRV(
-            "_https._udp", // Service Name
-            0,             // Priority
-            1,             // Weight
-            443,           // Port
-            name           // Target Domain
-        ))
-        out.push(SRV(
-            "_http._tcp",  // Service Name
-            0,             // Priority
-            1,             // Weight
-            80,            // Port
-            name           // Target Domain
-        ))
-    } else {
-        // List the service names that are available
-        out.push(PTR("_https._tcp", name + "._https._tcp.maxchernoff.ca."))
-        out.push(PTR("_http._udp",  name + "._http._tcp.maxchernoff.ca."))
-        out.push(PTR("_http._tcp",  name + "._http._tcp.maxchernoff.ca."))
-
-        // Map the service names to the actual services
-        out.push(SRV(
-            name + "._https._tcp", // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            443,                   // Port
-            name                   // Target Domain
-        ))
-        out.push(SRV(
-            name + "._https._udp", // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            443,                   // Port
-            name                   // Target Domain
-        ))
-        out.push(SRV(
-            name + "._http._tcp",  // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            80,                    // Port
-            name                   // Target Domain
-        ))
-
-        // Add the mandatory TXT records
-        out.push(TXT(name + "._https._tcp", "txtvers=1 path=/"))
-        out.push(TXT(name + "._https._udp", "txtvers=1 path=/"))
-        out.push(TXT(name + "._http._tcp",  "txtvers=1 path=/"))
-
-        // And also add the raw SRV records
-        out.push(SRV(
-            "_https._tcp." + name, // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            443,                   // Port
-            name                   // Target Domain
-        ))
-        out.push(SRV(
-            "_https._udp." + name, // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            443,                   // Port
-            name                   // Target Domain
-        ))
-        out.push(SRV(
-            "_http._tcp." + name,  // Service Name
-            0,                     // Priority
-            1,                     // Weight
-            80,                    // Port
-            name                   // Target Domain
-        ))
-    }
-
     // Prevent email on this domain
     out.push(no_mail(name))
 
     return out
 }
 
-// Begin the domain
+// Primary domain: maxchernoff.ca
+MAIL_ALLOWED = ["@", "noreply"]
 D("maxchernoff.ca", REG_MONITOR,
     DnsProvider(DSP_KNOT, 0),
     DefaultTTL("1d"),
@@ -379,5 +298,69 @@ D("maxchernoff.ca", REG_MONITOR,
         horizontal_precision: 20e3,
         vertical_precision: 100,
         size: 10,
+    }),
+)
+
+// Secondary domain: duck.tel
+MAIL_ALLOWED = []
+D("duck.tel", REG_MONITOR,
+    DnsProvider(DSP_KNOT, 0),
+    DefaultTTL("1d"),
+
+    ////////////////////
+    /// Name Servers ///
+    ////////////////////
+
+    NAMESERVER_TTL("1d"),
+
+    // The master nameserver
+    NAMESERVER("ns.maxchernoff.ca."),
+
+    // Use Hurricane Electric for the public nameservers
+    NAMESERVER("ns2.he.net."),
+    NAMESERVER("ns3.he.net."),
+    NAMESERVER("ns4.he.net."),
+    NAMESERVER("ns5.he.net."),
+
+    //////////////////
+    /// Web Server ///
+    //////////////////
+
+    // Root domain
+    web("@"),
+
+    ////////////////////
+    /// Certificates ///
+    ////////////////////
+
+    // Limits the CAs permitted to issue certificates
+    CAA_BUILDER({
+        label: "@", // Apply this to the root domain
+        iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
+        issue: [ "letsencrypt.org" ], // Allowed certificate issuers
+        issuewild: "none", // No wildcard certificates
+        issue_critical: true, // Mark all records as critical
+        iodef_critical: true,
+        issuewild_critical: true,
+    }),
+
+    /////////////
+    /// Email ///
+    /////////////
+
+    // DMARC (tells receiving servers to reject spoofed emails)
+    DMARC_BUILDER({
+        // Reject anything that fails
+        policy: "reject",
+        subdomainPolicy: "reject",
+
+        // Send reports to these addresses
+        rua: ["mailto:mail-reports@maxchernoff.ca"],
+        ruf: ["mailto:mail-reports@maxchernoff.ca"],
+        failureOptions: "1", // Report if any part of DMARC fails
+
+        // Require strict SPF and DKIM matching
+        alignmentSPF: "strict",
+        alignmentDKIM: "strict",
     }),
 )

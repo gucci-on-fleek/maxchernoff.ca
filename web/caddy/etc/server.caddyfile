@@ -59,7 +59,7 @@ import base.caddyfile
 	log {
 		output stderr
 		format console
-		level DEBUG
+		# level DEBUG
 	}
 }
 
@@ -196,6 +196,13 @@ ns.maxchernoff.ca {
 
 # Outgoing mail server
 noreply.maxchernoff.ca {
+	import default
+	import domain-info
+	respond "Not Found" 404
+}
+
+# Secondary domain: duck.tel
+duck.tel {
 	import default
 	import domain-info
 	respond "Not Found" 404
