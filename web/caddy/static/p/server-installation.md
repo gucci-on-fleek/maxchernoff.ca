@@ -258,6 +258,12 @@ Web Server
         hmac-sha256:dnscontrol:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
         ```
 
+    - A Podman secret `caddy_tsig` that looks like
+
+        ```text
+        DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=
+        ```
+
     - A file `~web/knot/config/secrets.conf` that looks like
 
         ```yaml
@@ -273,6 +279,10 @@ Web Server
           - id: red-deer
             algorithm: hmac-sha256
             secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
+
+          - id: caddy
+            algorithm: hmac-sha256
+            secret: DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=
 
           # Plus some DNSControl stuff...
         ```

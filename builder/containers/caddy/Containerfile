@@ -5,7 +5,10 @@
 
 FROM docker.io/library/caddy:2.9-builder AS builder
 
-RUN xcaddy build \
+ENV GOTOOLCHAIN=auto
+
+RUN xcaddy build ech \
+    --with github.com/caddy-dns/rfc2136 \
     --with github.com/caddyserver/cache-handler \
     --with github.com/caddyserver/replace-response \
     --with github.com/caddyserver/transform-encoder \
@@ -15,5 +18,7 @@ RUN xcaddy build \
     --with github.com/porech/caddy-maxmind-geolocation
 
 FROM docker.io/library/caddy:2.9
+
+ENV CADDY_VERSION=ech
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy

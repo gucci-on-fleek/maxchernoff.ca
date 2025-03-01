@@ -15,6 +15,8 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 UserNS=nomap
 
+Secret="caddy_tsig,type=env,target=CADDY_TSIG"
+
 Volume=%h/caddy/etc:/etc/caddy:ro,noexec
 Volume=%h/caddy/static:/srv:ro,noexec
 Volume=%h/caddy/data:/data:rw,Z,noexec
