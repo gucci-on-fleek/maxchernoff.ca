@@ -18,4 +18,4 @@ ProtectProc=invisible
 ProtectSystem=strict
 ProtectHome=true
 
-ExecStart=curl --fail-with-body --silent --show-error 'https://svn.tug.org:8369/texlive/?view=log'
+ExecStart=curl --fail-with-body --silent --show-error --cookie 'viewvc=imnotarobot' 'https://svn.tug.org:8369/texlive/?view=log'
