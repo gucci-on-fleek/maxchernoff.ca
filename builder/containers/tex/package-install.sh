@@ -22,6 +22,7 @@ dnf_packages=(
     # gucci-on-fleek/extractbb
     diffutils
     groff-perl
+    parallel
     perl-Compress-Zlib
 )
 
