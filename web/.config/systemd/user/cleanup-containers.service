@@ -1,0 +1,15 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Unit]
+Description=Garbage collects the container registry
+After=container-registry.service
+Wants=container-registry.service
+
+[Service]
+Type=oneshot
+ExecStart=podman exec systemd-container-registry registry garbage-collect --delete-untagged=true /etc/docker/registry/config.yml
+
+[Install]
+WantedBy=cleanup-containers.timer
