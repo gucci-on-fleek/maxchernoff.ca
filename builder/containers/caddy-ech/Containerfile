@@ -6,13 +6,15 @@
 FROM docker.io/library/caddy:2.9-builder AS builder
 
 ENV GOTOOLCHAIN=auto
+ENV GOPRIVATE=github.com/gucci-on-fleek
 
-RUN xcaddy build ech \
+RUN xcaddy build master \
     --with github.com/caddy-dns/rfc2136 \
     --with github.com/caddyserver/cache-handler \
     --with github.com/caddyserver/replace-response \
     --with github.com/darkweak/storages/otter/caddy \
-    --with github.com/mholt/caddy-l4
+    --with github.com/mholt/caddy-l4 \
+    --replace github.com/libdns/rfc2136=github.com/gucci-on-fleek/libdns-rfc2136@set-append-semantics
 
 FROM docker.io/library/caddy:2.9
 
