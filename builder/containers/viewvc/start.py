@@ -4,10 +4,12 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
+from os import nice
 from subprocess import Popen
-from waitress import serve
+
 import sapi
 import viewvc
+from waitress import serve
 
 
 # Runs the ViewVC application
@@ -30,6 +32,9 @@ Popen(
     ],
     pass_fds=[3, 4],  # Socket activation
 )
+
+# Renice the Python process to a lower priority
+nice(20)
 
 # Start the Waitress server, which runs the ViewVC application
 serve(
