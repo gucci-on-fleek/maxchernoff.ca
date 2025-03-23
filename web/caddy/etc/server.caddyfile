@@ -63,7 +63,7 @@ import base.caddyfile
 	}
 
 	# ECH
-	debug
+	# debug
 	dns rfc2136 {
 		server host.containers.internal:53
 		key_name caddy
