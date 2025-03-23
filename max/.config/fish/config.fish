@@ -19,6 +19,10 @@ if set --query TOOLBOX_PATH
     set --global fish_color_user --reverse --bold --dim yellow
 end
 
+if test "$in_nspawn" = "true"
+    set --global fish_color_user --reverse --bold --dim magenta
+end
+
 function ok
     truncate --size=0 ~repo/triggers/get-status.output
     echo "$(date)" > ~repo/triggers/get-status.trigger
@@ -37,6 +41,20 @@ function container
     # podman run --name=fedora -it --network=host --volume=/var/home/max:/home/max --security-opt=label=disable fedora:latest
     podman start fedora
     podman exec -lit /usr/bin/fish
+end
+
+# systemd-nspawn
+function nspawn
+    sudo systemd-nspawn \
+        --background='' \
+        --console='autopipe' \
+        --directory='/' \
+        --ephemeral \
+        --machine='EPHEMERAL' \
+        --resolv-conf='bind-stub' \
+        --setenv='in_nspawn=true' \
+        --user='max' \
+        /usr/bin/fish --login $argv
 end
 
 function refresh
