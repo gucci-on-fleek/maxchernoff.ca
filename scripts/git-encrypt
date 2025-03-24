@@ -7,25 +7,33 @@
 # Manually updating all of the secrets in the project is fragile and
 # error-prone, so instead, it would be best to store them in Git. However, since
 # I would like to store the repository on GitHub, it would be best to encrypt
-# the secrets before committing them. The most transparent way to do this is
-# with Git smudge/clean filters. However, for these to work properly, we need
-# for the encryption to be deterministic---that is, for a given key and input,
-# the output must always be the same. This is a problem because most of the
-# standard Linux encryption tools either unconditionally generate a random nonce
-# for each invocation, let you specify a nonce but use algorithms that are
-# unsafe if the nonce is ever reused, or are far too heavyweight. So
-# unfortunately, I'm left with rolling my own crypto, which is generally a
-# horrible idea.
+# the secrets before committing them.
+#
+# The most transparent way to do this is with Git smudge/clean filters. However,
+# for these to work properly, we need for the encryption to be deterministic---
+# that is, for a given key and input, the output must always be the same. This
+# is a problem because most of the standard Linux encryption tools either
+# unconditionally generate a random nonce for each invocation, let you specify a
+# nonce but use algorithms that are unsafe if the nonce is ever reused.
+#
+# This script is very similar to the `git-crypt` tool
+#
+#     https://github.com/AGWA/git-crypt
+#
+# except that this tool uses slightly different cryptographic primitives its
+# implementation is considerably simpler.
+
 
 ###############
 ### Imports ###
 ###############
+
+import lzma
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from base64 import b85decode, b85encode
-from bz2 import compress, decompress
 from itertools import batched
 from os import getenv
-from sys import exit, stderr, stdin, stdout
+from sys import exit, stdin, stdout
 from typing import Callable, cast
 
 from cryptography.exceptions import InvalidTag
@@ -45,12 +53,23 @@ type KeyFunction = Callable[[], bytes]
 ### Constants ###
 #################
 
-LINE_LENGTH = 80  # Length of each line in the output
+DIGEST_BYTES = 64  # BLAKE2b digest length in bytes
+FILE_HEADER = (
+    "github.com/gucci-on-fleek/maxchernoff.ca",
+    "git-encrypt",
+    "v1",
+)  # Header for the encrypted file
 KEY_BITS = 256  # AES key size in bits
 KEY_BYTES = KEY_BITS // 8  # AES key size in bytes
+KNOWN_VERSIONS = ("v1",)  # Known versions of the file format
+LINE_LENGTH = 80  # Length of each line in the output
+LZMA_FILTERS = [
+    {"id": lzma.FILTER_LZMA2, "preset": lzma.PRESET_DEFAULT}
+]  # Filters to use for LZMA compression, required for FORMAT_RAW
+LZMA_FORMAT = (
+    lzma.FORMAT_RAW
+)  # Don't include the header and checksum in the compressed data
 NONCE_BYTES = 12  # AES nonce size in bytes
-DIGEST_BYTES = 64  # BLAKE2b digest length in bytes
-FILE_HEADER = "https://github.com/gucci-on-fleek/maxchernoff.ca/ git-encrypt v1"  # Header for the encrypted file
 
 
 #########################
@@ -59,7 +78,7 @@ FILE_HEADER = "https://github.com/gucci-on-fleek/maxchernoff.ca/ git-encrypt v1"
 
 
 class InvalidArgumentError(ValueError):
-    """Custom exception for invalid arguments."""
+    """Custom exception raised when invalid arguments are passed."""
 
     pass
 
@@ -71,6 +90,7 @@ class InvalidArgumentError(ValueError):
 
 def encode(data: bytes) -> str:
     """Encodes and chunks the input data using base85 encoding."""
+
     encoded = b85encode(data).decode("utf-8")
     chunked = "\n".join("".join(s) for s in batched(encoded, LINE_LENGTH))
     return chunked
@@ -78,16 +98,32 @@ def encode(data: bytes) -> str:
 
 def decode(data: str) -> bytes:
     """Decodes the input data using base85 decoding."""
+
     unchunked = data.replace("\n", "")
     decoded = b85decode(unchunked)
     return decoded
 
 
+def compress(data: bytes) -> bytes:
+    """Compress the input data."""
+
+    compressed = lzma.compress(data, format=LZMA_FORMAT, filters=LZMA_FILTERS)
+    return compressed
+
+
+def decompress(data: bytes) -> bytes:
+    """Decompress the input data."""
+
+    decompressed = lzma.decompress(data, format=LZMA_FORMAT)
+    return decompressed
+
+
 def parse_key(env: str | None) -> bytes:
     """Parse the key from the environment variable."""
+
     if env is None:
         raise InvalidArgumentError(
-            "GIT_ENCRYPT_KEY environment variable is required"
+            '"$GIT_ENCRYPT_KEY" environment variable is not set.'
         )
 
     try:
@@ -103,16 +139,10 @@ def parse_key(env: str | None) -> bytes:
     return key
 
 
-def generate_key() -> bytes:
-    """Generate a new key."""
-    key_bytes = AESGCMSIV.generate_key(KEY_BITS)
-    key_encoded = encode(key_bytes)
-    return key_encoded.encode("utf-8") + b"\n"
-
-
 def encrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     """Encrypt the input data using the key."""
-    # First, we will compress the data using bzip2. This isn't strictly
+
+    # First, we will compress the data using lzma. This isn't strictly
     # necessary; however, later we will be encoding the data using base85 which
     # will increase the size by 25%, so by compressing the data first, we can
     # hopefully counteract this.
@@ -129,8 +159,9 @@ def encrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     digest = Hash(BLAKE2b(digest_size=DIGEST_BYTES))
 
     # Note that Blake2 is specifically designed to be immune to length-extension
-    # attacks, so it's safe to combine the plaintext and filename in this way.
-    # For other hashing algorithms, we would need to use an HMAC or similar.
+    # attacks, so it's safe to merely concatenate the  plaintext and filename
+    # when creating the hash. For other hashing algorithms, we would need to use
+    # an HMAC or similar construction to ensure that the hash is secure.
     digest.update(data)
     digest.update(filename)
     nonce = digest.finalize()[:NONCE_BYTES]
@@ -160,24 +191,39 @@ def encrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     encoded = encode(encrypted)
 
     # Finally, we will join the header, nonce, and ciphertext together
-    return "\n".join([FILE_HEADER, encode(nonce), encoded, ""]).encode("utf-8")
+    return "\n".join(
+        [
+            " ".join(FILE_HEADER),
+            encode(nonce),
+            encoded,
+            "",
+        ]
+    ).encode("utf-8")
 
 
 def decrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     """Decrypt the input data using the key."""
+
     # First, we need to split the input data into the header, nonce, and
     # ciphertext.
     data: str = data.decode("utf-8")
     lines = data.split("\n")
-    header = lines[0]
+    header = lines[0].split(" ")
     nonce = lines[1]
     ciphertext = "\n".join(lines[2:])
 
     # Now, we need to make sure that the header is valid.
-    if header != FILE_HEADER:
-        raise InvalidArgumentError("Invalid header. Must be 'git-encrypt v1'")
+    if (*header[:2],) != FILE_HEADER[:2]:
+        raise InvalidArgumentError(
+            'Invalid header. Are you sure this is a "git-encrypt"ed file?'
+        )
 
-    # Next, we need to decode the ciphertext and nonce.
+    if header[2] not in KNOWN_VERSIONS:
+        raise InvalidArgumentError(
+            f'Invalid version. "{header[2]}" was passed, but only {KNOWN_VERSIONS} are supported.'
+        )
+
+    # Next, we will try to decode the ciphertext and nonce.
     try:
         nonce = decode(nonce)
         ciphertext = decode(ciphertext)
@@ -204,12 +250,20 @@ def decrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     return output
 
 
+def generate_key() -> bytes:
+    """Generate a new random key."""
+
+    key_bytes = AESGCMSIV.generate_key(KEY_BITS)
+    key_encoded = encode(key_bytes)
+    return key_encoded.encode("utf-8") + b"\n"
+
+
 ###################
 ### Entry Point ###
 ###################
 
 if __name__ == "__main__":
-    # Generate the argument parser
+    # Generate the root argument parser for the script
     parser = ArgumentParser(
         formatter_class=RawDescriptionHelpFormatter,
         description="A Git smudge/clean filter for transparently encrypting files.",
@@ -229,6 +283,7 @@ usage:
   """.strip(),
     )
 
+    # Add subparsers for each command
     subparsers = parser.add_subparsers(
         title="commands",
         required=True,
@@ -281,5 +336,6 @@ usage:
     except InvalidArgumentError as e:
         parser.error(str(e))
 
+    # Write the output to stdout
     stdout.buffer.write(output_data)
     exit(0)
