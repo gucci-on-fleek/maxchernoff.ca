@@ -16,15 +16,6 @@
 # unsafe if the nonce is ever reused, or are far too heavyweight. So
 # unfortunately, I'm left with rolling my own crypto, which is generally a
 # horrible idea.
-#
-# # .git/config
-# [filter "git-encrypt"]
-#     clean = ./scripts/git-encrypt encrypt %f
-#     smudge = ./scripts/git-encrypt decrypt %f
-#     required
-#
-# # .gitattributes
-# *.enc filter=git-encrypt
 
 ###############
 ### Imports ###
@@ -35,10 +26,19 @@ from bz2 import compress, decompress
 from itertools import batched
 from os import getenv
 from sys import exit, stderr, stdin, stdout
+from typing import Callable, cast
 
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESGCMSIV
 from cryptography.hazmat.primitives.hashes import BLAKE2b, Hash
+
+
+####################
+### Type Aliases ###
+####################
+
+type CommandFunction = Callable[[bytes, bytes, bytes], bytes]
+type KeyFunction = Callable[[], bytes]
 
 
 #################
@@ -51,6 +51,17 @@ KEY_BYTES = KEY_BITS // 8  # AES key size in bytes
 NONCE_BYTES = 12  # AES nonce size in bytes
 DIGEST_BYTES = 64  # BLAKE2b digest length in bytes
 FILE_HEADER = "https://github.com/gucci-on-fleek/maxchernoff.ca/ git-encrypt v1"  # Header for the encrypted file
+
+
+#########################
+### Class Definitions ###
+#########################
+
+
+class InvalidArgumentError(ValueError):
+    """Custom exception for invalid arguments."""
+
+    pass
 
 
 ############################
@@ -75,24 +86,28 @@ def decode(data: str) -> bytes:
 def parse_key(env: str | None) -> bytes:
     """Parse the key from the environment variable."""
     if env is None:
-        raise ValueError("GIT_ENCRYPT_KEY environment variable is required")
+        raise InvalidArgumentError(
+            "GIT_ENCRYPT_KEY environment variable is required"
+        )
 
     try:
         key = decode(env)
     except ValueError:
-        raise ValueError("Invalid key format. Must be base85 encoded.")
+        raise InvalidArgumentError(
+            "Invalid key format. Must be base85 encoded."
+        )
 
     if len(key) != KEY_BYTES:
-        raise ValueError("Invalid key length. Must be 32 bytes.")
+        raise InvalidArgumentError("Invalid key length. Must be 32 bytes.")
 
     return key
 
 
-def generate_key() -> str:
+def generate_key() -> bytes:
     """Generate a new key."""
     key_bytes = AESGCMSIV.generate_key(KEY_BITS)
     key_encoded = encode(key_bytes)
-    return key_encoded
+    return key_encoded.encode("utf-8") + b"\n"
 
 
 def encrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
@@ -160,27 +175,29 @@ def decrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
 
     # Now, we need to make sure that the header is valid.
     if header != FILE_HEADER:
-        raise ValueError("Invalid header. Must be 'git-encrypt v1'")
+        raise InvalidArgumentError("Invalid header. Must be 'git-encrypt v1'")
 
     # Next, we need to decode the ciphertext and nonce.
     try:
         nonce = decode(nonce)
         ciphertext = decode(ciphertext)
     except ValueError:
-        raise ValueError(
+        raise InvalidArgumentError(
             "Invalid nonce or ciphertext format. Must be base85 encoded."
         )
 
     # Now we need to make sure that the nonce is the correct length.
     if len(nonce) != NONCE_BYTES:
-        raise ValueError("Invalid nonce length. Must be 12 bytes.")
+        raise InvalidArgumentError("Invalid nonce length. Must be 12 bytes.")
 
     # Now, we can decrypt the ciphertext using the nonce and the key.
     cipher = AESGCMSIV(key)
     try:
         decrypted = cipher.decrypt(nonce, ciphertext, filename)
     except InvalidTag:
-        raise ValueError("Invalid key or ciphertext. Decryption failed.")
+        raise InvalidArgumentError(
+            "Invalid key or ciphertext. Decryption failed."
+        )
 
     # Finally, we need to decompress the decrypted data.
     output = decompress(decrypted)
@@ -195,25 +212,46 @@ if __name__ == "__main__":
     # Generate the argument parser
     parser = ArgumentParser(
         formatter_class=RawDescriptionHelpFormatter,
-        epilog="""environment variables:
-  $GIT_ENCRYPT_KEY      The key to use for encryption""",
+        description="A Git smudge/clean filter for transparently encrypting files.",
+        epilog="""
+environment variables:
+  $GIT_ENCRYPT_KEY      The key to use for encryption
+
+usage:
+  .git/config:
+    [filter "git-encrypt"]
+    clean = ./scripts/git-encrypt encrypt %f
+    smudge = ./scripts/git-encrypt decrypt %f
+    required
+
+  .gitattributes:
+    *.enc filter=git-encrypt
+  """.strip(),
     )
 
-    subparsers = parser.add_subparsers(required=True)
+    subparsers = parser.add_subparsers(
+        title="commands",
+        required=True,
+    )
 
-    encrypt_args = subparsers.add_parser("encrypt", help="Encrypt the input")
-    encrypt_args.add_argument(
+    filename_args = ArgumentParser(add_help=False)
+    filename_args.add_argument(
         "filename",
         type=str,
         help="The name of the piped file",
+    )
+
+    encrypt_args = subparsers.add_parser(
+        "encrypt",
+        help="Encrypt the input",
+        parents=[filename_args],
     )
     encrypt_args.set_defaults(func=encrypt)
 
-    decrypt_args = subparsers.add_parser("decrypt", help="Decrypt the input")
-    decrypt_args.add_argument(
-        "filename",
-        type=str,
-        help="The name of the piped file",
+    decrypt_args = subparsers.add_parser(
+        "decrypt",
+        help="Decrypt the input",
+        parents=[filename_args],
     )
     decrypt_args.set_defaults(func=decrypt)
 
@@ -222,22 +260,26 @@ if __name__ == "__main__":
 
     # Parse the arguments
     args = parser.parse_args()
+    func: CommandFunction | KeyFunction = args.func
 
     # Handle the subcommands
-    if args.func == generate_key:
-        encoded = args.func()
-        print(encoded)
-        exit(0)
+    try:
+        if func in (generate_key,):
+            func = cast(KeyFunction, func)
 
-    key = parse_key(getenv("GIT_ENCRYPT_KEY"))
+            output_data = func()
+        elif func in (encrypt, decrypt):
+            func = cast(CommandFunction, func)
 
-    if not key:
-        parser.error("GIT_ENCRYPT_KEY environment variable is required")
+            key = parse_key(getenv("GIT_ENCRYPT_KEY"))
+            filename: bytes = args.filename.encode("utf-8")
 
-    filename: bytes = args.filename.encode("utf-8")
+            input_data = stdin.buffer.read()
+            output_data = func(key, input_data, filename)
+        else:
+            raise InvalidArgumentError("Invalid command")
+    except InvalidArgumentError as e:
+        parser.error(str(e))
 
-    # Process the subcommands
-    input_data = stdin.buffer.read()
-    output_data = args.func(key, input_data, filename)
     stdout.buffer.write(output_data)
     exit(0)
