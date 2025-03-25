@@ -29,8 +29,16 @@
 ###############
 
 import lzma
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from argparse import (
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    FileType,
+    RawTextHelpFormatter,
+)
 from base64 import b85decode, b85encode
+from binascii import crc32
+from hashlib import blake2b
+from io import BufferedRandom
 from itertools import batched
 from os import getenv
 from sys import exit, stdin, stdout
@@ -38,8 +46,6 @@ from typing import Callable, cast
 
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESGCMSIV
-from cryptography.hazmat.primitives.hashes import BLAKE2b, Hash
-
 
 ####################
 ### Type Aliases ###
@@ -53,7 +59,9 @@ type KeyFunction = Callable[[], bytes]
 ### Constants ###
 #################
 
-DIGEST_BYTES = 64  # BLAKE2b digest length in bytes
+BLAKE_PERSON = (
+    b"git-encrypt v1"  # The "personalization string" for the BLAKE2b hash
+)
 FILE_HEADER = (
     "github.com/gucci-on-fleek/maxchernoff.ca",
     "git-encrypt",
@@ -61,6 +69,7 @@ FILE_HEADER = (
 )  # Header for the encrypted file
 KEY_BITS = 256  # AES key size in bits
 KEY_BYTES = KEY_BITS // 8  # AES key size in bytes
+KEY_CHECKSUM_BYTES = 4  # Size of the checksum in bytes
 KNOWN_VERSIONS = ("v1",)  # Known versions of the file format
 LINE_LENGTH = 80  # Length of each line in the output
 LZMA_FILTERS = [
@@ -79,6 +88,16 @@ NONCE_BYTES = 12  # AES nonce size in bytes
 
 class InvalidArgumentError(ValueError):
     """Custom exception raised when invalid arguments are passed."""
+
+    pass
+
+
+class RawDefaultHelpFormatter(
+    RawTextHelpFormatter, ArgumentDefaultsHelpFormatter
+):
+    """Argparse formatter that lets us insert newlines in the epilog while still
+    showing the default values.
+    """
 
     pass
 
@@ -118,23 +137,29 @@ def decompress(data: bytes) -> bytes:
     return decompressed
 
 
-def parse_key(env: str | None) -> bytes:
-    """Parse the key from the environment variable."""
+def parse_key(data: bytes | None) -> bytes:
+    """Parse the contents of the keyfile."""
 
-    if env is None:
-        raise InvalidArgumentError(
-            '"$GIT_ENCRYPT_KEY" environment variable is not set.'
-        )
+    if data is None:
+        raise InvalidArgumentError("No key provided.")
 
+    # Make sure that the format of the key is valid
     try:
-        key = decode(env)
+        key_checksum = decode(data.decode("utf-8").strip())
     except ValueError:
         raise InvalidArgumentError(
             "Invalid key format. Must be base85 encoded."
         )
 
-    if len(key) != KEY_BYTES:
-        raise InvalidArgumentError("Invalid key length. Must be 32 bytes.")
+    if len(key_checksum) != KEY_BYTES + KEY_CHECKSUM_BYTES:
+        raise InvalidArgumentError(
+            f"Invalid key length. Must be {KEY_BYTES + KEY_CHECKSUM_BYTES} bytes."
+        )
+
+    # Make sure that the checksum is valid
+    key, checksum = key_checksum[:KEY_BYTES], key_checksum[KEY_BYTES:]
+    if crc32(key) != int.from_bytes(checksum, "big"):
+        raise InvalidArgumentError("Invalid key checksum.")
 
     return key
 
@@ -156,15 +181,12 @@ def encrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
     # the IV is unique for each file, but also deterministic. And by including
     # the filename in the hash, we ensure that we don't reveal to an attacker
     # that two files are identical.
-    digest = Hash(BLAKE2b(digest_size=DIGEST_BYTES))
-
-    # Note that Blake2 is specifically designed to be immune to length-extension
-    # attacks, so it's safe to merely concatenate the  plaintext and filename
-    # when creating the hash. For other hashing algorithms, we would need to use
-    # an HMAC or similar construction to ensure that the hash is secure.
-    digest.update(data)
-    digest.update(filename)
-    nonce = digest.finalize()[:NONCE_BYTES]
+    nonce = blake2b(
+        data,
+        digest_size=NONCE_BYTES,
+        key=filename,
+        person=BLAKE_PERSON,
+    ).digest()
 
     # Now, we can encrypt the data using the nonce and the key. We're using
     # AES-GCM-SIV here since it is nonce-misuse resistant. That is, reusing the
@@ -253,8 +275,15 @@ def decrypt(key: bytes, data: bytes, filename: bytes) -> bytes:
 def generate_key() -> bytes:
     """Generate a new random key."""
 
+    # Generate the key using "cryptography"'s CSPRNG.
     key_bytes = AESGCMSIV.generate_key(KEY_BITS)
-    key_encoded = encode(key_bytes)
+
+    # Add a checksum to the key. This isn't strictly necessary, but we'll do it
+    # so that we can hopefully catch if the key gets silently corrupted.
+    checksum_bytes = crc32(key_bytes).to_bytes(4, "big")
+
+    # Encode and return the key.
+    key_encoded = encode(key_bytes + checksum_bytes)
     return key_encoded.encode("utf-8") + b"\n"
 
 
@@ -265,13 +294,10 @@ def generate_key() -> bytes:
 if __name__ == "__main__":
     # Generate the root argument parser for the script
     parser = ArgumentParser(
-        formatter_class=RawDescriptionHelpFormatter,
+        formatter_class=RawDefaultHelpFormatter,
         description="A Git smudge/clean filter for transparently encrypting files.",
         epilog="""
-environment variables:
-  $GIT_ENCRYPT_KEY      The key to use for encryption
-
-usage:
+files:
   .git/config:
     [filter "git-encrypt"]
     clean = ./scripts/git-encrypt encrypt %f
@@ -281,6 +307,14 @@ usage:
   .gitattributes:
     *.enc filter=git-encrypt
   """.strip(),
+    )
+
+    parser.add_argument(
+        "--keyfile",
+        type=FileType("a+b"),
+        help="the file containing the key",
+        required=False,
+        default=".git/git-encrypt.private-key",
     )
 
     # Add subparsers for each command
@@ -293,49 +327,65 @@ usage:
     filename_args.add_argument(
         "filename",
         type=str,
-        help="The name of the piped file",
+        help="the name of the piped file",
     )
 
     encrypt_args = subparsers.add_parser(
         "encrypt",
-        help="Encrypt the input",
+        help="encrypt the input",
         parents=[filename_args],
     )
     encrypt_args.set_defaults(func=encrypt)
 
     decrypt_args = subparsers.add_parser(
         "decrypt",
-        help="Decrypt the input",
+        help="decrypt the input",
         parents=[filename_args],
     )
     decrypt_args.set_defaults(func=decrypt)
 
-    keygen_args = subparsers.add_parser("keygen", help="Generate a new key")
+    keygen_args = subparsers.add_parser("keygen", help="generate a new key")
     keygen_args.set_defaults(func=generate_key)
 
     # Parse the arguments
     args = parser.parse_args()
     func: CommandFunction | KeyFunction = args.func
+    keyfile: BufferedRandom = args.keyfile
+    keyfile.seek(0)
 
     # Handle the subcommands
     try:
         if func in (generate_key,):
             func = cast(KeyFunction, func)
 
-            output_data = func()
+            if keyfile.read().strip() == b"":
+                # If the keyfile is empty, we will generate a new key
+                new_key = func()
+
+                keyfile.seek(0)
+                keyfile.truncate()
+                keyfile.write(new_key)
+                keyfile.close()
+            else:
+                # Otherwise, throw an error
+                raise InvalidArgumentError("Keyfile already exists.")
+
         elif func in (encrypt, decrypt):
             func = cast(CommandFunction, func)
 
-            key = parse_key(getenv("GIT_ENCRYPT_KEY"))
+            # Read in the key
+            key = parse_key(keyfile.read())
             filename: bytes = args.filename.encode("utf-8")
 
+            # Process the data
             input_data = stdin.buffer.read()
             output_data = func(key, input_data, filename)
+
+            # Write the output to stdout
+            stdout.buffer.write(output_data)
         else:
             raise InvalidArgumentError("Invalid command")
     except InvalidArgumentError as e:
         parser.error(str(e))
 
-    # Write the output to stdout
-    stdout.buffer.write(output_data)
     exit(0)
