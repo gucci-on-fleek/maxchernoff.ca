@@ -7,7 +7,7 @@ Image=ghcr.io/stackexchange/dnscontrol:latest
 AutoUpdate=registry
 UserNS=nomap
 
-Secret="dnscontrol_tsig,type=env,target=DNSCONTROL_TSIG"
+EnvironmentFile=/var/home/repo/credentials/web/dnscontrol_tsig
 
 Network=private
 Volume=%h/dnscontrol:/dns:ro,z

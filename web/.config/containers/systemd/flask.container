@@ -11,7 +11,7 @@ Volume=%h/flask/:/srv:ro,exec
 Volume=/var/home/repo/triggers/:/root/triggers:rw
 Exec=/srv/app.py
 
-Secret="webhook_secret,type=env,target=WEBHOOK_SECRET"
+EnvironmentFile=/var/home/repo/credentials/web/webhook_secret
 
 DropCapability=all
 NoNewPrivileges=true

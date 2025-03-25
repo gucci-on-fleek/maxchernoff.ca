@@ -48,7 +48,7 @@ Environment="OVERLEAF_EMAIL_REPLY_TO=overleaf@maxchernoff.ca"
 Environment="OVERLEAF_EMAIL_SMTP_HOST=systemd-maddy"
 Environment="OVERLEAF_EMAIL_SMTP_PORT=587"
 Environment="OVERLEAF_EMAIL_SMTP_USER=overleaf@noreply.maxchernoff.ca"
-Secret="overleaf_smtp_password,type=env,target=OVERLEAF_EMAIL_SMTP_PASS"
+EnvironmentFile=/var/home/repo/credentials/web/overleaf_smtp_password
 Environment="OVERLEAF_EMAIL_SMTP_IGNORE_TLS=true"
 Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
 

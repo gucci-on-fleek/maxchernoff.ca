@@ -143,7 +143,7 @@ Downloading the repository
 2. Switch to the `repo` user:
 
     ```
-    $ sudo -u repo fish
+    $ sudo machinectl shell repo@ /usr/bin/fish
     ```
 
 1. Generate a new <abbr>SSH</abbr> key:
@@ -154,12 +154,28 @@ Downloading the repository
 
 2. Add this new key as a single-repo deploy key on GitHub.
 
-3. Clone the repository:
+3. Clone the repositories:
 
     ```shell-session
-    % git clone git@github.com:gucci-on-fleek/maxchernoff.ca.git
+    % git clone https://github.com/gucci-on-fleek/maxchernoff.ca.git
+    % git clone --no-checkout \
+    >     git@github.com:gucci-on-fleek/maxchernoff.ca-credentials.git \
+    >     credentials
     ```
 
+4. Decrypt the credentials' repository:
+
+    ```shell-session
+    % cd credentials/
+    % echo 'PRIVATE-KEY' > .git/git-encrypt.private-key
+    % echo > .git/config <<EOF
+    [filter "git-encrypt"]
+        clean = git-encrypt encrypt %f
+        smudge = git-encrypt decrypt %f
+        required
+    EOF
+    % git checkout master
+    ```
 
 Installing TeX Live
 -------------------
@@ -174,7 +190,7 @@ Installing TeX Live
 2. Switch to the `tex` user:
 
     ```shell-session
-    $ sudo -u tex fish
+    $ sudo machinectl shell tex@ /usr/bin/fish
     ```
 
 3. Create the necessary directories:
@@ -234,90 +250,6 @@ Web Server
     $ sudo loginctl enable-linger web
     ```
 
-9. Switch to the `web` user:
-
-    ```shell-session
-    $ sudo -u web fish
-    ```
-
-10. Add the GitHub webhook shared secret:
-
-    ```shell-session
-    % cat /dev/urandom | head --bytes=21 | base64 | tr -d '\n' \
-        | podman secret create webhook_secret -
-
-    % podman secret inspect webhook_secret --showsecret
-    (then paste into the GitHub webhook secret field)
-    ```
-
-11. Add the DNS shared secrets:
-
-    - A Podman secret `dnscontrol_tsig` that looks like
-
-        ```text
-        hmac-sha256:dnscontrol:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-        ```
-
-    - A Podman secret `caddy_tsig` that looks like
-
-        ```text
-        DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=
-        ```
-
-    - A file `~web/knot/config/secrets.conf` that looks like
-
-        ```yaml
-        key:
-          - id: dnscontrol
-            algorithm: hmac-sha256
-            secret: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-
-          - id: maxchernoff-he
-            algorithm: hmac-sha256
-            secret: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=
-
-          - id: red-deer
-            algorithm: hmac-sha256
-            secret: CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=
-
-          - id: caddy
-            algorithm: hmac-sha256
-            secret: DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=
-
-          # Plus some DNSControl stuff...
-        ```
-
-12. Add the email secrets:
-
-    - A Podman secret `overleaf_smtp_password`:
-
-        ```shell-session
-        % cat /dev/urandom | head --bytes=21 | base64 | tr -d '\n' \
-            | podman secret create overleaf_smtp_password -
-
-        % podman secret inspect overleaf_smtp_password --showsecret \
-            | podman run --rm -i --entrypoint=/bin/maddy \
-                docker.io/foxcpp/maddy hash --hash argon2
-        ```
-
-    - A global service failure file:
-
-        ```shell-session
-        $ cat /dev/urandom | head --bytes=21 | base64 \
-            | sudo tee ~repo/credentials/server@noreply.maxchernoff.ca \
-            | podman run --rm -i --entrypoint=/bin/maddy \
-                docker.io/foxcpp/maddy hash --hash argon2
-        ```
-
-
-    - A file `~web/maddy/config/users.conf` that looks like
-
-        ```yaml
-        overleaf@noreply.maxchernoff.ca: argon2:AAAAAAAAAAAAAAAAAAAAAAAA
-        server@noreply.maxchernoff.ca: argon2:BBBBBBBBBBBBBBBBBBBBBBBBBB
-        ```
-
-
 18. Reboot to make sure everything starts correctly.
 
 19. Once all the containers have been built, switch to `bootc`:
@@ -331,40 +263,11 @@ Web Server
 Woodpecker CI
 -------------
 
-1. Switch to the `web` user:
-
-    ```shell-session
-    $ sudo -u web fish
-    ```
-
-3. Add the Woodpecker server Podman secrets:
-
-    ```shell-session
-    % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
-    >     podman secret create woodpecker_github_secret -
-    % head --bytes=36 /dev/urandom | basenc --z85 | tr -d '\n' | \
-    >     tee /dev/stderr | \ # Copy this value for later
-    >     podman secret create woodpecker_agent_secret -
-    ```
-
-4. Create the `woodpecker` user:
+1. Create the `woodpecker` user:
 
     ```shell-session
     $ sudo useradd --create-home --shell /usr/sbin/nologin woodpecker
     $ sudo loginctl enable-linger woodpecker
-    ```
-
-5. Switch to the `woodpecker` user:
-
-    ```shell-session
-    $ sudo -u woodpecker fish
-    ```
-
-7. Add the Woodpecker agent Podman secrets:
-
-    ```shell-session
-    % cat | tr -d '\n' | \ # Paste the secret, Enter, Ctrl+D
-    >     podman secret create woodpecker_agent_secret -
     ```
 
 

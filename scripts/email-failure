@@ -16,7 +16,6 @@ from re import sub as replace
 from smtplib import SMTP
 from subprocess import run
 
-
 #################
 ### Constants ###
 #################
@@ -34,7 +33,7 @@ HTML_TEMPLATE = """\
 <style>pre {{overflow-x: auto;}}</style>
 <pre><code>{body}</code></pre>
 """
-PASSWORD_FILE = f"/var/home/repo/credentials/{EMAIL_FROM}"
+PASSWORD_FILE = f"/var/home/repo/credentials/global/{EMAIL_FROM}"
 SMTP_PORT = 587
 SMTP_SERVER = "localhost"
 SYSTEMCTL_REGEX_FIND = r" M[SD]T [^:]*: "

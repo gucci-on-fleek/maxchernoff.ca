@@ -16,8 +16,8 @@ Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
 Environment="WOODPECKER_GITHUB=true"
 Environment="WOODPECKER_HOST=https://woodpecker.maxchernoff.ca"
 Environment="WOODPECKER_OPEN=false"
-Secret="woodpecker_agent_secret,type=env,target=WOODPECKER_AGENT_SECRET"
-Secret="woodpecker_github_secret,type=env,target=WOODPECKER_GITHUB_SECRET"
+EnvironmentFile=/var/home/repo/credentials/web/woodpecker_agent_secret
+EnvironmentFile=/var/home/repo/credentials/web/woodpecker_github_secret
 
 [Service]
 Restart=always
