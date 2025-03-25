@@ -73,6 +73,7 @@ packages:
   - perl-interpreter # Needed for TeX Live
   - podman
   - policycoreutils-python-utils # semanage
+  - python3-cryptography
   - python3-pystemd
   - qemu-guest-agent # Recommended for a VM guest
   - selinux-policy-targeted

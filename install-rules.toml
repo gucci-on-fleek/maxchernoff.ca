@@ -127,7 +127,7 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/bin/"
-paths = ["web-uptime", "email-failure"]
+paths = ["web-uptime", "email-failure", "git-encrypt"]
 owner = "root"
 permissions.other = "r"
 
