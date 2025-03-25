@@ -133,7 +133,9 @@ def compress(data: bytes) -> bytes:
 def decompress(data: bytes) -> bytes:
     """Decompress the input data."""
 
-    decompressed = lzma.decompress(data, format=LZMA_FORMAT)
+    decompressed = lzma.decompress(
+        data, format=LZMA_FORMAT, filters=LZMA_FILTERS
+    )
     return decompressed
 
 
