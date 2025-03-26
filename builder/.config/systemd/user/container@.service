@@ -6,6 +6,9 @@
 After=podman.socket network-ready.service
 Requires=podman.socket
 
+StartLimitIntervalSec=15min
+StartLimitBurst=2
+
 [Service]
 Type=oneshot
 RemainAfterExit=no
@@ -31,8 +34,6 @@ ExecStart=podman push \
 
 Restart=on-failure
 RestartSec=5min
-StartLimitIntervalSec=15min
-StartLimitBurst=2
 
 [Install]
 WantedBy=update-all.target
