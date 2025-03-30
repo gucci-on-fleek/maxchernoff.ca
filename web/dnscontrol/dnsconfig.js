@@ -275,9 +275,7 @@ D("maxchernoff.ca", REG_MONITOR,
     TXT("@",
         "google-site-verification=gWIJ3Mg-zy1MuwAJHw8PkhOEENqOmLxUNslbQ4ZPfAE"),
 
-    // Dynamic DNS to home router
-    IGNORE("red-deer", "A, AAAA"),
-    no_mail("red-deer"),
+    CNAME("red-deer", "rd.duck.tel."),
 
     // dnssecuritytxt, see https://github.com/disclose/dnssecuritytxt/
     TXT("@", "security_contact=mailto:security@maxchernoff.ca"),
@@ -292,16 +290,6 @@ D("maxchernoff.ca", REG_MONITOR,
         horizontal_precision: 100,
         vertical_precision: 10,
         size: 100,
-    }),
-
-    LOC_BUILDER_DD({
-        label: "red-deer",
-        x: 52.3,
-        y: -113.8,
-        alt: 800,
-        horizontal_precision: 20e3,
-        vertical_precision: 100,
-        size: 10,
     }),
 )
 
@@ -332,6 +320,26 @@ D("duck.tel", REG_MONITOR,
 
     // Root domain
     web("@"),
+
+
+    ///////////////////
+    /// Dynamic DNS ///
+    ///////////////////
+
+    // Dynamic DNS to my home server
+    IGNORE("rd", "A,AAAA"),
+    IGNORE("_acme-challenge.*.rd", "TXT"),
+    no_mail("rd"),
+
+    LOC_BUILDER_DD({
+        label: "rd",
+        x: 52.3,
+        y: -113.8,
+        alt: 800,
+        horizontal_precision: 20e3,
+        vertical_precision: 100,
+        size: 10,
+    }),
 
     ////////////////////
     /// Certificates ///
