@@ -314,9 +314,9 @@ def process_config(file: BufferedReader):
 
     global x
 
-    def x[
-        T: str | list[str] | dict[str, str | bool | int] | bool | int | None
-    ](value: T) -> T:
+    def x[T: str | list[str] | dict[str, str | bool | int] | bool | int | None](
+        value: T,
+    ) -> T:
         """Expands the variables in the value."""
         match value:
             case dict():
