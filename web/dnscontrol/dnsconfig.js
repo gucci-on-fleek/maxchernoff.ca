@@ -332,20 +332,17 @@ D("duck.tel", REG_MONITOR,
     no_mail("rd"),
 
     CAA_BUILDER({
-        label: "rd", // Apply this to the root domain
-        iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
-        issue: [ "letsencrypt.org" ], // Allowed certificate issuers
-        issuewild: "none", // No wildcard certificates
+        label: "rd",
+        iodef: "mailto:acme-certificates@maxchernoff.ca",
+        issue: [ // Restrict to only DNS validation
+            "letsencrypt.org" +
+            ";validationmethods=dns-01"
+        ],
+        issuewild: "none",
         issue_critical: true, // Mark all records as critical
         iodef_critical: true,
         issuewild_critical: true,
     }),
-
-    SSHFP("rd",
-        4, // Key Algorithm: Ed25519
-        2, // Hash Algorithm: SHA-256
-        "a0db863147852652d69e7e4334f62c823594e5552eb5e3074fd931c97b4889d4"
-    ),
 
     LOC_BUILDER_DD({
         label: "rd",
