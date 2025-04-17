@@ -13,9 +13,9 @@ RUN xcaddy build master \
     --with github.com/caddyserver/cache-handler \
     --with github.com/caddyserver/replace-response \
     --with github.com/darkweak/storages/otter/caddy \
-    --with github.com/mholt/caddy-l4
-# --replace github.com/libdns/libdns=github.com/libdns/libdns@draft-1.0 \
-# --replace github.com/libdns/rfc2136=github.com/gucci-on-fleek/libdns-rfc2136@libdns-1.0
+    --with github.com/mholt/caddy-l4 \
+    --replace github.com/libdns/libdns=github.com/libdns/libdns@v1.0.0-beta.1 \
+    --replace github.com/libdns/rfc2136=github.com/gucci-on-fleek/libdns-rfc2136@libdns-1.0
 
 FROM docker.io/library/caddy:2.9
 
