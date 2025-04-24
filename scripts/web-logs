@@ -1,0 +1,31 @@
+#!/bin/bash
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+set -euo pipefail
+
+# Get the command line arguments
+user="$1"
+service="$2"
+
+if [ -z "$user" ] || [ -z "$service" ]; then
+    echo "Usage: $0 <user> <service>"
+    exit 1
+fi
+
+# Handle the service argument
+if ! [[ "$service" =~ \. ]]; then
+    service="$service.service"
+fi
+
+# Handle the journal argument
+if [ "$user" = "system" ]; then
+    journal_cmd="_SYSTEMD_UNIT=$service + UNIT=$service + OBJECT_SYSTEMD_UNIT=$service"
+else
+    uid="$(id -u "$user")"
+    journal_cmd="_UID=$uid _SYSTEMD_USER_UNIT=$service + USER_UNIT=$service + OBJECT_SYSTEMD_USER_UNIT=$service"
+fi
+
+# Get the logs
+journalctl --pager-end --boot=all --lines=100000 --no-hostname $journal_cmd

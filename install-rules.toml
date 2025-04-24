@@ -167,6 +167,7 @@ paths = [
     "notify-all",
     "ssh-restrict.sh",
     "console-colors.sh",
+    "web-restart",
 ]
 owner = "root"
 permissions.other = "r"
@@ -174,7 +175,7 @@ permissions.other = "r"
 [[copy]]
 source = "{repo}/scripts/"
 destination = "{usrlocal}/bin/"
-paths = ["web-uptime", "email-failure", "git-encrypt"]
+paths = ["web-uptime", "email-failure", "git-encrypt", "web-logs"]
 owner = "root"
 permissions.other = "r"
 

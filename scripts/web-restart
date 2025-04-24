@@ -1,0 +1,48 @@
+#!/bin/sh
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+set -eu
+
+# Get the command line arguments
+user="$1"
+service="$2"
+
+if [ -z "$user" ] || [ -z "$service" ]; then
+    echo "Usage: $0 <user> <service>"
+    exit 1
+fi
+
+# Handle the user argument
+if [ "$user" = "system" ]; then
+    user_cmd="--system"
+    uid=0
+else
+    if ! id "$user" >/dev/null 2>&1; then
+        echo "User $user does not exist."
+        exit 1
+    fi
+    user_cmd="--user --machine=$user@"
+    uid="$(id -u "$user")"
+fi
+
+# Handle the service argument
+service="$(systemctl $user_cmd show "$service" --property=Id --value)"
+if [ "$(systemctl $user_cmd show "$service" --property=CanStart --value)" != "yes" ]; then
+    echo "Service $service cannot be started."
+    exit 1
+fi
+
+# Handle the journal argument
+if [ "$user" = "system" ]; then
+    journal_cmd="_UID=$uid _SYSTEMD_UNIT=$service + UNIT=$service + OBJECT_SYSTEMD_UNIT=$service"
+else
+    journal_cmd="_UID=$uid _SYSTEMD_USER_UNIT=$service + USER_UNIT=$service + OBJECT_SYSTEMD_USER_UNIT=$service"
+fi
+
+# Start the service
+systemctl $user_cmd daemon-reload
+systemctl $user_cmd reset-failed "$service"
+systemctl $user_cmd restart "$service" --no-block
+journalctl --lines=1 --follow --no-hostname $journal_cmd
