@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 
 #################
 ### Variables ###
@@ -12,7 +12,6 @@ builder = "/var/home/builder/"
 credentials = "/var/home/repo/credentials/"
 etc = "/etc/"
 max = "/var/home/max/"
-physics = "/var/home/physics/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
@@ -474,15 +473,3 @@ permissions.builder = "r"
 base = "{builder}/.cache/"
 paths = ["podman-dnf/", "go-build/", "go-modules/", "rpm-ostree/"]
 owner = "builder"
-
-
-###############
-### physics ###
-###############
-
-[[permissions]]
-base = "{physics}"
-paths = ["*"]
-owner = "physics"
-permissions.other = ""
-permissions.max = "rw"
