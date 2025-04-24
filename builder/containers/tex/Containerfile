@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
 # Base image
-FROM registry.fedoraproject.org/fedora-minimal:41
+FROM registry.fedoraproject.org/fedora-minimal:42
 
 # Add the files
 COPY ["tex-cache.sh", "package-install.sh", "/usr/local/sbin/"]

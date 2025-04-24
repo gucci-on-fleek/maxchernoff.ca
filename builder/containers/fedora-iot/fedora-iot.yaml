@@ -10,7 +10,7 @@ edition: "2024"
 ref: maxchernoff.ca/fedora-iot
 
 # Use the host's Fedora repos
-releasever: 41
+releasever: 42
 repos:
   - fedora
   - updates

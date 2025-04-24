@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
 # Base image
-FROM registry.fedoraproject.org/fedora-minimal:41 AS build
+FROM registry.fedoraproject.org/fedora-minimal:42 AS build
 
 # Add the files
 COPY ["container-build.sh", "/usr/local/sbin/"]
