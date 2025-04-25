@@ -25,11 +25,15 @@ ExecStart=podman build \
     --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
     %h/containers/%i/
 
-ExecStart=podman push \
-    --tls-verify=false \
-    --compression-format=zstd:chunked \
-    --compression-level=5 \
-    maxchernoff.ca/%i:latest \
+ExecStart=skopeo copy \
+    --all \
+    --dest-tls-verify=false \
+    --dest-compress-format=zstd:chunked \
+    --dest-compress-level=5 \
+    --dest-precompute-digests \
+    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
+    --sign-identity=maxchernoff.ca/%i:latest \
+    containers-storage:maxchernoff.ca/%i:latest \
     docker://localhost:23719/%i:latest
 
 Restart=on-failure

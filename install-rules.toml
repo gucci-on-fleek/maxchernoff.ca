@@ -96,7 +96,7 @@ permissions.other = ""
 base = "{repo-user}"
 paths = ["credentials"]
 owner = "repo"
-permissions.other = "r"
+permissions.other = ""
 recursive_permissions = true
 
 [[permissions]]
@@ -139,6 +139,14 @@ paths = ["woodpecker/"]
 owner = "repo"
 permissions.other = ""
 permissions.woodpecker = "r"
+recursive_permissions = true
+
+[[permissions]]
+base = "{credentials}"
+paths = ["builder/"]
+owner = "repo"
+permissions.other = ""
+permissions.builder = "r"
 recursive_permissions = true
 
 

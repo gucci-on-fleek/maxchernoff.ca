@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 set -euo pipefail
 
-ptys=$(who --message | awk '/+/ {print $3}')
+ptys=$(who --message | sed 's/sshd //' | awk '/+/ {print $3}')
 
 for pty in $ptys; do
     printf "\n\e[0;1;2;37mServer updated at %s.\e[0m\n" "$(date +'%-l:%M%P')" > /dev/$pty

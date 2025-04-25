@@ -1,0 +1,70 @@
+{
+    "default": [
+        {
+            "type": "reject"
+        }
+    ],
+    "transports": {
+        "docker-daemon": {
+            "": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ]
+        },
+        "docker": {
+            "docker.io/allinurl": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/cznic": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/foxcpp": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/library": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/sharelatex": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/woodpeckerci": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "ghcr.io/stackexchange": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "localhost:23719": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "maxchernoff.ca": [
+                {
+                    "type": "sigstoreSigned",
+                    "rekorPublicKeyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFMkcyWSsydGFiZFRWNUJjR2lCSXgwYTlmQUZ3cgprQmJtTFNHdGtzNEwzcVg2eVlZMHp1ZkJuaEM4VXIvaXk1NUdoV1AvOUEvYlkyTGhDMzBNOStSWXR3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo=",
+                    "keyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFdU51aWh1SUpOSFhvUUVacTF5SHZPZkZZU1gwYgpYMjlMVUYremQzdWVHS3RKV1Z4WlFJWEJCZVN4YnBxV1djdDQzR1RoUE44QmFHbWpDT0tDTjNrWUp3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo="
+                }
+            ],
+            "registry.fedoraproject.org": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ]
+        }
+    }
+}

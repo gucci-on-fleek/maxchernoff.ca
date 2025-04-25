@@ -14,7 +14,6 @@ ExecStart=podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
     --device=/dev/fuse \
-    --env=CONTAINERS_CONF_OVERRIDE=/root/source/containers.conf \
     --network=pasta:-T,23719 \
     --pull=always \
     --rm \
@@ -24,6 +23,17 @@ ExecStart=podman run \
     --volume=%h/containers/fedora-iot/:/root/source/:ro \
     maxchernoff.ca/bootc-builder:latest \
     /root/source/container-build.sh
+
+ExecStart=skopeo copy \
+    --all \
+    --dest-tls-verify=false \
+    --dest-compress-format=zstd:chunked \
+    --dest-compress-level=5 \
+    --dest-precompute-digests \
+    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
+    --sign-identity=maxchernoff.ca/fedora-iot:latest \
+    docker://localhost:23719/fedora-iot:latest \
+    docker://localhost:23719/fedora-iot:latest
 
 [Install]
 WantedBy=update-all.target
