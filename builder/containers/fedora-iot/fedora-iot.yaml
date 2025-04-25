@@ -10,14 +10,14 @@ edition: "2024"
 ref: maxchernoff.ca/fedora-iot
 
 # Use the host's Fedora repos
-releasever: 41
+releasever: 42
 repos:
   - fedora
   - updates
 
 # Keep the security attributes
 selinux: true
-ima: true
+# ima: true # TODO: See https://discussion.fedoraproject.org/t/150494
 readonly-executables: true
 
 # Global package installation options
@@ -59,7 +59,7 @@ packages:
   - greenboot-default-health-checks
   - grub2-efi-x64
   - htop
-  - ima-evm-utils # Needed for IMA security attributes
+  # - ima-evm-utils # Needed for IMA security attributes
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
   - kernel
