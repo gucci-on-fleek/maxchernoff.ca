@@ -10,7 +10,7 @@ cache=/var/cache/rpm-ostree
 
 # Build and push the container
 rpm-ostree compose image \
-    --initialize-mode=query \
+    --initialize-mode=never \
     --format=registry \
     --cachedir=$cache \
     /root/source/fedora-iot.yaml \
