@@ -9,7 +9,7 @@ Wants=container-registry.service
 
 [Service]
 Type=oneshot
-ExecStart=podman exec systemd-container-registry registry garbage-collect --delete-untagged=true /etc/docker/registry/config.yml
+ExecStart=podman exec systemd-container-registry registry garbage-collect --delete-untagged=true /etc/distribution/config.yml
 
 [Install]
 WantedBy=cleanup-containers.timer

@@ -65,6 +65,13 @@
                     "type": "insecureAcceptAnything"
                 }
             ]
+        },
+        "oci": {
+            "": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ]
         }
     }
 }
