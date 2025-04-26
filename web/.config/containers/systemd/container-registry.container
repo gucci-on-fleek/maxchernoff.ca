@@ -17,6 +17,11 @@ Environment="REGISTRY_HTTP_ADDR=:23719"
 Volume=container-registry.volume:/var/lib/registry:rw
 Environment="REGISTRY_STORAGE_MAINTENANCE_UPLOADPURGING={interval: 12h, age: 72h, enabled: true, dryrun: false}"
 Environment="REGISTRY_STORAGE_DELETE_ENABLED=true"
+Environment="REGISTRY_LOG_LEVEL=warn"
+Environment="OTEL_SDK_DISABLED=true"
+Environment="OTEL_TRACES_EXPORTER=none"
+Environment="OTEL_METRICS_EXPORTER=none"
+Environment="OTEL_LOGS_EXPORTER=none"
 
 [Service]
 Restart=always
