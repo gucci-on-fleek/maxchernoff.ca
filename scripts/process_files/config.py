@@ -8,16 +8,16 @@
 ###############
 
 from io import BufferedReader
-from os import chown, symlink
+from os import chown, getxattr, setxattr, symlink
 from pathlib import Path
 from pprint import pprint
 from pwd import getpwnam
-from shutil import Error as CopyTreeError
 from shutil import SameFileError
-from shutil import copy2 as copy_file
-from shutil import rmtree, copytree
+from shutil import copy2 as _shutil_copy_file
+from shutil import copytree, rmtree
 from subprocess import run as subprocess_run
 from tomllib import load as toml_load
+from filecmp import cmp as compare_files
 
 from . import acl
 
@@ -247,6 +247,30 @@ def link_item(item: dict):
     process_permissions(item, destinations)
 
 
+def _copy_file(source: str | Path, destination: str | Path, **kwargs):
+    """Copies a file from the source to the destination, while preserving the
+    SELinux context of the destination."""
+    # Do nothing if both files are the same
+    try:
+        if compare_files(source, destination, shallow=False):
+            return
+    except OSError:
+        pass
+
+    # Get the SELinux context of the destination
+    try:
+        context: bytes | None = getxattr(destination, "security.selinux")
+    except (FileNotFoundError, OSError):
+        context = None
+
+    # Copy the file
+    _shutil_copy_file(source, destination, **kwargs)
+
+    # Set the SELinux context of the destination
+    if context:
+        setxattr(destination, "security.selinux", context)
+
+
 def copy_item(item: dict):
     """Copies the source files to the destination."""
     # Get the source and destination paths
@@ -267,7 +291,13 @@ def copy_item(item: dict):
                 destination.unlink()
 
             # Now, remove the directory and copy over the new one
-            copytree(source, destination, symlinks=True, dirs_exist_ok=True)
+            copytree(
+                source,
+                destination,
+                symlinks=True,
+                dirs_exist_ok=True,
+                copy_function=_copy_file,
+            )
 
             # Reset the owner
             for path in destination.rglob("*"):
@@ -275,7 +305,7 @@ def copy_item(item: dict):
 
         elif source.is_file() and not source.is_symlink():
             try:
-                copy_file(source, destination, follow_symlinks=False)
+                _copy_file(source, destination, follow_symlinks=False)
             except SameFileError:
                 pass
 
@@ -324,7 +354,7 @@ def process_config(file: BufferedReader):
             case list():
                 return [x(v) for v in value]  # type: ignore
             case str():
-                return value.format_map(variables)
+                return value.format_map(variables)  # type: ignore
             case bool() | int() | None:
                 return value  # type: ignore
             case _:

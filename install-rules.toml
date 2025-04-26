@@ -81,7 +81,6 @@ permissions.other = "r"
 base = "{repo-user}/triggers/"
 paths = [
     "install-repo-maxchernoff.ca.trigger",
-    "install-repo-credentials.trigger",
     "get-status.trigger",
     "get-status.output",
 ]
