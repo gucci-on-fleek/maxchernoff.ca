@@ -43,6 +43,6 @@ fi
 
 # Start the service
 systemctl $user_cmd daemon-reload
-systemctl $user_cmd reset-failed "$service"
+systemctl --quiet $user_cmd reset-failed "$service" 2>/dev/null || true
 systemctl $user_cmd restart "$service" --no-block
 journalctl --lines=1 --follow --no-hostname $journal_cmd

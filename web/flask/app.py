@@ -27,7 +27,7 @@ from werkzeug.exceptions import HTTPException as _HTTPException
 app = Flask(__name__)
 
 ZONE = datetime.now().astimezone().tzinfo
-UPDATE_TRIGGER = Path("/root/triggers/install-repo.trigger")
+UPDATE_TRIGGER = Path("/root/triggers/install-repo-maxchernoff.ca.trigger")
 
 
 #########################

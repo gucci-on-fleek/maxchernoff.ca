@@ -4,14 +4,14 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 Description=Install the files from the server Git repository
-After=pull-repo.service
-Requires=pull-repo.service
+After=pull-repo@%i.service
+Requires=pull-repo@%i.service
 
 [Service]
 User=root
 Type=oneshot
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/
-ExecStart=/usr/local/sbin/web-install /home/repo/maxchernoff.ca/install-rules.toml
+ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/ /var/usrlocal/bin/
+ExecStart=/usr/local/sbin/web-install /home/repo/%i/install-rules.toml
 ExecStart=/usr/bin/systemctl --system daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "builder@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "max@" daemon-reload
@@ -20,7 +20,7 @@ ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "web@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "woodpecker@" daemon-reload
 # TODO: Hacks!
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/ /var/usrlocal/bin/ /var/home/web/maddy/config/maddy-users.conf /var/home/web/knot/config/knot-secrets.conf
+ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/  /var/usrlocal/bin/
 ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
 ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
 ExecStart=/usr/local/sbin/notify-all

@@ -40,7 +40,11 @@ function container
 end
 
 function refresh
-    echo "$(date)" > ~repo/triggers/install-repo.trigger
+    echo "$(date)" > ~repo/triggers/install-repo-maxchernoff.ca.trigger
+end
+
+function refresh-credentials
+    echo "$(date)" > ~repo/triggers/install-repo-credentials.trigger
 end
 
 function reboot

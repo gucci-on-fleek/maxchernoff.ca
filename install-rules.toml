@@ -9,7 +9,6 @@
 
 [variables]
 builder = "/var/home/builder/"
-credentials = "/var/home/repo/credentials/"
 etc = "/etc/"
 max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
@@ -80,74 +79,17 @@ permissions.other = "r"
 
 [[touch]]
 base = "{repo-user}/triggers/"
-paths = ["install-repo.trigger", "get-status.trigger", "get-status.output"]
+paths = [
+    "install-repo-maxchernoff.ca.trigger",
+    "install-repo-credentials.trigger",
+    "get-status.trigger",
+    "get-status.output",
+]
 owner = "repo"
 permissions.max = "rw"
 permissions.root = "rw"
 permissions."web/1000" = "rw"
 permissions.other = ""
-
-
-###################
-### Credentials ###
-###################
-
-[[folder]]
-base = "{repo-user}"
-paths = ["credentials"]
-owner = "repo"
-permissions.other = ""
-recursive_permissions = true
-
-[[permissions]]
-base = "{credentials}"
-paths = ["global/"]
-owner = "repo"
-permissions.other = "r"
-recursive_permissions = true
-
-[[permissions]]
-base = "{credentials}"
-paths = ["web/"]
-owner = "repo"
-permissions.other = ""
-permissions.web = "r"
-recursive_permissions = true
-
-[[copy]]
-source = "{credentials}/web/"
-destination = "{web}/knot/config/"
-paths = ["knot-secrets.conf"]
-owner = "web"
-permissions.web = "r"
-permissions."web/53" = "r"
-permissions."web/root" = "r"
-permissions.other = ""
-
-[[copy]]
-source = "{credentials}/web/"
-destination = "{web}/maddy/config/"
-paths = ["maddy-users.conf"]
-owner = "web"
-permissions.web = "r"
-permissions."web/1000" = "r"
-permissions.other = ""
-
-[[permissions]]
-base = "{credentials}"
-paths = ["woodpecker/"]
-owner = "repo"
-permissions.other = ""
-permissions.woodpecker = "r"
-recursive_permissions = true
-
-[[permissions]]
-base = "{credentials}"
-paths = ["builder/"]
-owner = "repo"
-permissions.other = ""
-permissions.builder = "r"
-recursive_permissions = true
 
 
 ###########
