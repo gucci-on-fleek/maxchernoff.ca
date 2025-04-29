@@ -96,6 +96,11 @@ body = replace(
     ).stdout,
 )
 
+if ("systemd/transient" in body) and ("podman healthcheck run" in body):
+    # Ignore healthcheck failures
+    print("Ignoring healthcheck failure")
+    exit(0)
+
 msg = EmailMessage()
 msg["Subject"] = title
 msg["From"] = Address(
