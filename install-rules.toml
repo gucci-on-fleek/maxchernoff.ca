@@ -14,7 +14,6 @@ max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
 tex = "/var/home/tex/"
-usrlocal = "/usr/local/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
@@ -108,30 +107,9 @@ permissions.other = "r"
 #################
 
 [[copy]]
-source = "{repo}/scripts/"
-destination = "{usrlocal}/sbin/"
-paths = [
-    "web-install",
-    "web-status",
-    "notify-all",
-    "ssh-restrict.sh",
-    "console-colors.sh",
-    "web-restart",
-]
-owner = "root"
-permissions.other = "r"
-
-[[copy]]
-source = "{repo}/scripts/"
-destination = "{usrlocal}/bin/"
-paths = ["web-uptime", "email-failure", "git-encrypt", "web-logs"]
-owner = "root"
-permissions.other = "r"
-
-[[copy]]
-source = "{repo}/scripts/"
-destination = "{usrlocal}/lib/python3.13/site-packages/"
-paths = ["process_files/"]
+source = "{repo}/usrlocal/"
+destination = "/usr/local/"
+paths = ["**/*"]
 owner = "root"
 permissions.other = "r"
 

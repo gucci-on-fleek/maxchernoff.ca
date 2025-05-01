@@ -4,7 +4,7 @@ DefaultDependencies=no
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/sbin/console-colors.sh
+ExecStart=/usr/local/bin/console-colors.sh
 
 [Install]
 WantedBy=sysinit.target

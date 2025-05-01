@@ -10,8 +10,8 @@ Requires=pull-repo@%i.service
 [Service]
 User=root
 Type=oneshot
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/ /var/usrlocal/bin/
-ExecStart=/usr/local/sbin/web-install /home/repo/%i/install-rules.toml
+ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/ /var/usrlocal/bin/
+ExecStart=/usr/local/bin/web-install /home/repo/%i/install-rules.toml
 ExecStart=/usr/bin/systemctl --system daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "builder@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "max@" daemon-reload
@@ -20,7 +20,7 @@ ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "web@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "woodpecker@" daemon-reload
 # TODO: Hacks!
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/sbin/  /var/usrlocal/bin/
+ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/  /var/usrlocal/bin/
 ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
 ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
-ExecStart=/usr/local/sbin/notify-all
+ExecStart=/usr/local/bin/notify-all

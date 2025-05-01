@@ -16,7 +16,7 @@ echo -n > "$output"
 
 # Get the unit statuses
 status="$(mktemp)"
-/usr/local/sbin/web-status ~repo/maxchernoff.ca/unit-status.conf > "$status"
+/usr/local/bin/web-status ~repo/maxchernoff.ca/unit-status.conf > "$status"
 
 # Successful units
 printf '\t%sSuccessful Units%s\n' "$STYLE_BOLD" "$STYLE_RESET" >> "$output"
