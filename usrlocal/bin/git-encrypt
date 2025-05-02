@@ -302,8 +302,8 @@ if __name__ == "__main__":
 files:
   .git/config:
     [filter "git-encrypt"]
-    clean = ./scripts/git-encrypt encrypt %f
-    smudge = ./scripts/git-encrypt decrypt %f
+    clean = ./usrlocal/bin/git-encrypt encrypt %f
+    smudge = ./usrlocal/bin/git-encrypt decrypt %f
     required
 
   .gitattributes:

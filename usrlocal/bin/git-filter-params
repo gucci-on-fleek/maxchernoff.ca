@@ -1,0 +1,273 @@
+#!/usr/bin/env python3
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+
+###############
+### Imports ###
+###############
+
+from argparse import (
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    FileType,
+    RawTextHelpFormatter,
+)
+from collections.abc import Iterable, Iterator
+from functools import reduce
+from io import BufferedReader
+from itertools import batched, count, takewhile
+from operator import getitem
+from re import Match
+from re import compile as re_compile
+from sys import stderr, stdin, stdout
+from tomllib import load as toml_load
+from traceback import format_exc as get_traceback
+from typing import Callable
+
+####################
+### Type Aliases ###
+####################
+
+type Filter = Callable[[bytes], bytes]
+
+
+#################
+### Constants ###
+#################
+
+MAX_PACKET_LENGTH = 65516
+PACKET_LENGTH_FIELD_LENGTH = 4
+FLUSH_PACKET = b"0000"
+VARIABLE_RE = re_compile(b"!!(.*?)!!")
+
+
+#########################
+### Class Definitions ###
+#########################
+
+
+class RawDefaultHelpFormatter(
+    RawTextHelpFormatter, ArgumentDefaultsHelpFormatter
+):
+    """Argparse formatter that lets us insert newlines in the epilog while still
+    showing the default values.
+    """
+
+    pass
+
+
+class GitPacket:
+    """Class for reading and writing git packets."""
+
+    def __init__(self, smudge: Filter, clean: Filter) -> None:
+        self.packets = self.read_packets()
+        self.smudge = smudge
+        self.clean = clean
+
+    def _read_packet(self) -> bytes | None:
+        """Read a packet from stdin."""
+        # Read the packet length
+        length_bytes = stdin.buffer.read(PACKET_LENGTH_FIELD_LENGTH)
+        if length_bytes == b"":
+            raise EOFError("EOF while reading packet length")
+
+        length = int(
+            length_bytes,
+            base=16,
+        )
+
+        # Read the packet data
+        if length == 0:
+            return None
+        else:
+            return stdin.buffer.read(length - PACKET_LENGTH_FIELD_LENGTH)
+
+    def _write_packet(self, data: bytes | None) -> None:
+        """Write a packet to stdout."""
+        # Handle "flush-pkt"s
+        if data is None:
+            stdout.buffer.write(FLUSH_PACKET)
+            return
+
+        if data == b"":
+            data += b"\n"
+
+        # Handle too-long packets
+        rest = None
+        if len(data) > MAX_PACKET_LENGTH:
+            rest = data[MAX_PACKET_LENGTH:]
+            data = data[:MAX_PACKET_LENGTH]
+
+        # Handle regular packets
+        length = len(data) + 4
+        stdout.buffer.write(f"{length:04x}".encode() + data)
+
+        if rest:
+            self._write_packet(rest)
+
+    def read_packets(self) -> Iterator[bytes | None]:
+        """Generator for processing git packet data."""
+        try:
+            while True:
+                yield self._read_packet()
+        except EOFError:
+            return
+
+    def write_packets(self, packets: Iterable[bytes] = []) -> None:
+        """Write out a list of git packets."""
+        for packet in packets:
+            self._write_packet(packet)
+        self._write_packet(None)
+        stdout.flush()
+
+    def scan_section(self) -> list[bytes]:
+        """Scan a section of packets until a flush-pkt is found."""
+        not_flush = lambda pkt: pkt is not None
+        val = [*takewhile(not_flush, self.packets)] or [b""]
+        return val  # type: ignore[return-value]
+
+    def process_files(
+        self,
+    ) -> Iterator[tuple[list[bytes], list[bytes]]]:
+        """Process the "files" section of packets."""
+        forever = count()
+        not_empty = lambda pkt: pkt != []
+
+        yield from batched(
+            takewhile(
+                not_empty,
+                (self.scan_section() for _ in forever),
+            ),
+            n=2,
+            strict=True,
+        )  # type: ignore[return-value]
+
+    def process_git_filter(self) -> None:
+        """Process a long-running git smudge filter."""
+
+        # Version and protocol handshake
+        handshake = self.scan_section()
+        if (b"git-filter-client\n" not in handshake) or (
+            b"version=2\n" not in handshake
+        ):
+            raise ValueError("Not a git-filter-client v2 packet stream")
+
+        self.write_packets([b"git-filter-server", b"version=2"])
+
+        # Capability handshake
+        capabilities = self.scan_section()
+        if b"capability=smudge\n" not in capabilities:
+            raise ValueError("Not a smudge filter")
+
+        self.write_packets([b"capability=smudge", b"capability=clean"])
+
+        # Process the files
+        for header, content in self.process_files():
+            # Preprocess the content to the correct data formats
+            if header == [b""] and content == [b""]:
+                break
+
+            header = dict(pair.split(b"=") for pair in header)
+            content = b"".join(content)
+
+            # Process the content
+            command = header.get(b"command", b"").removesuffix(b"\n")
+
+            try:
+                if command == b"smudge":
+                    content = self.smudge(content)
+                elif command == b"clean":
+                    content = self.clean(content)
+                else:
+                    raise ValueError(f"Unknown command: {command}")
+            except KeyError as e:
+                print(f"Unknown key: {e}", file=stderr)
+                processor.write_packets([b"status=error"])
+                continue
+            except Exception:
+                print(get_traceback(), file=stderr)
+                self.write_packets([b"status=error"])
+                continue
+
+            # Return the processed content
+            self.write_packets([b"status=success"])
+            self.write_packets([content])
+            self.write_packets()
+
+
+###################
+### Entry Point ###
+###################
+
+if __name__ == "__main__":
+    # Set up the argument parser
+    parser = ArgumentParser(
+        formatter_class=RawDefaultHelpFormatter,
+        description="A Git smudge/clean filter for interpolating variables.",
+        epilog="""
+files:
+  .git/config:
+    [filter "git-filter-params"]
+    process = ./usrlocal/bin/git-filter-params ./variables.toml
+    required
+
+  .gitattributes:
+    *                  filter=git-filter-params
+    git-filter-params  filter=
+    variables.toml     filter=
+  """.strip(),
+    )
+
+    parser.add_argument(
+        "--check-only",
+        action="store_true",
+        help="check if the filter is working without modifying any files",
+    )
+
+    parser.add_argument(
+        "variables",
+        type=FileType("rb"),
+        nargs="?",
+        help="the file containing the variables to interpolate",
+        default="variables.toml",
+    )
+
+    # Parse the arguments
+    args = parser.parse_args()
+    variables_file: BufferedReader = args.variables
+    variables = toml_load(variables_file)
+    check_only: bool = args.check_only
+    variables_file.close()
+
+    # Create the filters
+    def replace_variable(match: Match) -> bytes:
+        variable = match[1].decode("utf-8")
+        parts = variable.split(".")
+        value = reduce(getitem, parts, variables)
+
+        assert isinstance(value, str)
+        return value.encode("utf-8")
+
+    def interpolate(data: bytes) -> bytes:
+        """Interpolate variables between "!!exclamation!!" marks."""
+        return VARIABLE_RE.sub(replace_variable, data)
+
+    def check(data: bytes) -> bytes:
+        """Make sure that smudging is possible, but don't actually do it."""
+        interpolate(data)
+        return data
+
+    identity: Filter = lambda data: data
+
+    # Apply the filters
+    if check_only:
+        smudge = identity
+        clean = check
+    else:
+        smudge = interpolate
+        clean = identity
+
+    processor = GitPacket(smudge=smudge, clean=clean)
+    processor.process_git_filter()

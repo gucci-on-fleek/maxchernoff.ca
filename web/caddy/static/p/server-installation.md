@@ -163,10 +163,22 @@ Downloading the repository
     >     credentials
     ```
 
-4. Decrypt the credentials' repository:
+4. Enable variable interpolation:
 
     ```shell-session
-    % cd credentials/
+    % cd ~repo/maxchernoff.ca/
+    % echo > .git/config <<EOF
+    [filter "git-filter-params"]
+        process = git-filter-params ./variables.toml
+        required
+    EOF
+    % git checkout master
+    ```
+
+5. Decrypt the credentials' repository:
+
+    ```shell-session
+    % cd ~repo/credentials/
     % echo 'PRIVATE-KEY' > .git/git-encrypt.private-key
     % echo > .git/config <<EOF
     [filter "git-encrypt"]
