@@ -9,7 +9,7 @@ UserNS=nomap
 Network=woodpecker.network
 
 Volume=%h/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec
-PublishPort=127.0.0.1:9000:9000
+PublishPort=127.0.0.1:!!woodpecker.port!!:!!woodpecker.port!!
 
 Environment="WOODPECKER_ADMIN=gucci-on-fleek"
 Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"

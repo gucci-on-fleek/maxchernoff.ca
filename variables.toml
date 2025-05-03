@@ -2,3 +2,29 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
+
+[network]
+# The IP addresses of the server
+ipv4 = "152.53.36.213"
+ipv6 = "2a0a:4cc0:2000:172::1"
+
+
+[woodpecker]
+# The port used by the Woodpecker agent to communicate with the Woodpecker
+# server
+port = "9000"
+
+
+[registry]
+# The port used to push/write to the container registry
+port = "23719"
+
+
+[fedora]
+# The version of Fedora to use for all container images
+version = "42"
+
+
+[dns]
+# The alternate port that the DNS server will listen on
+altport = "25108"

@@ -48,7 +48,7 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
-            "localhost:23719": [
+            "localhost:!!registry.port!!": [
                 {
                     "type": "insecureAcceptAnything"
                 }

@@ -5,5 +5,5 @@
 docker:
     maxchernoff.ca:
         use-sigstore-attachments: true
-    "localhost:23719":
+    "localhost:!!registry.port!!":
         use-sigstore-attachments: true

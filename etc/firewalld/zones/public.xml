@@ -25,7 +25,7 @@
     <!-- DNS -->
     <service name="dns"/>
     <service name="dns-over-tls"/>
-    <port port="25108" protocol="tcp"/>
+    <port port="!!dns.altport!!" protocol="tcp"/>
 
     <!-- Apply the allowlist -->
     <forward/>

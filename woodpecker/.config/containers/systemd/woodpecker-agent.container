@@ -6,13 +6,13 @@
 Image=docker.io/woodpeckerci/woodpecker-agent:v3
 AutoUpdate=registry
 UserNS=nomap
-Network=pasta:-T,9000
+Network=pasta:-T,!!woodpecker.port!!
 SecurityLabelDisable=true
 
 Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
 Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
 
-Environment="WOODPECKER_SERVER=127.0.0.1:9000"
+Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"
 Environment="WOODPECKER_MAX_WORKFLOWS=4"
 Environment="WOODPECKER_LOG_LEVEL=trace"
 Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/opt/texlive:ro,/var/home/tex/context:/opt/context:ro"

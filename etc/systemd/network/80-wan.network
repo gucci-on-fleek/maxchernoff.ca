@@ -10,12 +10,12 @@ Description=WAN Interface
 DHCP=no
 
 # IPv4
-Address=152.53.36.213/22
+Address=!!network.ipv4!!/22
 Gateway=152.53.36.1
 DNS=1.1.1.1 1.0.0.1
 
 # IPv6
-Address=2a0a:4cc0:2000:172::1/64
+Address=!!network.ipv6!!/64
 Gateway=fe80::1
 DNS=2606:4700:4700::1111 2606:4700:4700::1001
 

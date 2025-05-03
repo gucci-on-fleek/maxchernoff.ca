@@ -12,8 +12,8 @@ var DSP_KNOT = NewDnsProvider("knot")
 var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
-var IPv4 = "152.53.36.213"
-var IPv6 = "2a0a:4cc0:2000:172::1"
+var IPv4 = "!!network.ipv4!!"
+var IPv6 = "!!network.ipv6!!"
 
 // Handle the DANE TLSA records
 function dane(name) {

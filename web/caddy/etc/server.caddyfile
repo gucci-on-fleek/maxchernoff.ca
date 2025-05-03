@@ -184,7 +184,7 @@ registry.maxchernoff.ca {
 
 	@get-head method GET HEAD
 	handle @get-head {
-		reverse_proxy systemd-container-registry:23719
+		reverse_proxy systemd-container-registry:!!registry.port!!
 	}
 
 	# Fallback
@@ -226,7 +226,7 @@ duck.tel {
 }
 
 # Fallback hosts
-152.53.36.213, [2a0a:4cc0:2000:172::1], * {
+!!network.ipv4!!, [!!network.ipv6!!], * {
 	# I've set the security options here to be as strict as possible since
 	# there's no valid reason for anyone to be here.
 	header {

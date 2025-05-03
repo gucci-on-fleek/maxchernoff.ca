@@ -8,14 +8,14 @@ AutoUpdate=registry
 UserNS=nomap
 
 Network=private
-PublishPort=152.53.36.213:53:53
-PublishPort=152.53.36.213:53:53/udp
-PublishPort=[2a0a:4cc0:2000:172::1]:53:53
-PublishPort=[2a0a:4cc0:2000:172::1]:53:53/udp
+PublishPort=!!network.ipv4!!:53:53
+PublishPort=!!network.ipv4!!:53:53/udp
+PublishPort=[!!network.ipv6!!]:53:53
+PublishPort=[!!network.ipv6!!]:53:53/udp
 
 # Extra DNS port
-PublishPort=[2a0a:4cc0:2000:172::1]:25108:53
-PublishPort=152.53.36.213:25108:53
+PublishPort=[!!network.ipv6!!]:!!dns.altport!!:53
+PublishPort=!!network.ipv4!!:!!dns.altport!!:53
 
 Volume=%h/knot/config:/config:ro,z
 Volume=%h/knot/storage:/storage:rw,Z

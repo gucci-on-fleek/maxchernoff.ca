@@ -34,7 +34,7 @@ ExecStart=skopeo copy \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/%i:latest \
     containers-storage:maxchernoff.ca/%i:latest \
-    docker://localhost:23719/%i:latest
+    docker://localhost:!!registry.port!!/%i:latest
 
 Restart=on-failure
 RestartSec=5min

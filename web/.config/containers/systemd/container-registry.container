@@ -9,9 +9,9 @@ UserNS=nomap
 Network=container-registry.network
 
 # Random port number for local-only pushes
-PublishPort=127.0.0.1:23719:23719
-PublishPort=[::1]:23719:23719
-Environment="REGISTRY_HTTP_ADDR=:23719"
+PublishPort=127.0.0.1:!!registry.port!!:!!registry.port!!
+PublishPort=[::1]:!!registry.port!!:!!registry.port!!
+Environment="REGISTRY_HTTP_ADDR=:!!registry.port!!"
 
 # Image Storage
 Volume=container-registry.volume:/var/lib/registry:rw

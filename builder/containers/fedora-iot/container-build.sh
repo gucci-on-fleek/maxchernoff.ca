@@ -14,4 +14,4 @@ rpm-ostree compose image \
     --format=registry \
     --cachedir=$cache \
     /root/source/fedora-iot.yaml \
-    localhost:23719/fedora-iot:latest
+    localhost:!!registry.port!!/fedora-iot:latest
