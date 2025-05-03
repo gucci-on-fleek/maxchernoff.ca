@@ -28,3 +28,8 @@ version = "42"
 [dns]
 # The alternate port that the DNS server will listen on
 altport = "25108"
+
+
+[prometheus]
+# Define the IP addresses for the Prometheus subnet
+subnet = "10.79.79.1/24"

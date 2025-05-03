@@ -1,0 +1,10 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Unit]
+Description=The root slice
+
+[Slice]
+# Block all processes from using the Prometheus network by default
+IPAddressDeny=!!prometheus.subnet!!
