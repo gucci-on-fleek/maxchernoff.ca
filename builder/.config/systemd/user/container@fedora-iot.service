@@ -17,7 +17,7 @@ ExecStart=podman run \
     --network=pasta:-T,!!registry.port!! \
     --pull=always \
     --rm \
-    --security-opt=label=disable \
+    --security-opt=label=nested \
     --volume=/etc/containers/:/etc/containers/:ro \
     --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
     --volume=%h/containers/fedora-iot/:/root/source/:ro \

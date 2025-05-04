@@ -7,7 +7,7 @@ Image=docker.io/woodpeckerci/woodpecker-agent:v3
 AutoUpdate=registry
 UserNS=nomap
 Network=pasta:-T,!!woodpecker.port!!
-SecurityLabelDisable=true
+SecurityLabelType=container_runtime_t
 
 Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
 Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z

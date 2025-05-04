@@ -1,0 +1,84 @@
+;; Source Code for maxchernoff.ca
+;; https://github.com/gucci-on-fleek/maxchernoff.ca
+;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+;; SPDX-FileCopyrightText: 2025 Max Chernoff
+
+;; Dummy define for unconfined_t
+(type unconfined_t)
+
+;; Includes
+(typeattributeset cil_gen_require admin_home_t)
+(typeattributeset cil_gen_require cgroup_t)
+(typeattributeset cil_gen_require chkpwd_t)
+(typeattributeset cil_gen_require container_ro_file_t)
+(typeattributeset cil_gen_require container_runtime_t)
+(typeattributeset cil_gen_require container_t)
+(typeattributeset cil_gen_require home_root_t)
+(typeattributeset cil_gen_require init_t)
+(typeattributeset cil_gen_require init_var_run_t)
+(typeattributeset cil_gen_require initrc_t)
+(typeattributeset cil_gen_require proc_t)
+(typeattributeset cil_gen_require selinux_config_t)
+(typeattributeset cil_gen_require semanage_store_t)
+(typeattributeset cil_gen_require semanage_t)
+(typeattributeset cil_gen_require staff_t)
+(typeattributeset cil_gen_require syslogd_t)
+(typeattributeset cil_gen_require systemd_modules_load_t)
+(typeattributeset cil_gen_require tmp_t)
+(typeattributeset cil_gen_require user_devpts_t)
+(typeattributeset cil_gen_require user_home_t)
+(typeattributeset cil_gen_require user_tmp_t)
+
+;; Needed for "sudo systemctl --machine=USER@ ..."
+(allow chkpwd_t user_devpts_t (chr_file (read write)))
+(allow init_t chkpwd_t (process (siginh)))
+(allow init_t staff_t (process (siginh)))
+
+;; Needed for systemd user socket units
+(allow staff_t container_runtime_t (tcp_socket (bind create getopt listen read setopt write)))
+(allow staff_t container_runtime_t (udp_socket (bind create getopt listen read setopt write)))
+(allow staff_t container_runtime_t (unix_stream_socket (bind create getopt listen read setopt write)))
+(allow staff_t user_home_t (service (disable enable reload start status stop)))
+(allow staff_t user_tmp_t (service (disable enable reload start status stop )))
+
+;; Needed for check-tug-svn.service
+(allow staff_t admin_home_t (dir (mounton)))
+(allow staff_t device_t (dir (add_name create getattr ioctl lock mounton open read relabelfrom relabelto remove_name search write)))
+(allow staff_t device_t (file (append create getattr ioctl link lock mounton open read rename setattr unlink watch watch_reads write)))
+(allow staff_t device_t (lnk_file (create getattr)))
+(allow staff_t devpts_t (filesystem (unmount)))
+(allow staff_t dosfs_t (filesystem (remount)))
+(allow staff_t fs_t (filesystem (remount unmount)))
+(allow staff_t home_root_t (dir (mounton)))
+(allow staff_t init_var_run_t (dir (mounton)))
+(allow staff_t root_t (dir (getattr mounton open search)))
+(allow staff_t tmp_t (dir (add_name create getattr ioctl link lock open read relabelto mounton remove_name rename reparent rmdir search setattr unlink watch watch_reads write)))
+(allow staff_t tmpfs_t (filesystem (mount remount unmount)))
+(allow staff_t var_run_t (dir (mounton)))
+
+;; For the image builder units
+(allow staff_t container_ro_file_t (dir (mounton)))
+(allow staff_t nsfs_t (file (getattr ioctl lock open read)))
+(allow staff_t self (capability (setuid)))
+(allow staff_t sysfs_t (filesystem (mount)))
+(allow staff_t user_tmp_t (file (mounton)))
+
+;; For the bootc builder units
+(allow container_t devpts_t (filesystem (mount)))
+(allow container_t proc_t (filesystem (mount)))
+(allow container_t var_t (dir (getattr search open)))
+(allow container_t var_lib_t (dir (getattr search open)))
+(allow container_t container_ro_file_t (dir (open read getattr lock search ioctl add_name remove_name write)))
+(allow container_t container_ro_file_t (dir (create open getattr setattr read write link unlink rename search add_name remove_name reparent rmdir lock ioctl watch watch_reads)))
+(allow container_t tmpfs_t (filesystem (remount)))
+(allow staff_t sysfs_t (dir (mounton)))
+
+;; For "semanage module --add=..."
+(allow semanage_t selinux_config_t (dir (relabelfrom)))
+(allow semanage_t semanage_store_t (dir (relabelfrom)))
+(allow semanage_t semanage_store_t (file (relabelfrom)))
+
+;; For "systemd-remount-fs" to work properly
+(allow init_t initrc_t (process (siginh)))
+(allow syslogd_t cgroup_t (file (write)))
+(allow systemd_modules_load_t self (capability (net_admin)))

@@ -1,0 +1,5 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+%wheel  ALL=(ALL)  TYPE=sysadm_t ROLE=sysadm_r    ALL
