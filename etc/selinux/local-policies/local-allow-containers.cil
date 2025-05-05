@@ -4,6 +4,7 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
+(roleattributeset cil_gen_require iptables_roles)
 (typeattributeset cil_gen_require container_ro_file_t)
 (typeattributeset cil_gen_require container_runtime_t)
 (typeattributeset cil_gen_require container_t)
@@ -16,6 +17,11 @@
 ;; Defines
 (typeattribute local_user_domains)
 (typeattributeset local_user_domains (user_t staff_t))
+
+;; General containers
+(allow container_runtime_t container_t (process (transition)))
+(allow container_t container_runtime_t (fifo_file (setattr)))
+(roleattributeset iptables_roles (user_r))
 
 ;; Allow containers to bind to sockets
 (allow local_user_domains container_runtime_t (tcp_socket (bind create getopt listen read setopt write)))
