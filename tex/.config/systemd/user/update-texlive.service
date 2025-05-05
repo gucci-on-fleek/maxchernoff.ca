@@ -26,8 +26,8 @@ ExecStart=sh -c "cd %h/context/ && %h/context/texmf-linux-64/bin/mtxrun --script
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
-PrivateDevices=true
-PrivateTmp=true
+# PrivateDevices=true  # TODO: SELinux
+# PrivateTmp=true
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict

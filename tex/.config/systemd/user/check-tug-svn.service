@@ -11,8 +11,8 @@ Type=oneshot
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
-PrivateDevices=true
-PrivateTmp=true
+# PrivateDevices=true  # TODO: SELinux
+# PrivateTmp=true
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict
