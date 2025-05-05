@@ -25,9 +25,10 @@ woodpecker = "/var/home/woodpecker/"
 [selinux]
 rules = """
 # Reset some settings to their defaults
-fcontext --deleteall
 boolean --deleteall
+fcontext --deleteall
 login --deleteall
+module --deleteall
 
 # Set the container file contexts
 fcontext --add --type container_file_t    '{repo-user}triggers(/.*)?'
@@ -43,7 +44,6 @@ fcontext --add --type container_ro_file_t '{repo}web/maddy(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --type container_ro_file_t '{tex}texlive(/.*)?'
 
-
 # Let us host the network services as unprivileged users
 boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
@@ -53,14 +53,15 @@ boolean --modify container_manage_cgroup --on
 module --disable unconfineduser
 
 # Let all users run containers
-user --add restricted_staff_u --roles 'staff_r' --range 's0-s0:c0.c1023'
-login --modify --seuser restricted_staff_u --range 's0-s0:c0.c1023' __default__
+login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
 # Allow max to sudo
 login --add --seuser staff_u --range 's0-s0:c0.c1023' max
 
-# Load the custom policy
-module --add /etc/selinux/local-policy.cil
+# Load the custom policies
+module --add /etc/selinux/local-policies/local-general.cil
+module --add /etc/selinux/local-policies/local-allow-containers.cil
+module --add /etc/selinux/local-policies/local-systemd.cil
 """
 
 
