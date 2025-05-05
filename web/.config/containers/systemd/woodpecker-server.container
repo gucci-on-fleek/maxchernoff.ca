@@ -12,12 +12,19 @@ Volume=%h/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec
 PublishPort=127.0.0.1:!!woodpecker.port!!:!!woodpecker.port!!
 
 Environment="WOODPECKER_ADMIN=gucci-on-fleek"
-Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
-Environment="WOODPECKER_GITHUB=true"
 Environment="WOODPECKER_HOST=https://woodpecker.maxchernoff.ca"
 Environment="WOODPECKER_OPEN=false"
 EnvironmentFile=/var/home/repo/credentials/web/woodpecker_agent_secret
+
+Environment="WOODPECKER_GITHUB=true"
+Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
 EnvironmentFile=/var/home/repo/credentials/web/woodpecker_github_secret
+
+# TODO: https://github.com/woodpecker-ci/woodpecker/issues/138
+# Environment="WOODPECKER_FORGEJO=true"
+# Environment="WOODPECKER_FORGEJO_URL=https://codeberg.org"
+# Environment="WOODPECKER_FORGEJO_CLIENT=035db7ae-de8d-43b3-8045-5ca42c24fb0a"
+# EnvironmentFile=/var/home/repo/credentials/web/woodpecker_codeberg_secret
 
 [Service]
 Restart=always
