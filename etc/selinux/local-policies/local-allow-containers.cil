@@ -4,43 +4,41 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
-(roleattributeset cil_gen_require iptables_roles)
-(typeattributeset cil_gen_require container_ro_file_t)
-(typeattributeset cil_gen_require container_runtime_t)
-(typeattributeset cil_gen_require container_t)
-(typeattributeset cil_gen_require proc_t)
-(typeattributeset cil_gen_require staff_t)
-(typeattributeset cil_gen_require tmp_t)
-(typeattributeset cil_gen_require user_t)
-(typeattributeset cil_gen_require user_tmp_t)
+(roleattributeset cil_gen_require iptables_roles           )
+(typeattributeset cil_gen_require container_file_t         )
+(typeattributeset cil_gen_require container_ro_file_t      )
+(typeattributeset cil_gen_require container_runtime_t      )
+(typeattributeset cil_gen_require container_t              )
+(typeattributeset cil_gen_require devpts_t                 )
+(typeattributeset cil_gen_require fs_t                     )
+(typeattributeset cil_gen_require proc_t                   )
+(typeattributeset cil_gen_require staff_t                  )
+(typeattributeset cil_gen_require systemd_user_runtimedir_t)
+(typeattributeset cil_gen_require tmpfs_t                  )
+(typeattributeset cil_gen_require user_t                   )
 
 ;; Defines
-(typeattribute local_user_domains)
-(typeattributeset local_user_domains (user_t staff_t))
+(typeattribute    local_user_domains                 )
+(typeattributeset local_user_domains (staff_t user_t))
 
-;; General containers
-(allow container_runtime_t container_t (process (transition)))
-(allow container_t container_runtime_t (fifo_file (setattr)))
+;; Needed for custom networks to work in rootless containers
 (roleattributeset iptables_roles (user_r))
 
-;; Allow containers to bind to sockets
-(allow local_user_domains container_runtime_t (tcp_socket (bind create getopt listen read setopt write)))
-(allow local_user_domains container_runtime_t (udp_socket (bind create getopt listen read setopt write)))
-(allow local_user_domains container_runtime_t (unix_stream_socket (bind create getopt listen read setopt write)))
+;; Needed for user (rootless) containers to work properly
+(allow container_t               container_ro_file_t (dir                (watch                    )))
+(allow container_t               container_runtime_t (fifo_file          (setattr                  )))
+(allow container_t               devpts_t            (filesystem         (mount                    )))
+(allow container_t               proc_t              (filesystem         (mount                    )))
+(allow local_user_domains        container_ro_file_t (dir                (mounton                  )))
+(allow local_user_domains        container_runtime_t (process            (sigkill signal signull   )))
+(allow local_user_domains        container_runtime_t (tcp_socket         (bind create listen setopt)))
+(allow local_user_domains        container_runtime_t (udp_socket         (bind create setopt       )))
+(allow local_user_domains        container_runtime_t (unix_stream_socket (bind create listen setopt)))
+(allow local_user_domains        container_t         (process            (signal                   )))
+(allow systemd_user_runtimedir_t container_file_t    (dir                (rmdir                    )))
 
-;; For the image builder units
-(allow local_user_domains container_ro_file_t (dir (mounton)))
-(allow local_user_domains nsfs_t (file (getattr ioctl lock open read)))
+;; Needed for newuidmap to work
 (allow local_user_domains self (capability (setuid)))
-(allow local_user_domains sysfs_t (filesystem (mount)))
-(allow local_user_domains user_tmp_t (file (mounton)))
 
-;; For the bootc builder units
-(allow container_t devpts_t (filesystem (mount)))
-(allow container_t proc_t (filesystem (mount)))
-(allow container_t var_t (dir (getattr search open)))
-(allow container_t var_lib_t (dir (getattr search open)))
-(allow container_t container_ro_file_t (dir (add_name getattr ioctl lock open read remove_name search write)))
-(allow container_t container_ro_file_t (dir (create open getattr setattr read write link unlink rename search add_name remove_name reparent rmdir lock ioctl watch watch_reads)))
+;; Needed for container@fedora-iot.service
 (allow container_t tmpfs_t (filesystem (remount)))
-(allow local_user_domains sysfs_t (dir (mounton)))

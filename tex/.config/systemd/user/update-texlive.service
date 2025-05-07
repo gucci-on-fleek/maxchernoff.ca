@@ -28,6 +28,7 @@ CapabilityBoundingSet=
 NoNewPrivileges=true
 # PrivateDevices=true  # TODO: SELinux
 # PrivateTmp=true
+ReadWritePaths=/tmp/
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict

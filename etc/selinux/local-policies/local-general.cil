@@ -3,15 +3,6 @@
 ;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
-;; Includes
-(typeattributeset cil_gen_require selinux_config_t)
-(typeattributeset cil_gen_require semanage_store_t)
-(typeattributeset cil_gen_require semanage_t)
-
 ;; Dummy define for unconfined_t, since we've disabled unconfined users
 (type unconfined_t)
 
-;; For "semanage module --add=..." to work with unconfined users disabled
-(allow semanage_t selinux_config_t (dir (relabelfrom)))
-(allow semanage_t semanage_store_t (dir (relabelfrom)))
-(allow semanage_t semanage_store_t (file (relabelfrom)))
