@@ -12,6 +12,7 @@ Exec=/srv/app.py
 
 EnvironmentFile=/var/home/repo/credentials/web/webhook_secret
 
+ReadOnly=true
 ReadOnlyTmpfs=false
 
 [Service]

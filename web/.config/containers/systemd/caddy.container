@@ -7,6 +7,7 @@ Image=maxchernoff.ca/caddy:latest
 StopTimeout=10
 Notify=true
 
+ReadOnly=true
 ReadOnlyTmpfs=false
 
 EnvironmentFile=/var/home/repo/credentials/web/caddy_tsig

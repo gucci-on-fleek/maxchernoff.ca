@@ -11,8 +11,6 @@ Pod=overleaf.pod
 Network=overleaf.network
 Network=email.network
 
-ReadOnly=false
-
 StopTimeout=30
 HealthCmd=curl -sfL http://localhost/
 HealthInterval=60s
