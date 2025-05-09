@@ -49,9 +49,6 @@ boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
 boolean --modify container_manage_cgroup --on
 
-# Disable unconfined contexts
-module --disable unconfineduser
-
 # Let all users run containers
 login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
@@ -59,7 +56,6 @@ login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 login --add --seuser staff_u --range 's0-s0:c0.c1023' max
 
 # Load the custom policies
-module --add /etc/selinux/local-policies/local-general.cil
 module --add /etc/selinux/local-policies/local-allow-containers.cil
 module --add /etc/selinux/local-policies/local-systemd.cil
 """

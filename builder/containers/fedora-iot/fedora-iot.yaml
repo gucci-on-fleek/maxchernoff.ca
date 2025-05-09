@@ -59,7 +59,6 @@ packages:
   - greenboot-default-health-checks
   - grub2-efi-x64
   - htop
-  # - ima-evm-utils # Needed for IMA security attributes
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
   - kernel
@@ -77,6 +76,7 @@ packages:
   - python3-pystemd
   - qemu-guest-agent # Recommended for a VM guest
   - selinux-policy-targeted
+  - setools-console
   - snapper
   - sudo
   - systemd
@@ -103,8 +103,15 @@ units:
   - sshd.service
   - systemd-networkd.service
 
+add-files:
+  - ["image-minimizer.py", "/usr/bin/image-minimizer"]
+  - ["image-minimize.txt", "/etc/tmp/image-minimize.txt"]
+  - ["local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
+
 postprocess:
   - |
+    set -euo pipefail
+
     # From https://pagure.io/fedora-iot/ostree/blob/f41/f/treecompose-post.sh
     rm -rf /etc/systemd/system/*
     systemctl preset-all
@@ -121,3 +128,12 @@ postprocess:
     [composefs]
     enabled = yes
     EOF
+
+    # Run image-minimizer
+    INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
+
+    # Rebuild the SELinux modules
+    semodule --install=/etc/tmp/local-required-fallbacks.cil
+
+    # Remove the temporary files
+    rm -rf /etc/tmp/

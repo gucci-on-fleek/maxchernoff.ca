@@ -1,0 +1,77 @@
+;; Source Code for maxchernoff.ca
+;; https://github.com/gucci-on-fleek/maxchernoff.ca
+;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+;; SPDX-FileCopyrightText: 2025 Max Chernoff
+
+;; We need this custom SELinux policy because we're removing the distribution's
+;; policies that we're not using, but some of the distribution policies that we
+;; do need have dependencies on the policies that we're removing.
+
+;; Failed to resolve booleanif statement at /etc/selinux/targeted/tmp/modules/100/git/cil:439
+(boolean httpd_enable_cgi false)
+(boolean httpd_builtin_scripting false)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/chronyd/cil:119
+(typeattribute mta_user_agent)
+(type system_mail_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/chronyd/cil:121
+(typeattribute mta_exec_type)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/200/container/cil:421
+(type sssd_var_lib_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/200/container/cil:428
+(type sssd_public_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/git/cil:66
+(typeattribute httpd_exec_scripts)
+(typeattribute httpd_script_exec_type)
+(typeattribute httpd_script_type)
+(typeattribute httpd_content_type)
+(type httpd_t)
+(type httpd_suexec_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/git/cil:91
+(type inetd_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/gpg/cil:192
+(type etc_mail_t)
+(type mail_spool_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/gpg/cil:214
+(type httpd_tmp_t)
+(type httpd_sys_rw_content_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/200/passt/cil:12
+(type unconfined_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/200/pasta/cil:48
+(type hostname_exec_t)
+
+;; Failed to resolve roletype statement at /etc/selinux/targeted/tmp/modules/100/staff/cil:8
+(type xauth_t)
+(type iceauth_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/staff/cil:178
+(typeattribute dridomain)
+(typeattribute x_userdomain)
+(typeattribute x_domain)
+(typeattribute input_xevent_type)
+(typeattribute xdrawable_type)
+(typeattribute xcolormap_type)
+(typeattribute xdmhomewriter)
+(type root_xdrawable_t)
+(type xdm_t)
+(type xserver_t)
+(type xproperty_t)
+(type user_xproperty_t)
+(type xevent_t)
+(type client_xevent_t)
+(type input_xevent_t)
+(type user_input_xevent_t)
+(type xdm_var_run_t)
+(type xdm_log_t)
+
+;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/systemd/cil:556
+(type xserver_etc_t)
