@@ -86,6 +86,7 @@ packages:
   - tar # Needed for TeX Live
   - tmux
   - traceroute
+  - udica
   - vim-enhanced
   - xz # Needed for TeX Live
   - zram-generator-defaults
