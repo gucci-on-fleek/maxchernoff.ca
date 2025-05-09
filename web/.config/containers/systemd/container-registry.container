@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
 Image=docker.io/library/registry:3
-AutoUpdate=registry
-UserNS=nomap
 Network=container-registry.network
 
 # Random port number for local-only pushes

@@ -4,7 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=maxchernoff.ca/flask:latest
-AutoUpdate=registry
 Network=flask.network
 
 Volume=%h/flask/:/srv:ro,exec
@@ -13,11 +12,7 @@ Exec=/srv/app.py
 
 EnvironmentFile=/var/home/repo/credentials/web/webhook_secret
 
-DropCapability=all
-NoNewPrivileges=true
-ReadOnly=true
 ReadOnlyTmpfs=false
-UserNS=nomap
 
 [Service]
 Restart=always

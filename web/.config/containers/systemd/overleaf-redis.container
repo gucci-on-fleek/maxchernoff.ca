@@ -5,10 +5,8 @@
 [Container]
 Image=docker.io/library/redis:6
 Volume=%h/overleaf/redis:/data:Z,noexec
-AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
-UserNS=nomap
 
 [Service]
 Restart=always

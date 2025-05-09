@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/woodpeckerci/woodpecker-agent:v3
-AutoUpdate=registry
-UserNS=nomap
 Network=pasta:-T,!!woodpecker.port!!
 SecurityLabelType=container_runtime_t
 

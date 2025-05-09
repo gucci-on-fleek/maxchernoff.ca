@@ -5,10 +5,8 @@
 [Container]
 Image=docker.io/library/mongo:6
 Volume=%h/overleaf/mongo:/data/db:Z,noexec
-AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
-UserNS=nomap
 
 Exec=--replSet overleaf
 HealthCmd=echo 'db.stats().ok' | mongosh localhost:27017/test --quiet

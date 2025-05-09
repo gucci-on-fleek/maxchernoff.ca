@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/cznic/knot:latest
-AutoUpdate=registry
-UserNS=nomap
 
 Network=private
 PublishPort=!!network.ipv4!!:53:53
@@ -29,8 +27,8 @@ Wants=network-ready.service
 After=network-ready.service
 
 [Service]
-ExecStartPre=mkdir -p %t/knot
 Restart=always
+ExecStartPre=mkdir -p %t/knot
 
 [Install]
 WantedBy=default.target

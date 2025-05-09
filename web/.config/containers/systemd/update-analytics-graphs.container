@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/allinurl/goaccess:latest
-AutoUpdate=registry
-UserNS=nomap
 Network=none
 
 Volume=%h/caddy/logs/access.log:/root/access.log:ro,z

@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=docker.io/woodpeckerci/woodpecker-server:v3
-AutoUpdate=registry
-UserNS=nomap
 Network=woodpecker.network
 
 Volume=%h/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec

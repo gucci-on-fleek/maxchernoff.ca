@@ -7,11 +7,11 @@ Image=docker.io/sharelatex/sharelatex:5
 Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,noexec
 Tmpfs=/var/lib/overleaf/tmp
 Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro,exec,nosuid
-AutoUpdate=registry
 Pod=overleaf.pod
 Network=overleaf.network
 Network=email.network
-UserNS=nomap
+
+ReadOnly=false
 
 StopTimeout=30
 HealthCmd=curl -sfL http://localhost/

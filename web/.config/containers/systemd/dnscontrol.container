@@ -4,8 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=ghcr.io/stackexchange/dnscontrol:latest
-AutoUpdate=registry
-UserNS=nomap
 
 EnvironmentFile=/var/home/repo/credentials/web/dnscontrol_tsig
 
@@ -18,7 +16,6 @@ After=knot.service
 Wants=knot.service
 Wants=network-ready.service
 After=network-ready.service
-
 
 [Service]
 Type=oneshot
