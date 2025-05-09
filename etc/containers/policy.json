@@ -64,6 +64,11 @@
                 {
                     "type": "insecureAcceptAnything"
                 }
+            ],
+            "quay.io/fedora": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
             ]
         },
         "oci": {
