@@ -135,5 +135,5 @@ postprocess:
     # Rebuild the SELinux modules
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
-    # Remove the temporary files
+    # Remove the unneeded temporary files
     rm -rf /etc/tmp/

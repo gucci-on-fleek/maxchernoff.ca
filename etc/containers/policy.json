@@ -12,6 +12,13 @@
                 }
             ]
         },
+        "dir" : {
+            "": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ]
+        },
         "docker": {
             "docker.io/allinurl": [
                 {
