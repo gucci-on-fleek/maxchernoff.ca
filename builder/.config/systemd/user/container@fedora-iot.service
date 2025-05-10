@@ -10,11 +10,6 @@ After=container@bootc-builder.service
 Type=oneshot
 RemainAfterExit=no
 
-CacheDirectory=%N-staging
-ExecStartPre=rm -rf %C/%N-staging
-ExecStartPre=mkdir -p %C/%N-staging
-ExecStartPost=rm -rf %C/%N-staging
-
 ExecStart=podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
@@ -34,19 +29,13 @@ ExecStart=podman run \
 # TODO: https://github.com/containers/skopeo/issues/2343
 ExecStart=skopeo copy \
     --all \
-    --dest-decompress \
-    docker://localhost:!!registry.port!!/fedora-iot:latest \
-    dir:%C/%N-staging/
-
-ExecStart=skopeo copy \
-    --all \
     --dest-tls-verify=false \
     --dest-compress-format=zstd:chunked \
     --dest-compress-level=5 \
     --dest-precompute-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
-    dir:%C/%N-staging/ \
+    docker://localhost:!!registry.port!!/fedora-iot:latest \
     docker://localhost:!!registry.port!!/fedora-iot:latest
 
 [Install]
