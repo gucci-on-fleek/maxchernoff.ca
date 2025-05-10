@@ -11,6 +11,8 @@ Pod=overleaf.pod
 Network=overleaf.network
 Network=email.network
 
+AddCapability=CAP_CHOWN CAP_DAC_OVERRIDE CAP_SETGID CAP_SETUID
+
 StopTimeout=30
 HealthCmd=curl -sfL http://localhost/
 HealthInterval=60s

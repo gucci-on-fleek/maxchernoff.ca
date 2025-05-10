@@ -34,7 +34,7 @@
 (allow local_user_domains        container_runtime_t (tcp_socket         (bind create listen setopt)))
 (allow local_user_domains        container_runtime_t (udp_socket         (bind create setopt       )))
 (allow local_user_domains        container_runtime_t (unix_stream_socket (bind create listen setopt)))
-(allow local_user_domains        container_t         (process            (signal                   )))
+(allow local_user_domains        container_t         (process            (sigkill signal signull)))
 (allow systemd_user_runtimedir_t container_file_t    (dir                (rmdir                    )))
 
 ;; Needed for newuidmap to work

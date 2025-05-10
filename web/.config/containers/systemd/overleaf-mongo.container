@@ -8,6 +8,8 @@ Volume=%h/overleaf/mongo:/data/db:Z,noexec
 Pod=overleaf.pod
 Network=overleaf.network
 
+AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID
+
 Exec=--replSet overleaf
 HealthCmd=echo 'db.stats().ok' | mongosh localhost:27017/test --quiet
 Environment="MONGODB_REPLICA_SET_MODE=primary"

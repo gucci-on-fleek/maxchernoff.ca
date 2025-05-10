@@ -8,6 +8,8 @@ Volume=%h/overleaf/redis:/data:Z,noexec
 Pod=overleaf.pod
 Network=overleaf.network
 
+AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID
+
 [Service]
 Restart=always
 TimeoutStartSec=300
