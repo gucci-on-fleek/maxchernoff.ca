@@ -12,6 +12,8 @@ User=1000
 Volume=%h/maddy/data:/data:rw,Z,noexec
 Volume=%h/maddy/config:/etc/maddy:ro,noexec
 
+# Allow external access so that we can send to other MX servers
+Network=maddy-external.network
 # Internal network to only allow access to Maddy, and not the outside world
 Network=email.network
 # Let services on the localhost access Maddy
