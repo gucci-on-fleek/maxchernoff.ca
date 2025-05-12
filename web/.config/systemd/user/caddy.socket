@@ -7,6 +7,7 @@
 Accept=no
 NoDelay=true
 BindIPv6Only=both
+SocketProtocol=mptcp
 
 # fd/3, TCP :80
 ListenStream=80
@@ -17,11 +18,7 @@ ListenStream=443
 # fdgram/5, UDP :443
 ListenDatagram=443
 
-# fd/6, Unix
-ListenStream=%t/caddy.sock
-SocketMode=0600
-
-# fd/7, TCP :853
+# fd/6, TCP :853
 ListenStream=853
 
 [Install]

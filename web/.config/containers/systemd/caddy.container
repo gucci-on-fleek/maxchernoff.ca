@@ -11,6 +11,7 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 
 EnvironmentFile=/var/home/repo/credentials/web/caddy_tsig
+Environment="GODEBUG=multipathtcp=1"
 
 Volume=%h/caddy/etc:/etc/caddy:ro,noexec
 Volume=%h/caddy/static:/srv:ro,noexec
