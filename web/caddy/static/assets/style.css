@@ -111,6 +111,9 @@ body {
     hyphens: auto;
     font-variant-ligatures: common-ligatures contextual;
     font-kerning: normal;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    text-wrap-style: pretty;
 }
 
 body * {
@@ -196,6 +199,7 @@ code {
     font-family: ui-monospace, Consolas, Inconsolata, "Roboto Mono", "Fira Mono", monospace;
     overflow-wrap: anywhere;
     hyphens: none;
+    tab-size: 4;
 }
 
 section,
@@ -410,6 +414,10 @@ header p {
 summary {
     font-weight: 500;
     list-style-position: outside;
+}
+
+input, button, textarea, select {
+  font: inherit;
 }
 
 /* Syntax Highlighting */
