@@ -6,11 +6,14 @@
 ;; Includes
 (typeattributeset cil_gen_require admin_home_t   )
 (typeattributeset cil_gen_require dosfs_t        )
+(typeattributeset cil_gen_require file_context_t )
 (typeattributeset cil_gen_require fs_t           )
+(typeattributeset cil_gen_require gpg_t          )
 (typeattributeset cil_gen_require home_root_t    )
 (typeattributeset cil_gen_require init_var_run_t )
 (typeattributeset cil_gen_require journalctl_t   )
 (typeattributeset cil_gen_require root_t         )
+(typeattributeset cil_gen_require snapperd_t     )
 (typeattributeset cil_gen_require staff_t        )
 (typeattributeset cil_gen_require sysadm_t       )
 (typeattributeset cil_gen_require tmpfs_t        )
@@ -20,6 +23,7 @@
 (typeattributeset cil_gen_require user_tmp_t     )
 (typeattributeset cil_gen_require var_log_t      )
 (typeattributeset cil_gen_require var_run_t      )
+
 
 ;; Defines
 (typeattribute    local_user_domains                 )
@@ -42,3 +46,7 @@
 (allow local_user_domains user_tmp_t      (service            (reload start status stop                )))
 (allow local_user_domains var_log_t       (file               (open read                               )))
 (allow local_user_domains var_run_t       (dir                (mounton                                 )))
+
+;; Miscellaneous
+(allow snapperd_t file_context_t (file     (map           )))
+(allow user_t     gpg_t          (process2 (nnp_transition)))

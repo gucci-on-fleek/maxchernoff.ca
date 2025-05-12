@@ -25,6 +25,7 @@
 (roleattributeset iptables_roles (user_r))
 
 ;; Needed for user (rootless) containers to work properly
+(allow container_runtime_t       self                (process2           (nnp_transition           )))
 (allow container_t               container_ro_file_t (dir                (watch                    )))
 (allow container_t               container_runtime_t (fifo_file          (setattr                  )))
 (allow container_t               devpts_t            (filesystem         (mount                    )))
@@ -34,7 +35,7 @@
 (allow local_user_domains        container_runtime_t (tcp_socket         (bind create listen setopt)))
 (allow local_user_domains        container_runtime_t (udp_socket         (bind create setopt       )))
 (allow local_user_domains        container_runtime_t (unix_stream_socket (bind create listen setopt)))
-(allow local_user_domains        container_t         (process            (sigkill signal signull)))
+(allow local_user_domains        container_t         (process            (sigkill signal signull   )))
 (allow systemd_user_runtimedir_t container_file_t    (dir                (rmdir                    )))
 
 ;; Needed for newuidmap to work
