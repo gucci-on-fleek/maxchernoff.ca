@@ -1,28 +1,16 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 [Unit]
 Description=Update TeX Live
 After=network.target
 
 [Service]
 Type=oneshot
-Environment="PATH=%h/texlive/bin/x86_64-linux:/usr/bin:/usr/sbin"
-ExecStart=%h/texlive/bin/x86_64-linux/tlmgr update --all --self
-ExecStart=%h/texlive/bin/x86_64-linux/luaotfload-tool --update
-ExecStart=%h/texlive/bin/x86_64-linux/context --make
-ExecStart=%h/texlive/bin/x86_64-linux/context --luatex --make
-ExecStart=%h/texlive/bin/x86_64-linux/mtxrun --script fonts --reload
-ExecStart=%h/texlive/bin/x86_64-linux/mtxrun --luatex --script fonts --reload
-
-WorkingDirectory=%h/context-installer/
-ExecStart=%h/context-installer/install.sh
-ExecStart=%h/context/texmf-linux-64/bin/context --make
-ExecStart=%h/context/texmf-linux-64/bin/context --luatex --make
-ExecStart=%h/context/texmf-linux-64/bin/mtxrun --script fonts --reload
-ExecStart=%h/context/texmf-linux-64/bin/mtxrun --luatex --script fonts --reload
-ExecStart=sh -c "cd %h/context/ && %h/context/texmf-linux-64/bin/mtxrun --script install-modules --install --all"
+ExecStart=/usr/local/bin/update-texlive.sh
+ExecStart=/usr/local/bin/update-context.sh
+ExecStart=restorecon -RDT0 %h/texlive %h/context-installer/tex
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
@@ -32,5 +20,3 @@ ReadWritePaths=/tmp/
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict
-
-ExecStart=restorecon -R %h/texlive %h/context-installer/tex
