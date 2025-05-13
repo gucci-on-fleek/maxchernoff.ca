@@ -43,6 +43,7 @@ packages:
   - bootc
   - borgbackup
   - btrfs-progs # /usr/bin/btrfs
+  - busybox
   - chrony
   - curl
   - dosfstools # fsck for the EFI partition
@@ -75,6 +76,7 @@ packages:
   - python3-cryptography
   - python3-pystemd
   - qemu-guest-agent # Recommended for a VM guest
+  - ripgrep
   - selinux-policy-targeted
   - setools-console
   - snapper
