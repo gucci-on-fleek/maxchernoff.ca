@@ -24,6 +24,10 @@ dnf_packages=(
     groff-perl
     parallel
     perl-Compress-Zlib
+
+    # gucci-on-fleek/context-packaging
+    prename
+    zip
 )
 
 dnf install \
