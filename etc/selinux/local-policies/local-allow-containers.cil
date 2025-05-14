@@ -21,9 +21,6 @@
 (typeattribute    local_user_domains                 )
 (typeattributeset local_user_domains (staff_t user_t))
 
-;; Needed for custom networks to work in rootless containers
-(roleattributeset iptables_roles (user_r))
-
 ;; Needed for user (rootless) containers to work properly
 (allow container_runtime_t       self                (process2           (nnp_transition           )))
 (allow container_t               container_ro_file_t (dir                (watch                    )))

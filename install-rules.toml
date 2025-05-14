@@ -61,6 +61,7 @@ login --add --seuser staff_u --range 's0-s0:c0.c1023' max
 # Load the custom policies
 module --add /etc/selinux/local-policies/local-allow-containers.cil
 module --add /etc/selinux/local-policies/local-systemd.cil
+module --add /etc/selinux/local-policies/local-pasta.cil
 """
 
 

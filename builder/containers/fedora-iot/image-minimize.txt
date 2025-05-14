@@ -94,9 +94,9 @@ keep /etc/selinux/targeted/active/modules/100/miscfiles
 keep /etc/selinux/targeted/active/modules/100/modutils
 keep /etc/selinux/targeted/active/modules/100/mount
 keep /etc/selinux/targeted/active/modules/100/namespace
+keep /etc/selinux/targeted/active/modules/100/netutils
 keep /etc/selinux/targeted/active/modules/100/oddjob
 keep /etc/selinux/targeted/active/modules/100/policykit
-keep /etc/selinux/targeted/active/modules/100/netutils
 keep /etc/selinux/targeted/active/modules/100/remotelogin
 keep /etc/selinux/targeted/active/modules/100/rpm
 keep /etc/selinux/targeted/active/modules/100/screen
@@ -119,10 +119,11 @@ keep /etc/selinux/targeted/active/modules/100/unlabelednet
 keep /etc/selinux/targeted/active/modules/100/unprivuser
 keep /etc/selinux/targeted/active/modules/100/userdomain
 keep /etc/selinux/targeted/active/modules/100/usermanage
-keep /etc/selinux/targeted/active/modules/100/webadm
+keep /etc/selinux/targeted/active/modules/100/usernetctl
 keep /etc/selinux/targeted/active/modules/100/virt
 keep /etc/selinux/targeted/active/modules/100/virt_supplementary
 keep /etc/selinux/targeted/active/modules/100/vlock
+keep /etc/selinux/targeted/active/modules/100/webadm
 keep /etc/selinux/targeted/active/modules/200/container
 keep /etc/selinux/targeted/active/modules/200/passt
 keep /etc/selinux/targeted/active/modules/200/passt-repair
