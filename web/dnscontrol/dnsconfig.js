@@ -261,6 +261,7 @@ D("maxchernoff.ca", REG_MONITOR,
         alignmentDKIM: "strict",
     }),
     TXT("noreply.maxchernoff.ca._report._dmarc", "v=DMARC1"),
+    TXT("duck.tel._report._dmarc", "v=DMARC1"),
 
     /////////////////////
     /// Miscellaneous ///
@@ -289,7 +290,7 @@ D("maxchernoff.ca", REG_MONITOR,
 )
 
 // Secondary domain: duck.tel
-MAIL_ALLOWED = []
+MAIL_ALLOWED = ["@"]
 D("duck.tel", REG_MONITOR,
     DnsProvider(DSP_KNOT, 0),
     DefaultTTL("1d"),
@@ -364,14 +365,46 @@ D("duck.tel", REG_MONITOR,
         issuewild_critical: true,
     }),
 
-    /////////////
+     /////////////
     /// Email ///
     /////////////
 
+    // Migadu ownership verification
+    TXT("@", "hosted-email-verify=h4viiswl"),
+
+    // Mailbox receiving servers
+    MX("@", 10, "aspmx1.migadu.com."),
+    MX("@", 20, "aspmx2.migadu.com."),
+
+    // DKIM (signs outgoing mail)
+    CNAME("key1._domainkey", "key1.duck.tel._domainkey.migadu.com."),
+    CNAME("key2._domainkey", "key2.duck.tel._domainkey.migadu.com."),
+    CNAME("key3._domainkey", "key3.duck.tel._domainkey.migadu.com."),
+
+    // DKIM reporting
+    TXT("_report._domainkey",
+        "ra=mail-reports " + // Send reports to this address
+        "rr=all"             // Report on all emails
+    ),
+
+    // DKIM ADSP (Obsolete, but maybe still used somewhere)
+    TXT("_adsp._domainkey",
+        "dkim=discardable " + // No mailing lists here, so we can be strict
+        "ra=mail-reports " +  // Send reports to this address
+        "rr=all"              // Report on all emails
+    ),
+
+    // SPF (restricts outgoing mail's IP addresses)
+    TXT("@",
+        "v=spf1 " +                 // Version (always 1)
+        "include:spf.migadu.com " + // Allow Migadu to send mail
+        "-all"                      // Reject all other mail
+    ),
+
     // DMARC (tells receiving servers to reject spoofed emails)
     DMARC_BUILDER({
-        // Reject anything that fails
-        policy: "reject",
+        // Send anything that fails to spam
+        policy: "reject", // No mailing lists here, so we can be strict
         subdomainPolicy: "reject",
 
         // Send reports to these addresses
@@ -383,4 +416,9 @@ D("duck.tel", REG_MONITOR,
         alignmentSPF: "strict",
         alignmentDKIM: "strict",
     }),
+
+    // MTA-STS (tells receiving servers to use TLS)
+    web("mta-sts"),
+    TXT("_mta-sts", "v=STSv1 id=1"),
+    TXT("_smtp._tls", "v=TLSRPTv1 rua=mailto:tls-reports@maxchernoff.ca"),
 )

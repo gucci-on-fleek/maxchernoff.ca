@@ -161,6 +161,12 @@ mta-sts.maxchernoff.ca {
 	respond "Not Found" 404
 }
 
+mta-sts.duck.tel {
+	import default
+	import domain-info
+	respond "Not Found" 404
+}
+
 # Flask reverse proxy
 api.maxchernoff.ca {
 	import default
