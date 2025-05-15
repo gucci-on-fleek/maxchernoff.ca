@@ -224,8 +224,8 @@ D("maxchernoff.ca", REG_MONITOR,
 
     // MTA-STS (tells receiving servers to use TLS)
     web("mta-sts"),
-    TXT("_mta-sts", "v=STSv1 id=2"),
-    TXT("_smtp._tls", "v=TLSRPTv1 rua=mailto:tls-reports@maxchernoff.ca"),
+    TXT("_mta-sts", "v=STSv1; id=2"),
+    TXT("_smtp._tls", "v=TLSRPTv1; rua=mailto:tls-reports@maxchernoff.ca"),
 
     // Mail server access (IMAP, SMTP, etc.)
     SRV("_autodiscover._tcp", 0, 1, 443, "autodiscover.migadu.com."),
@@ -260,8 +260,8 @@ D("maxchernoff.ca", REG_MONITOR,
         alignmentSPF: "relaxed",
         alignmentDKIM: "strict",
     }),
-    TXT("noreply.maxchernoff.ca._report._dmarc", "v=DMARC1"),
-    TXT("duck.tel._report._dmarc", "v=DMARC1"),
+    TXT("noreply.maxchernoff.ca._report._dmarc", "v=DMARC1;"),
+    TXT("duck.tel._report._dmarc", "v=DMARC1;"),
 
     /////////////////////
     /// Miscellaneous ///
@@ -370,7 +370,7 @@ D("duck.tel", REG_MONITOR,
     /////////////
 
     // Migadu ownership verification
-    TXT("@", "hosted-email-verify=h4viiswl"),
+    TXT("@", "hosted-email-verify=4c9llzmf"),
 
     // Mailbox receiving servers
     MX("@", 10, "aspmx1.migadu.com."),
@@ -419,6 +419,6 @@ D("duck.tel", REG_MONITOR,
 
     // MTA-STS (tells receiving servers to use TLS)
     web("mta-sts"),
-    TXT("_mta-sts", "v=STSv1 id=1"),
-    TXT("_smtp._tls", "v=TLSRPTv1 rua=mailto:tls-reports@maxchernoff.ca"),
+    TXT("_mta-sts", "v=STSv1; id=1"),
+    TXT("_smtp._tls", "v=TLSRPTv1; rua=mailto:tls-reports@maxchernoff.ca"),
 )
