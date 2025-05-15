@@ -421,4 +421,12 @@ D("duck.tel", REG_MONITOR,
     web("mta-sts"),
     TXT("_mta-sts", "v=STSv1; id=1"),
     TXT("_smtp._tls", "v=TLSRPTv1; rua=mailto:tls-reports@maxchernoff.ca"),
+
+    /////////////////////
+    /// Miscellaneous ///
+    /////////////////////
+
+    // Google Search Console ownership verification
+    TXT("@",
+        "google-site-verification=AF_OhBzlGPeUXXBkZcv4D-yBvXCUibw9hNd8OoRK2Cw"),
 )
