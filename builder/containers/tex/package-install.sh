@@ -28,6 +28,7 @@ dnf_packages=(
     # gucci-on-fleek/context-packaging
     prename
     zip
+    llvm # For `llvm-lipo`
 )
 
 dnf install \
