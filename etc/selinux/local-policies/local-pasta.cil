@@ -9,6 +9,7 @@
 (roleattributeset cil_gen_require user_r)
 (roleattributeset cil_gen_require usernetctl_roles)
 (typeattributeset cil_gen_require container_runtime_t)
+(typeattributeset cil_gen_require container_t)
 (typeattributeset cil_gen_require ifconfig_var_run_t)
 (typeattributeset cil_gen_require pasta_exec_t)
 (typeattributeset cil_gen_require pasta_t)
@@ -34,6 +35,12 @@
 (allow pasta_t container_runtime_t (fifo_file (write)))
 (allow pasta_t self (cap_userns (setgid setuid)))
 (allow pasta_t tmpfs_t (filesystem (getattr)))
+
+;; For "podman build"
+(allow pasta_t container_runtime_t (dir (open read search)))
+(allow pasta_t container_runtime_t (file (read)))
+(allow pasta_t container_runtime_t (lnk_file (read)))
+(allow pasta_t container_t (lnk_file (read)))
 
 ;; Allow pasta to bind to any port
 (boolean pasta_allow_bind_any_port true)
