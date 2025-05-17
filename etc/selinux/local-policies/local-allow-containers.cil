@@ -4,6 +4,7 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
+(roleattributeset cil_gen_require install_roles            )
 (roleattributeset cil_gen_require iptables_roles           )
 (typeattributeset cil_gen_require container_file_t         )
 (typeattributeset cil_gen_require container_ro_file_t      )
@@ -11,8 +12,11 @@
 (typeattributeset cil_gen_require container_t              )
 (typeattributeset cil_gen_require devpts_t                 )
 (typeattributeset cil_gen_require fs_t                     )
+(typeattributeset cil_gen_require install_exec_t           )
+(typeattributeset cil_gen_require install_t                )
 (typeattributeset cil_gen_require proc_t                   )
 (typeattributeset cil_gen_require staff_t                  )
+(typeattributeset cil_gen_require sysadm_t                 )
 (typeattributeset cil_gen_require systemd_user_runtimedir_t)
 (typeattributeset cil_gen_require tmpfs_t                  )
 (typeattributeset cil_gen_require user_t                   )
@@ -40,3 +44,8 @@
 
 ;; Needed for container@fedora-iot.service
 (allow container_t tmpfs_t (filesystem (remount)))
+
+;; Needed for "bootc status" to work (via sudo)
+(roleattributeset install_roles (sysadm_r                           ))
+(allow            sysadm_t      install_t      (process (transition)))
+(typetransition   sysadm_t      install_exec_t process  install_t    )
