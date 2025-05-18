@@ -16,13 +16,17 @@ RUN /usr/local/sbin/container-build.sh
 # Pull Caddy
 FROM maxchernoff.ca/caddy:latest AS caddy
 
+# Pull Anubis
+FROM ghcr.io/techarohq/anubis:latest AS anubis
+
 # Create the new container
 FROM scratch
 
-COPY --from=build /mnt/build/ /
-COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
-COPY --chmod=755 ["start.py", "/usr/local/bin/"]
 COPY --chmod=644 ["dbip-asn-lite.mmdb", "/usr/local/share/GeoIP/"]
+COPY --from=anubis /ko-app/anubis /usr/local/bin/anubis
+COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
+COPY --from=build /mnt/build/ /
+COPY --chmod=755 ["start.py", "/usr/local/bin/"]
 
 USER 1000:1000
 CMD ["/usr/local/bin/start.py"]

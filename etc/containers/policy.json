@@ -55,6 +55,11 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
+            "ghcr.io/techarohq": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
             "localhost:!!registry.port!!": [
                 {
                     "type": "insecureAcceptAnything"

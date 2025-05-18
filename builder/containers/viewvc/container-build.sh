@@ -36,6 +36,7 @@ dnf5 install \
     diffutils \
     generic-release \
     glibc-minimal-langpack \
+    mailcap \
     python3-subversion \
     python3-waitress
 
