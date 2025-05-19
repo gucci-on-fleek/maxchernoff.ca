@@ -41,3 +41,5 @@ ctx=/opt/context/texmf-linux-64/bin
 } &
 
 wait
+
+rm -f /root/{context,latex}-cache.*

@@ -26,13 +26,10 @@ dnf_packages=(
     perl-Compress-Zlib
 
     # gucci-on-fleek/context-packaging
-    awk
-    binutils # For `ar`
+    add-determinism
     dos2unix # For EOL conversion
     llvm # For `llvm-lipo`
     prename
-    tar
-    xz
     zip
 )
 
