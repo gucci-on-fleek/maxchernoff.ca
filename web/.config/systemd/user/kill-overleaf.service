@@ -1,0 +1,18 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Unit]
+Description=Forces Overleaf to restart
+After=overleaf-overleaf.service
+Wants=overleaf-overleaf.service
+
+[Service]
+Type=oneshot
+
+# TODO: This is an awful hack needed because Overleaf randomly maxes out the CPU
+# after running for a couple hours for some unknown reason.
+ExecStart=podman unshare /usr/bin/bash -c 'kill -INT $(pgrep -f clsi/[a]pp.js) $(pgrep -f filestore/[a]pp.js) $(pgrep -f real-time/[a]pp.js)'
+
+[Install]
+WantedBy=kill-overleaf.timer
