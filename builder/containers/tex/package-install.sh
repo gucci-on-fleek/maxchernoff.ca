@@ -26,9 +26,14 @@ dnf_packages=(
     perl-Compress-Zlib
 
     # gucci-on-fleek/context-packaging
-    prename
-    zip
+    awk
+    binutils # For `ar`
+    dos2unix # For EOL conversion
     llvm # For `llvm-lipo`
+    prename
+    tar
+    xz
+    zip
 )
 
 dnf install \
