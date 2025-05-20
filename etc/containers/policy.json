@@ -12,7 +12,7 @@
                 }
             ]
         },
-        "dir" : {
+        "dir": {
             "": [
                 {
                     "type": "insecureAcceptAnything"
@@ -26,6 +26,11 @@
                 }
             ],
             "docker.io/cznic": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
+            "docker.io/deblan": [
                 {
                     "type": "insecureAcceptAnything"
                 }

@@ -10,10 +10,11 @@ SecurityLabelType=container_runtime_t
 Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
 Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
 
-Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"
-Environment="WOODPECKER_MAX_WORKFLOWS=4"
-Environment="WOODPECKER_LOG_LEVEL=trace"
+Environment="WOODPECKER_BACKEND_DOCKER_ENABLE_IPV6=true"
+Environment="WOODPECKER_BACKEND_DOCKER_NETWORK=pasta:-T,587"
 Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/opt/texlive:ro,/var/home/tex/context:/opt/context:ro"
+Environment="WOODPECKER_MAX_WORKFLOWS=4"
+Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"
 EnvironmentFile=/var/home/repo/credentials/woodpecker/woodpecker_agent_secret
 
 [Service]
