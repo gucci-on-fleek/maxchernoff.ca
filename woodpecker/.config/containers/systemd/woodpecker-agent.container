@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
 Image=docker.io/woodpeckerci/woodpecker-agent:v3
 Network=pasta:-T,!!woodpecker.port!!
@@ -11,7 +11,6 @@ Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
 Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
 
 Environment="WOODPECKER_BACKEND_DOCKER_ENABLE_IPV6=true"
-Environment="WOODPECKER_BACKEND_DOCKER_NETWORK=pasta:-T,587"
 Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/opt/texlive:ro,/var/home/tex/context:/opt/context:ro"
 Environment="WOODPECKER_MAX_WORKFLOWS=4"
 Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"

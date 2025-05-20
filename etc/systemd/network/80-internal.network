@@ -6,11 +6,14 @@
 Name=lo
 
 [Network]
-Description=Prometheus Network
+Description=Internal Networks
 
-# IPv4
+# For hosting Prometheus metric endpoints
 [Address]
 Address=!!prometheus.subnet!!
 Scope=host
 
-
+# For hosting an internal email server
+[Address]
+Address=!!email.ipv4!!/32
+Scope=host
