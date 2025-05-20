@@ -70,6 +70,7 @@ packages:
   - openssh-clients
   - openssh-server
   - perl-File-Find # Needed for TeX Live
+  - perl-LWP-Protocol-https # Recommended for TeX Live
   - perl-interpreter # Needed for TeX Live
   - podman
   - policycoreutils-python-utils # semanage
