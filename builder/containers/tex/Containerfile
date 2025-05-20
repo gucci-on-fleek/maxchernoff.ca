@@ -8,7 +8,7 @@ FROM registry.fedoraproject.org/fedora-minimal:!!fedora.version!!
 
 # Add the files
 COPY ["tex-cache.sh", "package-install.sh", "/usr/local/sbin/"]
-COPY ["context-cache.tex", "latex-cache.tex", "/root/"]
+COPY ["context-cache.tex", "latex-cache.tex", "/root/make-font-cache/"]
 
 # Set the environment variables
 ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/opt/texlive/bin/windows:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
