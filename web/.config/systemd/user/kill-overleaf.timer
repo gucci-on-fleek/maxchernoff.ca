@@ -6,7 +6,8 @@
 Description=Forces Overleaf to restart
 
 [Timer]
-OnActiveSec=8h
+OnActiveSec=6h
+OnUnitActiveSec=6h
 
 [Install]
 WantedBy=timers.target
