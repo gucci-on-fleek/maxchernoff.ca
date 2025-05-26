@@ -79,8 +79,10 @@ ln -sf /srv/mimetypes.conf $root/etc/viewvc/mimetypes.conf
 ln -sf /srv/viewvc.conf $root/etc/viewvc/viewvc.conf
 
 # GeoIP folder
-mkdir -p $root/usr/share/GeoIP/
-chmod -R a+rX $root/usr/share/GeoIP/
+mkdir -p $root/usr/local/share/GeoIP/
+chmod -R a+rX $root/usr/local/share/GeoIP/
+curl -L 'https://cdn.jsdelivr.net/npm/@ip-location-db/asn-mmdb/asn.mmdb' -o $root/usr/local/share/GeoIP/asn.mmdb
+chmod a=r,u+w $root/usr/local/share/GeoIP/asn.mmdb
 
 # Unlink the cache from the host
 rm $root/var/cache/libdnf5
