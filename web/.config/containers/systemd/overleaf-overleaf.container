@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
-# TODO: https://github.com/overleaf/overleaf/issues/1359
-Image=docker.io/sharelatex/sharelatex:5.4
+Image=docker.io/sharelatex/sharelatex:5
 Volume=%h/overleaf/overleaf:/var/lib/overleaf:Z,noexec
 Tmpfs=/var/lib/overleaf/tmp
 Volume=/var/home/tex/texlive:/usr/local/texlive/2024:ro,exec,nosuid
