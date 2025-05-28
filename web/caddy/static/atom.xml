@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Source Code for maxchernoff.ca
+     https://github.com/gucci-on-fleek/maxchernoff.ca
+     SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+     SPDX-FileCopyrightText: 2025 Max Chernoff -->
+<!-- type="application/xslt+xml" doesn't work with Chrome. -->
+<?xml-stylesheet href="/assets/atom.xslt" type="text/xsl"?>
+
+{{- define "entry" -}}
+    {{- $path := printf "/p/%s.md" . -}}
+    {{- $url := print "https://www.maxchernoff.ca" (trimSuffix ".md" $path)  -}}
+    {{- $markdown := (include $path | splitFrontMatter) -}}
+    {{- $meta := $markdown.Meta -}}
+    <entry>
+        <title>{{ $meta.title }}</title>
+        <link rel="alternate" type="text/html" href="{{ $url }}"/>
+        <id>{{ $url }}</id>
+        <published>{{ $meta.date }}T00:00:00-07:00</published>
+        <updated>{{ $meta.date }}T00:00:00-07:00</updated>
+        <summary>{{ $meta.description }}</summary>
+        <content type="html">
+            &lt;style&gt;
+                {{- /* Minify the CSS */ -}}
+                {{- regexReplaceAll `/\*[^\0]*?\*\/|\s*\n\s*|([^-\w)])\s+` (include "/assets/atom-style.css") "${1}" -}}
+            &lt;/style&gt;
+            {{- markdown $markdown.Body | html -}}
+        </content>
+    </entry>
+{{- end }}
+
+<feed
+    xmlns="http://www.w3.org/2005/Atom"
+    xml:lang="en"
+    xml:base="https://www.maxchernoff.ca/"
+>
+    <title>Max Chernoff's posts</title>
+    <id>https://www.maxchernoff.ca/</id>
+    <link
+        rel="alternate"
+        type="text/html"
+        href="https://www.maxchernoff.ca/"
+    />
+    <link
+        rel="self"
+        type="application/atom+xml"
+        href="https://www.maxchernoff.ca/atom.xml"
+    />
+    <icon>https://www.maxchernoff.ca/assets/favicon.svg</icon>
+    <rights>CC BY-SA 4.0</rights>
+    <author>
+        <name>Max Chernoff</name>
+    </author>
+
+    <!-- Content that needs to be updated whenever a new post is added: -->
+    <updated>2025-05-27T00:00:00-07:00</updated>
+    {{ template "entry" "overleaf" }}
+    {{ template "entry" "server-installation" }}
+    {{ template "entry" "luatex-vulnerabilities" }}
+</feed>

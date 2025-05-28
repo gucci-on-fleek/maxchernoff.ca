@@ -2,15 +2,14 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 set -eu
 if [ "$(id -u)" -eq 0 ]; then
     echo "Must not run as root"
     exit 1
 fi
 
-script_dir="$(dirname "$(realpath "$0")")"
-repo_dir="$(realpath "$script_dir/..")"
+repo_dir="$(git rev-parse --show-toplevel)"
 cd $repo_dir
 
 if [ "${1:-}" = "knot" ]; then

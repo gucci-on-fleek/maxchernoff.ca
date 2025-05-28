@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 
 # Define the minifier
 (minify) {
@@ -112,7 +112,7 @@
 
 	# No sitemaps, so cache the response for a long time
 	@sitemaps {
-		path /sitemap.xml /sitemap.txt /sitemaps.xml /sitemap.xml.gz /sitemap_index.xml /atom.xml
+		path /sitemap.xml /sitemap.txt /sitemaps.xml /sitemap.xml.gz /sitemap_index.xml
 	}
 	handle @sitemaps {
 		header Cache-Control max-age=2592000 # 30 days
@@ -211,6 +211,35 @@
 	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
 
+	# Atom feed
+	@pretty-atom {
+		header Sec-Fetch-Mode navigate
+	}
+
+	handle /atom.xml {
+		header @pretty-atom {
+			# Browsers will force a download for "application/atom+xml", but
+			# will allow processing "<?xml-stylesheet ...?>" directives for
+			# "application/xml", so we'll use that if the request is from a web
+			# browser.
+			Content-Type "application/xml; charset=utf-8"
+			defer
+		}
+		header Content-Type "application/atom+xml; charset=utf-8"
+		header Cache-Control max-age=86400 # 1 day
+		header Access-Control-Allow-Origin "*"
+		templates {
+			mime application/xml application/atom+xml text/xml
+		}
+	}
+
+	handle /assets/atom.xslt {
+		header Content-Type "application/xslt+xml; charset=utf-8"
+		templates {
+			mime application/xslt+xml
+		}
+	}
+
 	# Block internal paths
 	@internal-url {
 		expression `{http.request.orig_uri.path}.matches("^/(includes/?|p/?$|domains/?)")`
@@ -237,10 +266,19 @@
 	}
 
 	# Minify
-	import minify
+	@minify-allowed {
+		# The Atom XML file contains embedded HTML, which can contain embedded
+		# <pre> tags, so minifying the whitespace would break the rendering.
+		not path /atom.xml /assets/atom.xslt
+	}
+
+	route @minify-allowed {
+		import minify
+	}
 
 	# Handle errors
 	handle_errors {
+		header Content-Type "text/html; charset=utf-8"
 		rewrite * /includes/error.html
 		templates
 		file_server

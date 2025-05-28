@@ -1,0 +1,173 @@
+/* Source Code for maxchernoff.ca
+ * https://github.com/gucci-on-fleek/maxchernoff.ca
+ * SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+ * SPDX-FileCopyrightText: 2025 Max Chernoff
+ */
+
+/* For the Atom feeds, we'll assume that the user-agent will handle all the
+ * styling decisions, so we'll only provide the bare minimum to make the content
+ * readable.
+ */
+
+:root {
+    color-scheme: light dark;
+    hyphens: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    svg, img.dark {
+        filter: invert(1) hue-rotate(180deg) saturate(140%) !important;
+    }
+}
+
+[hidden] {
+    display: none !important;
+}
+
+code {
+    overflow-wrap: anywhere;
+    hyphens: none;
+    tab-size: 4;
+}
+
+code.block {
+    display: block;
+    max-width: 100%;
+}
+
+abbr {
+    text-decoration: none;
+    font-variant-caps: all-small-caps;
+    font-variant-numeric: oldstyle-nums;
+    font-size: 1.075em;
+}
+
+pre {
+    overflow-x: auto;
+    hyphens: none;
+}
+
+pre.scroll {
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.hscroll {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.vscroll {
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+span.sidenote {
+    display: block;
+    font-size: 80%;
+    margin-top: 1em;
+    margin-left: 3em;
+}
+
+/* Syntax Highlighting */
+.chroma :is(.p, .cl) {
+    color: CanvasText;
+}
+
+@media not (prefers-color-scheme: dark) {
+    .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs) {
+        color: #515151;
+    }
+
+    .chroma :is(.err, .gd, .nv, .sr, .vc, .vg, .vi) {
+        color: #a12236;
+    }
+
+    .chroma :is(.k, .kc, .kd, .kn, .kp, .kr, .ne, .ow) {
+        color: #6730c5;
+    }
+
+    .chroma :is(.bp, .il, .kt, .l, .ld, .m, .mb, .mf, .mh, .mi, .mo, .nd, .nl, .vm) {
+        color: #7f4707;
+    }
+
+    .chroma :is(.n, .nn, .nx, .pm, .w) {
+        color: CanvasText;
+    }
+
+    .chroma :is(.dl, .ni, .o, .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .gi, .nb) {
+        color: #00622f;
+    }
+
+    .chroma :is(.fm, .gh, .gu, .nc, .nf, .no, .nt, .py, .ss) {
+        color: #005b82;
+    }
+
+    .chroma .gp {
+        color: #005b82;
+        font-weight: 500;
+        user-select:none;
+    }
+
+    .chroma .ge {
+        font-style: italic;
+    }
+
+    .chroma .gs {
+        font-weight: 700;
+    }
+
+    .chroma .na {
+        color: #912583;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .chroma :is(.c, .c1, .ch, .cm, .cp, .cpf, .cs, .gu) {
+        color: #949076;
+    }
+
+    .chroma .err {
+        background-color: #1e0010;
+        color: #eb0083;
+    }
+
+    .chroma :is(.k, .kc, .kd, .kp, .kr, .kt, .no) {
+        color: #66d9ef;
+    }
+
+    .chroma .gp {
+        color: #66d9ef;
+        font-weight: 700;
+        user-select:none;
+    }
+
+    .chroma :is(.il, .l, .m, .mb, .mf, .mh, .mi, .mo, .se) {
+        color: #ae81ff;
+    }
+
+    .chroma :is(.bp, .n, .ni, .nl, .nn, .nv, .py, .vc, .vg, .vi, .vm, .w) {
+        color: CanvasText;
+    }
+
+    .chroma :is(.gd, .kn, .nt, .o, .ow) {
+        color: #f94e8a;
+    }
+
+    .chroma .ge {
+        font-style: italic;
+    }
+
+    .chroma :is(.fm, .gi, .na, .nc, .nd, .ne, .nf, .nx, .nb) {
+        color: #a6e22e;
+    }
+
+    .chroma .gs {
+        font-weight: 700;
+    }
+
+    .chroma :is(.dl, .ld, .s, .s1, .s2, .sa, .sb, .sc, .sd, .sh, .si, .sr, .ss, .sx) {
+        color: #e6db74;
+    }
+
+}

@@ -1,7 +1,7 @@
 /* Source Code for maxchernoff.ca
  * https://github.com/gucci-on-fleek/maxchernoff.ca
  * SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
- * SPDX-FileCopyrightText: 2024 Max Chernoff
+ * SPDX-FileCopyrightText: 2025 Max Chernoff
  */
 
 :root {
@@ -82,6 +82,7 @@
 html {
     color: var(--color-text);
     background-color: var(--color-background);
+    color-scheme: light dark;
 }
 
 a:link {
@@ -102,6 +103,7 @@ body {
     /* Center all content in the viewport */
     display: grid;
     justify-items: center;
+    align-content: start;
     margin: var(--page-margin);
     font-size: var(--base-font-size);
 
@@ -407,13 +409,31 @@ dl.bold > dt {
 
 header p {
     font-style: italic;
+}
+
+header h1 + p {
     position: absolute;
     right: var(--margin-width);
 }
 
-summary {
+summary:not(.atom) {
     font-weight: 500;
     list-style-position: outside;
+}
+
+summary.atom {
+    list-style: none;
+}
+
+summary.atom::after {
+    padding-top: 1rem;
+    display: list-item;
+    content: "Expand for full post…";
+    list-style: inside disclosure-open;
+}
+
+details:not([open]) summary.atom::after {
+    list-style: inside disclosure-closed;
 }
 
 input, button, textarea, select {
