@@ -4,53 +4,60 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
-(typeattributeset cil_gen_require admin_home_t      )
-(typeattributeset cil_gen_require dosfs_t           )
-(typeattributeset cil_gen_require file_context_t    )
-(typeattributeset cil_gen_require fs_t              )
-(typeattributeset cil_gen_require gpg_t             )
-(typeattributeset cil_gen_require home_root_t       )
-(typeattributeset cil_gen_require init_var_run_t    )
-(typeattributeset cil_gen_require journalctl_t      )
-(typeattributeset cil_gen_require root_t            )
-(typeattributeset cil_gen_require snapperd_t        )
-(typeattributeset cil_gen_require staff_t           )
-(typeattributeset cil_gen_require sysadm_t          )
-(typeattributeset cil_gen_require systemd_networkd_t)
-(typeattributeset cil_gen_require tmpfs_t           )
-(typeattributeset cil_gen_require user_home_dir_t   )
-(typeattributeset cil_gen_require user_home_t       )
-(typeattributeset cil_gen_require user_t            )
-(typeattributeset cil_gen_require user_tmp_t        )
-(typeattributeset cil_gen_require var_log_t         )
-(typeattributeset cil_gen_require var_run_t         )
-
+(typeattributeset cil_gen_require admin_home_t       )
+(typeattributeset cil_gen_require dosfs_t            )
+(typeattributeset cil_gen_require file_context_t     )
+(typeattributeset cil_gen_require fs_t               )
+(typeattributeset cil_gen_require gconf_home_t       )
+(typeattributeset cil_gen_require gpg_t              )
+(typeattributeset cil_gen_require home_root_t        )
+(typeattributeset cil_gen_require init_var_run_t     )
+(typeattributeset cil_gen_require journalctl_t       )
+(typeattributeset cil_gen_require root_t             )
+(typeattributeset cil_gen_require snapperd_t         )
+(typeattributeset cil_gen_require staff_t            )
+(typeattributeset cil_gen_require sysadm_t           )
+(typeattributeset cil_gen_require systemd_networkd_t )
+(typeattributeset cil_gen_require systemd_unit_file_t)
+(typeattributeset cil_gen_require tmpfs_t            )
+(typeattributeset cil_gen_require user_t             )
+(typeattributeset cil_gen_require user_tmp_t         )
+(typeattributeset cil_gen_require var_log_t          )
+(typeattributeset cil_gen_require var_run_t          )
 
 ;; Defines
 (typeattribute    local_user_domains                 )
 (typeattributeset local_user_domains (user_t staff_t))
 
-;; Needed for various systemd user units and utilities
-(allow journalctl_t       user_home_dir_t (dir                (add_name remove_name write              )))
-(allow journalctl_t       user_home_dir_t (file               (create getattr open rename setattr write)))
-(allow journalctl_t       user_home_t     (file               (unlink                                  )))
-(allow local_user_domains admin_home_t    (dir                (mounton                                 )))
-(allow local_user_domains dosfs_t         (filesystem         (remount                                 )))
-(allow local_user_domains fs_t            (filesystem         (remount unmount                         )))
-(allow local_user_domains home_root_t     (dir                (mounton                                 )))
-(allow local_user_domains init_var_run_t  (dir                (mounton                                 )))
-(allow local_user_domains root_t          (dir                (mounton                                 )))
-(allow local_user_domains sysadm_t        (unix_stream_socket (getattr getopt read setopt write        )))
-(allow local_user_domains tmpfs_t         (filesystem         (remount                                 )))
-(allow local_user_domains user_home_t     (service            (reload start status stop                )))
-(allow local_user_domains user_tmp_t      (file               (mounton                                 )))
-(allow local_user_domains user_tmp_t      (service            (reload start status stop                )))
-(allow local_user_domains var_log_t       (file               (open read                               )))
-(allow local_user_domains var_run_t       (dir                (mounton                                 )))
+;; Allow systemd user units to sandbox their filesystems
+(allow local_user_domains admin_home_t   (dir        (mounton        )))
+(allow local_user_domains dosfs_t        (filesystem (remount        )))
+(allow local_user_domains fs_t           (filesystem (remount unmount)))
+(allow local_user_domains home_root_t    (dir        (mounton        )))
+(allow local_user_domains init_var_run_t (dir        (mounton        )))
+(allow local_user_domains root_t         (dir        (mounton        )))
+(allow local_user_domains tmpfs_t        (filesystem (remount        )))
+(allow local_user_domains user_tmp_t     (file       (mounton        )))
+(allow local_user_domains var_log_t      (file       (open read      )))
+(allow local_user_domains var_run_t      (dir        (mounton        )))
+
+;; Needed for "sudo systemctl --user --machine=USER@ ..."
+(allow local_user_domains sysadm_t (unix_stream_socket (getattr getopt read setopt write)))
+
+;; Needed for runtime-generated user units
+(filecon "/run/user/%{USERID}/systemd/generator" dir (system_u object_r systemd_unit_file_t ((s0) (s0))))
+
+(allow local_user_domains systemd_unit_file_t (dir      (add_name create remove_name rmdir write)))
+(allow local_user_domains systemd_unit_file_t (file     (create unlink write                    )))
+(allow local_user_domains systemd_unit_file_t (lnk_file (create unlink                          )))
+
+;; Needed for journalctl (with the "less" pager) to stop complaining
+(dontaudit journalctl_t gconf_home_t (dir  (add_name remove_name write  )))
+(dontaudit journalctl_t gconf_home_t (file (create rename setattr unlink)))
 
 ;; Miscellaneous
-(allow snapperd_t file_context_t (file     (map           )))
-(allow user_t     gpg_t          (process2 (nnp_transition)))
+(allow snapperd_t         file_context_t (file     (map           )))
+(allow local_user_domains gpg_t          (process2 (nnp_transition)))
 
 ;; Needed for "sudo networkctl ..."
 (allow sysadm_t systemd_networkd_t (dbus               (send_msg )))

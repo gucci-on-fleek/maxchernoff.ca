@@ -30,6 +30,17 @@ fcontext --deleteall
 login --deleteall
 module --deleteall
 
+# Allow max to sudo
+login --add --seuser staff_u --range 's0-s0:c0.c1023' max
+
+# Let all users run containers
+login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
+
+# Load the custom policies
+module --add /etc/selinux/local-policies/local-allow-containers.cil
+module --add /etc/selinux/local-policies/local-systemd.cil
+module --add /etc/selinux/local-policies/local-pasta.cil
+
 # Set the container file contexts
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
@@ -47,21 +58,17 @@ fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/maddy(/.*)?
 fcontext --add --seuser user_u --type container_ro_file_t '{tex}context-installer/tex(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{tex}texlive(/.*)?'
 
+# Set the file context equivalents
+fcontext --add '{repo}builder/.config' --equal '{builder}/.config'
+fcontext --add '{repo}max/.config' --equal '{max}/.config'
+fcontext --add '{repo}tex/.config' --equal '{tex}/.config'
+fcontext --add '{repo}web/.config' --equal '{web}/.config'
+fcontext --add '{repo}woodpecker/.config' --equal '{woodpecker}/.config'
+
 # Let us host the network services as unprivileged users
 boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
 boolean --modify container_manage_cgroup --on
-
-# Let all users run containers
-login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
-
-# Allow max to sudo
-login --add --seuser staff_u --range 's0-s0:c0.c1023' max
-
-# Load the custom policies
-module --add /etc/selinux/local-policies/local-allow-containers.cil
-module --add /etc/selinux/local-policies/local-systemd.cil
-module --add /etc/selinux/local-policies/local-pasta.cil
 """
 
 
