@@ -12,7 +12,8 @@ Type=oneshot
 
 # TODO: This is an awful hack needed because Overleaf randomly maxes out the CPU
 # after running for a couple hours for some unknown reason.
-ExecStart=podman unshare /usr/bin/bash -c 'kill -INT $(pgrep -f clsi/[a]pp.js) $(pgrep -f filestore/[a]pp.js) $(pgrep -f real-time/[a]pp.js)'
+# ExecStart=podman unshare /usr/bin/bash -c 'kill -INT $(pgrep -f clsi/[a]pp.js) $(pgrep -f filestore/[a]pp.js) $(pgrep -f real-time/[a]pp.js)'
+ExecStart=/usr/bin/true
 
 [Install]
 WantedBy=kill-overleaf.timer
