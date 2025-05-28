@@ -126,13 +126,20 @@
 	@bad-url {
 		expression `
 		(path(
-		"*/.git/*",
-		"/.*",
-		"*.php",
-		"/*.yml",
-		"/cgi-bin/*",
-		"/actuator/*",
+		"*.php*",
 		"*/.env",
+		"*/.git/*",
+		"*phpinfo*",
+		"/.*",
+		"/*.yml",
+		"/actuator/*",
+		"/backup",
+		"/cgi-bin/*",
+		"/config.json",
+		"/media/system/js/core.js",
+		"/owa/*",
+		"/sftp-config.json",
+		"/wordpress*",
 		"/wp-*"
 		) &&
 		!path("/.well-known/*")) ||
