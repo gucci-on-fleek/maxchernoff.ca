@@ -51,3 +51,6 @@
         (allow pasta_t port_type (udp_socket (accept getopt name_bind)))
     )
 )
+
+;; Testing TODO
+(allow user_t pasta_t (process (sigkill signull)))

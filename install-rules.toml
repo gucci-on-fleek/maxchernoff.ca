@@ -59,11 +59,11 @@ fcontext --add --seuser user_u --type container_ro_file_t '{tex}context-installe
 fcontext --add --seuser user_u --type container_ro_file_t '{tex}texlive(/.*)?'
 
 # Set the file context equivalents
-fcontext --add '{repo}builder/.config' --equal '{builder}/.config'
-fcontext --add '{repo}max/.config' --equal '{max}/.config'
-fcontext --add '{repo}tex/.config' --equal '{tex}/.config'
-fcontext --add '{repo}web/.config' --equal '{web}/.config'
-fcontext --add '{repo}woodpecker/.config' --equal '{woodpecker}/.config'
+fcontext --add '{repo}builder/.config' --equal '{builder}.config'
+fcontext --add '{repo}max/.config' --equal '{max}.config'
+fcontext --add '{repo}tex/.config' --equal '{tex}.config'
+fcontext --add '{repo}web/.config' --equal '{web}.config'
+fcontext --add '{repo}woodpecker/.config' --equal '{woodpecker}.config'
 
 # Let us host the network services as unprivileged users
 boolean --modify selinuxuser_tcp_server --on
