@@ -29,6 +29,7 @@
 			header Content-Type "text/xml*"
 			header Content-Type "application/xml*"
 			header Content-Type "*+xml*"
+			header !X-No-Minify
 		}
 		re `<![-]-[^\0]*?[-]->\s*|\s*(\n)\s*|([^-\w<!])\s+([^-\w<!])` "${1}${2}${3}"
 	}
@@ -228,6 +229,7 @@
 		header Content-Type "application/atom+xml; charset=utf-8"
 		header Cache-Control max-age=86400 # 1 day
 		header Access-Control-Allow-Origin "*"
+		header X-No-Minify "true"
 		templates {
 			mime application/xml application/atom+xml text/xml
 		}
@@ -235,6 +237,7 @@
 
 	handle /assets/atom.xslt {
 		header Content-Type "application/xslt+xml; charset=utf-8"
+		header X-No-Minify "true"
 		templates {
 			mime application/xslt+xml
 		}
@@ -265,16 +268,7 @@
 		Content-Type application/speculationrules+json
 	}
 
-	# Minify
-	@minify-allowed {
-		# The Atom XML file contains embedded HTML, which can contain embedded
-		# <pre> tags, so minifying the whitespace would break the rendering.
-		not path /atom.xml /assets/atom.xslt
-	}
-
-	route @minify-allowed {
-		import minify
-	}
+	import minify
 
 	# Handle errors
 	handle_errors {
