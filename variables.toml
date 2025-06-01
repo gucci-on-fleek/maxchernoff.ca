@@ -56,6 +56,15 @@ woodpecker.port = "9102"
 node.ip = "10.79.79.7"
 node.port = "9100"
 
+podman.web.ip = "10.79.79.8"
+podman.web.port = "9882"
+
+podman.woodpecker.ip = "10.79.79.9"
+podman.woodpecker.port = "9882"
+
+podman.builder.ip = "10.79.79.10"
+podman.builder.port = "9882"
+
 
 [email]
 # Define the IP addresses for the email server

@@ -9,11 +9,13 @@
 (typeattributeset cil_gen_require container_file_t         )
 (typeattributeset cil_gen_require container_ro_file_t      )
 (typeattributeset cil_gen_require container_runtime_t      )
+(typeattributeset cil_gen_require container_runtime_tmpfs_t)
 (typeattributeset cil_gen_require container_t              )
 (typeattributeset cil_gen_require devpts_t                 )
 (typeattributeset cil_gen_require fs_t                     )
 (typeattributeset cil_gen_require install_exec_t           )
 (typeattributeset cil_gen_require install_t                )
+(typeattributeset cil_gen_require nsfs_t                   )
 (typeattributeset cil_gen_require proc_t                   )
 (typeattributeset cil_gen_require staff_t                  )
 (typeattributeset cil_gen_require sysadm_t                 )
@@ -49,3 +51,7 @@
 (roleattributeset install_roles (sysadm_r                           ))
 (allow            sysadm_t      install_t      (process (transition)))
 (typetransition   sysadm_t      install_exec_t process  install_t    )
+
+;; Needed for the Prometheus Podman exporter to work
+(allow local_user_domains container_runtime_tmpfs_t (file (map open read write)))
+(allow local_user_domains nsfs_t                    (file (open read          )))

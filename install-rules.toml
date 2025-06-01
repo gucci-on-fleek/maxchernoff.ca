@@ -225,7 +225,11 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/web/"
 destination = "{web}/"
-paths = [".config/builder/", ".config/systemd/user/"]
+paths = [
+    ".config/builder/",
+    ".config/systemd/user/",
+    ".config/prometheus-podman-exporter",
+]
 permissions.web = "r"
 owner = "root"
 
@@ -409,7 +413,11 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/woodpecker/"
 destination = "{woodpecker}/"
-paths = [".config/systemd/user/", ".config/builder/"]
+paths = [
+    ".config/systemd/user/",
+    ".config/builder/",
+    ".config/prometheus-podman-exporter",
+]
 permissions.woodpecker = "r"
 
 [[folder]]
@@ -446,7 +454,11 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/builder/"
 destination = "{builder}/"
-paths = [".config/systemd/user/", "containers/"]
+paths = [
+    ".config/systemd/user/",
+    "containers/",
+    ".config/prometheus-podman-exporter",
+]
 permissions.builder = "r"
 
 [[folder]]

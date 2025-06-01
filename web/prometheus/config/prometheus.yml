@@ -40,3 +40,10 @@ scrape_configs:
     static_configs:
       - targets:
           - "!!prometheus.node.ip!!:!!prometheus.node.port!!"
+
+  - job_name: "podman"
+    static_configs:
+      - targets:
+          - "!!prometheus.podman.web.ip!!:!!prometheus.podman.web.port!!"
+          - "!!prometheus.podman.woodpecker.ip!!:!!prometheus.podman.woodpecker.port!!"
+          - "!!prometheus.podman.builder.ip!!:!!prometheus.podman.builder.port!!"
