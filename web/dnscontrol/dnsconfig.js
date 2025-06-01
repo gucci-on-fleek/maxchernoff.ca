@@ -133,6 +133,9 @@ D("maxchernoff.ca", REG_MONITOR,
     // Hosts an Overleaf instance
     web("overleaf"),
 
+    // Prometheus metrics
+    web("prometheus"),
+
     // Container Registry
     web("registry"),
 

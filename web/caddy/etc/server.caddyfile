@@ -63,7 +63,6 @@ import base.caddyfile
 	}
 
 	# ECH
-	# debug
 	dns rfc2136 {
 		server host.containers.internal:53
 		key_name caddy
@@ -71,6 +70,9 @@ import base.caddyfile
 		key {env.CADDY_TSIG}
 	}
 	ech ech.maxchernoff.ca
+
+	# Metrics
+	metrics
 }
 
 # Define the default options for all sites
@@ -224,6 +226,22 @@ ech.maxchernoff.ca {
 	respond "Not Found" 404
 }
 
+# Prometheus reverse proxy
+prometheus.maxchernoff.ca {
+	import default
+
+	header {
+		Cache-Control no-cache
+		?Content-Security-Policy ""
+	}
+
+	basic_auth {
+		analytics {env.CADDY_HTTP_CREDENTIALS}
+	}
+
+	reverse_proxy systemd-prometheus:9090
+}
+
 # Secondary domain: duck.tel
 duck.tel {
 	import default
@@ -263,4 +281,10 @@ duck.tel {
 		`
 		close
 	}
+}
+
+# Metrics
+http://!!prometheus.caddy.ip!!:!!prometheus.caddy.port!! {
+	bind 0.0.0.0
+	metrics
 }

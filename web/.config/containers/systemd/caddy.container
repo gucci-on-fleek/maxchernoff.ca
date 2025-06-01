@@ -27,6 +27,8 @@ Network=overleaf.network
 Network=prometheus.network
 Network=woodpecker.network
 
+PublishPort=!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!:!!prometheus.caddy.port!!
+
 [Service]
 Restart=always
 TimeoutStopSec=15s

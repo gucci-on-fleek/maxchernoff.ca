@@ -1,7 +1,8 @@
 ;; Includes
 (roleattributeset cil_gen_require object_r             )
 (typeattributeset cil_gen_require container_runtime_t  )
-(typeattributeset cil_gen_require files_unconfined_type)
+(typeattributeset cil_gen_require pasta_t              )
+(typeattributeset cil_gen_require staff_t              )
 
 ;; Port Includes
 (typeattributeset cil_gen_require bacula_port_t           )
@@ -92,7 +93,10 @@
 (allow domain local_prometheus_metrics_port_t (tcp_socket (name_bind)))
 
 ;; Only allow the Prometheus container to connect to the Prometheus metrics ports
+(allow container_runtime_t                local_prometheus_metrics_port_t (tcp_socket (name_connect)))
 (allow local_prometheus_container.process local_prometheus_metrics_port_t (tcp_socket (name_connect)))
+(allow pasta_t                            local_prometheus_metrics_port_t (tcp_socket (name_connect)))
+(allow staff_t                            local_prometheus_metrics_port_t (tcp_socket (name_connect)))
 
 ;; Block the ports that overlap with the Prometheus port
 (constrain
