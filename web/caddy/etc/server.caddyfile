@@ -231,7 +231,6 @@ prometheus.maxchernoff.ca {
 	import default
 
 	header {
-		Cache-Control no-cache
 		?Content-Security-Policy ""
 	}
 
@@ -239,7 +238,20 @@ prometheus.maxchernoff.ca {
 		analytics {env.CADDY_HTTP_CREDENTIALS}
 	}
 
-	reverse_proxy systemd-prometheus:9090
+	reverse_proxy systemd-prometheus:!!prometheus.prometheus.port!!
+}
+
+# Grafana reverse proxy
+grafana.maxchernoff.ca {
+	import default
+
+	basic_auth {
+		analytics {env.CADDY_HTTP_CREDENTIALS}
+	}
+
+	reverse_proxy systemd-grafana:3000 {
+		header_up X-WEBAUTH-USER "admin"
+	}
 }
 
 # Secondary domain: duck.tel

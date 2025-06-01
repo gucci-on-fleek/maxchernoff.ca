@@ -1,0 +1,22 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Container]
+Image=docker.io/grafana/grafana-oss:latest
+Network=prometheus.network
+
+Volume=%h/grafana/config/:/etc/grafana/:ro,noexec
+Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,noexec
+
+ReadOnly=true
+
+[Service]
+Restart=always
+
+[Unit]
+After=prometheus.container
+Requires=prometheus.container
+
+[Install]
+WantedBy=caddy.service

@@ -47,7 +47,11 @@ module --add /usr/share/udica/templates/net_container.cil
 # Set the container file contexts
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}grafana/data(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}knot/storage(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}maddy/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}overleaf(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}prometheus/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}woodpecker/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecker/config(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?'
@@ -56,6 +60,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/goaccess(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/grafana(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/knot(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/maddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/prometheus(/.*)?'
@@ -244,6 +249,7 @@ paths = [
     "knot/*/",
     "maddy/config",
     "prometheus/config",
+    "grafana/config",
 ]
 permissions.web = "r"
 permissions."web/root" = "r"
@@ -388,6 +394,21 @@ permissions."web/65534" = "rw"
 base = "{web}/prometheus/"
 paths = ["config"]
 permissions."web/65534" = "r"
+permissions."web" = "r"
+owner = "repo"
+recursive_permissions = true
+
+[[folder]]
+base = "{web}/grafana/"
+paths = ["data"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/472" = "rw"
+
+[[permissions]]
+base = "{web}/grafana/"
+paths = ["config"]
+permissions."web/472" = "r"
 permissions."web" = "r"
 owner = "repo"
 recursive_permissions = true

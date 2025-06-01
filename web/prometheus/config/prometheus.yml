@@ -52,3 +52,8 @@ scrape_configs:
     static_configs:
       - targets:
           - "!!prometheus.knot.ip!!:!!prometheus.knot.port!!"
+
+  - job_name: "grafana"
+    static_configs:
+      - targets:
+          - "systemd-grafana:3000"

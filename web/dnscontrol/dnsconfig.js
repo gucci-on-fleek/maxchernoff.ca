@@ -130,6 +130,9 @@ D("maxchernoff.ca", REG_MONITOR,
     // ECH Domain
     web("ech"),
 
+    // Grafana dashboard
+    web("grafana"),
+
     // Hosts an Overleaf instance
     web("overleaf"),
 
