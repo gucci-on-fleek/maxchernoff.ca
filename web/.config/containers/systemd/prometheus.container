@@ -1,0 +1,21 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Container]
+Image=quay.io/prometheus/prometheus:latest
+Network=prometheus.network
+
+Volume=%h/prometheus/config/:/etc/prometheus/:ro,noexec
+Volume=%h/prometheus/data/:/prometheus/:rw,Z,noexec
+
+PublishPort=127.0.0.1:9090:9090
+
+ReadOnly=true
+ReadOnlyTmpfs=false
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=caddy.service

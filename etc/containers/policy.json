@@ -86,6 +86,11 @@
                 {
                     "type": "insecureAcceptAnything"
                 }
+            ],
+            "quay.io/prometheus": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
             ]
         },
         "oci": {
