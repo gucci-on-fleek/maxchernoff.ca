@@ -47,3 +47,8 @@ scrape_configs:
           - "!!prometheus.podman.web.ip!!:!!prometheus.podman.web.port!!"
           - "!!prometheus.podman.woodpecker.ip!!:!!prometheus.podman.woodpecker.port!!"
           - "!!prometheus.podman.builder.ip!!:!!prometheus.podman.builder.port!!"
+
+  - job_name: "knot"
+    static_configs:
+      - targets:
+          - "!!prometheus.knot.ip!!:!!prometheus.knot.port!!"

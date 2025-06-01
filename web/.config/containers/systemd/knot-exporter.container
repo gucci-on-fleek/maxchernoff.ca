@@ -1,0 +1,29 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=maxchernoff.ca/knot-exporter:latest
+
+Network=private
+Volume=%t/knot:/run/knot/:rw,Z,U
+
+ReadOnly=true
+ReadOnlyTmpfs=false
+
+# Metrics
+Exec=\
+    --web-listen-addr=0.0.0.0 \
+    --web-listen-port=!!prometheus.knot.port!!
+
+PublishPort=!!prometheus.knot.ip!!:!!prometheus.knot.port!!:!!prometheus.knot.port!!
+
+[Unit]
+Wants=knot.service
+After=knot.service
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
