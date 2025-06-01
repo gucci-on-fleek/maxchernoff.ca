@@ -9,6 +9,7 @@ Network=prometheus.network
 Volume=%h/prometheus/config/:/etc/prometheus/:ro,noexec
 Volume=%h/prometheus/data/:/prometheus/:rw,Z,noexec
 
+SecurityLabelType=local_prometheus_container.process
 PublishPort=127.0.0.1:9090:9090
 
 ReadOnly=true

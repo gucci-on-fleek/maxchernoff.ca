@@ -38,8 +38,11 @@ login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
 # Load the custom policies
 module --add /etc/selinux/local-policies/local-allow-containers.cil
-module --add /etc/selinux/local-policies/local-systemd.cil
 module --add /etc/selinux/local-policies/local-pasta.cil
+module --add /etc/selinux/local-policies/local-prometheus.cil
+module --add /etc/selinux/local-policies/local-systemd.cil
+module --add /usr/share/udica/templates/base_container.cil
+module --add /usr/share/udica/templates/net_container.cil
 
 # Set the container file contexts
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'

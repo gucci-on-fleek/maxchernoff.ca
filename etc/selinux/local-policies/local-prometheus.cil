@@ -1,0 +1,107 @@
+;; Includes
+(roleattributeset cil_gen_require object_r             )
+(typeattributeset cil_gen_require container_runtime_t  )
+(typeattributeset cil_gen_require files_unconfined_type)
+
+;; Port Includes
+(typeattributeset cil_gen_require bacula_port_t           )
+(typeattributeset cil_gen_require boothd_port_t           )
+(typeattributeset cil_gen_require condor_port_t           )
+(typeattributeset cil_gen_require freeipmi_port_t         )
+(typeattributeset cil_gen_require git_port_t              )
+(typeattributeset cil_gen_require glance_port_t           )
+(typeattributeset cil_gen_require glance_registry_port_t  )
+(typeattributeset cil_gen_require hplip_port_t            )
+(typeattributeset cil_gen_require jboss_management_port_t )
+(typeattributeset cil_gen_require keylime_port_t          )
+(typeattributeset cil_gen_require neutron_port_t          )
+(typeattributeset cil_gen_require ocsp_port_t             )
+(typeattributeset cil_gen_require openqa_liveview_port_t  )
+(typeattributeset cil_gen_require openqa_port_t           )
+(typeattributeset cil_gen_require openqa_websockets_port_t)
+(typeattributeset cil_gen_require pingd_port_t            )
+(typeattributeset cil_gen_require pki_ca_port_t           )
+(typeattributeset cil_gen_require postgresql_port_t       )
+(typeattributeset cil_gen_require sap_port_t              )
+(typeattributeset cil_gen_require soundd_port_t           )
+(typeattributeset cil_gen_require sype_transport_port_t   )
+(typeattributeset cil_gen_require tor_port_t              )
+(typeattributeset cil_gen_require wap_wsp_port_t          )
+(typeattributeset cil_gen_require websm_port_t            )
+
+;; Define the Prometheus metrics ports
+(type local_prometheus_metrics_port_t)
+(roletype object_r local_prometheus_metrics_port_t)
+(portcon tcp (9091 9999) (system_u object_r local_prometheus_metrics_port_t ((s0) (s0))))
+
+;; Define the Prometheus server port
+(typealias local_prometheus_server_port_t)
+(typealiasactual local_prometheus_server_port_t websm_port_t)
+
+;; Define the list of ports that overlap with the Prometheus port
+(typeattribute local_bad_ports)
+(typeattributeset local_bad_ports (
+    bacula_port_t
+    boothd_port_t
+    condor_port_t
+    freeipmi_port_t
+    git_port_t
+    glance_port_t
+    glance_registry_port_t
+    hplip_port_t
+    ; http_port_t  ;; Will also block 80 and 443!
+    jboss_management_port_t
+    keylime_port_t
+    neutron_port_t
+    ocsp_port_t
+    openqa_liveview_port_t
+    openqa_port_t
+    openqa_websockets_port_t
+    pingd_port_t
+    pki_ca_port_t
+    postgresql_port_t
+    sap_port_t
+    soundd_port_t
+    sype_transport_port_t
+    tor_port_t
+    wap_wsp_port_t
+))
+
+;; Define the container runtime type
+(block local_prometheus_container
+    ;; Basic permissions for the container
+    (blockinherit container)
+    (blockinherit restricted_net_container)
+    (roletype user_r process)
+
+    ;; Allow binding to the Prometheus server port
+    (allow process local_prometheus_server_port_t (tcp_socket (name_bind       )))
+    (allow process process                        (capability (net_bind_service)))
+
+    ;; Filesystem permissions
+    (allow process var_t (dir       (add_name create getattr ioctl lock open read remove_name rmdir search setattr write)))
+    (allow process var_t (fifo_file (append getattr ioctl lock open read write                                          )))
+    (allow process var_t (file      (append create getattr ioctl lock map open read rename setattr unlink write         )))
+    (allow process var_t (sock_file (append getattr open read write                                                     )))
+)
+
+;; Allow anyone to connect to the Prometheus server port
+(allow domain local_prometheus_server_port_t (tcp_socket (name_connect)))
+
+;; Allow anyone to bind to the Prometheus metrics ports
+(allow domain local_prometheus_metrics_port_t (tcp_socket (name_bind)))
+
+;; Only allow the Prometheus container to connect to the Prometheus metrics ports
+(allow local_prometheus_container.process local_prometheus_metrics_port_t (tcp_socket (name_connect)))
+
+;; Block the ports that overlap with the Prometheus port
+(constrain
+    (tcp_socket (name_connect))
+    (or
+        (neq t2 local_bad_ports)
+        (or
+            (eq t1 container_runtime_t)
+            (eq t1 local_prometheus_container.process)
+        )
+    )
+)

@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Network]
-Internal=true
+Internal=false
 IPv6=true
 DisableDNS=false
