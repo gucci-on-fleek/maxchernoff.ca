@@ -8,8 +8,30 @@ global:
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets: ["localhost:9090"]
+      - targets:
+          - "!!prometheus.prometheus.ip!!:!!prometheus.prometheus.port!!"
 
   - job_name: "caddy"
     static_configs:
-      - targets: ["!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!"]
+      - targets:
+          - "!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!"
+
+  - job_name: "container-registry"
+    static_configs:
+      - targets:
+          - "!!prometheus.registry.ip!!:!!prometheus.registry.port!!"
+
+  - job_name: "overleaf"
+    static_configs:
+      - targets:
+          - "!!prometheus.overleaf.ip!!:!!prometheus.overleaf.port!!"
+
+  - job_name: "maddy"
+    static_configs:
+      - targets:
+          - "!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!"
+
+  - job_name: "woodpecker"
+    static_configs:
+      - targets:
+          - "!!prometheus.woodpecker.ip!!:!!prometheus.woodpecker.port!!"

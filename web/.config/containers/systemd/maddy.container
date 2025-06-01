@@ -19,6 +19,9 @@ Network=email.network
 # Let services on the localhost access Maddy
 PublishPort=!!email.ipv4!!:587:587
 
+# Metrics
+PublishPort=!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!:!!prometheus.maddy.port!!
+
 [Service]
 Restart=always
 

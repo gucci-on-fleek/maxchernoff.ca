@@ -27,6 +27,7 @@ Network=overleaf.network
 Network=prometheus.network
 Network=woodpecker.network
 
+# Metrics
 PublishPort=!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!:!!prometheus.caddy.port!!
 
 [Service]

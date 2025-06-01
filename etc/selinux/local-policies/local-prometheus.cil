@@ -67,6 +67,13 @@
     wap_wsp_port_t
 ))
 
+(typeattribute local_prometheus_ports)
+(typeattributeset local_prometheus_ports (
+    local_bad_ports
+    local_prometheus_metrics_port_t
+    local_prometheus_server_port_t
+))
+
 ;; Define the container runtime type
 (block local_prometheus_container
     ;; Basic permissions for the container
@@ -92,10 +99,10 @@
 (allow domain local_prometheus_metrics_port_t (tcp_socket (name_bind)))
 
 ;; Only allow the Prometheus container to connect to the Prometheus metrics ports
-(allow container_runtime_t                local_prometheus_metrics_port_t (tcp_socket (name_connect)))
-(allow local_prometheus_container.process local_prometheus_metrics_port_t (tcp_socket (name_connect)))
-(allow pasta_t                            local_prometheus_metrics_port_t (tcp_socket (name_connect)))
-(allow staff_t                            local_prometheus_metrics_port_t (tcp_socket (name_connect)))
+(allow container_runtime_t                local_prometheus_ports (tcp_socket (name_connect)))
+(allow local_prometheus_container.process local_prometheus_ports (tcp_socket (name_connect)))
+(allow pasta_t                            local_prometheus_ports (tcp_socket (name_connect)))
+(allow staff_t                            local_prometheus_ports (tcp_socket (name_connect)))
 
 ;; Block the ports that overlap with the Prometheus port
 (constrain
@@ -103,8 +110,14 @@
     (or
         (neq t2 local_bad_ports)
         (or
-            (eq t1 container_runtime_t)
-            (eq t1 local_prometheus_container.process)
+            (or
+                (eq t1 container_runtime_t)
+                (eq t1 local_prometheus_container.process)
+            )
+            (or
+                (eq t1 pasta_t)
+                (eq t1 staff_t)
+            )
         )
     )
 )

@@ -52,6 +52,9 @@ EnvironmentFile=/var/home/repo/credentials/web/overleaf_smtp_password
 Environment="OVERLEAF_EMAIL_SMTP_IGNORE_TLS=true"
 Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
 
+# Metrics
+PublishPort=!!prometheus.overleaf.ip!!:!!prometheus.overleaf.port!!:3000
+
 [Unit]
 Requires=overleaf-mongo.service overleaf-redis.service
 After=overleaf-mongo.service overleaf-redis.service

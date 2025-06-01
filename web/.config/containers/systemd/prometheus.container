@@ -10,7 +10,11 @@ Volume=%h/prometheus/config/:/etc/prometheus/:ro,noexec
 Volume=%h/prometheus/data/:/prometheus/:rw,Z,noexec
 
 SecurityLabelType=local_prometheus_container.process
-PublishPort=127.0.0.1:9090:9090
+
+Exec=\
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/prometheus \
+    --storage.tsdb.retention.size=10GB
 
 ReadOnly=true
 ReadOnlyTmpfs=false

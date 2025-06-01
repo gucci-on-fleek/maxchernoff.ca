@@ -25,6 +25,10 @@ EnvironmentFile=/var/home/repo/credentials/web/woodpecker_github_secret
 # Environment="WOODPECKER_FORGEJO_CLIENT=035db7ae-de8d-43b3-8045-5ca42c24fb0a"
 # EnvironmentFile=/var/home/repo/credentials/web/woodpecker_codeberg_secret
 
+# Metrics
+PublishPort=!!prometheus.woodpecker.ip!!:!!prometheus.woodpecker.port!!:!!prometheus.woodpecker.port!!
+Environment="WOODPECKER_METRICS_SERVER_ADDR=:!!prometheus.woodpecker.port!!"
+
 [Service]
 Restart=always
 
