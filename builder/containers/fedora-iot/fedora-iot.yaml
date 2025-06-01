@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 
 # Use the newer treefile defaults
 edition: "2024"
@@ -66,14 +66,16 @@ packages:
   - less
   - man-db # man pages
   - microcode_ctl
+  - node-exporter  # Prometheus metrics for the entire system
   - nss-altfiles # Also allows /usr/etc/passwd
   - openssh-clients
   - openssh-server
   - perl-File-Find # Needed for TeX Live
-  - perl-LWP-Protocol-https # Recommended for TeX Live
   - perl-interpreter # Needed for TeX Live
+  - perl-LWP-Protocol-https # Recommended for TeX Live
   - podman
   - policycoreutils-python-utils # semanage
+  - prometheus-podman-exporter  # Prometheus metrics for Podman containers
   - python3-cryptography
   - python3-pystemd
   - qemu-guest-agent # Recommended for a VM guest
