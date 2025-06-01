@@ -199,7 +199,7 @@
 		Cache-Control "max-age=60"
 	}
 	basic_auth /analytics/* {
-		analytics $2a$14$diUEkE1EKNXh1hSKp8cYKeWq8krwrgmcIta98zesFzQymOVxz0iXq
+		analytics {env.CADDY_HTTP_CREDENTIALS}
 	}
 
 	# Stardew Valley
