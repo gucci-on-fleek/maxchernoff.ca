@@ -35,3 +35,8 @@ scrape_configs:
     static_configs:
       - targets:
           - "!!prometheus.woodpecker.ip!!:!!prometheus.woodpecker.port!!"
+
+  - job_name: "node"
+    static_configs:
+      - targets:
+          - "!!prometheus.node.ip!!:!!prometheus.node.port!!"

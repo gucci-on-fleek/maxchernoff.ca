@@ -1,0 +1,43 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+
+[Unit]
+Description=Prometheus exporter for machine metrics
+Documentation=https://github.com/prometheus/node_exporter
+
+[Service]
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+Restart=on-failure
+ExecStart=/usr/bin/prometheus-node-exporter \
+    --collector.perf \
+    --collector.qdisc \
+    --collector.systemd \
+    --collector.tcpstat \
+    --collector.systemd.enable-restarts-metrics \
+    --collector.systemd.enable-start-time-metrics \
+    --web.listen-address="!!prometheus.node.ip!!:!!prometheus.node.port!!"
+
+# Sandboxing
+User=prometheus
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
+IPAddressDeny=any
+IPAddressAllow=!!prometheus.node.ip!!
+
+ProtectSystem=strict
+PrivateTmp=true
+PrivateIPC=true
+LockPersonality=true
+SystemCallArchitectures=native
+RestrictRealtime=true
+RestrictNamespaces=true
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
