@@ -24,7 +24,6 @@
 (typeattributeset cil_gen_require pki_ca_port_t           )
 (typeattributeset cil_gen_require postgresql_port_t       )
 (typeattributeset cil_gen_require sap_port_t              )
-(typeattributeset cil_gen_require soundd_port_t           )
 (typeattributeset cil_gen_require sype_transport_port_t   )
 (typeattributeset cil_gen_require tor_port_t              )
 (typeattributeset cil_gen_require wap_wsp_port_t          )
@@ -62,7 +61,7 @@
     pki_ca_port_t
     postgresql_port_t
     sap_port_t
-    soundd_port_t
+    ; soundd_port_t  ;; Will also block 8000, which is used by Woodpecker
     sype_transport_port_t
     tor_port_t
     wap_wsp_port_t

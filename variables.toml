@@ -12,7 +12,7 @@ ipv6 = "2a0a:4cc0:2000:172::1"
 [woodpecker]
 # The port used by the Woodpecker agent to communicate with the Woodpecker
 # server
-port = "85121"
+port = "40144"
 
 
 [registry]

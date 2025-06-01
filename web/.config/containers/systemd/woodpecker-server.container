@@ -12,6 +12,7 @@ PublishPort=127.0.0.1:!!woodpecker.port!!:!!woodpecker.port!!
 Environment="WOODPECKER_ADMIN=gucci-on-fleek"
 Environment="WOODPECKER_HOST=https://woodpecker.maxchernoff.ca"
 Environment="WOODPECKER_OPEN=false"
+Environment="WOODPECKER_GRPC_ADDR=:!!woodpecker.port!!"
 EnvironmentFile=/var/home/repo/credentials/web/woodpecker_agent_secret
 
 Environment="WOODPECKER_GITHUB=true"
