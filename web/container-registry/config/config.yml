@@ -1,0 +1,30 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+version: 0.1
+
+log:
+    level: warn
+
+storage:
+    delete:
+        enabled: true
+    maintenance:
+        uploadpurging:
+            age: 72h
+            dryrun: false
+            enabled: true
+            interval: 12h
+    cache:
+        blobdescriptor: inmemory
+    filesystem:
+        rootdirectory: /var/lib/registry
+
+http:
+    addr: ":!!registry.port!!"
+    debug:
+        addr: "0.0.0.0:!!prometheus.registry.port!!"
+        prometheus:
+            enabled: true
+            path: /metrics

@@ -9,21 +9,18 @@ Network=container-registry.network
 # Random port number for local-only pushes
 PublishPort=127.0.0.1:!!registry.port!!:!!registry.port!!
 PublishPort=[::1]:!!registry.port!!:!!registry.port!!
-Environment="REGISTRY_HTTP_ADDR=:!!registry.port!!"
+
+# Config
+Volume=%h/container-registry/config:/etc/distribution/:ro,noexec
 
 # Image Storage
 Volume=container-registry.volume:/var/lib/registry:rw
 Environment="OTEL_LOGS_EXPORTER=none"
 Environment="OTEL_METRICS_EXPORTER=none"
 Environment="OTEL_TRACES_EXPORTER=none"
-Environment="REGISTRY_LOG_LEVEL=warn"
-Environment="REGISTRY_STORAGE_DELETE_ENABLED=true"
-Environment="REGISTRY_STORAGE_MAINTENANCE_UPLOADPURGING={interval: 12h, age: 72h, enabled: true, dryrun: false}"
 
 # Metrics
 PublishPort=!!prometheus.registry.ip!!:!!prometheus.registry.port!!:!!prometheus.registry.port!!
-Environment="REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:!!prometheus.registry.port!!"
-Environment="REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
 
 [Service]
 Restart=always

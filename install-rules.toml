@@ -57,6 +57,7 @@ fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecke
 fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}builder/containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/container-registry(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/goaccess(/.*)?'
@@ -250,6 +251,7 @@ paths = [
     "maddy/config",
     "prometheus/config",
     "grafana/config",
+    "container-registry/config",
 ]
 permissions.web = "r"
 permissions."web/root" = "r"
@@ -409,6 +411,14 @@ permissions."web/472" = "rw"
 base = "{web}/grafana/"
 paths = ["config"]
 permissions."web/472" = "r"
+permissions."web" = "r"
+owner = "repo"
+recursive_permissions = true
+
+[[permissions]]
+base = "{web}/container-registry/"
+paths = ["config"]
+permissions."web/root" = "r"
 permissions."web" = "r"
 owner = "repo"
 recursive_permissions = true
