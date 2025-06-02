@@ -53,6 +53,9 @@ import base.caddyfile
 	# Cache some responses server-side
 	cache {
 		otter
+		api {
+			prometheus
+		}
 	}
 
 	# Configure (non-request) logging
@@ -103,6 +106,14 @@ import base.caddyfile
 	}
 }
 
+(cache) {
+	# Block access to the Souin API
+	route {
+		error /souin-api/* 404
+		cache
+	}
+}
+
 http:// {
 	bind fd/3
 	redir https://{host}{uri} permanent
@@ -131,7 +142,7 @@ maxchernoff.ca {
 # The main site
 www.maxchernoff.ca {
 	root * /srv
-	cache
+	import cache
 	import www.maxchernoff.ca
 }
 
@@ -175,7 +186,7 @@ api.maxchernoff.ca {
 	import domain-info
 
 	header Cache-Control max-age=5
-	cache
+	import cache
 
 	reverse_proxy systemd-flask:8080
 }
@@ -184,7 +195,7 @@ api.maxchernoff.ca {
 registry.maxchernoff.ca {
 	import default
 	import domain-info
-	cache
+	import cache
 
 	@manifest path /v2/*/manifests/* /v2/_catalog
 	header @manifest Cache-Control max-age=15
@@ -298,5 +309,14 @@ duck.tel {
 # Metrics
 http://!!prometheus.caddy.ip!!:!!prometheus.caddy.port!! {
 	bind 0.0.0.0
-	metrics
+
+	handle /metrics {
+		metrics
+	}
+	handle /souin-api/metrics {
+		cache
+	}
+	handle {
+		respond "404 Not Found" 404
+	}
 }
