@@ -16,6 +16,7 @@
 (typeattributeset cil_gen_require jboss_management_port_t )
 (typeattributeset cil_gen_require keylime_port_t          )
 (typeattributeset cil_gen_require neutron_port_t          )
+(typeattributeset cil_gen_require ntop_port_t             )
 (typeattributeset cil_gen_require ocsp_port_t             )
 (typeattributeset cil_gen_require openqa_liveview_port_t  )
 (typeattributeset cil_gen_require openqa_port_t           )
@@ -28,6 +29,7 @@
 (typeattributeset cil_gen_require tor_port_t              )
 (typeattributeset cil_gen_require wap_wsp_port_t          )
 (typeattributeset cil_gen_require websm_port_t            )
+
 
 ;; Define the Prometheus metrics ports
 (type local_prometheus_metrics_port_t)
@@ -84,6 +86,9 @@
     ;; Allow binding to the Prometheus server port
     (allow process local_prometheus_server_port_t (tcp_socket (name_bind       )))
     (allow process process                        (capability (net_bind_service)))
+
+    ;; Allow connecting to Grafana
+    (allow process ntop_port_t (tcp_socket (name_connect)))
 
     ;; Filesystem permissions
     (allow process var_t (dir       (add_name create getattr ioctl lock open read remove_name rmdir search setattr write)))
