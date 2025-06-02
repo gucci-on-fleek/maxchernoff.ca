@@ -75,7 +75,9 @@ import base.caddyfile
 	ech ech.maxchernoff.ca
 
 	# Metrics
-	metrics
+	metrics {
+		per_host
+	}
 }
 
 # Define the default options for all sites
