@@ -45,6 +45,11 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
+            "docker.io/jgosmann": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
             "docker.io/library": [
                 {
                     "type": "insecureAcceptAnything"

@@ -64,3 +64,8 @@ scrape_configs:
     static_configs:
       - targets:
           - "systemd-grafana:3000"
+
+  - job_name: "dmarc-metrics"
+    static_configs:
+      - targets:
+          - "!!prometheus.dmarc-metrics.ip!!:!!prometheus.dmarc-metrics.port!!"

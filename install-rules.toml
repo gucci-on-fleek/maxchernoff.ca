@@ -47,6 +47,7 @@ module --add /usr/share/udica/templates/net_container.cil
 # Set the container file contexts
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}dmarc-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}grafana/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}knot/storage(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}maddy/data(/.*)?'
@@ -58,6 +59,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}builder/containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/container-registry(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/dmarc-metrics(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/dnscontrol(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/flask(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/goaccess(/.*)?'
@@ -252,6 +254,7 @@ paths = [
     "prometheus/config",
     "grafana/config",
     "container-registry/config",
+    "dmarc-metrics/config",
 ]
 permissions.web = "r"
 permissions."web/root" = "r"
@@ -422,6 +425,21 @@ permissions."web/root" = "r"
 permissions."web" = "r"
 owner = "repo"
 recursive_permissions = true
+
+[[permissions]]
+base = "{web}/dmarc-metrics/"
+paths = ["config"]
+permissions."web/1000" = "r"
+permissions."web" = "r"
+owner = "repo"
+recursive_permissions = true
+
+[[folder]]
+base = "{web}/dmarc-metrics/"
+paths = ["data"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/1000" = "rw"
 
 
 ##################

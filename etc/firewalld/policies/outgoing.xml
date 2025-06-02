@@ -44,4 +44,7 @@
 
     <!-- svn.tug.org web interface -->
     <port port="8369" protocol="tcp"/>
+
+    <!-- IMAP, for dmarc-metrics -->
+    <service name="imaps"/>
 </policy>

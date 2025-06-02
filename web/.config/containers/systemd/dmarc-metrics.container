@@ -1,0 +1,25 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2024 Max Chernoff
+[Container]
+Image=docker.io/jgosmann/dmarc-metrics-exporter:latest
+
+Volume=%h/dmarc-metrics/config/dmarc-metrics-exporter.json:/etc/dmarc-metrics-exporter.json:ro,noexec
+Volume=%h/dmarc-metrics/data/:/var/lib/dmarc-metrics-exporter:rw,Z,noexec
+
+ReadOnly=true
+ReadOnlyTmpfs=false
+
+# Metrics
+PublishPort=!!prometheus.dmarc-metrics.ip!!:!!prometheus.dmarc-metrics.port!!:!!prometheus.dmarc-metrics.port!!
+
+[Unit]
+Wants=network-ready.service
+After=network-ready.service
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
