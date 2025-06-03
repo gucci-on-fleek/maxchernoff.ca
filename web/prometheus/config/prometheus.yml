@@ -7,48 +7,63 @@ global:
 
 scrape_configs:
   - job_name: "prometheus"
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        action: keep
+        regex: "^(prom|scrape)"
     static_configs:
       - targets:
           - "!!prometheus.prometheus.ip!!:!!prometheus.prometheus.port!!"
 
   - job_name: "caddy"
+    metric_relabel_configs: &metric_relabel_configs
+      - source_labels: [__name__]
+        action: drop
+        regex: "^(go|nodejs|openfga|python)_"
     metrics_path: "/metrics"
     static_configs:
       - targets:
           - "!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!"
 
   - job_name: "caddy-cache"
+    metric_relabel_configs: *metric_relabel_configs
     metrics_path: "/souin-api/metrics"
     static_configs:
       - targets:
           - "!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!"
 
   - job_name: "container-registry"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.registry.ip!!:!!prometheus.registry.port!!"
 
   - job_name: "overleaf"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.overleaf.ip!!:!!prometheus.overleaf.port!!"
 
   - job_name: "maddy"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!"
 
   - job_name: "woodpecker"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.woodpecker.ip!!:!!prometheus.woodpecker.port!!"
 
   - job_name: "node"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.node.ip!!:!!prometheus.node.port!!"
 
   - job_name: "podman"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.podman.web.ip!!:!!prometheus.podman.web.port!!"
@@ -56,16 +71,22 @@ scrape_configs:
           - "!!prometheus.podman.builder.ip!!:!!prometheus.podman.builder.port!!"
 
   - job_name: "knot"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.knot.ip!!:!!prometheus.knot.port!!"
 
   - job_name: "grafana"
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        action: keep
+        regex: "^(grafana_api_dashboard|grafana_api_response|grafana_apiserver|grafana_build_info|grafana_database|grafana_datasource|grafana_db|grafana_folder|grafana_http|grafana_live|grafana_plugin|grafana_process|grafana_prometheus|grafana_stat)"
     static_configs:
       - targets:
           - "systemd-grafana:3000"
 
   - job_name: "dmarc-metrics"
+    metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
           - "!!prometheus.dmarc-metrics.ip!!:!!prometheus.dmarc-metrics.port!!"
