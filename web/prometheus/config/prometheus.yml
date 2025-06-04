@@ -10,7 +10,7 @@ scrape_configs:
     metric_relabel_configs:
       - source_labels: [__name__]
         action: keep
-        regex: "^(prom|scrape)"
+        regex: "^(prom|scrape).*"
     static_configs:
       - targets:
           - "!!prometheus.prometheus.ip!!:!!prometheus.prometheus.port!!"
@@ -19,7 +19,7 @@ scrape_configs:
     metric_relabel_configs: &metric_relabel_configs
       - source_labels: [__name__]
         action: drop
-        regex: "^(go|nodejs|openfga|python)_"
+        regex: "^(go|nodejs|openfga|promhttp|python)_.*"
     metrics_path: "/metrics"
     static_configs:
       - targets:
@@ -80,7 +80,7 @@ scrape_configs:
     metric_relabel_configs:
       - source_labels: [__name__]
         action: keep
-        regex: "^(grafana_api_dashboard|grafana_api_response|grafana_apiserver|grafana_build_info|grafana_database|grafana_datasource|grafana_db|grafana_folder|grafana_http|grafana_live|grafana_plugin|grafana_process|grafana_prometheus|grafana_stat)"
+        regex: "^(grafana_api_dashboard|grafana_api_response|grafana_apiserver|grafana_build_info|grafana_database|grafana_datasource|grafana_db|grafana_folder|grafana_http|grafana_live|grafana_plugin|grafana_process|grafana_prometheus|grafana_stat).*"
     static_configs:
       - targets:
           - "systemd-grafana:3000"
