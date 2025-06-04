@@ -23,6 +23,10 @@
 (typeattributeset cil_gen_require tmpfs_t                  )
 (typeattributeset cil_gen_require user_t                   )
 
+;============= user_t ==============
+(allow user_t container_ro_file_t (chr_file (create unlink)))
+(allow user_t fs_t (filesystem (mount)))
+
 ;; Defines
 (typeattribute    local_user_domains                 )
 (typeattributeset local_user_domains (staff_t user_t))
@@ -55,3 +59,7 @@
 ;; Needed for the Prometheus Podman exporter to work
 (allow local_user_domains container_runtime_tmpfs_t (file (map open read write)))
 (allow local_user_domains nsfs_t                    (file (open read          )))
+
+; Needed for weird whiteout errors
+(allow local_user_domains container_ro_file_t (chr_file   (create unlink)))
+(allow local_user_domains fs_t                (filesystem (mount        )))
