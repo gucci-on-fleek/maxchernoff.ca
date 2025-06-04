@@ -17,7 +17,7 @@ PublishPort=!!network.ipv4!!:!!dns.altport!!:53
 
 Volume=%h/knot/config:/config:ro,z
 Volume=%h/knot/storage:/storage:rw,Z
-Volume=%t/knot:/rundir:rw,Z,U
+Volume=%t/knot:/rundir:rw,z,U
 
 Entrypoint=/usr/sbin/knotd
 Exec=
