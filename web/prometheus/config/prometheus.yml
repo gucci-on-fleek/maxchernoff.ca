@@ -19,7 +19,7 @@ scrape_configs:
     metric_relabel_configs: &metric_relabel_configs
       - source_labels: [__name__]
         action: drop
-        regex: "^(go|nodejs|openfga|promhttp|python)_.*"
+        regex: "^(go|nodejs|openfga|promhttp|python|timer_event_loop)_.*"
     metrics_path: "/metrics"
     static_configs:
       - targets:
