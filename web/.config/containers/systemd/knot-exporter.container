@@ -6,7 +6,7 @@
 Image=maxchernoff.ca/knot-exporter:latest
 
 Network=private
-Volume=%t/knot:/run/knot/:rw,z,U
+Volume=%t/knot:/run/knot/:rw,z
 
 User=1000
 Group=0
