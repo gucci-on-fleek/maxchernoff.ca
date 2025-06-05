@@ -51,7 +51,3 @@
 (roleattributeset install_roles (sysadm_r                           ))
 (allow            sysadm_t      install_t      (process (transition)))
 (typetransition   sysadm_t      install_exec_t process  install_t    )
-
-;; Needed for the Prometheus Podman exporter to work
-(allow local_user_domains container_runtime_tmpfs_t (file (map open read write)))
-(allow local_user_domains nsfs_t                    (file (open read          )))

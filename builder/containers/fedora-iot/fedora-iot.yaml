@@ -126,6 +126,8 @@ postprocess:
     # vi -> vim
     ln -s /usr/bin/vim /usr/bin/vi
 
+    semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
+
     # Enable composefs
     cat <<EOF > /etc/ostree/prepare-root.conf
     [sysroot]
