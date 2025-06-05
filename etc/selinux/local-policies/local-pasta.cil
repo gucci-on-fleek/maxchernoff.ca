@@ -54,3 +54,4 @@
 
 ;; Testing TODO
 (allow user_t pasta_t (process (sigkill signull)))
+(allow pasta_t container_runtime_t (fifo_file (getattr)))

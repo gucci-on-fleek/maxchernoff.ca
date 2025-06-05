@@ -4,48 +4,33 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
-(roleattributeset cil_gen_require install_roles            )
-(roleattributeset cil_gen_require iptables_roles           )
-(typeattributeset cil_gen_require container_file_t         )
-(typeattributeset cil_gen_require container_ro_file_t      )
-(typeattributeset cil_gen_require container_runtime_t      )
-(typeattributeset cil_gen_require container_runtime_tmpfs_t)
-(typeattributeset cil_gen_require container_t              )
-(typeattributeset cil_gen_require devpts_t                 )
-(typeattributeset cil_gen_require fs_t                     )
-(typeattributeset cil_gen_require install_exec_t           )
-(typeattributeset cil_gen_require install_t                )
-(typeattributeset cil_gen_require nsfs_t                   )
-(typeattributeset cil_gen_require proc_t                   )
-(typeattributeset cil_gen_require staff_t                  )
-(typeattributeset cil_gen_require sysadm_t                 )
-(typeattributeset cil_gen_require systemd_user_runtimedir_t)
-(typeattributeset cil_gen_require tmpfs_t                  )
-(typeattributeset cil_gen_require user_t                   )
+(roleattributeset cil_gen_require install_roles      )
+(typeattributeset cil_gen_require container_ro_file_t)
+(typeattributeset cil_gen_require container_runtime_t)
+(typeattributeset cil_gen_require container_t        )
+(typeattributeset cil_gen_require devpts_t           )
+(typeattributeset cil_gen_require fs_t               )
+(typeattributeset cil_gen_require install_exec_t     )
+(typeattributeset cil_gen_require install_t          )
+(typeattributeset cil_gen_require proc_t             )
+(typeattributeset cil_gen_require sysadm_t           )
+(typeattributeset cil_gen_require tmpfs_t            )
+(typeattributeset cil_gen_require userdomain         )
 
-;; Defines
-(typeattribute    local_user_domains                 )
-(typeattributeset local_user_domains (staff_t user_t))
+;; Silence some denials
+(dontaudit userdomain container_runtime_t (process (sigkill signal signull)))
+(dontaudit userdomain container_t         (process (sigkill signal signull)))
 
-;; Needed for user (rootless) containers to work properly
-(allow container_runtime_t       self                (process2           (nnp_transition           )))
-(allow container_t               container_ro_file_t (dir                (watch                    )))
-(allow container_t               container_runtime_t (fifo_file          (setattr                  )))
-(allow container_t               devpts_t            (filesystem         (mount                    )))
-(allow container_t               proc_t              (filesystem         (mount                    )))
-(allow local_user_domains        container_ro_file_t (dir                (mounton                  )))
-(allow local_user_domains        container_runtime_t (process            (sigkill signal signull   )))
-(allow local_user_domains        container_runtime_t (tcp_socket         (bind create listen setopt)))
-(allow local_user_domains        container_runtime_t (udp_socket         (bind create setopt       )))
-(allow local_user_domains        container_runtime_t (unix_stream_socket (bind create listen setopt)))
-(allow local_user_domains        container_t         (process            (sigkill signal signull   )))
-(allow systemd_user_runtimedir_t container_file_t    (dir                (rmdir                    )))
-
-;; Needed for newuidmap to work
-(allow local_user_domains self (capability (setuid)))
+;; Needed to allow systemd socket activation of containers ran as confined users
+(allow userdomain container_runtime_t (tcp_socket         (bind create getopt listen setopt)))
+(allow userdomain container_runtime_t (udp_socket         (bind create getopt listen setopt)))
+(allow userdomain container_runtime_t (unix_stream_socket (bind create getopt listen setopt)))
 
 ;; Needed for container@fedora-iot.service
-(allow container_t tmpfs_t (filesystem (remount)))
+(allow container_t container_ro_file_t (dir        (watch  )))
+(allow container_t tmpfs_t             (filesystem (remount)))
+(allow container_t devpts_t            (filesystem (mount  )))
+(allow container_t proc_t              (filesystem (mount  )))
 
 ;; Needed for "bootc status" to work (via sudo)
 (roleattributeset install_roles (sysadm_r                           ))

@@ -51,10 +51,6 @@
 (allow local_user_domains systemd_unit_file_t (file     (create unlink write                    )))
 (allow local_user_domains systemd_unit_file_t (lnk_file (create unlink                          )))
 
-;; Testing TODO
-(typeattributeset cil_gen_require user_home_t)
-(allow user_t user_home_t (service (status)))
-
 ;; Needed for journalctl (with the "less" pager) to stop complaining
 (dontaudit journalctl_t gconf_home_t (dir  (add_name remove_name write  )))
 (dontaudit journalctl_t gconf_home_t (file (create rename setattr unlink)))
