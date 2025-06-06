@@ -26,6 +26,10 @@
 (allow userdomain container_runtime_t (udp_socket         (bind create getopt listen setopt)))
 (allow userdomain container_runtime_t (unix_stream_socket (bind create getopt listen setopt)))
 
+;; Needed for "podman build" to work
+(allow userdomain container_ro_file_t (dir        (mounton)))
+(allow userdomain self                (capability (setuid )))
+
 ;; Needed for container@fedora-iot.service
 (allow container_t container_ro_file_t (dir        (watch  )))
 (allow container_t tmpfs_t             (filesystem (remount)))

@@ -56,8 +56,9 @@
 (dontaudit journalctl_t gconf_home_t (file (create rename setattr unlink)))
 
 ;; Miscellaneous
-(allow snapperd_t         file_context_t (file     (map           )))
-(allow local_user_domains gpg_t          (process2 (nnp_transition)))
+(allow container_t        container_ro_file_t (file     (relabelto     )))
+(allow local_user_domains gpg_t               (process2 (nnp_transition)))
+(allow snapperd_t         file_context_t      (file     (map           )))
 
 ;; Needed for "sudo networkctl ..."
 (allow sysadm_t systemd_networkd_t (dbus               (send_msg )))
