@@ -13,6 +13,7 @@ SecurityLabelType=local_prometheus_container.process
 
 Exec=\
     --config.file=/etc/prometheus/prometheus.yml \
+    --enable-feature=promql-experimental-functions \
     --storage.tsdb.path=/prometheus \
     --storage.tsdb.retention.size=10GB
 
