@@ -29,18 +29,21 @@ Popen(
         **environ,
         "BIND": "127.0.0.1:8923",  # Default value
         "COOKIE_DOMAIN": "tug.org",
-        "COOKIE_EXPIRATION_TIME": "720h",  # 30 days, increased from default of 1 week
-        "DIFFICULTY": "5",  # Increase from default of 4
+        "COOKIE_EXPIRATION_TIME": (
+            "2160h"
+        ),  # 90 days, increased from default of 1 week
+        "DIFFICULTY": "4",  # Default value
         "WEBMASTER_EMAIL": "webmaster@tug.org",
         "TARGET": "http://localhost:43219",
         "REDIRECT_DOMAINS": "svn.tug.org:8369",
-
         # We'll hardcode the private key here because we're only being targeted
         # by naive bots; anyone who cared enough to find this would be smart
         # enough to simply use the SVN protocol instead of scraping the web
         # interface.
-        "ED25519_PRIVATE_KEY_HEX": "3e5fabb2b118e31bbafc2356b7cd39874b1f7ccc1622e45fdd196ed55b9f102b",
-    }
+        "ED25519_PRIVATE_KEY_HEX": (
+            "3e5fabb2b118e31bbafc2356b7cd39874b1f7ccc1622e45fdd196ed55b9f102b"
+        ),
+    },
 )
 
 # Start the Caddy server
