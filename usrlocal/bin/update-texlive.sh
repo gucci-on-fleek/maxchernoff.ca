@@ -8,8 +8,9 @@ set -euo pipefail
 # Set the environment variables
 export PATH="/var/home/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 
-# Update the TeX Live installation
-tlmgr update --all --self
+# Update the TeX Live installation. Anything that depends on XeTeX will fail
+# because we've uninstalled it, so ignore any errors.
+tlmgr update --all --self || true
 
 # Remake the ConTeXt formats
 context --make
