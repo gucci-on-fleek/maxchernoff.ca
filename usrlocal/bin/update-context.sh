@@ -16,6 +16,7 @@ cd /var/home/tex/context-installer/
 for platform in \
     freebsd-amd64 \
     linux \
+    linux-aarch64 \
     linuxmusl \
     linuxmusl-64 \
     mswin \
