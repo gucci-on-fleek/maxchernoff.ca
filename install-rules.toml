@@ -305,6 +305,7 @@ paths = [
 ]
 permissions."web/root" = "rw"
 permissions.web = "rw"
+permissions.max = "r"
 owner = "web/root"
 
 [[permissions]]
@@ -363,6 +364,7 @@ paths = ["logs/"]
 owner = "web"
 permissions.web = "rw"
 permissions."web/root" = "rw"
+permissions.max = "r"
 recursive_permissions = true
 
 [[permissions]]

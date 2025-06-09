@@ -1,3 +1,8 @@
+;; Source Code for maxchernoff.ca
+;; https://github.com/gucci-on-fleek/maxchernoff.ca
+;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+;; SPDX-FileCopyrightText: 2025 Max Chernoff
+
 ;; Includes
 (roleattributeset cil_gen_require object_r             )
 (typeattributeset cil_gen_require container_runtime_t  )
