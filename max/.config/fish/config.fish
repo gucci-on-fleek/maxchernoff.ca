@@ -54,3 +54,10 @@ end
 function journalctl
     command journalctl --exclude-identifier='sshd-session' --grep='^(?!{"t":{)((?!sshd|container health_status).)+$' $argv
 end
+
+function ls
+    command ls --classify --color=auto --human-readable --almost-all $argv
+    if test $status = 2
+        sudo ls --classify --color=auto --human-readable --almost-all $argv
+    end
+end
