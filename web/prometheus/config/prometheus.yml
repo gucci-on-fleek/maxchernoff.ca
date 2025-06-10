@@ -66,9 +66,8 @@ scrape_configs:
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "!!prometheus.podman.web.ip!!:!!prometheus.podman.web.port!!"
-          - "!!prometheus.podman.woodpecker.ip!!:!!prometheus.podman.woodpecker.port!!"
-          - "!!prometheus.podman.builder.ip!!:!!prometheus.podman.builder.port!!"
+          - "!!prometheus.podman.web.ip!!:!!prometheus.podman.port!!"
+          - "!!prometheus.podman.woodpecker.ip!!:!!prometheus.podman.port!!"
 
   - job_name: "knot"
     metric_relabel_configs: *metric_relabel_configs
@@ -90,3 +89,14 @@ scrape_configs:
     static_configs:
       - targets:
           - "!!prometheus.dmarc-metrics.ip!!:!!prometheus.dmarc-metrics.port!!"
+
+  - job_name: "systemd"
+    metric_relabel_configs: *metric_relabel_configs
+    static_configs:
+      - targets:
+          - "!!prometheus.systemd.max.ip!!:!!prometheus.systemd.port!!"
+          - "!!prometheus.systemd.web.ip!!:!!prometheus.systemd.port!!"
+          - "!!prometheus.systemd.tex.ip!!:!!prometheus.systemd.port!!"
+          - "!!prometheus.systemd.woodpecker.ip!!:!!prometheus.systemd.port!!"
+          - "!!prometheus.systemd.builder.ip!!:!!prometheus.systemd.port!!"
+          - "!!prometheus.systemd.system.ip!!:!!prometheus.systemd.port!!"

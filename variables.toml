@@ -56,20 +56,23 @@ woodpecker.port = "9102"
 node.ip = "10.79.79.7"
 node.port = "9100"
 
+podman.port = "9882"
 podman.web.ip = "10.79.79.8"
-podman.web.port = "9882"
-
 podman.woodpecker.ip = "10.79.79.9"
-podman.woodpecker.port = "9882"
-
-podman.builder.ip = "10.79.79.10"
-podman.builder.port = "9882"
 
 knot.ip = "10.79.79.11"
 knot.port = "9434"
 
 dmarc-metrics.ip = "10.79.79.12"
 dmarc-metrics.port = "9797"
+
+systemd.port = "9558"
+systemd.max.ip = "10.79.79.13"
+systemd.web.ip = "10.79.79.14"
+systemd.tex.ip = "10.79.79.15"
+systemd.woodpecker.ip = "10.79.79.16"
+systemd.builder.ip = "10.79.79.17"
+systemd.system.ip = "10.79.79.18"
 
 
 [email]

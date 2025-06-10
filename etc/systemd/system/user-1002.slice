@@ -2,4 +2,9 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
-PODMAN_EXPORTER_OPTS="--collector.enable-all --collector.enhance-metrics --web.listen-address=!!prometheus.podman.builder.ip!!:!!prometheus.podman.builder.port!!"
+[Unit]
+Description=The "tex" user slice
+
+[Slice]
+# Only allow access to its own IP address within the Prometheus subnet.
+IPAddressAllow=!!prometheus.systemd.tex.ip!!

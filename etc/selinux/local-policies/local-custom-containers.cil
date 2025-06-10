@@ -11,7 +11,6 @@
 (typeattributeset cil_gen_require systemd_unit_file_t)
 (typeattributeset cil_gen_require unconfined_t)
 (typeattributeset cil_gen_require user_tmp_t)
-(typeattributeset cil_gen_require xdm_unit_file_t)
 
 ;; Allow the Prometheus systemd exporter to access the service statuses
 (block local_systemd_exporter
@@ -46,5 +45,3 @@
     (allow process init_t (dbus (send_msg)))
     (allow process system_dbusd_t (dbus (send_msg)))
 )
-
-(allow unconfined_t local_prometheus_metrics_port_t (tcp_socket (name_connect)))

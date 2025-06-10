@@ -24,26 +24,24 @@ woodpecker = "/var/home/woodpecker/"
 
 [selinux]
 rules = """
-# Reset some settings to their defaults
-boolean --deleteall
-fcontext --deleteall
-login --deleteall
-module --deleteall
-
 # Allow max to sudo
+login --deleteall
 login --add --seuser staff_u --range 's0-s0:c0.c1023' max
 
 # Let all users run containers
 login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
 # Load the custom policies
+module --deleteall
 module --add /etc/selinux/local-policies/local-allow-containers.cil
+module --add /etc/selinux/local-policies/local-custom-containers.cil
 module --add /etc/selinux/local-policies/local-prometheus.cil
 module --add /etc/selinux/local-policies/local-systemd.cil
 module --add /usr/share/udica/templates/base_container.cil
 module --add /usr/share/udica/templates/net_container.cil
 
 # Set the container file contexts
+fcontext --deleteall
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}dmarc-metrics/data(/.*)?'
@@ -76,7 +74,11 @@ fcontext --add '{repo}tex/.config' --equal '{tex}.config'
 fcontext --add '{repo}web/.config' --equal '{web}.config'
 fcontext --add '{repo}woodpecker/.config' --equal '{woodpecker}.config'
 
+# Missing policy definition
+fcontext --add '/etc/systemd/user' --equal '/usr/lib/systemd/user'
+
 # Let us host the network services as unprivileged users
+boolean --deleteall
 boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
 boolean --modify container_manage_cgroup --on
@@ -180,6 +182,12 @@ owner = "max"
 # paths = [".ssh/authorized_keys",]
 # owner = "max"
 
+[[link]]
+source = "{repo}/max/"
+destination = "{max}/"
+paths = [".config/containers/"]
+owner = "max"
+
 
 ###########
 ### tex ###
@@ -201,7 +209,7 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/tex/"
 destination = "{tex}/"
-paths = [".config/systemd/user/"]
+paths = [".config/systemd/user/", ".config/containers/"]
 owner = "tex"
 
 [[permissions]]
@@ -233,7 +241,7 @@ recursive_permissions = true
 source = "{repo}/web/"
 destination = "{web}/"
 paths = [
-    ".config/builder/",
+    ".config/containers/",
     ".config/systemd/user/",
     ".config/prometheus-podman-exporter",
 ]
@@ -465,7 +473,7 @@ source = "{repo}/woodpecker/"
 destination = "{woodpecker}/"
 paths = [
     ".config/systemd/user/",
-    ".config/builder/",
+    ".config/containers/",
     ".config/prometheus-podman-exporter",
 ]
 permissions.woodpecker = "r"
@@ -505,9 +513,10 @@ recursive_permissions = true
 source = "{repo}/builder/"
 destination = "{builder}/"
 paths = [
+    ".config/containers/",
+    ".config/prometheus-podman-exporter",
     ".config/systemd/user/",
     "containers/",
-    ".config/prometheus-podman-exporter",
 ]
 permissions.builder = "r"
 

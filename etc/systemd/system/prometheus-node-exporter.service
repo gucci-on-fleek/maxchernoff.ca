@@ -17,10 +17,8 @@ Restart=on-failure
 ExecStart=/usr/bin/prometheus-node-exporter \
     --collector.perf \
     --collector.qdisc \
-    --collector.systemd \
     --collector.tcpstat \
-    --collector.systemd.enable-restarts-metrics \
-    --collector.systemd.enable-start-time-metrics \
+    --no-collector.systemd \
     --web.listen-address="!!prometheus.node.ip!!:!!prometheus.node.port!!"
 
 # Sandboxing
