@@ -17,9 +17,9 @@
 (typeattributeset cil_gen_require tmpfs_t            )
 (typeattributeset cil_gen_require userdomain         )
 
-;; Silence some denials
-(dontaudit userdomain container_runtime_t (process (sigkill signal signull)))
-(dontaudit userdomain container_t         (process (sigkill signal signull)))
+;; Allow systemd to kill containers
+(allow userdomain container_runtime_t (process (sigkill signal signull)))
+(allow userdomain container_t         (process (sigkill signal signull)))
 
 ;; Needed to allow systemd socket activation of containers ran as confined users
 (allow userdomain container_runtime_t (tcp_socket         (bind create getopt listen setopt)))
