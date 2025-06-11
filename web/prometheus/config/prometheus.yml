@@ -13,7 +13,7 @@ scrape_configs:
         regex: "^(prom|scrape).*"
     static_configs:
       - targets:
-          - "prometheus.metrics.internal:!!prometheus.prometheus.port!!"
+          - "prometheus.metrics.maxchernoff.ca:!!prometheus.prometheus.port!!"
 
   - job_name: "caddy"
     metric_relabel_configs: &metric_relabel_configs
@@ -23,57 +23,57 @@ scrape_configs:
     metrics_path: "/metrics"
     static_configs:
       - targets:
-          - "caddy.metrics.internal:!!prometheus.caddy.port!!"
+          - "caddy.metrics.maxchernoff.ca:!!prometheus.caddy.port!!"
 
   - job_name: "caddy-cache"
     metric_relabel_configs: *metric_relabel_configs
     metrics_path: "/souin-api/metrics"
     static_configs:
       - targets:
-          - "caddy.metrics.internal:!!prometheus.caddy.port!!"
+          - "caddy.metrics.maxchernoff.ca:!!prometheus.caddy.port!!"
 
   - job_name: "container-registry"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "container-registry.metrics.internal:!!prometheus.registry.port!!"
+          - "container-registry.metrics.maxchernoff.ca:!!prometheus.registry.port!!"
 
   - job_name: "overleaf"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "overleaf.metrics.internal:!!prometheus.overleaf.port!!"
+          - "overleaf.metrics.maxchernoff.ca:!!prometheus.overleaf.port!!"
 
   - job_name: "maddy"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "maddy.metrics.internal:!!prometheus.maddy.port!!"
+          - "maddy.metrics.maxchernoff.ca:!!prometheus.maddy.port!!"
 
   - job_name: "woodpecker"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "woodpecker.metrics.internal:!!prometheus.woodpecker.port!!"
+          - "woodpecker.metrics.maxchernoff.ca:!!prometheus.woodpecker.port!!"
 
   - job_name: "node"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "node-exporter.metrics.internal:!!prometheus.node.port!!"
+          - "node-exporter.metrics.maxchernoff.ca:!!prometheus.node.port!!"
 
   - job_name: "podman"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "podman-web.metrics.internal:!!prometheus.podman.port!!"
-          - "podman-woodpecker.metrics.internal:!!prometheus.podman.port!!"
+          - "podman-web.metrics.maxchernoff.ca:!!prometheus.podman.port!!"
+          - "podman-woodpecker.metrics.maxchernoff.ca:!!prometheus.podman.port!!"
 
   - job_name: "knot"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "knot.metrics.internal:!!prometheus.knot.port!!"
+          - "knot.metrics.maxchernoff.ca:!!prometheus.knot.port!!"
 
   - job_name: "grafana"
     metric_relabel_configs:
@@ -88,15 +88,15 @@ scrape_configs:
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "dmarc.metrics.internal:!!prometheus.dmarc-metrics.port!!"
+          - "dmarc.metrics.maxchernoff.ca:!!prometheus.dmarc-metrics.port!!"
 
   - job_name: "systemd"
     metric_relabel_configs: *metric_relabel_configs
     static_configs:
       - targets:
-          - "systemd-max.metrics.internal:!!prometheus.systemd.port!!"
-          - "systemd-web.metrics.internal:!!prometheus.systemd.port!!"
-          - "systemd-tex.metrics.internal:!!prometheus.systemd.port!!"
-          - "systemd-woodpecker.metrics.internal:!!prometheus.systemd.port!!"
-          - "systemd-builder.metrics.internal:!!prometheus.systemd.port!!"
-          - "systemd-system.metrics.internal:!!prometheus.systemd.port!!"
+          - "systemd-max.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+          - "systemd-web.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+          - "systemd-tex.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+          - "systemd-woodpecker.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+          - "systemd-builder.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+          - "systemd-system.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"

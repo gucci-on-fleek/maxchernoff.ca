@@ -8,20 +8,20 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 # Prometheus metrics addresses
-!!prometheus.caddy.ip!!               caddy.metrics.internal.
-!!prometheus.dmarc-metrics.ip!!       dmarc.metrics.internal.
-!!prometheus.knot.ip!!                knot.metrics.internal.
-!!prometheus.maddy.ip!!               maddy.metrics.internal.
-!!prometheus.node.ip!!                node-exporter.metrics.internal.
-!!prometheus.overleaf.ip!!            overleaf.metrics.internal.
-!!prometheus.podman.web.ip!!          podman-web.metrics.internal.
-!!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.internal.
-!!prometheus.prometheus.ip!!          prometheus.metrics.internal.
-!!prometheus.registry.ip!!            container-registry.metrics.internal.
-!!prometheus.systemd.builder.ip!!     systemd-builder.metrics.internal.
-!!prometheus.systemd.max.ip!!         systemd-max.metrics.internal.
-!!prometheus.systemd.system.ip!!      systemd-system.metrics.internal.
-!!prometheus.systemd.tex.ip!!         systemd-tex.metrics.internal.
-!!prometheus.systemd.web.ip!!         systemd-web.metrics.internal.
-!!prometheus.systemd.woodpecker.ip!!  systemd-woodpecker.metrics.internal.
-!!prometheus.woodpecker.ip!!          woodpecker.metrics.internal.
+!!prometheus.caddy.ip!!               caddy.metrics.maxchernoff.ca.
+!!prometheus.dmarc-metrics.ip!!       dmarc.metrics.maxchernoff.ca.
+!!prometheus.knot.ip!!                knot.metrics.maxchernoff.ca.
+!!prometheus.maddy.ip!!               maddy.metrics.maxchernoff.ca.
+!!prometheus.node.ip!!                node-exporter.metrics.maxchernoff.ca.
+!!prometheus.overleaf.ip!!            overleaf.metrics.maxchernoff.ca.
+!!prometheus.podman.web.ip!!          podman-web.metrics.maxchernoff.ca.
+!!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
+!!prometheus.prometheus.ip!!          prometheus.metrics.maxchernoff.ca.
+!!prometheus.registry.ip!!            container-registry.metrics.maxchernoff.ca.
+!!prometheus.systemd.builder.ip!!     systemd-builder.metrics.maxchernoff.ca.
+!!prometheus.systemd.max.ip!!         systemd-max.metrics.maxchernoff.ca.
+!!prometheus.systemd.system.ip!!      systemd-system.metrics.maxchernoff.ca.
+!!prometheus.systemd.tex.ip!!         systemd-tex.metrics.maxchernoff.ca.
+!!prometheus.systemd.web.ip!!         systemd-web.metrics.maxchernoff.ca.
+!!prometheus.systemd.woodpecker.ip!!  systemd-woodpecker.metrics.maxchernoff.ca.
+!!prometheus.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.

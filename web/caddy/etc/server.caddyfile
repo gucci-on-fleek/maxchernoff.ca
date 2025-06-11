@@ -309,7 +309,7 @@ duck.tel {
 }
 
 # Metrics
-http://!!prometheus.caddy.ip!!:!!prometheus.caddy.port!! {
+http://caddy.metrics.maxchernoff.ca:!!prometheus.caddy.port!! {
 	bind 0.0.0.0
 
 	handle /metrics {
