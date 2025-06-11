@@ -12,7 +12,6 @@ Volume=%t/systemd/private:/run/systemd/private:ro
 
 # Command-line arguments
 Exec=\
-    --systemd.collector.enable-ip-accounting \
     --systemd.collector.enable-restart-count \
     --systemd.collector.private
 
