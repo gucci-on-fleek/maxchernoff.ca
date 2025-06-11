@@ -1,0 +1,27 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+
+# Loopback interface
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+# Prometheus metrics addresses
+!!prometheus.caddy.ip!!               caddy.metrics.internal.
+!!prometheus.dmarc-metrics.ip!!       dmarc.metrics.internal.
+!!prometheus.knot.ip!!                knot.metrics.internal.
+!!prometheus.maddy.ip!!               maddy.metrics.internal.
+!!prometheus.node.ip!!                node-exporter.metrics.internal.
+!!prometheus.overleaf.ip!!            overleaf.metrics.internal.
+!!prometheus.podman.web.ip!!          podman-web.metrics.internal.
+!!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.internal.
+!!prometheus.prometheus.ip!!          prometheus.metrics.internal.
+!!prometheus.registry.ip!!            container-registry.metrics.internal.
+!!prometheus.systemd.builder.ip!!     systemd-builder.metrics.internal.
+!!prometheus.systemd.max.ip!!         systemd-max.metrics.internal.
+!!prometheus.systemd.system.ip!!      systemd-system.metrics.internal.
+!!prometheus.systemd.tex.ip!!         systemd-tex.metrics.internal.
+!!prometheus.systemd.web.ip!!         systemd-web.metrics.internal.
+!!prometheus.systemd.woodpecker.ip!!  systemd-woodpecker.metrics.internal.
+!!prometheus.woodpecker.ip!!          woodpecker.metrics.internal.
