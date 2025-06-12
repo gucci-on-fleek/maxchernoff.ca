@@ -13,8 +13,13 @@ ReadOnlyTmpfs=false
 
 # Metrics
 Exec=\
-    -enable_metrics cpu,diskIO,memory,process \
-    -port !!prometheus.cadvisor.port!!
+    --enable_metrics=cpu,diskIO,memory,process \
+    --event_storage_age_limit=2m \
+    --housekeeping_interval=30s \
+    --port=!!prometheus.cadvisor.port!! \
+    --storage_duration=2m \
+    --store_container_labels=false \
+    --update_machine_info_interval=8760h
 
 PublishPort=!!prometheus.cadvisor.ip!!:!!prometheus.cadvisor.port!!:!!prometheus.cadvisor.port!!
 
