@@ -13,7 +13,7 @@ Volume=/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
 Exec=\
     --systemd.collector.enable-ip-accounting \
     --systemd.collector.enable-restart-count \
-    --systemd.collector.unit-exclude=".+\\.(device|mount|swap|automount|slice)"
+    --systemd.collector.unit-exclude=".+\\.(device|mount|swap|automount|scope)"
 
 # Give a broken PublishPort to force the individual units to override it.
 PublishPort=!!prometheus.systemd.system.ip!!:!!prometheus.systemd.port!!:!!prometheus.systemd.port!!

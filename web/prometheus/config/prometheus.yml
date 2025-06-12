@@ -121,11 +121,17 @@ scrape_configs:
 
       - source_labels: ["id"]
         target_label: "unit"
-        regex: ".*/([^/]*\\.(?:scope|service))$"
+        action: replace
+        regex: ".*/([^/]*\\.service)$"
+
+      - source_labels: ["id"]
+        target_label: "unit"
+        action: replace
+        regex: "/(system\\.slice)"
 
       - source_labels: ["id"]
         target_label: "user"
-        regex: ".*/user@(\\d+)\\.service.*|/(system).slice/.*"
+        regex: ".*/user@(\\d+)\\.service.*|/(system).slice(?:/.*)?"
         replacement: "$1$2"
 
       - source_labels: ["unit"]
