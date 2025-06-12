@@ -65,6 +65,11 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
+            "gcr.io/cadvisor": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
             "ghcr.io/stackexchange": [
                 {
                     "type": "insecureAcceptAnything"

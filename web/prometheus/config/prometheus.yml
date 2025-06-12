@@ -100,3 +100,29 @@ scrape_configs:
           - "systemd-woodpecker.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
           - "systemd-builder.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
           - "systemd-system.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
+
+  - job_name: "cadvisor"
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        action: keep
+        regex: "^(cadvisor|container)_.*"
+
+      - source_labels: ["id"]
+        target_label: "unit"
+        regex: ".*/([^/]*\\.(?:scope|service))$"
+
+      - source_labels: ["id"]
+        target_label: "user"
+        regex: ".*/user@(\\d+)\\.service.*|/(system).slice/.*"
+        replacement: "$1$2"
+
+      - source_labels: ["unit"]
+        action: keep
+        regex: ".+"
+
+      - action: labeldrop
+        regex: "id"
+
+    static_configs:
+      - targets:
+          - "cadvisor.metrics.maxchernoff.ca:!!prometheus.cadvisor.port!!"
