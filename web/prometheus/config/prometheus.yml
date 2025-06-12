@@ -91,7 +91,19 @@ scrape_configs:
           - "dmarc.metrics.maxchernoff.ca:!!prometheus.dmarc-metrics.port!!"
 
   - job_name: "systemd"
-    metric_relabel_configs: *metric_relabel_configs
+    metric_relabel_configs:
+      - source_labels: ["name"]
+        action: drop
+        regex: "[[:xdigit:]]{64}-[[:xdigit:]]{16}\\.[^.]+"
+
+      - source_labels: ["name"]
+        action: drop
+        regex: "email-failure@.*"
+
+      - source_labels: [__name__]
+        action: keep
+        regex: "^systemd_.*"
+
     static_configs:
       - targets:
           - "systemd-max.metrics.maxchernoff.ca:!!prometheus.systemd.port!!"
@@ -122,6 +134,10 @@ scrape_configs:
 
       - action: labeldrop
         regex: "id"
+
+      - source_labels: ["unit"]
+        action: drop
+        regex: "[[:xdigit:]]{64}-[[:xdigit:]]{16}\\.[^.]+"
 
         # max=1000 web=1001 tex=1002 woodpecker=1003 repo=1005 builder=1006
       - source_labels: ["user"]

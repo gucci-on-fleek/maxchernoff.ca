@@ -13,7 +13,8 @@ Volume=%t/systemd/private:/run/systemd/private:ro
 # Command-line arguments
 Exec=\
     --systemd.collector.enable-restart-count \
-    --systemd.collector.private
+    --systemd.collector.private \
+    --systemd.collector.unit-exclude=".+\\.(device|mount|swap|automount|slice)"
 
 # Give a broken PublishPort to force the individual units to override it.
 PublishPort=INVALID-INVALID-INVALID
