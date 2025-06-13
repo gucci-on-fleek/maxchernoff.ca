@@ -9,7 +9,6 @@
 
 # Prometheus metrics addresses
 !!prometheus.caddy.ip!!               caddy.metrics.maxchernoff.ca.
-!!prometheus.cadvisor.ip!!            cadvisor.metrics.maxchernoff.ca.
 !!prometheus.dmarc-metrics.ip!!       dmarc.metrics.maxchernoff.ca.
 !!prometheus.knot.ip!!                knot.metrics.maxchernoff.ca.
 !!prometheus.maddy.ip!!               maddy.metrics.maxchernoff.ca.

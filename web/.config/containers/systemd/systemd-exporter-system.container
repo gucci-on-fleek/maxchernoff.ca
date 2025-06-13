@@ -11,7 +11,6 @@ Volume=/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
 
 # Command-line arguments
 Exec=\
-    --systemd.collector.enable-ip-accounting \
     --systemd.collector.enable-restart-count \
     --systemd.collector.unit-exclude=".+\\.(device|mount|swap|automount|scope)"
 

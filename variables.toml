@@ -74,9 +74,6 @@ systemd.woodpecker.ip = "10.79.79.16"
 systemd.builder.ip = "10.79.79.17"
 systemd.system.ip = "10.79.79.18"
 
-cadvisor.ip = "10.79.79.19"
-cadvisor.port = "9104"
-
 
 [email]
 # Define the IP addresses for the email server

@@ -41,6 +41,3 @@
 (roleattributeset install_roles (sysadm_r                           ))
 (allow            sysadm_t      install_t      (process (transition)))
 (typetransition   sysadm_t      install_exec_t process  install_t    )
-
-;; Needed for cAdvisor; harmless enough to allow all containers access to
-(allow container_t cgroup_t (dir (watch)))
