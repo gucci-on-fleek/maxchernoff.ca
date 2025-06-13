@@ -256,7 +256,15 @@ prometheus.maxchernoff.ca {
 
 # Grafana reverse proxy
 grafana.maxchernoff.ca {
-	import default
+	import default-base # default-base because we want to skip logging
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+	}
+
+	tls {
+		protocols tls1.3
+	}
 
 	basic_auth {
 		analytics {env.CADDY_HTTP_CREDENTIALS}
