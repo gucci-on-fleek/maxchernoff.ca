@@ -18,8 +18,12 @@ ExecStart=/usr/bin/prometheus-node-exporter \
     --collector.perf \
     --collector.processes \
     --collector.qdisc \
+    --collector.systemd \
+    --collector.systemd.enable-restarts-metrics \
+    --collector.systemd.enable-start-time-metrics \
+    --collector.systemd.enable-task-metrics \
+    --collector.systemd.unit-exclude=".+\\.(device|mount|swap|automount|scope)" \
     --collector.tcpstat \
-    --no-collector.systemd \
     --web.listen-address="!!prometheus.node.ip!!:!!prometheus.node.port!!"
 
 # Sandboxing

@@ -18,10 +18,4 @@
 !!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
 !!prometheus.prometheus.ip!!          prometheus.metrics.maxchernoff.ca.
 !!prometheus.registry.ip!!            container-registry.metrics.maxchernoff.ca.
-!!prometheus.systemd.builder.ip!!     systemd-builder.metrics.maxchernoff.ca.
-!!prometheus.systemd.max.ip!!         systemd-max.metrics.maxchernoff.ca.
-!!prometheus.systemd.system.ip!!      systemd-system.metrics.maxchernoff.ca.
-!!prometheus.systemd.tex.ip!!         systemd-tex.metrics.maxchernoff.ca.
-!!prometheus.systemd.web.ip!!         systemd-web.metrics.maxchernoff.ca.
-!!prometheus.systemd.woodpecker.ip!!  systemd-woodpecker.metrics.maxchernoff.ca.
 !!prometheus.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.

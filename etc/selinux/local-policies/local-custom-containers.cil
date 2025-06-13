@@ -3,45 +3,4 @@
 ;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
-;; Includes
-(typeattributeset cil_gen_require dbusd_unit_file_t)
-(typeattributeset cil_gen_require local_prometheus_metrics_port_t)
-(typeattributeset cil_gen_require local_systemd_exporter.process)
-(typeattributeset cil_gen_require node_t)
-(typeattributeset cil_gen_require systemd_unit_file_t)
-(typeattributeset cil_gen_require unconfined_t)
-(typeattributeset cil_gen_require user_tmp_t)
-
-;; Allow the Prometheus systemd exporter to access the service statuses
-(block local_systemd_exporter
-    ;; Basic permissions for the container
-    (blockinherit container)
-
-    ;; Allow users to run this SELinux policy
-    (roletype user_r process)
-    (roletype staff_r process)
-
-    ;; Allow binding to the Prometheus metrics port
-    (allow process local_prometheus_metrics_port_t (tcp_socket (name_bind)))
-    (allow process node_t (tcp_socket (node_bind)))
-    (allow process self (tcp_socket (listen)))
-
-    ;; Allow accessing the systemd private bus (user)
-    (allow process user_tmp_t (sock_file (write)))
-    (allow process userdomain (unix_stream_socket (connectto)))
-
-    ;; Allow accessing the system DBus (system)
-    (allow process system_dbusd_var_run_t (sock_file (write)))
-    (allow process system_dbusd_t (unix_stream_socket (connectto)))
-
-    ;; Allow reading service statuses
-    (allow process systemd_unit_file_type (service (status))) ;; Most services
-    (allow process user_tmp_t (service (status))) ;; Ephemeral user services
-
-    (allow process userdomain (system (status))) ;; User
-    (allow process init_t (system (status))) ;; System
-
-    ;; Allow messaging the systemd DBus (system)
-    (allow process init_t (dbus (send_msg)))
-    (allow process system_dbusd_t (dbus (send_msg)))
-)
+;; Empty for now...

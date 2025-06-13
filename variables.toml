@@ -66,14 +66,6 @@ knot.port = "9434"
 dmarc-metrics.ip = "10.79.79.12"
 dmarc-metrics.port = "9797"
 
-systemd.port = "9558"
-systemd.max.ip = "10.79.79.13"
-systemd.web.ip = "10.79.79.14"
-systemd.tex.ip = "10.79.79.15"
-systemd.woodpecker.ip = "10.79.79.16"
-systemd.builder.ip = "10.79.79.17"
-systemd.system.ip = "10.79.79.18"
-
 
 [email]
 # Define the IP addresses for the email server

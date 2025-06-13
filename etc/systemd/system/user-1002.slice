@@ -6,5 +6,4 @@
 Description=The "tex" user slice
 
 [Slice]
-# Only allow access to its own IP address within the Prometheus subnet.
-IPAddressAllow=!!prometheus.systemd.tex.ip!!
+# Empty for now.
