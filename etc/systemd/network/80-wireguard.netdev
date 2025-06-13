@@ -1,0 +1,22 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[NetDev]
+Name=wg0
+Kind=wireguard
+Description=WireGuard VPN to my home router
+
+[WireGuard]
+PrivateKey=@network.wireguard.private-key
+
+[WireGuardPeer]
+Endpoint=rd.duck.tel:51820
+PublicKey=dIcl7KryWFwChRbxnGrDB5RJv5E0Abj17zAHFIopIw4=
+PresharedKey=@network.wireguard.preshared-key
+
+AllowedIPs=10.77.0.0/16
+AllowedIPs=fd77:0:0:77::/64
+AllowedIPs=10.78.1.0/24
+AllowedIPs=fd77:0:0:78::/64
+RouteTable=local

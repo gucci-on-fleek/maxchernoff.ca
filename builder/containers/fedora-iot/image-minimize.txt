@@ -13,6 +13,7 @@ keep /usr/lib/modules/*/kernel/drivers/net/net_failover.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/net/tun.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/net/veth.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/net/virtio_net.ko.xz
+keep /usr/lib/modules/*/kernel/drivers/net/wireguard/wireguard.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/powercap/intel_rapl_common.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/powercap/intel_rapl_msr.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/virtio/virtio_balloon.ko.xz

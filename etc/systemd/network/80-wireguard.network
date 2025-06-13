@@ -1,0 +1,13 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Match]
+Name=wg0
+
+[Network]
+Description=WireGuard VPN to my home router
+Address=10.78.1.4/32
+Address=fd77:0:0:78::4/128
+DNS=10.77.0.1
+Domains=~rd.duck.tel
