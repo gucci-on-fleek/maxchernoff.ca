@@ -16,6 +16,7 @@ SendSIGKILL=no
 Restart=on-failure
 ExecStart=/usr/bin/prometheus-node-exporter \
     --collector.perf \
+    --collector.processes \
     --collector.qdisc \
     --collector.tcpstat \
     --no-collector.systemd \

@@ -10,7 +10,7 @@ scrape_configs:
     metric_relabel_configs:
       - source_labels: [__name__]
         action: keep
-        regex: "^(prom|scrape).*"
+        regex: "^(prometheus_(config|engine|http|remote|target)|scrape)_.*"
     static_configs:
       - targets:
           - "prometheus.metrics.maxchernoff.ca:!!prometheus.prometheus.port!!"
@@ -79,7 +79,7 @@ scrape_configs:
     metric_relabel_configs:
       - source_labels: [__name__]
         action: keep
-        regex: "^(grafana_api_dashboard|grafana_api_response|grafana_apiserver|grafana_build_info|grafana_database|grafana_datasource|grafana_db|grafana_folder|grafana_http|grafana_live|grafana_plugin|grafana_process|grafana_prometheus|grafana_stat).*"
+        regex: "^(grafana_api_dashboard|grafana_api_response|grafana_apiserver|grafana_build_info|grafana_database|grafana_datasource|grafana_db|grafana_folder|grafana_http|grafana_live|grafana_plugin|grafana_prometheus|grafana_stat).*"
     static_configs:
       - targets:
           - "systemd-grafana:3000"
