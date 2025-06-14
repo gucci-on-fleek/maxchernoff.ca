@@ -89,3 +89,10 @@ scrape_configs:
     static_configs:
       - targets:
           - "dmarc.metrics.maxchernoff.ca:!!prometheus.dmarc-metrics.port!!"
+
+  - job_name: "openwrt"
+    metric_relabel_configs: *metric_relabel_configs
+    static_configs:
+      - targets:
+          - "rd.duck.tel:!!prometheus.openwrt.port!!"
+          - "wifi-ap.rd.duck.tel:!!prometheus.openwrt.port!!"

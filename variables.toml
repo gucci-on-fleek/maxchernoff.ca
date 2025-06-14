@@ -66,6 +66,8 @@ knot.port = "9434"
 dmarc-metrics.ip = "10.79.79.12"
 dmarc-metrics.port = "9797"
 
+openwrt.port = "9103"
+
 
 [email]
 # Define the IP addresses for the email server
