@@ -47,4 +47,10 @@
 
     <!-- IMAP, for dmarc-metrics -->
     <service name="imaps"/>
+
+    <!-- WireGuard, for the VPN -->
+    <service name="wireguard"/>
+
+    <!-- Prometheus metrics over the VPN -->
+    <port port="9103" protocol="tcp"/>
 </policy>

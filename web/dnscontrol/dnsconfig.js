@@ -277,7 +277,8 @@ D("maxchernoff.ca", REG_MONITOR,
     TXT("@",
         "google-site-verification=gWIJ3Mg-zy1MuwAJHw8PkhOEENqOmLxUNslbQ4ZPfAE"),
 
-    CNAME("red-deer", "rd.duck.tel."),
+    // Alternate dynamic DNS
+    IGNORE("red-deer", "A,AAAA"),
 
     // dnssecuritytxt, see https://github.com/disclose/dnssecuritytxt/
     TXT("@", "security_contact=mailto:security@maxchernoff.ca"),

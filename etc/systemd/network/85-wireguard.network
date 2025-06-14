@@ -9,5 +9,11 @@ Name=wg0
 Description=WireGuard VPN to my home router
 Address=10.78.1.4/32
 Address=fd77:0:0:78::4/128
+
 DNS=10.77.0.1
 Domains=~rd.duck.tel
+DNSOverTLS=false
+DNSSEC=false
+
+[Link]
+RequiredForOnline=false
