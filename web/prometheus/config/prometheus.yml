@@ -91,7 +91,18 @@ scrape_configs:
           - "dmarc.metrics.maxchernoff.ca:!!prometheus.dmarc-metrics.port!!"
 
   - job_name: "openwrt"
-    metric_relabel_configs: *metric_relabel_configs
+    metric_relabel_configs:
+      - source_labels: ["type"]
+        target_label: "device"
+        action: replace
+        regex: "^(rx|tx)_(.*)$"
+        replacement: "$2"
+
+      - source_labels: ["type"]
+        target_label: "direction"
+        action: replace
+        regex: "^(rx|tx)_(.*)$"
+        replacement: "$1"
     static_configs:
       - targets:
           - "rd.duck.tel:!!prometheus.openwrt.port!!"
