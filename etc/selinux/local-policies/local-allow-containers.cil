@@ -41,3 +41,8 @@
 (roleattributeset install_roles (sysadm_r                           ))
 (allow            sysadm_t      install_t      (process (transition)))
 (typetransition   sysadm_t      install_exec_t process  install_t    )
+
+;; Silence some useless AVC denials
+(dontaudit container_runtime_t self (process2 (nnp_transition)))
+(dontaudit container_t container_runtime_t (fifo_file (setattr)))
+(dontaudit userdomain container_runtime_t (tcp_socket (accept)))
