@@ -245,6 +245,13 @@ files:
     def replace_variable(match: Match) -> bytes:
         variable = match[1].decode("utf-8")
         parts = variable.split(".")
+
+        try:
+            # Allow for array indexing (1-based)
+            parts[-1] = int(parts[-1]) - 1
+        except ValueError:
+            pass
+
         value = reduce(getitem, parts, variables)
 
         assert isinstance(value, str)

@@ -9,3 +9,8 @@ Description=The "web" user slice
 # Allow the "web" user full access to the Prometheus network (needed here since
 # we can't set IPAddressAllow/IPAddressDeny in user-owned units).
 IPAddressAllow=!!prometheus.subnet!!
+
+# Allow the "web" user access to the Prometheus devices on the WireGuard
+# network.
+IPAddressAllow=10.77.0.1/32
+IPAddressAllow=10.77.0.2/32

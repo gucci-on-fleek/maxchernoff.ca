@@ -72,3 +72,15 @@ openwrt.port = "9103"
 [email]
 # Define the IP addresses for the email server
 ipv4 = "10.80.80.1"
+
+
+[wireguard]
+# Define the IP addresses for the WireGuard VPN
+ipv4 = [
+    "10.77.0.0/16",
+    "10.78.1.0/24",
+]
+ipv6 = [
+    "fd77:0:0:77::/64",
+    "fd77:0:0:78::/64",
+]

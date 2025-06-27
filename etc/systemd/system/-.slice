@@ -8,4 +8,11 @@ Description=The root slice
 [Slice]
 # Block all processes from using the Prometheus network by default
 IPAddressDeny=!!prometheus.subnet!!
+IPAddressDeny=!!prometheus.subnet!!
 IPAddressAllow=!!prometheus.gateway!!
+
+# Block all processes from using the WireGuard network by default
+IPAddressDeny=!!wireguard.ipv4.1!!
+IPAddressDeny=!!wireguard.ipv4.2!!
+IPAddressDeny=!!wireguard.ipv6.1!!
+IPAddressDeny=!!wireguard.ipv6.2!!
