@@ -61,6 +61,7 @@ scrape_configs:
     static_configs:
       - targets:
           - "node-exporter.metrics.maxchernoff.ca:!!prometheus.node.port!!"
+          - "max-new-laptop.rd.duck.tel:!!prometheus.node.port!!"
 
   - job_name: "podman"
     metric_relabel_configs: *metric_relabel_configs

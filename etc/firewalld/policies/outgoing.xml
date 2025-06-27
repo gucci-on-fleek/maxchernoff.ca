@@ -52,5 +52,6 @@
     <service name="wireguard"/>
 
     <!-- Prometheus metrics over the VPN -->
-    <port port="9103" protocol="tcp"/>
+    <port port="!!prometheus.node.port!!" protocol="tcp"/>
+    <port port="!!prometheus.openwrt.port!!" protocol="tcp"/>
 </policy>

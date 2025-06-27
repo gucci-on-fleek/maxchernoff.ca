@@ -14,3 +14,4 @@ IPAddressAllow=!!prometheus.subnet!!
 # network.
 IPAddressAllow=10.77.0.1/32
 IPAddressAllow=10.77.0.2/32
+IPAddressAllow=10.77.0.100/32
