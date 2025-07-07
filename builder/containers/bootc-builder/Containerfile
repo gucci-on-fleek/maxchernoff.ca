@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
 # Base image
-FROM registry.fedoraproject.org/fedora-minimal:!!fedora.version!! AS build
+FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Install dependencies
 RUN dnf5 install \

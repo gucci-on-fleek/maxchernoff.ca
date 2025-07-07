@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 
 # Base image
-FROM registry.fedoraproject.org/fedora-minimal:!!fedora.version!! AS build
+FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Add the files
 COPY ["container-build.sh", "/usr/local/sbin/"]

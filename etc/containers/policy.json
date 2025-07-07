@@ -87,11 +87,6 @@
                     "keyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFdU51aWh1SUpOSFhvUUVacTF5SHZPZkZZU1gwYgpYMjlMVUYremQzdWVHS3RKV1Z4WlFJWEJCZVN4YnBxV1djdDQzR1RoUE44QmFHbWpDT0tDTjNrWUp3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo="
                 }
             ],
-            "registry.fedoraproject.org": [
-                {
-                    "type": "insecureAcceptAnything"
-                }
-            ],
             "quay.io/fedora": [
                 {
                     "type": "insecureAcceptAnything"
