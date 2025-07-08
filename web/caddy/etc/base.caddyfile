@@ -140,7 +140,8 @@
 		"/owa/*",
 		"/sftp-config.json",
 		"/wordpress*",
-		"/wp-*"
+		"/wp-*",
+		"/honeypot/seriously-there-is-nothing-here*"
 		) &&
 		!path("/.well-known/*")) ||
 		header({"User-Agent": "Go-http-client/*"})
@@ -256,6 +257,11 @@
 	}
 	handle @internal-url {
 		error 404
+	}
+
+	# Don't index files in /files/
+	header /files/* {
+		X-Robots-Tag "noindex, nofollow"
 	}
 
 	# Remove query parameters
