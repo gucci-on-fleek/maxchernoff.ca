@@ -43,6 +43,7 @@ packages:
   - bootc
   - borgbackup
   - btrfs-progs # /usr/bin/btrfs
+  - btrfsmaintenance
   - busybox
   - chrony
   - curl
@@ -98,7 +99,13 @@ packages:
 
 # systemd units to enable
 units:
+  - btrfs-balance.timer
+  - btrfs-defrag.timer
+  - btrfs-scrub.timer
+  - btrfs-trim.timer
+  - btrfsmaintenance-refresh.path
   - firewalld.service
+  - fstrim.timer
   - greenboot-grub2-set-counter.service
   - greenboot-grub2-set-success.service
   - greenboot-healthcheck.service
