@@ -51,7 +51,17 @@
     <!-- WireGuard, for the VPN -->
     <service name="wireguard"/>
 
+    <!-- Block some specific ICMP types, from
+    https://datatracker.ietf.org/doc/html/draft-ietf-opsec-icmp-filtering-04 -->
+    <icmp-block name="network-unknown"/>
+    <icmp-block name="host-unknown"/>
+    <icmp-block name="source-quench"/>
+    <icmp-block name="redirect"/>
+
     <!-- Prometheus metrics over the VPN -->
-    <port port="!!prometheus.node.port!!" protocol="tcp"/>
-    <port port="!!prometheus.openwrt.port!!" protocol="tcp"/>
+    <rule family="ipv4">
+        <destination address="!!wireguard.ipv4.1!!"/>
+        <port port="!!prometheus.node.port!!-!!prometheus.openwrt.port!!" protocol="tcp"/>
+        <accept/>
+    </rule>
 </policy>

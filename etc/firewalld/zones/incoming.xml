@@ -2,16 +2,17 @@
 <!-- Source Code for maxchernoff.ca
      https://github.com/gucci-on-fleek/maxchernoff.ca
      SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-     SPDX-FileCopyrightText: 2024 Max Chernoff -->
-<zone>
+     SPDX-FileCopyrightText: 2025 Max Chernoff -->
+
+<!-- Reject everything NOT listed -->
+<zone target="%%REJECT%%">
     <!-- Metadata -->
-    <short>Public</short>
+    <short>Incoming</short>
     <description>
         Allow incoming traffic only from the specified ports.
     </description>
 
     <!-- Defaults -->
-    <service name="mdns"/>
     <service name="dhcpv6-client"/>
 
     <!-- SSH -->
@@ -26,6 +27,24 @@
     <service name="dns"/>
     <service name="dns-over-tls"/>
     <port port="!!dns.altport!!" protocol="tcp"/>
+
+    <!-- Allow most ICMP packets -->
+    <protocol value="icmp"/>
+    <protocol value="ipv6-icmp"/>
+
+    <!-- Block some specific ICMP types, from
+    https://datatracker.ietf.org/doc/html/draft-ietf-opsec-icmp-filtering-04 -->
+    <icmp-block name="network-unknown"/>
+    <icmp-block name="host-unknown"/>
+    <icmp-block name="source-quench"/>
+    <icmp-block name="redirect"/>
+
+    <!-- syslog over the VPN -->
+    <rule family="ipv4">
+        <source address="!!wireguard.ipv4.1!!"/>
+        <service name="syslog"/>
+        <accept/>
+    </rule>
 
     <!-- Apply the allowlist -->
     <forward/>
