@@ -39,6 +39,7 @@ ignore-removed-groups:
 # Packages to install
 packages:
   - acl # getfacl/setfacl
+  - audit-rules # auditctl
   - authselect # PAM configuration
   - bootc
   - borgbackup
@@ -99,6 +100,7 @@ packages:
 
 # systemd units to enable
 units:
+  - audit-rules.service
   - btrfs-balance.timer
   - btrfs-defrag.timer
   - btrfs-scrub.timer
