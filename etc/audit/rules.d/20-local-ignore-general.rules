@@ -1,0 +1,23 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+
+# Disable annoying BPF messages in audit logs
+-a always,exclude -F msgtype=BPF
+
+# Disable warnings from Pasta.
+-a always,exclude -F msgtype=ANOM_PROMISCUOUS
+
+# Already handled by systemd
+-a always,exclude -F msgtype=SERVICE_START
+-a always,exclude -F msgtype=SERVICE_STOP
+
+# Uninteresting messages
+-a always,exclude -F msgtype=CWD
+-a always,exclude -F msgtype=CRED_ACQ
+-a always,exclude -F msgtype=CRED_DISP
+-a always,exclude -F msgtype=CRED_REFR
+-a always,exclude -F msgtype=SYSCALL -F arch=b64
+-a always,exclude -F msgtype=SYSCALL -F arch=b32
+-a always,exclude -F msgtype=SOCKADDR

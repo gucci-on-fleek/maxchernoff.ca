@@ -1,0 +1,13 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+
+# The server is public-facing, so there are hundreds of failed login attempts
+# every day. This is a lot of noise in the audit logs, so we'll ignore these
+# messages.
+-a always,exclude -F msgtype=CRYPTO_KEY_USER -F exe=/usr/libexec/openssh/sshd-session
+-a always,exclude -F msgtype=CRYPTO_SESSION -F exe=/usr/libexec/openssh/sshd-session
+-a always,exclude -F msgtype=USER_LOGIN -F exe=/usr/libexec/openssh/sshd-session
+-a always,exclude -F msgtype=USER_ERR -F exe=/usr/libexec/openssh/sshd-session
+
