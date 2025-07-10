@@ -29,13 +29,13 @@ for platform in \
 done
 
 # Remake the ConTeXt formats
-context --make
-context --luatex --make
+context --make > /dev/null
+context --luatex --make > /dev/null
 
 # Rebuild the font caches
-mtxrun --script fonts --reload
-mtxrun --luatex --script fonts --reload
+mtxrun --script fonts --reload > /dev/null
+mtxrun --luatex --script fonts --reload > /dev/null
 
 # Update the ConTeXt modules
 cd /var/home/tex/context/
-mtxrun --script install-modules --install --all
+mtxrun --script install-modules --install --all > /dev/null

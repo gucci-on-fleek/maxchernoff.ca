@@ -11,5 +11,9 @@ Wants=container-registry.service
 Type=oneshot
 ExecStart=podman exec systemd-container-registry registry garbage-collect --delete-untagged=true /etc/distribution/config.yml
 
+# Silence the excessive logs
+StandardOutput=null
+StandardError=null
+
 [Install]
 WantedBy=cleanup-containers.timer

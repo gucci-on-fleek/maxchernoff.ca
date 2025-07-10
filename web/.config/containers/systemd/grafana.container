@@ -11,6 +11,9 @@ Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,noexec
 
 ReadOnly=true
 
+# Too many spammy logs
+LogDriver=none
+
 [Service]
 Restart=always
 

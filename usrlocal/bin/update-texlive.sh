@@ -13,10 +13,10 @@ export PATH="/var/home/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 tlmgr update --all --self || true
 
 # Remake the ConTeXt formats
-context --make
-context --luatex --make
+context --make > /dev/null
+context --luatex --make > /dev/null
 
 # Rebuild the font caches
 luaotfload-tool --update
-mtxrun --script fonts --reload
-mtxrun --luatex --script fonts --reload
+mtxrun --script fonts --reload > /dev/null
+mtxrun --luatex --script fonts --reload > /dev/null

@@ -17,26 +17,26 @@ ctx=/opt/context/texmf-linux-64/bin
 } &
 {
     cd "$(mktemp --directory)"
-    $tl/context --make || exit 1
-    $tl/mtxrun --script fonts --reload || exit 1
+    $tl/context --make > /dev/null || exit 1
+    $tl/mtxrun --script fonts --reload > /dev/null || exit 1
     $tl/context /root/make-font-cache/context-cache.tex || exit 1
 } &
 {
     cd "$(mktemp --directory)"
-    $tl/context --luatex --make || exit 1
-    $tl/mtxrun --luatex --script fonts --reload || exit 1
+    $tl/context --luatex --make > /dev/null || exit 1
+    $tl/mtxrun --luatex --script fonts --reload > /dev/null || exit 1
     $tl/context --luatex /root/make-font-cache/context-cache.tex || exit 1
 } &
 {
     cd "$(mktemp --directory)"
-    $ctx/context --make || exit 1
-    $ctx/mtxrun --script fonts --reload || exit 1
+    $ctx/context --make > /dev/null || exit 1
+    $ctx/mtxrun --script fonts --reload > /dev/null || exit 1
     $ctx/context /root/make-font-cache/context-cache.tex || exit 1
 } &
 {
     cd "$(mktemp --directory)"
-    $ctx/context --luatex --make || exit 1
-    $ctx/mtxrun --luatex --script fonts --reload || exit 1
+    $ctx/context --luatex --make > /dev/null || exit 1
+    $ctx/mtxrun --luatex --script fonts --reload > /dev/null || exit 1
     $ctx/context --luatex /root/make-font-cache/context-cache.tex || exit 1
 } &
 

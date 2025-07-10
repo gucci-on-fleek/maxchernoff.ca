@@ -18,6 +18,9 @@ HealthRetries=5
 HealthTimeout=10s
 HealthOnFailure=stop
 
+# Too many spammy logs
+LogDriver=none
+
 [Service]
 Restart=always
 TimeoutStartSec=300
