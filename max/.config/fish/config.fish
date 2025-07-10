@@ -52,7 +52,7 @@ function reboot
 end
 
 function journalctl
-    command journalctl --exclude-identifier='sshd-session' --grep='^(?!{"t":{)((?!sshd|container health_status).)+$' $argv
+    command journalctl --exclude-identifier='sshd-session' $argv
 end
 
 function ls
