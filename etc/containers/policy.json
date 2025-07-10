@@ -101,6 +101,11 @@
                 {
                     "type": "insecureAcceptAnything"
                 }
+            ],
+            "quay.io/victoriametrics": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
             ]
         },
         "oci": {
