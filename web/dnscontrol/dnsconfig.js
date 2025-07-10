@@ -133,6 +133,9 @@ D("maxchernoff.ca", REG_MONITOR,
     // Grafana dashboard
     web("grafana"),
 
+    // Victoria Logs instance
+    web("logs"),
+
     // Hosts an Overleaf instance
     web("overleaf"),
 

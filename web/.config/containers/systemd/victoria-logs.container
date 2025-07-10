@@ -1,0 +1,41 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Container]
+Image=maxchernoff.ca/victoria-logs:latest
+Network=prometheus.network
+
+# Configuration
+Volume=%h/victoria-logs/data/:/victoria-logs-data:rw,Z,noexec
+Exec=\
+    --enableTCP6 \
+    --httpListenAddr=:!!victoria-logs.port!! \
+    --journald.streamFields=_MACHINE_ID,_HOSTNAME,_SYSTEMD_UNIT,_TRANSPORT,_SYSTEMD_USER_UNIT,_UID \
+    --metrics.exposeMetadata \
+    --retention.maxDiskSpaceUsageBytes=10GB \
+    --retentionPeriod=100y \
+    --syslog.listenAddr.udp=:!!victoria-logs.syslog!! \
+    --syslog.useLocalTimestamp.udp
+
+# Sandboxing
+User=1000
+Group=1000
+ReadOnly=true
+
+# Metrics
+PublishPort=!!prometheus.victoria-logs.ip!!:!!prometheus.victoria-logs.port!!:!!victoria-logs.port!!
+
+# Allow access from the trusted networks so that we can append logs
+PublishPort=127.0.0.1:!!victoria-logs.port!!:!!victoria-logs.port!!
+PublishPort=[::1]:!!victoria-logs.port!!:!!victoria-logs.port!!
+PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.port!!:!!victoria-logs.port!!
+PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-logs.syslog!!/udp
+
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+WantedBy=grafana.service

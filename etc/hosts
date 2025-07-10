@@ -18,4 +18,5 @@
 !!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
 !!prometheus.prometheus.ip!!          prometheus.metrics.maxchernoff.ca.
 !!prometheus.registry.ip!!            container-registry.metrics.maxchernoff.ca.
+!!prometheus.victoria-logs.ip!!       victoria-logs.metrics.maxchernoff.ca.
 !!prometheus.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.

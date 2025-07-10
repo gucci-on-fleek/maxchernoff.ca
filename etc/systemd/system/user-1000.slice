@@ -10,7 +10,7 @@ Description=The "max" user slice
 IPAddressAllow=!!prometheus.subnet!!
 
 # Allow the "max" user full access to the WireGuard network, for testing.
-IPAddressAllow=!!wireguard.ipv4.1!!
-IPAddressAllow=!!wireguard.ipv4.2!!
-IPAddressAllow=!!wireguard.ipv6.1!!
-IPAddressAllow=!!wireguard.ipv6.2!!
+IPAddressAllow=!!wireguard.subnet.ipv4.1!!
+IPAddressAllow=!!wireguard.subnet.ipv4.2!!
+IPAddressAllow=!!wireguard.subnet.ipv6.1!!
+IPAddressAllow=!!wireguard.subnet.ipv6.2!!

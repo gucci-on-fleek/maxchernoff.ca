@@ -68,6 +68,9 @@ dmarc-metrics.port = "9797"
 
 openwrt.port = "9103"
 
+victoria-logs.ip = "10.79.79.13"
+victoria-logs.port = "9428"
+
 
 [email]
 # Define the IP addresses for the email server
@@ -76,11 +79,16 @@ ipv4 = "10.80.80.1"
 
 [wireguard]
 # Define the IP addresses for the WireGuard VPN
-ipv4 = [
-    "10.77.0.0/16",
-    "10.78.1.0/24",
-]
-ipv6 = [
-    "fd77:0:0:77::/64",
-    "fd77:0:0:78::/64",
-]
+subnet.ipv4 = ["10.77.0.0/16", "10.78.1.0/24"]
+subnet.ipv6 = ["fd77:0:0:77::/64", "fd77:0:0:78::/64"]
+
+self.ipv4 = "10.78.1.4"
+self.ipv6 = "fd77:0:0:78::4"
+
+
+[victoria-logs]
+# The port used to append logs
+port = "21660"
+
+# The port that Victoria Logs will listen on for syslog messages
+syslog = "514"

@@ -15,8 +15,8 @@ Endpoint=red-deer.maxchernoff.ca:51820
 PublicKey=dIcl7KryWFwChRbxnGrDB5RJv5E0Abj17zAHFIopIw4=
 PresharedKey=@network.wireguard.preshared-key
 
-AllowedIPs=!!wireguard.ipv4.1!!
-AllowedIPs=!!wireguard.ipv4.2!!
-AllowedIPs=!!wireguard.ipv6.1!!
-AllowedIPs=!!wireguard.ipv6.2!!
+AllowedIPs=!!wireguard.subnet.ipv4.1!!
+AllowedIPs=!!wireguard.subnet.ipv4.2!!
+AllowedIPs=!!wireguard.subnet.ipv6.1!!
+AllowedIPs=!!wireguard.subnet.ipv6.2!!
 RouteTable=local

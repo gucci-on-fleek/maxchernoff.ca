@@ -41,8 +41,25 @@
 
     <!-- syslog over the VPN -->
     <rule family="ipv4">
-        <source address="!!wireguard.ipv4.1!!"/>
+        <source address="!!wireguard.subnet.ipv4.1!!"/>
         <service name="syslog"/>
+        <accept/>
+    </rule>
+    <rule family="ipv4">
+        <source address="!!wireguard.subnet.ipv4.2!!"/>
+        <service name="syslog"/>
+        <accept/>
+    </rule>
+
+    <!-- Victoria Logs over the VPN -->
+    <rule family="ipv4">
+        <source address="!!wireguard.subnet.ipv4.1!!"/>
+        <port port="!!victoria-logs.port!!" protocol="tcp"/>
+        <accept/>
+    </rule>
+    <rule family="ipv4">
+        <source address="!!wireguard.subnet.ipv4.2!!"/>
+        <port port="!!victoria-logs.port!!" protocol="tcp"/>
         <accept/>
     </rule>
 

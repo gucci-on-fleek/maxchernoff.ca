@@ -50,8 +50,11 @@ fcontext --add --seuser user_u --type container_file_t    '{web}knot/storage(/.*
 fcontext --add --seuser user_u --type container_file_t    '{web}maddy/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}overleaf(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}prometheus/data(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}victoria-logs/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}woodpecker/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecker/config(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{tex}context-installer/tex(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{tex}texlive(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}builder/containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?'
@@ -64,8 +67,6 @@ fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/grafana(/.*
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/knot(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/maddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/prometheus(/.*)?'
-fcontext --add --seuser user_u --type container_file_t '{tex}context-installer/tex(/.*)?'
-fcontext --add --seuser user_u --type container_file_t '{tex}texlive(/.*)?'
 
 # Set the file context equivalents
 fcontext --add '{repo}builder/.config' --equal '{builder}.config'
@@ -445,6 +446,13 @@ recursive_permissions = true
 
 [[folder]]
 base = "{web}/dmarc-metrics/"
+paths = ["data"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/1000" = "rw"
+
+[[folder]]
+base = "{web}/victoria-logs/"
 paths = ["data"]
 owner = "web"
 permissions.web = "rw"

@@ -60,7 +60,7 @@
 
     <!-- Prometheus metrics over the VPN -->
     <rule family="ipv4">
-        <destination address="!!wireguard.ipv4.1!!"/>
+        <destination address="!!wireguard.subnet.ipv4.1!!"/>
         <port port="!!prometheus.node.port!!-!!prometheus.openwrt.port!!" protocol="tcp"/>
         <accept/>
     </rule>

@@ -275,6 +275,19 @@ grafana.maxchernoff.ca {
 	}
 }
 
+# Victoria Logs reverse proxy
+logs.maxchernoff.ca {
+	import default
+
+	header ?Content-Security-Policy ""
+
+	basic_auth {
+		analytics {env.CADDY_HTTP_CREDENTIALS}
+	}
+
+	reverse_proxy systemd-victoria-logs:!!victoria-logs.port!!
+}
+
 # Secondary domain: duck.tel
 duck.tel {
 	import default

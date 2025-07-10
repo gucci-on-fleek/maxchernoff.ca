@@ -5,8 +5,7 @@
 apiVersion: 1
 
 datasources:
-  - name: Prometheus
-    type: prometheus
+  - name: Victoria Logs
+    type: victoriametrics-logs-datasource
     access: proxy
-    url: http://systemd-prometheus:!!prometheus.prometheus.port!!
-    isDefault: true
+    url: http://systemd-victoria-logs:!!victoria-logs.port!!

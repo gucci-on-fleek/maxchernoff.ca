@@ -108,3 +108,9 @@ scrape_configs:
       - targets:
           - "rd.duck.tel:!!prometheus.openwrt.port!!"
           - "wifi-ap.rd.duck.tel:!!prometheus.openwrt.port!!"
+
+  - job_name: "victoria-logs"
+    metric_relabel_configs: *metric_relabel_configs
+    static_configs:
+      - targets:
+          - "victoria-logs.metrics.maxchernoff.ca:!!prometheus.victoria-logs.port!!"

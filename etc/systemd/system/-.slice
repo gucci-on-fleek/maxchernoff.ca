@@ -12,7 +12,7 @@ IPAddressDeny=!!prometheus.subnet!!
 IPAddressAllow=!!prometheus.gateway!!
 
 # Block all processes from using the WireGuard network by default
-IPAddressDeny=!!wireguard.ipv4.1!!
-IPAddressDeny=!!wireguard.ipv4.2!!
-IPAddressDeny=!!wireguard.ipv6.1!!
-IPAddressDeny=!!wireguard.ipv6.2!!
+IPAddressDeny=!!wireguard.subnet.ipv4.1!!
+IPAddressDeny=!!wireguard.subnet.ipv4.2!!
+IPAddressDeny=!!wireguard.subnet.ipv6.1!!
+IPAddressDeny=!!wireguard.subnet.ipv6.2!!

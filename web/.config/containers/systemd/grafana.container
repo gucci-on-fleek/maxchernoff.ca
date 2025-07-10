@@ -7,9 +7,11 @@ Image=docker.io/grafana/grafana-oss:latest
 Network=prometheus.network
 
 Volume=%h/grafana/config/:/etc/grafana/:ro,noexec
-Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,noexec
+Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,exec
 
 ReadOnly=true
+
+Environment=GF_INSTALL_PLUGINS=victoriametrics-logs-datasource
 
 # Too many spammy logs
 LogDriver=none
