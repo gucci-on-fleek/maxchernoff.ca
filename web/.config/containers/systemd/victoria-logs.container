@@ -12,7 +12,6 @@ Exec=\
     --enableTCP6 \
     --httpListenAddr=:!!victoria-logs.port!! \
     --journald.streamFields=_MACHINE_ID,_HOSTNAME,_SYSTEMD_UNIT,_TRANSPORT,_SYSTEMD_USER_UNIT,_UID \
-    --metrics.exposeMetadata \
     --retention.maxDiskSpaceUsageBytes=10GB \
     --retentionPeriod=100y \
     --syslog.listenAddr.udp=:!!victoria-logs.syslog!! \

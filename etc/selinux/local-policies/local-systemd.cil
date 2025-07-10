@@ -63,3 +63,6 @@
 ;; Needed for "sudo networkctl ..."
 (allow sysadm_t systemd_networkd_t (dbus               (send_msg )))
 (allow sysadm_t systemd_networkd_t (unix_stream_socket (connectto)))
+
+;; Needed for Victoria Logs
+(portcon tcp 21660 (system_u object_r journal_remote_port_t ((s0) (s0))))

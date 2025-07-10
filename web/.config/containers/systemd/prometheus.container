@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
-Image=quay.io/prometheus/prometheus:latest
+Image=quay.io/prometheus/prometheus:v3.4.2
 Network=prometheus.network
 
 Volume=%h/prometheus/config/:/etc/prometheus/:ro,noexec
