@@ -13,5 +13,7 @@ IPAddressAllow=!!prometheus.subnet!!
 # Allow the "web" user access to the Prometheus devices on the WireGuard
 # network.
 IPAddressAllow=10.77.0.1/32
-IPAddressAllow=10.77.0.2/32
 IPAddressAllow=10.77.0.100/32
+IPAddressAllow=10.77.0.2/32
+IPAddressAllow=10.78.1.0/32
+IPAddressAllow=10.78.1.2/32
