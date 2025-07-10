@@ -28,7 +28,9 @@ import base.caddyfile
 	default_bind fdgram/5 {
 		protocols h3
 	}
-	admin off
+	admin localhost:2019 {
+		origins caddy.metrics.maxchernoff.ca:9117
+	}
 
 	# Proxy DNS-over-TLS
 	layer4 {
@@ -337,7 +339,7 @@ http://caddy.metrics.maxchernoff.ca:!!prometheus.caddy.port!! {
 		metrics
 	}
 	handle /souin-api/metrics {
-		cache
+		reverse_proxy localhost:2019
 	}
 	handle {
 		respond "404 Not Found" 404
