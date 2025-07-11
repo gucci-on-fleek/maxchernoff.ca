@@ -13,9 +13,6 @@ ReadOnly=true
 
 Environment=GF_INSTALL_PLUGINS=victoriametrics-logs-datasource
 
-# Too many spammy logs
-LogDriver=none
-
 [Service]
 Restart=always
 
