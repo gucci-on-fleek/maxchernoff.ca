@@ -24,7 +24,7 @@ if [ "$user" = "system" ]; then
     journal_cmd="_SYSTEMD_UNIT=$service + UNIT=$service + OBJECT_SYSTEMD_UNIT=$service"
 else
     uid="$(id -u "$user")"
-    journal_cmd="_UID=$uid _SYSTEMD_USER_UNIT=$service + USER_UNIT=$service + OBJECT_SYSTEMD_USER_UNIT=$service"
+    journal_cmd="_SYSTEMD_OWNER_UID=$uid _SYSTEMD_USER_UNIT=$service + USER_UNIT=$service + OBJECT_SYSTEMD_USER_UNIT=$service"
 fi
 
 # Get the logs

@@ -14,11 +14,7 @@ Network=email.network
 AddCapability=CAP_CHOWN CAP_DAC_OVERRIDE CAP_SETGID CAP_SETUID
 
 StopTimeout=30
-HealthCmd=curl -sfL http://localhost/
-HealthInterval=60s
-HealthRetries=5
-HealthTimeout=10s
-HealthOnFailure=stop
+HealthCmd=none
 
 Environment="ENABLE_CONVERSIONS=true"
 Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
