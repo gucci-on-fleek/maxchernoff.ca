@@ -11,8 +11,6 @@ Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,exec
 
 ReadOnly=true
 
-Environment=GF_INSTALL_PLUGINS=victoriametrics-logs-datasource
-
 [Service]
 Restart=always
 
