@@ -61,3 +61,23 @@ function ls
         sudo ls --classify --color=auto --human-readable --almost-all $argv
     end
 end
+
+function pps
+    ps --no-headers -eo pid,user:12,context:40,cmd | \
+    tr --squeeze-repeats ' ' | \
+    sed -E \
+        -e 's/ /\x00/g5' \
+        -e 's/ /\t/g' \
+        -e 's/\x00/ /g' \
+        -e 's/^\t//' \
+        -e 's/:s0[^\t]*//' \
+        -e 's/^([^\t]*)(\t[^\t]{,12})[^\t]*(\t[^\t]{,40})[^\t]*(.*)/\1\2\3\4/' \
+    | \
+    column --table \
+        --separator="$(printf "\t")" \
+        --output-width=$COLUMNS \
+        --table-column=name=PID,right \
+        --table-column=name=User,width=12,trunc \
+        --table-column=name='SELinux Context',width=40,trunc \
+        --table-column=name=Command,wrap
+end
