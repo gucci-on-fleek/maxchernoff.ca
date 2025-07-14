@@ -41,9 +41,6 @@
 (allow local_user_domains var_log_t      (file       (open read      )))
 (allow local_user_domains var_run_t      (dir        (mounton        )))
 
-;; Needed for "sudo systemctl --user --machine=USER@ ..."
-(allow local_user_domains sysadm_t (unix_stream_socket (getattr getopt read setopt write)))
-
 ;; Needed for runtime-generated user units
 (filecon "/run/user/%{USERID}/systemd/generator" dir (system_u object_r systemd_unit_file_t ((s0) (s0))))
 
@@ -58,7 +55,10 @@
 ;; Miscellaneous
 (allow container_t        container_ro_file_t (file     (relabelto     )))
 (allow local_user_domains gpg_t               (process2 (nnp_transition)))
-(allow snapperd_t         file_context_t      (file     (map           )))
+
+;; Snapper
+(dontaudit snapperd_t file_context_t (file (map)))
+(allow sysadm_t snapperd_t (dbus (send_msg)))
 
 ;; Needed for "sudo networkctl ..."
 (allow sysadm_t systemd_networkd_t (dbus               (send_msg )))
@@ -66,3 +66,26 @@
 
 ;; Needed for Victoria Logs
 (portcon tcp 21660 (system_u object_r journal_remote_port_t ((s0) (s0))))
+
+;; Needed for "sudo systemctl --user --machine=USER@ ..."
+; (type systemd_stdio_bridge_t)
+; (type systemd_stdio_bridge_exec_t)
+;
+; (roletype object_r systemd_stdio_bridge_t)
+; (roletype object_r systemd_stdio_bridge_exec_t)
+; (roletype usernetctl_roles systemd_stdio_bridge_t)
+; (typeattributeset domain (systemd_stdio_bridge_t))
+;
+; (typetransition init_t systemd_stdio_bridge_exec_t process systemd_stdio_bridge_t)
+; (allow init_t systemd_stdio_bridge_exec_t (file (getattr open read execute)))
+; (allow systemd_stdio_bridge_t systemd_stdio_bridge_exec_t (file (entrypoint)))
+; (allow init_t systemd_stdio_bridge_t (process (transition)))
+;
+; (typetransition local_user_domains systemd_stdio_bridge_exec_t process systemd_stdio_bridge_t)
+; (allow local_user_domains systemd_stdio_bridge_exec_t (file (getattr open read execute)))
+; (allow systemd_stdio_bridge_t systemd_stdio_bridge_exec_t (file (entrypoint)))
+; (allow local_user_domains systemd_stdio_bridge_t (process (transition)))
+;
+; (filecon "/usr/local/bin/systemd-stdio-bridge" file (system_u object_r systemd_stdio_bridge_exec_t ((s0) (s0))))
+; (allow systemd_stdio_bridge_t admindomain (unix_stream_socket (getattr getopt read setopt write)))
+(allow local_user_domains sysadm_t (unix_stream_socket (getattr getopt read setopt write)))
