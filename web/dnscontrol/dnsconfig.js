@@ -57,16 +57,16 @@ function web(name) {
         AAAA(name, IPv6), // IPv6 Address
 
         // HTTPS Records
-        // HTTPS(
-        //     name,                      // Domain
-        //     1,                         // Priority
-        //     ".",                       // Target Domain (this domain)
-        //     "alpn=h3,h2 " +            // Protocols supported (HTTP/2 and HTTP/3)
-        //     "ipv4hint=" + IPv4 + " " + // IPv4 Address
-        //     "ipv6hint=" + IPv6         // IPv6 Address
-        //     // "tls-supported-groups=29,23" // x25519, secp256r1 // TODO: Enable this when DNSControl supports it
-        // ),
-        IGNORE(name, "HTTPS"), // TODO Not ideal, but good enough for now
+        HTTPS(
+            name,                      // Domain
+            1,                         // Priority
+            ".",                       // Target Domain (this domain)
+            "alpn=h3,h2 " +            // Protocols supported (HTTP/2 and HTTP/3)
+            "ipv4hint=" + IPv4 + " " + // IPv4 Address
+            "ipv6hint=" + IPv6 + " " + // IPv6 Address
+            "ech=IGNORE"               // Ignore the contents of the `ech` key
+            // "tls-supported-groups=29,23" // x25519, secp256r1 // TODO: Enable this when DNSControl supports it
+        ),
     ]
 
     // DANE
