@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
-Image=docker.io/grafana/grafana-oss:latest
+Image=docker.io/grafana/grafana-oss:main
 Network=prometheus.network
 
 Volume=%h/grafana/config/:/etc/grafana/:ro,noexec
