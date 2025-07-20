@@ -8,5 +8,5 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://systemd-prometheus:!!prometheus.prometheus.port!!
+    url: http://systemd-victoria-metrics:!!prometheus.victoria-metrics.port!!
     isDefault: true

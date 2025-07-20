@@ -6,20 +6,31 @@ global:
   scrape_interval: 30s
 
 scrape_configs:
-  - job_name: "prometheus"
-    metric_relabel_configs:
-      - source_labels: [__name__]
-        action: keep
-        regex: "^(prometheus_(config|engine|http|remote|target)|scrape)_.*"
-    static_configs:
-      - targets:
-          - "prometheus.metrics.maxchernoff.ca:!!prometheus.prometheus.port!!"
-
-  - job_name: "caddy"
+  - job_name: "victoria-metrics"
     metric_relabel_configs: &metric_relabel_configs
       - source_labels: [__name__]
         action: drop
+        regex: "^(go|nodejs|openfga|process|promhttp|python|timer_event_loop)_.*"
+    static_configs:
+      - targets:
+          - "victoria-metrics.metrics.maxchernoff.ca:!!prometheus.victoria-metrics.port!!"
+
+  - job_name: "caddy"
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        action: drop
         regex: "^(go|nodejs|openfga|promhttp|python|timer_event_loop)_.*"
+
+      - source_labels: [host]
+        target_label: host
+        action: replace
+        regex: "([^:]+):([^:]+)"
+        replacement: "$1"
+
+      - source_labels: [host]
+        regex: "^$|^(!!network.ipv4!!|\\[?!!network.ipv6!!\\]?)$|^(.*\\.)?(maxchernoff\\.ca|duck\\.tel)$"
+        action: keep
+
     metrics_path: "/metrics"
     static_configs:
       - targets:

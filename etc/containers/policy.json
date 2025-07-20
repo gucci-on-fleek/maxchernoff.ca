@@ -92,11 +92,6 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
-            "quay.io/prometheus": [
-                {
-                    "type": "insecureAcceptAnything"
-                }
-            ],
             "quay.io/prometheuscommunity": [
                 {
                     "type": "insecureAcceptAnything"

@@ -11,7 +11,7 @@ Volume=%h/victoria-logs/data/:/victoria-logs-data:rw,Z,noexec
 Exec=\
     --enableTCP6 \
     --httpListenAddr=:!!victoria-logs.port!! \
-    --journald.streamFields=_MACHINE_ID,_HOSTNAME,_SYSTEMD_UNIT,_TRANSPORT,_SYSTEMD_USER_UNIT,_UID \
+    --journald.streamFields=_MACHINE_ID,_HOSTNAME,_SYSTEMD_UNIT,_TRANSPORT,_SYSTEMD_USER_UNIT,_SYSTEMD_OWNER_UID \
     --retention.maxDiskSpaceUsageBytes=10GB \
     --retentionPeriod=100y \
     --syslog.listenAddr.udp=:!!victoria-logs.syslog!! \

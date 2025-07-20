@@ -49,8 +49,8 @@ fcontext --add --seuser user_u --type container_file_t    '{web}grafana/data(/.*
 fcontext --add --seuser user_u --type container_file_t    '{web}knot/storage(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}maddy/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}overleaf(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '{web}prometheus/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}victoria-logs/data(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{web}victoria-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}woodpecker/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecker/config(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{tex}context-installer/tex(/.*)?'
@@ -66,7 +66,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/goaccess(/.
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/grafana(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/knot(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/maddy(/.*)?'
-fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/prometheus(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/victoria-metrics/config(/.*)?'
 
 # Set the file context equivalents
 fcontext --add '{repo}builder/.config' --equal '{builder}.config'
@@ -259,10 +259,10 @@ paths = [
     "goaccess",
     "knot/*/",
     "maddy/config",
-    "prometheus/config",
     "grafana/config",
     "container-registry/config",
     "dmarc-metrics/config",
+    "victoria-metrics/config",
 ]
 permissions.web = "r"
 permissions."web/root" = "r"
@@ -399,21 +399,6 @@ owner = "repo"
 recursive_permissions = true
 
 [[folder]]
-base = "{web}/prometheus/"
-paths = ["data"]
-owner = "web"
-permissions.web = "rw"
-permissions."web/65534" = "rw"
-
-[[permissions]]
-base = "{web}/prometheus/"
-paths = ["config"]
-permissions."web/65534" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
-
-[[folder]]
 base = "{web}/grafana/"
 paths = ["data"]
 owner = "web"
@@ -453,6 +438,21 @@ permissions."web/1000" = "rw"
 
 [[folder]]
 base = "{web}/victoria-logs/"
+paths = ["data"]
+owner = "web"
+permissions.web = "rw"
+permissions."web/1000" = "rw"
+
+[[permissions]]
+base = "{web}/victoria-metrics/"
+paths = ["config"]
+permissions."web/1000" = "r"
+permissions."web" = "r"
+owner = "repo"
+recursive_permissions = true
+
+[[folder]]
+base = "{web}/victoria-metrics/"
 paths = ["data"]
 owner = "web"
 permissions.web = "rw"

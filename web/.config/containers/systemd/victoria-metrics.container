@@ -1,0 +1,32 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+[Container]
+Image=maxchernoff.ca/victoria-metrics:latest
+Network=prometheus.network
+
+# Configuration
+Volume=%h/victoria-metrics/data/:/victoria-metrics-data:rw,Z,noexec
+Volume=%h/victoria-metrics/config/:/etc/prometheus/:ro,noexec
+Exec=\
+    --enableTCP6 \
+    --httpListenAddr=:!!prometheus.victoria-metrics.port!! \
+    --promscrape.config=/etc/prometheus/prometheus.yml \
+    --retentionPeriod=100y \
+    --sortLabels=true \
+    --storageDataPath=/victoria-metrics-data \
+    --vm-significant-figures=10
+
+# Sandboxing
+User=1000
+Group=1000
+ReadOnly=true
+SecurityLabelType=local_prometheus_container.process
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=caddy.service
+WantedBy=grafana.service

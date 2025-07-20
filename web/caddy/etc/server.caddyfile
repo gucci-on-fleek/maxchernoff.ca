@@ -242,19 +242,19 @@ ech.maxchernoff.ca {
 	respond "Not Found" 404
 }
 
-# Prometheus reverse proxy
-prometheus.maxchernoff.ca {
+# Victoria Metrics reverse proxy
+metrics.maxchernoff.ca {
 	import default
 
 	header {
-		?Content-Security-Policy ""
+		?Content-Security-Policy "default-src 'self'; frame-ancestors 'none';"
 	}
 
 	basic_auth {
 		analytics {env.CADDY_HTTP_CREDENTIALS}
 	}
 
-	reverse_proxy systemd-prometheus:!!prometheus.prometheus.port!!
+	reverse_proxy systemd-victoria-metrics:!!prometheus.victoria-metrics.port!!
 }
 
 # Grafana reverse proxy
@@ -282,7 +282,9 @@ grafana.maxchernoff.ca {
 logs.maxchernoff.ca {
 	import default
 
-	header ?Content-Security-Policy ""
+	header {
+		?Content-Security-Policy "default-src 'self'; frame-ancestors 'none';"
+	}
 
 	basic_auth {
 		analytics {env.CADDY_HTTP_CREDENTIALS}

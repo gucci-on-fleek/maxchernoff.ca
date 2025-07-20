@@ -35,9 +35,6 @@ altport = "25108"
 subnet = "10.79.79.1/24"
 gateway = "10.79.79.1"
 
-prometheus.ip = "127.0.0.1"
-prometheus.port = "9090"
-
 caddy.ip = "10.79.79.2"
 caddy.port = "9117"
 
@@ -70,6 +67,9 @@ openwrt.port = "9103"
 
 victoria-logs.ip = "10.79.79.13"
 victoria-logs.port = "9428"
+
+victoria-metrics.ip = "127.0.0.1"
+victoria-metrics.port = "9090"
 
 
 [email]

@@ -136,11 +136,11 @@ D("maxchernoff.ca", REG_MONITOR,
     // Victoria Logs instance
     web("logs"),
 
+    // Prometheus metrics
+    web("metrics"),
+
     // Hosts an Overleaf instance
     web("overleaf"),
-
-    // Prometheus metrics
-    web("prometheus"),
 
     // Container Registry
     web("registry"),

@@ -15,8 +15,8 @@ ReadOnly=true
 Restart=always
 
 [Unit]
-After=prometheus.container
-Requires=prometheus.container
+After=victoria-metrics.container
+Wants=victoria-metrics.container
 
 [Install]
 WantedBy=caddy.service
