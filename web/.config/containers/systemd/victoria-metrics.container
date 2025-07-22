@@ -15,8 +15,7 @@ Exec=\
     --promscrape.config=/etc/prometheus/prometheus.yml \
     --retentionPeriod=100y \
     --sortLabels=true \
-    --storageDataPath=/victoria-metrics-data \
-    --vm-significant-figures=10
+    --storageDataPath=/victoria-metrics-data
 
 # Sandboxing
 User=1000
