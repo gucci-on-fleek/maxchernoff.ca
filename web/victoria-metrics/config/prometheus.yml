@@ -22,7 +22,7 @@ scrape_configs:
         regex: "^(go|nodejs|openfga|promhttp|python|timer_event_loop)_.*"
 
       - source_labels: [host]
-        target_label: host
+        target_label: real_host
         action: replace
         regex: "([^:]+):([^:]+)"
         replacement: "$1"
