@@ -41,6 +41,7 @@ packages:
   - acl # getfacl/setfacl
   - audit-rules # auditctl
   - authselect # PAM configuration
+  - bees # Btrfs deduplication
   - bootc
   - borgbackup
   - btrfs-progs # /usr/bin/btrfs

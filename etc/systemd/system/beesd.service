@@ -1,0 +1,49 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2025 Zygo Blaxell and 2025 Max Chernoff
+# (Based off of the original upstream file)
+
+[Unit]
+Description=Bees
+Documentation=https://github.com/Zygo/bees
+After=local-fs.target
+
+[Service]
+# Service settings
+Type=simple
+ExecStart=/usr/bin/beesd --no-timestamps !!filesystems.root!!
+
+KillMode=control-group
+KillSignal=SIGTERM
+Restart=on-abnormal
+RuntimeDirectory=bees
+RuntimeDirectoryMode=0700
+
+# Performance settings
+CPUAccounting=true
+CPUSchedulingPolicy=batch
+CPUWeight=12
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+IOWeight=10
+MemoryAccounting=true
+Nice=19
+StartupCPUWeight=25
+StartupIOWeight=25
+
+# Sandboxing settings
+AmbientCapabilities=CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_FOWNER CAP_SYS_ADMIN
+NoNewPrivileges=true
+PrivateIPC=true
+PrivateNetwork=true
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target

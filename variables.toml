@@ -92,3 +92,11 @@ port = "21660"
 
 # The port that Victoria Logs will listen on for syslog messages
 syslog = "514"
+
+
+[filesystems]
+# The UUIDs for the filesystems used by the system
+root = "54b902ba-941a-495f-ae19-770ee22681c4"
+boot = "26d65031-c51b-4e2c-999f-9642f90ebcab"
+efi = "312A-0AD0"
+swap = "25c85fb7-eadd-414c-9c56-475bf2a401f4"

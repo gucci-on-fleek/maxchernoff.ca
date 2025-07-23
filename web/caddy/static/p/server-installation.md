@@ -115,10 +115,6 @@ Post-installation
     $ chsh -s /usr/bin/fish
     ```
 
-4. Fix `/etc/fstab`:
-
-    Change the options for `/` to `defaults,compress=zstd:1,noatime`.
-
 5. Fix `/etc/passwd`: <span class=sidenote>If not done, `podman` will
    complain about a mismatched home location.</span>
 
@@ -306,18 +302,4 @@ Snapshots
 
     ```shell-session
     $ btrfs subvolume create {.local,.cache}
-    ```
-
-1. Mount the snapshot directory:
-
-    ```ini
-    # /etc/fstab
-    # This line was here originally
-    UUID={uuid}  /home/            btrfs  subvol={subvol},compress=zstd:1,noatime             0  0
-    # Add this line
-    UUID={uuid}  /home/.snapshots  btrfs  subvol={subvol}/.snapshots,compress=zstd:1,noatime  0  0
-    ```
-    ```shell-session
-    $ sudo systemctl daemon-reload
-    $ sudo mount -av
     ```
