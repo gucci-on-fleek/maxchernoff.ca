@@ -33,9 +33,13 @@ dnf_packages=(
     zip
 )
 
-dnf install \
-    --assumeyes \
-    --nodocs \
-    --setopt=install_weak_deps=False \
-    --setopt=keepcache=true \
-     "${dnf_packages[@]}"
+for _ in $(seq 3); do
+    dnf install \
+        --assumeyes \
+        --nodocs \
+        --setopt=install_weak_deps=False \
+        --setopt=keepcache=true \
+        "${dnf_packages[@]}" \
+    && break \
+    || sleep $((30 + RANDOM % 90))
+done

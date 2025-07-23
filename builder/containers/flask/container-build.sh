@@ -15,18 +15,22 @@ mkdir -p $root/var/cache/
 ln -s /var/cache/libdnf5 $root/var/cache/libdnf5
 
 # Install the base packages
-dnf5 install \
-    --assumeyes \
-    --installroot=$root \
-    --nodocs \
-    --setopt=install_weak_deps=false \
-    --setopt=keepcache=true \
-    --use-host-config \
-    coreutils-single \
-    generic-release \
-    glibc-minimal-langpack \
-    python3-flask \
-    python3-waitress
+for _ in $(seq 3); do
+    dnf5 install \
+        --assumeyes \
+        --installroot=$root \
+        --nodocs \
+        --setopt=install_weak_deps=false \
+        --setopt=keepcache=true \
+        --use-host-config \
+        coreutils-single \
+        generic-release \
+        glibc-minimal-langpack \
+        python3-flask \
+        python3-waitress \
+    && break \
+    || sleep $((30 + RANDOM % 90))
+done
 
 # Unlink the cache from the host
 rm $root/var/cache/libdnf5

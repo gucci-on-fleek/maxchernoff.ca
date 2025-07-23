@@ -15,13 +15,17 @@ mkdir -p $root/var/cache/
 ln -s /var/cache/libdnf5 $root/var/cache/libdnf5
 
 # Install the builder packages
-dnf5 install \
-    --assumeyes \
-    --nodocs \
-    --setopt=install_weak_deps=false \
-    --setopt=keepcache=true \
-    gzip \
-    tar
+for _ in $(seq 3); do
+    dnf5 install \
+        --assumeyes \
+        --nodocs \
+        --setopt=install_weak_deps=false \
+        --setopt=keepcache=true \
+        gzip \
+        tar \
+    && break \
+    || sleep $((30 + RANDOM % 90))
+done
 
 # Install the base packages
 dnf5 install \
