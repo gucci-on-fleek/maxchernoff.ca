@@ -16,4 +16,4 @@ StandardOutput=null
 StandardError=null
 
 [Install]
-WantedBy=cleanup-containers.timer
+WantedBy=cleanup-container-registry.timer

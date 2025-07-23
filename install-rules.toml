@@ -210,7 +210,11 @@ recursive_permissions = true
 [[link]]
 source = "{repo}/tex/"
 destination = "{tex}/"
-paths = [".config/systemd/user/", ".config/containers/"]
+paths = [
+    ".config/containers/",
+    ".config/systemd/user/",
+    ".config/user-tmpfiles.d",
+]
 owner = "tex"
 
 [[permissions]]
@@ -243,8 +247,9 @@ source = "{repo}/web/"
 destination = "{web}/"
 paths = [
     ".config/containers/",
-    ".config/systemd/user/",
     ".config/prometheus-podman-exporter",
+    ".config/systemd/user/",
+    ".config/user-tmpfiles.d",
 ]
 permissions.web = "r"
 owner = "root"
@@ -289,6 +294,8 @@ paths = ["overleaf/redis/", "overleaf/mongo/"]
 owner = "web/root"
 permissions."web/999" = "rw"
 permissions."web/root" = "rw"
+permissions.web = "rw"
+recursive_permissions = true
 
 [[folder]]
 base = "{web}"
@@ -524,6 +531,7 @@ paths = [
     ".config/containers/",
     ".config/prometheus-podman-exporter",
     ".config/systemd/user/",
+    ".config/user-tmpfiles.d",
     "containers/",
 ]
 permissions.builder = "r"
@@ -532,3 +540,9 @@ permissions.builder = "r"
 base = "{builder}/.cache/"
 paths = ["podman-dnf/", "go-build/", "go-modules/", "rpm-ostree/"]
 owner = "builder"
+
+[[permissions]]
+base = "{builder}/.cache/"
+paths = ["go-modules"]
+permissions.builder = "rw"
+permissions.other = "r"

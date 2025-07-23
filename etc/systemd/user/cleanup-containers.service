@@ -3,12 +3,12 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Unit]
-Description=Garbage collects the container registry
+Description=Cleans up the Podman container files
 
-[Timer]
-OnCalendar=00:40:00 America/Edmonton
-Unit=cleanup-containers.service
+[Service]
+Type=oneshot
+ExecStart=podman system prune --external
+ExecStart=podman system prune --all --force
 
 [Install]
-WantedBy=timers.target
-Also=cleanup-containers.service
+WantedBy=cleanup-containers.timer

@@ -10,7 +10,12 @@ Network=overleaf.network
 
 AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID
 
-Exec=--replSet overleaf --logpath /dev/null
+Exec=\
+    --replSet overleaf \
+    --logpath /dev/null \
+    --wiredTigerJournalCompressor zstd \
+    --wiredTigerCollectionBlockCompressor zstd
+
 HealthCmd=none
 
 [Service]
