@@ -4,9 +4,11 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
 Image=docker.io/library/mongo:6
-Volume=%h/overleaf/mongo:/data/db:Z,noexec
 Pod=overleaf.pod
 Network=overleaf.network
+
+Volume=%h/overleaf/mongo:/data/db:Z,noexec
+Tmpfs=/data/db/diagnostic.data/
 
 AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID
 
