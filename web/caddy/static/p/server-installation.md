@@ -217,6 +217,22 @@ Installing TeX Live
     >     --texdir=/var/home/tex/texlive --scheme=full --paper=letter
     ```
 
+5. Install the TeX Live gpg keys:
+
+    ```shell-session
+    % curl -fsSL https://tug.org/texlive/files/texlive.asc | tlmgr key add -
+    % curl -fsSL https://www.preining.info/rsa.asc | tlmgr key add -
+    ```
+
+5. Install the extra TeX Live repositories:
+
+    ```shell-session
+    % tlmgr repository add https://tug.org/texlive/tlcritical/ tlcritical
+    % tlmgr repository add https://ctan.math.utah.edu/ctan/tex-archive/systems/texlive/tlcontrib tlcontrib
+    % tlmgr pinning add tlcontrib "*"
+    % tlmgr install collection-contrib
+    ```
+
 6. Download and run the ConTeXt installer:
 
     ```shell-session

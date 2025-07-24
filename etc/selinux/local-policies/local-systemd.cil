@@ -67,6 +67,10 @@
 ;; Needed for Victoria Logs
 (portcon tcp 21660 (system_u object_r journal_remote_port_t ((s0) (s0))))
 
+;; Needed for TeX Live gpg verification
+(allow gpg_t container_file_t (dir (search)))
+(allow gpg_t container_file_t (file (write open read)))
+
 ;; Needed for "sudo systemctl --user --machine=USER@ ..."
 ; (type systemd_stdio_bridge_t)
 ; (type systemd_stdio_bridge_exec_t)
