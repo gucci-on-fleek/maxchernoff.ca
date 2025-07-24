@@ -43,7 +43,7 @@ ProtectHome=true
 ProtectHostname=true
 ProtectKernelTunables=true
 ProtectProc=invisible
-ProtectSystem=strict
+ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target
