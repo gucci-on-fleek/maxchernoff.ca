@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=maxchernoff.ca/flask:latest
+StopSignal=SIGINT
 Network=flask.network
 
 Volume=%h/flask/:/srv:ro,exec

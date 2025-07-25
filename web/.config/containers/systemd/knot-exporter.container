@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Container]
 Image=maxchernoff.ca/knot-exporter:latest
+StopSignal=SIGINT
 
 Network=private
 Volume=%t/knot:/run/knot/:rw,z
