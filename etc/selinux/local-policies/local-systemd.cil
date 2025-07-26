@@ -4,26 +4,28 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
-(typeattributeset cil_gen_require admin_home_t       )
-(typeattributeset cil_gen_require dosfs_t            )
-(typeattributeset cil_gen_require file_context_t     )
-(typeattributeset cil_gen_require fs_t               )
-(typeattributeset cil_gen_require gconf_home_t       )
-(typeattributeset cil_gen_require gpg_t              )
-(typeattributeset cil_gen_require home_root_t        )
-(typeattributeset cil_gen_require init_var_run_t     )
-(typeattributeset cil_gen_require journalctl_t       )
-(typeattributeset cil_gen_require root_t             )
-(typeattributeset cil_gen_require snapperd_t         )
-(typeattributeset cil_gen_require staff_t            )
-(typeattributeset cil_gen_require sysadm_t           )
-(typeattributeset cil_gen_require systemd_networkd_t )
-(typeattributeset cil_gen_require systemd_unit_file_t)
-(typeattributeset cil_gen_require tmpfs_t            )
-(typeattributeset cil_gen_require user_t             )
-(typeattributeset cil_gen_require user_tmp_t         )
-(typeattributeset cil_gen_require var_log_t          )
-(typeattributeset cil_gen_require var_run_t          )
+(typeattributeset cil_gen_require admin_home_t          )
+(typeattributeset cil_gen_require dosfs_t               )
+(typeattributeset cil_gen_require file_context_t        )
+(typeattributeset cil_gen_require fs_t                  )
+(typeattributeset cil_gen_require gconf_home_t          )
+(typeattributeset cil_gen_require gpg_t                 )
+(typeattributeset cil_gen_require home_root_t           )
+(typeattributeset cil_gen_require init_var_run_t        )
+(typeattributeset cil_gen_require journalctl_t          )
+(typeattributeset cil_gen_require root_t                )
+(typeattributeset cil_gen_require snapperd_t            )
+(typeattributeset cil_gen_require staff_t               )
+(typeattributeset cil_gen_require sysadm_t              )
+(typeattributeset cil_gen_require systemd_networkd_t    )
+(typeattributeset cil_gen_require systemd_oomd_t        )
+(typeattributeset cil_gen_require systemd_oomd_var_run_t)
+(typeattributeset cil_gen_require systemd_unit_file_t   )
+(typeattributeset cil_gen_require tmpfs_t               )
+(typeattributeset cil_gen_require user_t                )
+(typeattributeset cil_gen_require user_tmp_t            )
+(typeattributeset cil_gen_require var_log_t             )
+(typeattributeset cil_gen_require var_run_t             )
 
 ;; Defines
 (typeattribute    local_user_domains                 )
@@ -70,6 +72,11 @@
 ;; Needed for TeX Live gpg verification
 (allow gpg_t container_file_t (dir (search)))
 (allow gpg_t container_file_t (file (write open read)))
+
+;; oomd bug
+(allow local_user_domains systemd_oomd_t (unix_stream_socket (connectto)))
+(allow local_user_domains systemd_oomd_var_run_t (sock_file (write)))
+
 
 ;; Needed for "sudo systemctl --user --machine=USER@ ..."
 ; (type systemd_stdio_bridge_t)
