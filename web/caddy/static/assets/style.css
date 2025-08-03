@@ -116,6 +116,7 @@ body {
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
     text-wrap-style: pretty;
+    font-size-adjust: ex-height 0.53;
 }
 
 body * {

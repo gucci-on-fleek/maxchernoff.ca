@@ -42,6 +42,11 @@ if [ "${1:-}" = "caddy" ]; then
     #     --watch \
     #     --adapter caddyfile \
     #     --config /etc/caddy/local.caddyfile
+
+    # Use the fake hash from
+    #     https://github.com/caddyserver/caddy/blob/b7ae39e9/modules/caddyhttp/caddyauth/hashes.go#L59
+    # for testing.
+    export CADDY_HTTP_CREDENTIALS='$2a$14$X3ulqf/iGxnf1k6oMZ.RZeJUoqI9PX2PM4rS5lkIKJXduLGXGPrt6'
     caddy run \
         --watch \
         --adapter caddyfile \
