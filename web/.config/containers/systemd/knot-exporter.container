@@ -28,6 +28,7 @@ After=knot.service
 
 [Service]
 Restart=always
+SuccessExitStatus=130
 
 [Install]
 WantedBy=default.target
