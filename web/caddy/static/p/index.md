@@ -48,6 +48,8 @@ Tools
 
 - [Stardew Valley Item Finder](/tools/Stardew-Valley-Item-Finder/)
 
+- [Container Registry](https://registry.maxchernoff.ca/)
+
 </nav>
 
 
@@ -58,13 +60,21 @@ TeX Projects
 
 - [<abbr>TUG</abbr> Board Member](https://tug.org/board.html) (2023–)
 
-- [TeX Live Committer](https://git.texlive.info/texlive/commit/Master/tlpkg/bin?id=f136d5) (2024–)
+- [TeX Live Developer](https://github.com/orgs/TeX-Live/people) (2024–)
+
+- [<abbr>TUG</abbr> Technical Council
+  Member](https://tug.org/committees.html#tech-council) (2025–)
+
+- [<abbr>TUG</abbr>&#8239;2026 Conference Local
+  Organizer](https://tug.org/tug2026/)
 
 ### Packages
 
-- [`lua-widow-control`](https://ctan.org/pkg/lua-widow-control)
+- [ConTeXt packaging for TeX Live](https://github.com/gucci-on-fleek/context-packaging)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/context)
 
-- [`extractbb.lua`](https://www.ctan.org/pkg/extractbb)
+- [`lua-widow-control`](https://github.com/gucci-on-fleek/lua-widow-control)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/lua-widow-control)
+
+- [`extractbb`](https://github.com/gucci-on-fleek/extractbb)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/extractbb)
 
 - [`luatex-syntax-highlighter`](https://github.com/gucci-on-fleek/luatex-syntax-highlighter)&emsp;(unreleased)
 
@@ -79,6 +89,7 @@ TeX Projects
   *TUGboat*, 43(1), 28–39.
   [<abbr>DOI</abbr>:&#8239;`10.47397/tb/43-1/tb133chernoff-widows`](//tug.org/TUGboat/tb43-1/tb133chernoff-widows.html).
   (2022-05)
+
 - Comparing TeX engines and formats.\
   Abstract: *TUGboat*, 43(2), 209.
   [<abbr>DOI</abbr>:&#8239;`10.47397/tb/43-2/tb134abstracts`](//tug.org/TUGboat/tb43-2/tb134abstracts.html).
@@ -86,15 +97,22 @@ TeX Projects
   [Video](//youtu.be/MNdAoza8VHU) and
   [slides](//tug.org/tug2022/assets/served/Max_Chernoff-TUG2022-chernoff-engines-slides.pdf).
   (2022-07)
+
 - Automatically removing widows and orphans with `lua-widow-control`.
   *Zpravodaj Československého sdružení uživatelů TeXu*, 2022(1–4),
   49–76.
   [<abbr>DOI</abbr>:&#8239;`10.5300/2022-1-4/49`](//dml.cz/handle/10338.dmlcz/151108).
   (2022-11)
+
 - Updates to "Automatically removing widows and orphans with
   `lua-widow-control`". *TUGboat*, 43(3), 340–342.
   [<abbr>DOI</abbr>:&#8239;`10.47397/tb/43-3/tb135chernoff-lwc`](//tug.org/TUGboat/tb43-3/tb135chernoff-lwc.html).
   (2022-12)
+
+- Karl Berry, Production notes: <abbr>PDF</abbr>s and urls. *TUGboat*,
+  45(3), 402.
+  [<abbr>DOI</abbr>:&#8239;`10.47397/tb/45-3/tb141prod`](https://doi.org/10.47397/tb/45-3/tb141prod).
+  (2024-10)
 
 ### Profiles
 
