@@ -66,6 +66,14 @@ done
 cp /root/cgi.py $root/usr/local/lib/$python_version/site-packages/cgi.py
 sed -i '/self.closed = 0/d' $root/usr/local/lib/$python_version/site-packages/sapi.py
 
+# Pablo prefers the old colour scheme
+cat <<'EOF' >> $root/usr/local/share/viewvc/docroot/styles.css
+.vc_diff_remove { background: rgb(100%,60%,60%); }
+.vc_diff_add { background: rgb(60%,100%,60%); }
+.vc_diff_changes1 { background: rgb(100%,100%,70%); color: rgb(50%,50%,50%); text-decoration: line-through; }
+.vc_diff_changes2 { background: rgb(100%,100%,0%); }
+EOF
+
 # Create the ViewVC user
 useradd --root=$root viewvc
 
