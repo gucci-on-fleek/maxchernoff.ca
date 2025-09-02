@@ -4,7 +4,6 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Pod]
 Network=overleaf.network
-UserNS=nomap
 
 [Unit]
 After=overleaf-network.service network-ready.service
