@@ -23,6 +23,7 @@ ExecStart=podman run \
     --volume=/etc/containers/:/etc/containers/:ro \
     --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
     --volume=%h/containers/fedora-iot/:/root/source/:ro \
+    --userns=host \
     maxchernoff.ca/bootc-builder:latest \
     /root/source/container-build.sh
 
