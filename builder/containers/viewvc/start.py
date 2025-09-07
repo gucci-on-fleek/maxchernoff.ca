@@ -30,9 +30,8 @@ Popen(
         "BIND": "127.0.0.1:8923",  # Default value
         "COOKIE_DOMAIN": "tug.org",
         "COOKIE_EXPIRATION_TIME": (
-            "2160h"
-        ),  # 90 days, increased from default of 1 week
-        "DIFFICULTY": "4",  # Default value
+            "8760h"
+        ),  # 1 year, increased from default of 1 week
         "WEBMASTER_EMAIL": "webmaster@tug.org",
         "TARGET": "http://localhost:43219",
         "REDIRECT_DOMAINS": "svn.tug.org:8369",
@@ -43,6 +42,7 @@ Popen(
         "ED25519_PRIVATE_KEY_HEX": (
             "3e5fabb2b118e31bbafc2356b7cd39874b1f7ccc1622e45fdd196ed55b9f102b"
         ),
+        "POLICY_FNAME": "/srv/anubis.yml",
     },
 )
 
