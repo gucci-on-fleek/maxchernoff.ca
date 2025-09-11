@@ -439,4 +439,7 @@ D("duck.tel", REG_MONITOR,
     // Google Search Console ownership verification
     TXT("@",
         "google-site-verification=AF_OhBzlGPeUXXBkZcv4D-yBvXCUibw9hNd8OoRK2Cw"),
+
+    // Test record to see if the updates are working
+    TXT("testing", "This is a test record")
 )
