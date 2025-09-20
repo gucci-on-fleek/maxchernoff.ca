@@ -12,6 +12,13 @@ dnf_packages=(
     git
     libxcrypt-compat  # For `biber`
 
+    # For TeX Live
+    perl-File-Find
+    perl-interpreter
+    perl-LWP-Protocol-https
+    tar
+    xz
+
     # gucci-on-fleek/lua-widow-control
     curl
     libxslt
