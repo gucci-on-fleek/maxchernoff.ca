@@ -65,7 +65,7 @@ packages:
   - htop
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
-  - kernel
+  - kernel-debug
   - less
   - man-db # man pages
   - microcode_ctl

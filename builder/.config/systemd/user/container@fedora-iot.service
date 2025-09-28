@@ -10,34 +10,34 @@ After=container@bootc-builder.service
 Type=oneshot
 RemainAfterExit=no
 
-# ExecStart=podman run \
-#     --cap-add=NET_ADMIN \
-#     --cap-add=SYS_ADMIN \
-#     --device=/dev/fuse \
-#     --network=pasta:-T,!!registry.port!! \
-#     --pull=always \
-#     --rm \
-#     --security-opt=label=nested \
-#     --security-opt=label=role:user_r \
-#     --security-opt=label=user:user_u \
-#     --volume=/etc/containers/:/etc/containers/:ro \
-#     --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
-#     --volume=%h/containers/fedora-iot/:/root/source/:ro \
-#     --userns=host \
-#     maxchernoff.ca/bootc-builder:latest \
-#     /root/source/container-build.sh
-#
-# # TODO: https://github.com/containers/skopeo/issues/2343
-# ExecStart=skopeo copy \
-#     --all \
-#     --dest-tls-verify=false \
-#     --dest-compress-format=zstd:chunked \
-#     --dest-compress-level=5 \
-#     --dest-precompute-digests \
-#     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-#     --sign-identity=maxchernoff.ca/fedora-iot:latest \
-#     docker://localhost:!!registry.port!!/fedora-iot:latest \
-#     docker://localhost:!!registry.port!!/fedora-iot:latest
+ExecStart=podman run \
+    --cap-add=NET_ADMIN \
+    --cap-add=SYS_ADMIN \
+    --device=/dev/fuse \
+    --network=pasta:-T,!!registry.port!! \
+    --pull=always \
+    --rm \
+    --security-opt=label=nested \
+    --security-opt=label=role:user_r \
+    --security-opt=label=user:user_u \
+    --volume=/etc/containers/:/etc/containers/:ro \
+    --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
+    --volume=%h/containers/fedora-iot/:/root/source/:ro \
+    --userns=host \
+    maxchernoff.ca/bootc-builder:latest \
+    /root/source/container-build.sh
+
+# TODO: https://github.com/containers/skopeo/issues/2343
+ExecStart=skopeo copy \
+    --all \
+    --dest-tls-verify=false \
+    --dest-compress-format=zstd:chunked \
+    --dest-compress-level=5 \
+    --dest-precompute-digests \
+    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
+    --sign-identity=maxchernoff.ca/fedora-iot:latest \
+    docker://localhost:!!registry.port!!/fedora-iot:latest \
+    docker://localhost:!!registry.port!!/fedora-iot:latest
 
 [Install]
 WantedBy=update-all.target
