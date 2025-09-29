@@ -14,7 +14,6 @@ releasever: "!!fedora.version!!"
 repos:
   - fedora
   - updates
-  - updates-archive
 
 # Keep the security attributes
 selinux: true
@@ -66,7 +65,7 @@ packages:
   - htop
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
-  - kernel-6.16.7-200.fc42.x86_64
+  - kernel-debug
   - less
   - man-db # man pages
   - microcode_ctl
