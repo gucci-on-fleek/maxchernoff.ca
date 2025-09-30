@@ -58,6 +58,9 @@ import base.caddyfile
 		api {
 			prometheus
 		}
+		regex {
+			exclude "^/files/.*qcow.*"
+		}
 	}
 
 	# Configure (non-request) logging
