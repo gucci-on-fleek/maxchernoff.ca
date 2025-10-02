@@ -26,6 +26,9 @@ SecurityLabelType=local_prometheus_container.process
 [Service]
 Restart=always
 
+# Run at a lower priority
+!!priorities.low!!
+
 [Install]
 WantedBy=caddy.service
 WantedBy=grafana.service

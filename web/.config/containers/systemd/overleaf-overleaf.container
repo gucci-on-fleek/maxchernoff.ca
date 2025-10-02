@@ -60,5 +60,8 @@ Restart=always
 TimeoutStartSec=300
 TimeoutStopSec=20
 
+# Run at a lower priority
+!!priorities.low!!
+
 [Install]
 Also=overleaf-network.service overleaf-mongo.service overleaf-redis.service

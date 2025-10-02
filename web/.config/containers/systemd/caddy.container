@@ -34,6 +34,9 @@ PublishPort=!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!:!!prometheus.caddy
 Restart=always
 TimeoutStopSec=15s
 
+# Run at a higher priority
+!!priorities.high!!
+
 [Unit]
 Wants=network-ready.service
 After=network-ready.service

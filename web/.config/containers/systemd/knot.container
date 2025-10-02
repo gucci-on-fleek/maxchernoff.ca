@@ -30,5 +30,8 @@ After=network-ready.service
 Restart=always
 ExecStartPre=mkdir -p %t/knot
 
+# Run at a higher priority
+!!priorities.high!!
+
 [Install]
 WantedBy=default.target

@@ -19,6 +19,9 @@ ReadOnlyTmpfs=false
 [Service]
 Restart=always
 
+# Run at a higher priority
+!!priorities.high!!
+
 [Unit]
 Wants=network-ready.service
 After=network-ready.service

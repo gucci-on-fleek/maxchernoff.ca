@@ -20,17 +20,8 @@ Restart=on-abnormal
 RuntimeDirectory=bees
 RuntimeDirectoryMode=0700
 
-# Performance settings
-CPUAccounting=true
-CPUSchedulingPolicy=batch
-CPUWeight=12
-IOSchedulingClass=idle
-IOSchedulingPriority=7
-IOWeight=10
-MemoryAccounting=true
-Nice=19
-StartupCPUWeight=25
-StartupIOWeight=25
+# Run at the lowest possible priority
+!!priorities.lowest!!
 
 # Sandboxing settings
 AmbientCapabilities=CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_FOWNER CAP_SYS_ADMIN

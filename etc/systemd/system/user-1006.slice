@@ -6,4 +6,5 @@
 Description=The "builder" user slice
 
 [Slice]
-# Empty for now.
+# Run at a lower priority
+!!priorities.low!!

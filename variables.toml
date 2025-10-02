@@ -100,3 +100,45 @@ root = "54b902ba-941a-495f-ae19-770ee22681c4"
 boot = "26d65031-c51b-4e2c-999f-9642f90ebcab"
 efi = "312A-0AD0"
 swap = "25c85fb7-eadd-414c-9c56-475bf2a401f4"
+
+
+# systemd resource control priorities
+[priorities]
+lowest = """
+CPUSchedulingPolicy=idle
+CPUWeight=1
+CPUQuota=200%
+
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+IOWeight=1
+Nice=19
+
+MemoryMax=6G
+"""
+
+low = """
+CPUSchedulingPolicy=batch
+CPUWeight=20
+CPUQuota=350%
+
+IOSchedulingClass=best-effort
+IOSchedulingPriority=5
+IOWeight=20
+Nice=10
+
+MemoryMax=10G
+"""
+
+high = """
+CPUSchedulingPolicy=other
+CPUWeight=200
+CPUQuota=
+
+IOSchedulingClass=best-effort
+IOSchedulingPriority=3
+IOWeight=200
+Nice=-5
+
+MemoryMax=12G
+"""

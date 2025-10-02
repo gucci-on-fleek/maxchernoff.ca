@@ -8,3 +8,6 @@ Description=The "woodpecker" user slice
 [Slice]
 # Only allow access to its own IP address within the Prometheus subnet.
 IPAddressAllow=!!prometheus.podman.woodpecker.ip!!
+
+# Run at a lower priority
+!!priorities.low!!

@@ -56,5 +56,8 @@ Restart=on-failure
 Type=oneshot
 RemainAfterExit=no
 
+# Run at a lower priority
+!!priorities.low!!
+
 [Install]
 WantedBy=update-analytics.target

@@ -35,6 +35,9 @@ PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-logs.sys
 [Service]
 Restart=always
 
+# Run at a lower priority
+!!priorities.low!!
+
 [Install]
 WantedBy=default.target
 WantedBy=grafana.service

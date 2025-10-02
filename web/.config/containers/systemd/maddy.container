@@ -25,6 +25,9 @@ PublishPort=!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!:!!prometheus.maddy
 [Service]
 Restart=always
 
+# Run at a higher priority
+!!priorities.high!!
+
 [Unit]
 Wants=network-ready.service
 After=network-ready.service
