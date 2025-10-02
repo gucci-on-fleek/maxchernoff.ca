@@ -14,6 +14,7 @@ releasever: "!!fedora.version!!"
 repos:
   - fedora
   - updates
+  - "copr:copr.fedorainfracloud.org:gucci-on-fleek:kernel"
 
 # Keep the security attributes
 selinux: true
@@ -65,7 +66,7 @@ packages:
   - htop
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
-  - kernel-debug
+  - kernel
   - less
   - man-db # man pages
   - microcode_ctl
