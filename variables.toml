@@ -107,7 +107,7 @@ swap = "25c85fb7-eadd-414c-9c56-475bf2a401f4"
 lowest = """
 CPUSchedulingPolicy=idle
 CPUWeight=1
-CPUQuota=200%
+CPUQuota=150%
 
 IOSchedulingClass=idle
 IOSchedulingPriority=7
