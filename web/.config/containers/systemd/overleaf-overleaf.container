@@ -13,14 +13,14 @@ Network=email.network
 
 AddCapability=CAP_CHOWN CAP_DAC_OVERRIDE CAP_SETGID CAP_SETUID
 
-StopTimeout=30
+StopTimeout=20
 HealthCmd=none
-
-Environment="ENABLE_CONVERSIONS=true"
-Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
 Environment="GRACEFUL_SHUTDOWN_DELAY_SECONDS=5"
 Environment="KILL_ALL_PROCESSES_TIMEOUT=15"
 Environment="KILL_PROCESS_TIMEOUT=15"
+
+Environment="ENABLE_CONVERSIONS=true"
+Environment="ENABLED_LINKED_FILE_TYPES=project_file,project_output_file"
 Environment="OVERLEAF_ADMIN_EMAIL=overleaf@maxchernoff.ca"
 Environment="OVERLEAF_APP_NAME=Overleaf"
 Environment="OVERLEAF_BEHIND_PROXY=true"
@@ -57,8 +57,8 @@ After=overleaf-mongo.service overleaf-redis.service
 
 [Service]
 Restart=always
-TimeoutStartSec=300
-TimeoutStopSec=20
+TimeoutStartSec=300s
+TimeoutStopSec=25s
 
 # Run at a lower priority
 !!priorities.low!!

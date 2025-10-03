@@ -18,6 +18,7 @@ ReadOnlyTmpfs=false
 
 [Service]
 Restart=always
+TimeoutStopSec=15s
 
 # Run at a higher priority
 !!priorities.high!!

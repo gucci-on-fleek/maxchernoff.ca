@@ -29,6 +29,7 @@ After=knot.service
 [Service]
 Restart=always
 SuccessExitStatus=130
+TimeoutStopSec=15s
 
 [Install]
 WantedBy=default.target
