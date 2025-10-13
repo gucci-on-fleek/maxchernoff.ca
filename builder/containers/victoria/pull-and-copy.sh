@@ -26,13 +26,17 @@ latest_version="v$(\
 )"
 
 # Copy the latest version to my own registry
-skopeo copy \
-    --all \
-    --dest-tls-verify=false \
-    --dest-compress-format=zstd:chunked \
-    --dest-compress-level=5 \
-    --dest-precompute-digests \
-    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-    --sign-identity="maxchernoff.ca/$base_name:latest" \
-    "docker://$image_name:$latest_version" \
-    "docker://localhost:!!registry.port!!/$base_name:latest"
+for _ in $(seq 3); do # This is flaky, so try up to 3 times
+    skopeo copy \
+        --all \
+        --dest-tls-verify=false \
+        --dest-compress-format=zstd:chunked \
+        --dest-compress-level=5 \
+        --dest-precompute-digests \
+        --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
+        --sign-identity="maxchernoff.ca/$base_name:latest" \
+        "docker://$image_name:$latest_version" \
+        "docker://localhost:!!registry.port!!/$base_name:latest" \
+    && break \
+    || sleep 5
+done
