@@ -303,6 +303,13 @@ duck.tel {
 	respond "Not Found" 404
 }
 
+# Testing domain: 958386.xyz
+958386.xyz {
+	import default
+	import domain-info
+	respond "Not Found" 404
+}
+
 # Fallback hosts
 !!network.ipv4!!, [!!network.ipv6!!], * {
 	# I've set the security options here to be as strict as possible since

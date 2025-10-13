@@ -9,6 +9,7 @@
 
 // Select our DNS providers
 var DSP_KNOT = NewDnsProvider("knot")
+var DSP_CLOUDFLARE = NewDnsProvider("cloudflare");
 var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
@@ -82,6 +83,36 @@ function web(name) {
     out.push(no_mail(name))
 
     return out
+}
+
+// Limits the certificate authorities permitted to issue certificates
+var default_caa = CAA_BUILDER({
+    label: "@", // Apply this to the root domain
+    iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
+    issue: [ "letsencrypt.org" ], // Allowed certificate issuers
+    issuewild: "none", // No wildcard certificates
+    issue_critical: true, // Mark all records as critical
+    iodef_critical: true,
+    issuewild_critical: true,
+})
+
+// DMARC (tells receiving servers to reject spoofed emails)
+function default_dmarc(policy, label, alignmentSPF) {
+    return DMARC_BUILDER({
+        "label": label,
+        // Send anything that fails to spam
+        policy: policy,
+        subdomainPolicy: "reject",
+
+        // Send reports to these addresses
+        rua: ["mailto:mail-reports@maxchernoff.ca"],
+        ruf: ["mailto:mail-reports@maxchernoff.ca"],
+        failureOptions: "1", // Report if any part of DMARC fails
+
+        // Require strict SPF and DKIM matching
+        alignmentSPF: alignmentSPF,
+        alignmentDKIM: "strict",
+    })
 }
 
 // Primary domain: maxchernoff.ca
@@ -160,16 +191,7 @@ D("maxchernoff.ca", REG_MONITOR,
     /// Certificates ///
     ////////////////////
 
-    // Limits the CAs permitted to issue certificates
-    CAA_BUILDER({
-        label: "@", // Apply this to the root domain
-        iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
-        issue: [ "letsencrypt.org" ], // Allowed certificate issuers
-        issuewild: "none", // No wildcard certificates
-        issue_critical: true, // Mark all records as critical
-        iodef_critical: true,
-        issuewild_critical: true,
-    }),
+    default_caa,
 
     // SSH fingerprint
     SSHFP("@",
@@ -215,21 +237,7 @@ D("maxchernoff.ca", REG_MONITOR,
         "~all"          // Send all other mail to spam (soft fail)
     ),
 
-    // DMARC (tells receiving servers to reject spoofed emails)
-    DMARC_BUILDER({
-        // Send anything that fails to spam
-        policy: "quarantine",
-        subdomainPolicy: "reject",
-
-        // Send reports to these addresses
-        rua: ["mailto:mail-reports@maxchernoff.ca"],
-        ruf: ["mailto:mail-reports@maxchernoff.ca"],
-        failureOptions: "1", // Report if any part of DMARC fails
-
-        // Require strict SPF and DKIM matching
-        alignmentSPF: "strict",
-        alignmentDKIM: "strict",
-    }),
+    default_dmarc("quarantine", "@", "strict"),
 
     // MTA-STS (tells receiving servers to use TLS)
     web("mta-sts"),
@@ -254,23 +262,12 @@ D("maxchernoff.ca", REG_MONITOR,
 
     TXT("default._domainkey.noreply", "v=DKIM1 k=rsa p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnT+imAGiJsBFdKU16lCvOwSsTOxEnQHrbr5JYvJYcdcYD+D5zYb7o6E6NvEYih7+BEQkAXA5viwABQFD5PQ/6d76w2z/UFB76jN2H2HMRhH/GxCK0RN5SPZNHfsLkGQKrZWsgm4UI4YHTDxqO1N1ILazVFiDOqsxIe3Z6EufZfayfjbaSYl66ZXu0ZDyYgsH7BjhoYggStvsbFnd100FbSx+8Oc66JSr5PRxThJoBBX0Ranr/R/+hhk2/oQH2W2Nnsc6VHHgVhPvV1o3pGFyCNDmP+vsxX4GozsgUEVIGvJ6CEbEBkqEjN/sHSY2bCuLsPoG+NO+AKKmAWthQNl+JQIDAQAB"),
 
-    DMARC_BUILDER({
-        "label": "noreply",
-        // Send anything that fails to spam
-        policy: "reject",
-        subdomainPolicy: "reject",
+    default_dmarc("reject", "noreply", "relaxed"),
 
-        // Send reports to these addresses
-        rua: ["mailto:mail-reports@maxchernoff.ca"],
-        ruf: ["mailto:mail-reports@maxchernoff.ca"],
-        failureOptions: "1", // Report if any part of DMARC fails
-
-        // Require strict SPF and DKIM matching
-        alignmentSPF: "relaxed",
-        alignmentDKIM: "strict",
-    }),
+    // Allow DMARC reports from the following domains
     TXT("noreply.maxchernoff.ca._report._dmarc", "v=DMARC1;"),
     TXT("duck.tel._report._dmarc", "v=DMARC1;"),
+    TXT("958386.xyz._report._dmarc", "v=DMARC1;"),
 
     /////////////////////
     /// Miscellaneous ///
@@ -324,6 +321,8 @@ D("duck.tel", REG_MONITOR,
     /// Web Server ///
     //////////////////
 
+    default_caa,
+
     // Root domain
     web("@"),
 
@@ -360,22 +359,7 @@ D("duck.tel", REG_MONITOR,
         size: 10,
     }),
 
-    ////////////////////
-    /// Certificates ///
-    ////////////////////
-
-    // Limits the CAs permitted to issue certificates
-    CAA_BUILDER({
-        label: "@", // Apply this to the root domain
-        iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
-        issue: [ "letsencrypt.org" ], // Allowed certificate issuers
-        issuewild: "none", // No wildcard certificates
-        issue_critical: true, // Mark all records as critical
-        iodef_critical: true,
-        issuewild_critical: true,
-    }),
-
-     /////////////
+    /////////////
     /// Email ///
     /////////////
 
@@ -411,21 +395,7 @@ D("duck.tel", REG_MONITOR,
         "-all"                      // Reject all other mail
     ),
 
-    // DMARC (tells receiving servers to reject spoofed emails)
-    DMARC_BUILDER({
-        // Send anything that fails to spam
-        policy: "reject", // No mailing lists here, so we can be strict
-        subdomainPolicy: "reject",
-
-        // Send reports to these addresses
-        rua: ["mailto:mail-reports@maxchernoff.ca"],
-        ruf: ["mailto:mail-reports@maxchernoff.ca"],
-        failureOptions: "1", // Report if any part of DMARC fails
-
-        // Require strict SPF and DKIM matching
-        alignmentSPF: "strict",
-        alignmentDKIM: "strict",
-    }),
+    default_dmarc("reject", "@", "strict"),
 
     // MTA-STS (tells receiving servers to use TLS)
     web("mta-sts"),
@@ -439,7 +409,21 @@ D("duck.tel", REG_MONITOR,
     // Google Search Console ownership verification
     TXT("@",
         "google-site-verification=AF_OhBzlGPeUXXBkZcv4D-yBvXCUibw9hNd8OoRK2Cw"),
+)
 
-    // Test record to see if the updates are working
-    TXT("testing", "This is a test record")
+// Testing domain: 958386.xyz
+MAIL_ALLOWED = []
+D("958386.xyz", REG_MONITOR,
+    DnsProvider(DSP_CLOUDFLARE),
+    DefaultTTL("60s"), // The minimum allowed by Cloudflare
+
+    CF_PROXY_DEFAULT_OFF, // Make the DNS records exactly what we say
+    CF_UNIVERSALSSL_OFF, // Disable Cloudflare's TLS certificate issuance
+
+    // Root domain
+    default_caa,
+    web("@"),
+
+    // Email (all disabled)
+    default_dmarc("reject", "@", "strict"),
 )

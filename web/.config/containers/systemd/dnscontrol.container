@@ -5,7 +5,7 @@
 [Container]
 Image=ghcr.io/stackexchange/dnscontrol:latest
 
-EnvironmentFile=/var/home/repo/credentials/web/dnscontrol_tsig
+EnvironmentFile=/var/home/repo/credentials/web/dnscontrol_secrets
 
 Network=private
 Volume=%h/dnscontrol:/dns:ro,z
