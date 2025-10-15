@@ -13,8 +13,8 @@ var DSP_CLOUDFLARE = NewDnsProvider("cloudflare");
 var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
-var IPv4 = "!!network.ipv4!!"
-var IPv6 = "!!network.ipv6!!"
+var IPv4 = "!!network.ipv4!!" // "152.53.36.213"
+var IPv6 = "!!network.ipv6!!" // "2a0a:4cc0:2000:172::1"
 
 // Handle the DANE TLSA records
 function dane(name) {
@@ -426,4 +426,7 @@ D("958386.xyz", REG_MONITOR,
 
     // Email (all disabled)
     default_dmarc("reject", "@", "strict"),
+
+    // libdns testing
+    IGNORE("test-*"),
 )
