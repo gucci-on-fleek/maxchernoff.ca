@@ -98,7 +98,7 @@ packages:
   - udica
   - vim-enhanced
   - xz # Needed for TeX Live
-  - zram-generator-defaults
+  - zram-generator
 
 # systemd units to enable
 units:
@@ -123,6 +123,7 @@ add-files:
   - ["image-minimizer.py", "/usr/bin/image-minimizer"]
   - ["image-minimize.txt", "/etc/tmp/image-minimize.txt"]
   - ["local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
+  - ["kargs-rootfs.toml", "/usr/lib/bootc/kargs.d/kargs-rootfs.toml"]
 
 postprocess:
   - |

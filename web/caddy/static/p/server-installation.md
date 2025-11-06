@@ -68,13 +68,13 @@ Installation
 
     <div class=hscroll>
 
-    | Index | Mount Point | Size      | Type   |
-    |-------|-------------|-----------|--------|
-    | 1     | `/boot/efi` | 500M      | EFI    |
-    | 2     | `/boot`     | 4G        | ext4   |
-    | 3     | `[SWAP]`    | 8G        | swap   |
-    | 4     | `/`         | remaining | btrfs  |
-    | 4.1   | `/home/`    | —         | subvol |
+    | Index | Mount Point | Name   | Size      | Type  |
+    |-------|-------------|--------|-----------|-------|
+    | 1     | `/boot/efi` | `efi`  | 500M      | EFI   |
+    | 2     | `/boot`     | `boot` | 4G        | ext4  |
+    | 3     | `[SWAP]`    |        | 8G        | swap  |
+    | 4     | `/`         | `root` | remaining | btrfs |
+    | 4.1   | `/ostree/deploy/fedora-iot/var/home/` | `/ostree/deploy/fedora-iot/var/home/` | — | subvol |
 
     </div>
 
@@ -94,10 +94,20 @@ Installation
     % ssh max@maxchernoff.ca
     ```
 
-12. Reboot.
+8. Fix the partition types and labels:
 
     ```shell-session
-    $ sudo systemctl reboot
+    $ sudo sfdisk --part-type /dev/vda 1 'EFI System'
+    $ sudo sfdisk --part-label /dev/vda 1 'efi'
+
+    $ sudo sfdisk --part-type /dev/vda 2 'Linux extended boot'
+    $ sudo sfdisk --part-label /dev/vda 2 'boot'
+
+    $ sudo sfdisk --part-type /dev/vda 3 'Linux swap'
+    $ sudo sfdisk --part-label /dev/vda 3 'swap'
+
+    $ sudo sfdisk --part-type /dev/vda 4 'Linux root (x86-64)'
+    $ sudo sfdisk --part-label /dev/vda 4 'root'
     ```
 
 Post-installation
@@ -118,6 +128,64 @@ Post-installation
 
     ```shell-session
     $ sudo authselect opt-out
+    ```
+
+7. Temporarily disable SELinux by editing `/etc/selinux/config` and
+   setting `SELINUX=permissive`.
+
+8. Switch to `bootc`:
+
+    ```shell-session
+    $ cat > /etc/containers/policy.json <<'EOF'
+    {
+        "default": [
+            {
+                "type": "reject"
+            }
+        ],
+        "transports": {
+            "docker": {
+                "maxchernoff.ca": [
+                    {
+                        "type": "sigstoreSigned",
+                        "rekorPublicKeyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFMkcyWSsydGFiZFRWNUJjR2lCSXgwYTlmQUZ3cgprQmJtTFNHdGtzNEwzcVg2eVlZMHp1ZkJuaEM4VXIvaXk1NUdoV1AvOUEvYlkyTGhDMzBNOStSWXR3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo=",
+                        "keyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFdU51aWh1SUpOSFhvUUVacTF5SHZPZkZZU1gwYgpYMjlMVUYremQzdWVHS3RKV1Z4WlFJWEJCZVN4YnBxV1djdDQzR1RoUE44QmFHbWpDT0tDTjNrWUp3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo="
+                    }
+                ]
+            }
+        }
+    }
+    EOF
+
+    $ cat > /etc/containers/registries.d/default.yaml <<'EOF'
+    docker:
+        maxchernoff.ca:
+            use-sigstore-attachments: true
+    EOF
+
+    $ cat > /etc/systemd/network/80-wan.network <<'EOF'
+    [Match]
+    Name=*
+
+    [Network]
+    DHCP=yes
+    EOF
+
+    $ sudo bootc switch --enforce-container-sigpolicy maxchernoff.ca/fedora-iot:latest
+
+    $ sudo systemctl reboot
+    ```
+
+9. SELinux fixes
+
+    ```shell-session
+    $ sudo semanage login --add --seuser staff_u --range 's0-s0:c0.c1023' max
+    $ sudo semanage user --modify user_u --range s0-s0:c0.c1023
+    $ sudo semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
+
+    $ echo '%wheel ALL=(ALL) TYPE=sysadm_t ROLE=sysadm_r ALL' | sudo tee /etc/sudoers.d/selinux
+
+    $ sudo restorecon -vR /var/ /etc/
     ```
 
 
@@ -157,12 +225,13 @@ Downloading the repository
 
     ```shell-session
     % cd ~repo/maxchernoff.ca/
-    % echo > .git/config <<EOF
+    % cat >> .git/config <<'EOF'
     [filter "git-filter-params"]
         process = git-filter-params ./variables.toml
         required
     EOF
-    % git checkout master
+    % rm ./.git/index
+    % PATH=$HOME/maxchernoff.ca/usrlocal/bin:/usr/bin git reset --hard @
     ```
 
 5. Decrypt the credentials' repository:
@@ -170,13 +239,22 @@ Downloading the repository
     ```shell-session
     % cd ~repo/credentials/
     % echo 'PRIVATE-KEY' > .git/git-encrypt.private-key
-    % echo > .git/config <<EOF
+    % cat >> .git/config <<'EOF'
     [filter "git-encrypt"]
         clean = git-encrypt encrypt %f
         smudge = git-encrypt decrypt %f
         required
     EOF
-    % git checkout master
+    % rm ./.git/index
+    % PATH=$HOME/maxchernoff.ca/usrlocal/bin:/usr/bin git reset --hard @
+    ```
+
+6. Install the files:
+
+    ```shell-session
+    % exit
+    $ sudo cp -r ~repo/maxchernoff.ca/usrlocal/{lib,bin} /usr/local/
+    $ sudo web-install ~repo/maxchernoff.ca/install-rules.toml
     ```
 
 Installing TeX Live
@@ -186,7 +264,6 @@ Installing TeX Live
 
     ```shell-session
     $ sudo useradd --create-home --shell /usr/sbin/nologin tex
-    $ sudo loginctl enable-linger tex
     ```
 
 2. Switch to the `tex` user:
@@ -265,17 +342,9 @@ Web Server
 8. Allow the `web` user to run services:
 
     ```shell-session
-    $ sudo loginctl enable-linger web
     ```
 
 18. Reboot to make sure everything starts correctly.
-
-19. Once all the containers have been built, switch to `bootc`:
-
-    ```shell-session
-    $ sudo bootc switch maxchernoff.ca/fedora-iot:latest
-    $ reboot
-    ```
 
 
 Woodpecker CI
@@ -285,7 +354,6 @@ Woodpecker CI
 
     ```shell-session
     $ sudo useradd --create-home --shell /usr/sbin/nologin woodpecker
-    $ sudo loginctl enable-linger woodpecker
     ```
 
 
@@ -299,17 +367,6 @@ you want to run, so we'll need to add a container builder.
 
     ```shell-session
     $ sudo useradd --create-home --shell /usr/sbin/nologin builder
-    $ sudo loginctl enable-linger builder
     ```
 
 2. That's pretty much it.
-
-
-Snapshots
----------
-
-1. Create subvolumes for the `.local` and `.cache` directories for every user:
-
-    ```shell-session
-    $ btrfs subvolume create {.local,.cache}
-    ```

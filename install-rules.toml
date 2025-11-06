@@ -29,6 +29,7 @@ login --deleteall
 login --add --seuser staff_u --range 's0-s0:c0.c1023' max
 
 # Let all users run containers
+user --modify user_u --range s0-s0:c0.c1023
 login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
 # Load the custom policies
@@ -173,14 +174,14 @@ permissions.other = ""
 [[copy]]
 source = "{repo}/max/"
 destination = "{max}/"
-paths = [".ssh/known_hosts", ".config/fish/config.fish"]
+paths = [".ssh/known_hosts", ".config/fish/config.fish", ".config/fish/themes/"]
 owner = "max"
 
 # Risky, so we keep this commented out most of the time
 # [[copy]]
 # source = "{repo}/max/"
 # destination = "{max}/"
-# paths = [".ssh/authorized_keys",]
+# paths = [".ssh/authorized_keys"]
 # owner = "max"
 
 [[link]]
