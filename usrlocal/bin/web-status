@@ -2,12 +2,13 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ###############
 ### Imports ###
 ###############
 
+from annotationlib import get_annotations
 from argparse import ArgumentParser, FileType
 from dataclasses import dataclass
 from datetime import datetime
@@ -19,7 +20,6 @@ from typing import TYPE_CHECKING, Callable, Literal, overload
 
 from pystemd import SDManager, SDUnit  # type: ignore
 from pystemd import dbuslib as dbus
-
 
 ####################
 ### Type Aliases ###
@@ -56,10 +56,10 @@ SOCKET_PREFIX = b"unix:path="
 SYSTEM_USER = "system"
 
 # Style constants
-STYLE_BAD = "\x1B[91m"
-STYLE_FADED = "\x1B[2m"
-STYLE_OK = "\x1B[32m"
-STYLE_RESET = "\x1B[0m"
+STYLE_BAD = "\x1b[91m"
+STYLE_FADED = "\x1b[2m"
+STYLE_OK = "\x1b[32m"
+STYLE_RESET = "\x1b[0m"
 
 
 ############################
@@ -188,7 +188,7 @@ class UnitStatus:
         self.user = user_name
 
         # Update the maximum widths
-        for field in self.__annotations__:
+        for field in get_annotations(self.__class__):
             _max_widths[field] = max(
                 _max_widths.get(field, 0),
                 len(str(getattr(self, field))),
