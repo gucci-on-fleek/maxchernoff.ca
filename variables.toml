@@ -22,7 +22,7 @@ port = "23719"
 
 [fedora]
 # The version of Fedora to use for all container images
-version = "42"
+version = "43"
 
 
 [dns]
