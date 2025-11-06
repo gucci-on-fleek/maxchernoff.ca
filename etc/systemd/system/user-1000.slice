@@ -14,6 +14,3 @@ IPAddressAllow=!!wireguard.subnet.ipv4.1!!
 IPAddressAllow=!!wireguard.subnet.ipv4.2!!
 IPAddressAllow=!!wireguard.subnet.ipv6.1!!
 IPAddressAllow=!!wireguard.subnet.ipv6.2!!
-
-# Run at a higher priority
-!!priorities.high!!
