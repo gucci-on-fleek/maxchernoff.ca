@@ -46,7 +46,7 @@ pip3 install \
     --root-user-action=ignore \
     --break-system-packages \
     --no-cache-dir \
-    'knot-exporter==3.4.*'  # TODO: questionable hack to work around old Fedora packages
+    knot-exporter
 
 # Unlink the cache from the host
 rm $root/var/cache/libdnf5
