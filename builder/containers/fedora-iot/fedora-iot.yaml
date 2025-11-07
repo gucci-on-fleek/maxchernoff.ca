@@ -105,6 +105,7 @@ packages:
 # systemd units to enable
 units:
   - audit-rules.service
+  - bootloader-update.service
   - btrfs-balance.timer
   - btrfs-defrag.timer
   - btrfs-scrub.timer
