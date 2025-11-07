@@ -85,6 +85,7 @@ packages:
   - ripgrep
   - selinux-policy-targeted
   - setools-console
+  - shim-x64
   - snapper
   - sudo
   - systemd
