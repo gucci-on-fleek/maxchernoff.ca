@@ -87,6 +87,7 @@ packages:
   - setools-console
   - shim-x64
   - snapper
+  - strace
   - sudo
   - systemd
   - systemd-container # systemd-nspawn

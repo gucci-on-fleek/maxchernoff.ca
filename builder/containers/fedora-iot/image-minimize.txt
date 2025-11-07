@@ -1,6 +1,7 @@
 # Drop unused kernel modules
 drop /usr/lib/modules/*/kernel/
 keep /usr/lib/modules/*/kernel/arch/x86/crypto/curve25519-x86_64.ko.xz
+keep /usr/lib/modules/*/kernel/crypto/zstd.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/ata/ata_generic.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/ata/pata_acpi.ko.xz
 keep /usr/lib/modules/*/kernel/drivers/block/loop.ko.xz

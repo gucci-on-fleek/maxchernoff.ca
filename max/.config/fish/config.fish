@@ -81,3 +81,52 @@ function pps
         --table-column=name='SELinux Context',width=40,trunc \
         --table-column=name=Command,wrap
 end
+
+# Strace
+set strace_exclude "$(echo "!\
+        _llseek, \
+        arch_prctl, \
+        brk, \
+        clock_gettime, \
+        clock_gettime64, \
+        close, \
+        epoll_ctl, \
+        epoll_pwait, \
+        fcntl, \
+        futex_waitv, \
+        futex, \
+        getrandom, \
+        gettid, \
+        ioctl, \
+        lseek, \
+        madvise, \
+        mmap, \
+        mmap2, \
+        mprotect, \
+        munmap, \
+        nanosleep, \
+        ppoll, \
+        prctl, \
+        pread64, \
+        prlimit64, \
+        pselect6, \
+        read, \
+        recvmsg, \
+        rseq, \
+        rt_sigaction, \
+        rt_sigprocmask, \
+        sched_yield, \
+        set_robust_list, \
+        set_tid_address, \
+    " | tr -d '[:space:]')"
+
+function strace
+    command strace \
+        --decode-fds=all \
+        --decode-pids=comm \
+        --follow-forks \
+        --no-abbrev \
+        --string-limit=65535 \
+        --strings-in-hex=non-ascii-chars \
+        --trace=$strace_exclude $argv
+end
