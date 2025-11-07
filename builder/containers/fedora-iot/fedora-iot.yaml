@@ -150,6 +150,9 @@ postprocess:
     enabled = yes
     EOF
 
+    # Install bootupd metadata
+    bootupctl backend generate-update-metadata /
+
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
 
