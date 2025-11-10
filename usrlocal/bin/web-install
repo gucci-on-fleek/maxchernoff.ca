@@ -45,7 +45,7 @@ parser.add_argument(
 
 parser.add_argument(
     "config_file",
-    type=FileType("rb"),
+    type=Path,
     nargs="?",
     help="The configuration file to build. (Default: $repo_root/install-rules.toml)",
     default=default_path,
