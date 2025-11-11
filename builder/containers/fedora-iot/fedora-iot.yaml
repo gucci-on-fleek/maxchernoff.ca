@@ -20,6 +20,9 @@ selinux: true
 # ima: true # TODO: See https://discussion.fedoraproject.org/t/150494
 readonly-executables: true
 
+# Make the RPM database reproducible
+rpmdb-normalize: true
+
 # Global package installation options
 recommends: false
 documentation: true
@@ -144,15 +147,19 @@ postprocess:
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
 
     # Enable composefs
-    cat <<EOF > /etc/ostree/prepare-root.conf
+    mkdir -p /usr/lib/ostree
+    cat <<EOF > /usr/lib/ostree/prepare-root.conf
     [sysroot]
     readonly = true
     [composefs]
-    enabled = yes
+    enabled = verity
     EOF
 
     # Install bootupd metadata
     bootupctl backend generate-update-metadata /
+
+    # Use kernel-install
+    echo "/usr/lib/kernel/install.conf" > /usr/lib/kernel/install.conf
 
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
