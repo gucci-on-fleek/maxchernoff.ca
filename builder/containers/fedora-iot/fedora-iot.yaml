@@ -130,6 +130,7 @@ add-files:
   - ["image-minimize.txt", "/etc/tmp/image-minimize.txt"]
   - ["local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
   - ["kargs-rootfs.toml", "/usr/lib/bootc/kargs.d/kargs-rootfs.toml"]
+  - ["console-colors.sh", "/usr/bin/console-colors.sh"]
 
 postprocess:
   - |
@@ -152,7 +153,7 @@ postprocess:
     [sysroot]
     readonly = true
     [composefs]
-    enabled = verity
+    enabled = yes
     EOF
 
     # Install bootupd metadata
