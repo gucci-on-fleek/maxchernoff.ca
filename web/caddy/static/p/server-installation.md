@@ -133,6 +133,14 @@ Post-installation
 7. Temporarily disable SELinux by editing `/etc/selinux/config` and
    setting `SELINUX=permissive`.
 
+7. Set some OSTree settings:
+
+    ```shell-session
+    sudo ostree config set ex-fsverity.required true
+    sudo ostree config set ex-integrity.composefs yes
+    sudo ostree config set sysroot.bootloader none
+    ```
+
 8. Switch to `bootc`:
 
     ```shell-session

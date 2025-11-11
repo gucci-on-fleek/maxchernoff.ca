@@ -159,6 +159,9 @@ postprocess:
     # Install bootupd metadata
     bootupctl backend generate-update-metadata /
 
+    # Reduce the Grub timeout to 1 second
+    echo "GRUB_TIMEOUT=1" >> /etc/default/grub
+
     # Use kernel-install
     echo "/usr/lib/kernel/install.conf" > /usr/lib/kernel/install.conf
 
