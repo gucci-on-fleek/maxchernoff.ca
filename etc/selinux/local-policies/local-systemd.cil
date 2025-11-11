@@ -11,7 +11,9 @@
 (typeattributeset cil_gen_require gconf_home_t          )
 (typeattributeset cil_gen_require gpg_t                 )
 (typeattributeset cil_gen_require home_root_t           )
+(typeattributeset cil_gen_require hostname_exec_t       )
 (typeattributeset cil_gen_require init_var_run_t        )
+(typeattributeset cil_gen_require install_t             )
 (typeattributeset cil_gen_require journalctl_t          )
 (typeattributeset cil_gen_require root_t                )
 (typeattributeset cil_gen_require snapperd_t            )
@@ -100,3 +102,6 @@
 ; (filecon "/usr/local/bin/systemd-stdio-bridge" file (system_u object_r systemd_stdio_bridge_exec_t ((s0) (s0))))
 ; (allow systemd_stdio_bridge_t admindomain (unix_stream_socket (getattr getopt read setopt write)))
 (allow local_user_domains sysadm_t (unix_stream_socket (getattr getopt read setopt write)))
+
+;; Needed for ostree
+(allow install_t hostname_exec_t (file (getattr open read unlink)))
