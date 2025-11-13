@@ -109,6 +109,13 @@
                     "type": "insecureAcceptAnything"
                 }
             ]
+        },
+        "oci-archive": {
+            "": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ]
         }
     }
 }
