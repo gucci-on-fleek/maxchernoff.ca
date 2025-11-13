@@ -10,6 +10,8 @@ After=container@bootc-builder.service
 Type=oneshot
 RemainAfterExit=no
 
+RuntimeDirectory=%N
+
 ExecStart=podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
@@ -21,8 +23,10 @@ ExecStart=podman run \
     --security-opt=label=role:user_r \
     --security-opt=label=user:user_u \
     --volume=/etc/containers/:/etc/containers/:ro \
+    --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
     --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
     --volume=%h/containers/fedora-iot/:/root/source/:ro \
+    --volume=%t/%N/:/root/output/:rw,z \
     --userns=host \
     maxchernoff.ca/bootc-builder:latest \
     /root/source/container-build.sh
@@ -36,7 +40,7 @@ ExecStart=skopeo copy \
     --dest-precompute-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
-    docker://localhost:!!registry.port!!/fedora-iot:latest \
+    oci-archive:%t/%N/fedora-iot.ociarchive \
     docker://localhost:!!registry.port!!/fedora-iot:latest
 
 [Install]

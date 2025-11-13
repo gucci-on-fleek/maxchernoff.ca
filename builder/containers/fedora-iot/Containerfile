@@ -1,0 +1,34 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2025 Max Chernoff
+FROM oci-archive:./fedora-iot.ociarchive as base
+
+FROM base as kernel
+ARG COMPOSEFS_FSVERITY
+RUN <<EOF
+    set -euo pipefail
+
+    dnf5 install \
+        --assumeyes \
+        --nodocs \
+        --setopt=install_weak_deps=false \
+        --setopt=keepcache=true \
+        --use-host-config \
+        sbsigntools \
+        systemd-boot-unsigned \
+        systemd-ukify
+
+    mkdir -p /usr/lib/kernel/install.conf.d/
+    echo <<EOT >/usr/lib/kernel/install.conf.d/10-composefs.conf
+    layout = uki
+    uki_generator = ukify
+    EOT
+
+    mkdir -p /etc/kernel/
+    echo "composefs=${COMPOSEFS_FSVERITY} rw" > /etc/kernel/cmdline
+    kernel-install add-all
+EOF
+
+FROM base AS bootable
+COPY --from=kernel /boot /boot

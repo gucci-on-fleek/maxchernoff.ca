@@ -15,6 +15,7 @@ RUN \
             --setopt=install_weak_deps=false \
             --setopt=keepcache=true \
             --use-host-config \
+            bootc \
             rpm-ostree \
             selinux-policy-targeted \
             skopeo \
