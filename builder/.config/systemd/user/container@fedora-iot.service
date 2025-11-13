@@ -10,23 +10,26 @@ After=container@bootc-builder.service
 Type=oneshot
 RemainAfterExit=no
 
-RuntimeDirectory=%N
+ExecStartPre=-rm -rf %V/fedora-iot-build/
+ExecStartPre=mkdir -p %V/fedora-iot-build/
 
 ExecStart=podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
     --device=/dev/fuse \
-    --network=pasta:-T,!!registry.port!! \
-    --pull=always \
-    --rm \
     --security-opt=label=nested \
     --security-opt=label=role:user_r \
     --security-opt=label=user:user_u \
+    --security-opt=label=level:s0 \
+    --network=pasta:-T,!!registry.port!! \
+    --pull=always \
+    --rm \
     --volume=/etc/containers/:/etc/containers/:ro \
+    --volume=/var/lib/containers \
     --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
     --volume=%h/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z \
     --volume=%h/containers/fedora-iot/:/root/source/:ro \
-    --volume=%t/%N/:/root/output/:rw,z \
+    --volume=%V/fedora-iot-build/:/root/output/:rw,z \
     --userns=host \
     maxchernoff.ca/bootc-builder:latest \
     /root/source/container-build.sh
@@ -40,7 +43,7 @@ ExecStart=skopeo copy \
     --dest-precompute-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
-    oci-archive:%t/%N/fedora-iot.ociarchive \
+    oci-archive:%V/fedora-iot-build/fedora-iot.ociarchive \
     docker://localhost:!!registry.port!!/fedora-iot:latest
 
 [Install]

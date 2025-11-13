@@ -8,6 +8,11 @@ set -euxo pipefail
 # Keep a cache to speed up the build
 cache=/var/cache/rpm-ostree
 
+# Download the previous image
+skopeo copy --remove-signatures \
+    docker://localhost:!!registry.port!!/fedora-iot:latest \
+    oci-archive:./fedora-iot.ociarchive
+
 # Build the container
 rpm-ostree compose image \
     --initialize-mode=query \
@@ -15,17 +20,17 @@ rpm-ostree compose image \
     --cachedir=$cache \
     --max-layers=200 \
     /root/source/fedora-iot.yaml \
-    fedora-iot.ociarchive
+    ./fedora-iot.ociarchive
 
 # Get the composefs info
-composefs_repo=/var/tmp/composefs-repo
+composefs_repo=/root/output/composefs-repo/
 mkdir -p "$composefs_repo"
 
 image_id="$(\
     bootc internals cfs \
         --repo="$composefs_repo" \
-        oci pull oci-archive:fedora-iot.ociarchive \
-    | grep --only-matching --perl-regexp '(?<=^Fetching config ).*$'\
+        oci pull oci-archive:./fedora-iot.ociarchive \
+    2>&1 | grep --only-matching --perl-regexp '(?<=^sha256 ).*$'\
 )"
 
 fsverity_id="$(\
@@ -38,6 +43,7 @@ fsverity_id="$(\
 podman build \
     --no-cache \
     --security-opt=label=disable \
+    --security-opt=label=level:s0 \
     --volume=/var/cache/libdnf5/:/var/cache/libdnf5/:rw \
     --build-arg="COMPOSEFS_FSVERITY=$fsverity_id" \
     --label=containers.composefs.fsverity="$fsverity_id" \
@@ -48,5 +54,8 @@ podman build \
 
 # Push the container
 skopeo copy \
+    --dest-compress-format=zstd:chunked \
+    --dest-compress-level=5 \
+    --dest-precompute-digests \
     containers-storage:maxchernoff.ca/fedora-iot:latest \
     oci-archive:/root/output/fedora-iot.ociarchive

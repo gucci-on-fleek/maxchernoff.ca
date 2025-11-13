@@ -21,9 +21,9 @@ RUN <<EOF
 
     mkdir -p /usr/lib/kernel/install.conf.d/
     echo <<EOT >/usr/lib/kernel/install.conf.d/10-composefs.conf
-    layout = uki
-    uki_generator = ukify
-    EOT
+layout = uki
+uki_generator = ukify
+EOT
 
     mkdir -p /etc/kernel/
     echo "composefs=${COMPOSEFS_FSVERITY} rw" > /etc/kernel/cmdline
