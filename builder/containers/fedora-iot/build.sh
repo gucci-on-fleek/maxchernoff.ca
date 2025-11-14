@@ -13,19 +13,30 @@ temp_dir="$(mktemp --directory --tmpdir=/var/tmp/)"
 trap 'rm -rf "$temp_dir"' EXIT
 cd "$temp_dir"
 
-# Download the previous image
-skopeo copy --remove-signatures \
-    docker://localhost:!!registry.port!!/fedora-iot:latest \
-    "oci-archive:$temp_dir/fedora-iot.ociarchive"
-
 # Build the container
-rpm-ostree compose image \
-    --initialize-mode=query \
-    --format=ociarchive \
-    --cachedir="$HOME/.cache/rpm-ostree/" \
-    --max-layers=200 \
-    "$script_dir/fedora-iot.yaml" \
-    "$temp_dir/fedora-iot.ociarchive"
+podman run \
+    --cap-add=NET_ADMIN \
+    --cap-add=SYS_ADMIN \
+    --device=/dev/fuse \
+    --network=pasta:-T,!!registry.port!! \
+    --pull=always \
+    --rm \
+    --security-opt=label=nested \
+    --security-opt=label=role:user_r \
+    --security-opt=label=user:user_u \
+    --userns=host \
+    --volume="/etc/containers/:/etc/containers/:ro" \
+    --volume="$HOME/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z" \
+    --volume="$script_dir:/root/source/:ro" \
+    --volume="$temp_dir:/root/output/:rw,z" \
+    "maxchernoff.ca/bootc-builder:latest" \
+    rpm-ostree compose image \
+        --initialize-mode=query \
+        --format=registry \
+        --cachedir="/var/cache/rpm-ostree" \
+        --max-layers=200 \
+        "/root/source/fedora-iot.yaml" \
+        "localhost:!!registry.port!!/fedora-iot-base:latest" \
 
 # Get the composefs command
 composefs_cmd="bootc internals cfs --repo=$temp_dir/composefs-repo/"
@@ -33,8 +44,8 @@ mkdir -p "$temp_dir/composefs-repo/"
 
 # Get the composefs info
 image_id="$(\
-    $composefs_cmd oci pull oci-archive:./fedora-iot.ociarchive \
-    2>&1 | grep --only-matching --perl-regexp '(?<=^sha256 ).*$'\
+    $composefs_cmd oci pull "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
+    2>&1 | grep --only-matching --perl-regexp '(?<=^sha256 ).*$' \
 )"
 
 fsverity_id="$($composefs_cmd oci compute-id "$image_id")"
@@ -52,10 +63,12 @@ podman build \
 # Push the container
 skopeo copy \
     --all \
-    --dest-tls-verify=false \
     --dest-compress-format=zstd:chunked \
     --dest-compress-level=5 \
     --dest-precompute-digests \
+    --dest-tls-verify=false \
+    --image-parallel-copies=4 \
+    --preserve-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \

@@ -54,6 +54,7 @@ packages:
   - curl
   - dnf5
   - dosfstools # fsck for the EFI partition
+  - dracut-config-generic # Creates a non-host-specific initramfs
   - efibootmgr
   - fedora-release-iot
   - firewalld

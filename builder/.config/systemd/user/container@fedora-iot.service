@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 [Unit]
 After=network-ready.service
+After=container@bootc-builder.service
 
 [Service]
 Type=oneshot
