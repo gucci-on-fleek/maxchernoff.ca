@@ -15,6 +15,7 @@ RUN <<EOF
         --setopt=install_weak_deps=false \
         --setopt=keepcache=true \
         --use-host-config \
+        dracut-config-generic \
         sbsigntools \
         systemd-boot-unsigned \
         systemd-ukify

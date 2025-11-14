@@ -54,7 +54,6 @@ packages:
   - curl
   - dnf5
   - dosfstools # fsck for the EFI partition
-  - dracut-config-generic # Creates a non-host-specific initramfs
   - efibootmgr
   - fedora-release-iot
   - firewalld
@@ -127,11 +126,11 @@ units:
   - systemd-networkd.service
 
 add-files:
-  - ["image-minimizer.py", "/usr/bin/image-minimizer"]
-  - ["image-minimize.txt", "/etc/tmp/image-minimize.txt"]
-  - ["local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
-  - ["kargs-rootfs.toml", "/usr/lib/bootc/kargs.d/kargs-rootfs.toml"]
-  - ["console-colors.sh", "/usr/bin/console-colors.sh"]
+  - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
+  - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
+  - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
+  - ["files/kargs-rootfs.toml", "/usr/lib/bootc/kargs.d/kargs-rootfs.toml"]
+  - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
 
 postprocess:
   - |
