@@ -15,21 +15,36 @@ RUN <<EOF
         --setopt=install_weak_deps=false \
         --setopt=keepcache=true \
         --use-host-config \
-        dracut-config-generic \
         sbsigntools \
-        systemd-boot-unsigned \
         systemd-ukify
 
-    mkdir -p /usr/lib/kernel/install.conf.d/
-    echo <<EOT >/usr/lib/kernel/install.conf.d/10-composefs.conf
-layout = uki
-uki_generator = ukify
-EOT
+    mkdir -p /etc/dracut.conf.d/
+    echo "export DRACUT_NO_XATTR=1" > /etc/dracut.conf.d/no-xattr.conf
 
     mkdir -p /etc/kernel/
-    echo "composefs=${COMPOSEFS_FSVERITY} rw" > /etc/kernel/cmdline
-    kernel-install add-all
+    echo "composefs=${COMPOSEFS_FSVERITY} root=gpt-auto rootflags=compress=zstd:3,noatime rw" > /etc/kernel/cmdline
+
+    mkdir -p /boot/efi/EFI/Linux/
+    kver="$(cd /usr/lib/modules && echo *)"
+    kernel_path="/usr/lib/modules/$kver"
+    ukify build \
+        --linux="$kernel_path/vmlinuz" \
+        --initrd="$kernel_path/initramfs.img" \
+        --cmdline="@/etc/kernel/cmdline" \
+        --uname="$kver" \
+        --measure \
+        --output="/boot/efi/EFI/Linux/$kver.efi"
+
+    mkdir -p /boot/efi/EFI/BOOT/ /boot/efi/EFI/systemd/
+    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/systemd-bootx64.efi
+
+    mkdir -p /boot/efi/loader/
+    echo 'timeout 1' > /boot/efi/loader/loader.conf
+
+    bootc container lint || true
 EOF
 
 FROM base AS bootable
 COPY --from=kernel /boot /boot
+LABEL containers.bootc=sealed

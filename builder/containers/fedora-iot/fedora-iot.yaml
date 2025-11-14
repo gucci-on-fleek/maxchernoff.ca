@@ -64,8 +64,6 @@ packages:
   - glibc-langpack-en
   - glibc-minimal-langpack
   - gnupg2 # GPG
-  - greenboot-default-health-checks
-  - grub2-efi-x64
   - htop
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
@@ -89,11 +87,11 @@ packages:
   - ripgrep
   - selinux-policy-targeted
   - setools-console
-  - shim-x64
   - snapper
   - strace
   - sudo
   - systemd
+  - systemd-boot-unsigned
   - systemd-container # systemd-nspawn
   - systemd-journal-remote # For journald remote logging
   - systemd-networkd
@@ -109,7 +107,6 @@ packages:
 # systemd units to enable
 units:
   - audit-rules.service
-  - bootloader-update.service
   - btrfs-balance.timer
   - btrfs-defrag.timer
   - btrfs-scrub.timer
@@ -117,12 +114,6 @@ units:
   - btrfsmaintenance-refresh.path
   - firewalld.service
   - fstrim.timer
-  - greenboot-grub2-set-counter.service
-  - greenboot-grub2-set-success.service
-  - greenboot-healthcheck.service
-  - greenboot-rpm-ostree-grub2-check-fallback.service
-  - greenboot-status.service
-  - greenboot-task-runner.service
   - sshd.service
   - systemd-networkd.service
 
@@ -130,8 +121,9 @@ add-files:
   - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
   - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
-  - ["files/kargs-rootfs.toml", "/usr/lib/bootc/kargs.d/kargs-rootfs.toml"]
   - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
+  - ["files/00-fedora-iot.toml", "/usr/lib/bootc/install/00-fedora-iot.toml"]
+  - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
 
 postprocess:
   - |
@@ -146,30 +138,20 @@ postprocess:
     # vi -> vim
     ln -s /usr/bin/vim /usr/bin/vi
 
+    # OSTree settings
+    ostree config set ex-fsverity.required true
+    ostree config set ex-integrity.composefs yes
+    ostree config set sysroot.bootloader none
+
+    # Set SELinux context for prometheus-podman-exporter
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
-
-    # Enable composefs
-    mkdir -p /usr/lib/ostree
-    cat <<EOF > /usr/lib/ostree/prepare-root.conf
-    [sysroot]
-    readonly = true
-    [composefs]
-    enabled = yes
-    EOF
-
-    # Install bootupd metadata
-    bootupctl backend generate-update-metadata /
-
-    # Reduce the Grub timeout to 1 second
-    echo "GRUB_TIMEOUT=1" >> /etc/default/grub
-
-    # Use kernel-install
-    echo "/usr/lib/kernel/install.conf" > /usr/lib/kernel/install.conf
 
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
 
     # Rebuild the SELinux modules
+    semanage user --modify user_u --range s0-s0:c0.c1023
+    semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
     # Remove the temporary files

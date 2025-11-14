@@ -52,12 +52,14 @@ fsverity_id="$($composefs_cmd oci compute-id "$image_id")"
 
 # Rebuild the container with composefs fsverity info
 podman build \
-    --no-cache \
-    --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     --build-arg="COMPOSEFS_FSVERITY=$fsverity_id" \
-    --label="containers.composefs.fsverity=$fsverity_id" \
     --file="$script_dir/Containerfile" \
+    --inherit-annotations=true \
+    --inherit-labels \
+    --label="containers.composefs.fsverity=$fsverity_id" \
+    --no-cache \
     --tag=maxchernoff.ca/fedora-iot:latest \
+    --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     "$script_dir"
 
 # Push the container
@@ -68,7 +70,6 @@ skopeo copy \
     --dest-precompute-digests \
     --dest-tls-verify=false \
     --image-parallel-copies=4 \
-    --preserve-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \
