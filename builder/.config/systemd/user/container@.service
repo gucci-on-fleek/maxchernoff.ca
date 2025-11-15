@@ -31,7 +31,7 @@ ExecStart=skopeo copy \
     --all \
     --dest-tls-verify=false \
     --dest-compress-format=zstd:chunked \
-    --dest-compress-level=5 \
+    --dest-compress-level=15 \
     --dest-precompute-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/%i:latest \

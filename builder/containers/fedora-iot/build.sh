@@ -42,11 +42,11 @@ podman run \
 /usr/local/bin/skopeo copy \
     --all \
     --dest-compress-format=zstd \
-    --dest-compress-level=10 \
+    --dest-compress-level=15 \
     --dest-force-compress-format=true \
     --dest-precompute-digests \
     --dest-tls-verify=false \
-    --image-parallel-copies=1 \
+    --image-parallel-copies=4 \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot-base:latest \
     "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
@@ -83,10 +83,10 @@ podman build \
 skopeo copy \
     --all \
     --dest-compress-format=zstd:chunked \
-    --dest-compress-level=5 \
+    --dest-compress-level=15 \
     --dest-precompute-digests \
     --dest-tls-verify=false \
-    --image-parallel-copies=1 \
+    --image-parallel-copies=4 \
     --preserve-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
