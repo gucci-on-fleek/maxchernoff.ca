@@ -38,6 +38,20 @@ podman run \
         "/root/source/fedora-iot.yaml" \
         "localhost:!!registry.port!!/fedora-iot-base:latest" \
 
+# Recompress the image (zstd:chunked doesn't work with composefs+bootc)
+/usr/local/bin/skopeo copy \
+    --all \
+    --dest-compress-format=zstd \
+    --dest-compress-level=10 \
+    --dest-force-compress-format=true \
+    --dest-precompute-digests \
+    --dest-tls-verify=false \
+    --image-parallel-copies=1 \
+    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
+    --sign-identity=maxchernoff.ca/fedora-iot-base:latest \
+    "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
+    "docker://localhost:!!registry.port!!/fedora-iot-base:latest"
+
 # Get the composefs command
 composefs_cmd="bootc internals cfs --repo=$temp_dir/composefs-repo/"
 mkdir -p "$temp_dir/composefs-repo/"
@@ -56,9 +70,12 @@ podman build \
     --file="$script_dir/Containerfile" \
     --inherit-annotations=true \
     --inherit-labels \
+    --label="containers.bootc=sealed" \
     --label="containers.composefs.fsverity=$fsverity_id" \
     --no-cache \
     --tag=maxchernoff.ca/fedora-iot:latest \
+    --unsetlabel="ostree.bootable" \
+    --unsetlabel="ostree.linux" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     "$script_dir"
 
@@ -69,7 +86,8 @@ skopeo copy \
     --dest-compress-level=5 \
     --dest-precompute-digests \
     --dest-tls-verify=false \
-    --image-parallel-copies=4 \
+    --image-parallel-copies=1 \
+    --preserve-digests \
     --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
     --sign-identity=maxchernoff.ca/fedora-iot:latest \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \

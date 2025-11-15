@@ -7,13 +7,15 @@
 edition: "2024"
 
 # What to call our container
-ref: maxchernoff.ca/fedora-iot
+ref: maxchernoff.ca/fedora-iot-base
+mutate-os-release: "${releasever}"
 
 # Use the host's Fedora repos
 releasever: "!!fedora.version!!"
 repos:
   - fedora
   - updates
+  - updates-testing
 
 # Keep the security attributes
 selinux: true
@@ -22,6 +24,9 @@ readonly-executables: true
 
 # Make the RPM database reproducible
 rpmdb-normalize: true
+
+# Don't generate an initramfs
+# no-initramfs: true  # TODO: not released yet
 
 # Global package installation options
 recommends: false
@@ -45,7 +50,7 @@ packages:
   - audit-rules # auditctl
   - authselect # PAM configuration
   - bees # Btrfs deduplication
-  - bootc
+  - bootc-1.10.0-2.fc43  # TODO: unhardcode version when possible
   - borgbackup
   - btrfs-progs # /usr/bin/btrfs
   - btrfsmaintenance
@@ -124,6 +129,8 @@ add-files:
   - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
   - ["files/00-fedora-iot.toml", "/usr/lib/bootc/install/00-fedora-iot.toml"]
   - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
+  - ["files/composefs-module-setup.sh", "/usr/lib/dracut/modules.d/37composefs/module-setup.sh"]
+  - ["files/composefs-setup-root.service", "/usr/lib/dracut/modules.d/37composefs/composefs-setup-root.service"]
 
 postprocess:
   - |
@@ -137,11 +144,6 @@ postprocess:
 
     # vi -> vim
     ln -s /usr/bin/vim /usr/bin/vi
-
-    # OSTree settings
-    ostree config set ex-fsverity.required true
-    ostree config set ex-integrity.composefs yes
-    ostree config set sysroot.bootloader none
 
     # Set SELinux context for prometheus-podman-exporter
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t

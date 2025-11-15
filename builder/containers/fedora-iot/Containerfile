@@ -9,6 +9,7 @@ ARG COMPOSEFS_FSVERITY
 RUN <<EOF
     set -euo pipefail
 
+    # Install required packages
     dnf5 install \
         --assumeyes \
         --nodocs \
@@ -18,19 +19,24 @@ RUN <<EOF
         sbsigntools \
         systemd-ukify
 
-    mkdir -p /etc/dracut.conf.d/
-    echo "export DRACUT_NO_XATTR=1" > /etc/dracut.conf.d/no-xattr.conf
-
-    mkdir -p /etc/kernel/
-    echo "composefs=${COMPOSEFS_FSVERITY} root=gpt-auto rootflags=compress=zstd:3,noatime rw" > /etc/kernel/cmdline
-
-    mkdir -p /boot/efi/EFI/Linux/
+    # Determine kernel version
     kver="$(cd /usr/lib/modules && echo *)"
     kernel_path="/usr/lib/modules/$kver"
+
+    # Create cmdline file
+    echo "composefs=${COMPOSEFS_FSVERITY} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown rw" > /etc/cmdline
+
+    # Dracut configuration
+    mkdir -p /etc/dracut.conf.d/
+    echo "export DRACUT_NO_XATTR=1" > /etc/dracut.conf.d/no-xattr.conf
+    dracut --verbose --force --reproducible --zstd --no-hostonly --kver="$kver" "$kernel_path/initramfs.img"
+
+    # Build systemd-boot EFI executable
+    mkdir -p /boot/efi/EFI/Linux/
     ukify build \
         --linux="$kernel_path/vmlinuz" \
         --initrd="$kernel_path/initramfs.img" \
-        --cmdline="@/etc/kernel/cmdline" \
+        --cmdline="@/etc/cmdline" \
         --uname="$kver" \
         --measure \
         --output="/boot/efi/EFI/Linux/$kver.efi"
@@ -47,4 +53,3 @@ EOF
 
 FROM base AS bootable
 COPY --from=kernel /boot /boot
-LABEL containers.bootc=sealed
