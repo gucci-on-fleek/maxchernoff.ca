@@ -19,13 +19,14 @@ podman run \
     --cap-add=SYS_ADMIN \
     --device=/dev/fuse \
     --network=pasta:-T,!!registry.port!! \
-    --pull=always \
+    --pull=newer \
     --rm \
     --security-opt=label=nested \
     --security-opt=label=role:user_r \
     --security-opt=label=user:user_u \
     --userns=host \
     --volume="/etc/containers/:/etc/containers/:ro" \
+    --volume="/usr/local/bin/composefs-setup-root:/usr/local/bin/composefs-setup-root:ro" \
     --volume="$HOME/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z" \
     --volume="$script_dir:/root/source/:ro" \
     --volume="$temp_dir:/root/output/:rw,z" \
@@ -38,35 +39,21 @@ podman run \
         "/root/source/fedora-iot.yaml" \
         "localhost:!!registry.port!!/fedora-iot-base:latest" \
 
-# Recompress the image (zstd:chunked doesn't work with composefs+bootc)
-/usr/local/bin/skopeo copy \
-    --all \
-    --dest-compress-format=zstd \
-    --dest-compress-level=15 \
-    --dest-force-compress-format=true \
-    --dest-precompute-digests \
-    --dest-tls-verify=false \
-    --image-parallel-copies=4 \
-    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-    --sign-identity=maxchernoff.ca/fedora-iot-base:latest \
-    "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
-    "docker://localhost:!!registry.port!!/fedora-iot-base:latest"
-
 # Get the composefs command
-composefs_cmd="bootc internals cfs --repo=$temp_dir/composefs-repo/"
+composefs_cmd="cfsctl --repo=$temp_dir/composefs-repo/"
 mkdir -p "$temp_dir/composefs-repo/"
 
 # Get the composefs info
-image_id="$(\
+composefs_output="$(\
     $composefs_cmd oci pull "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
-    2>&1 | grep --only-matching --perl-regexp '(?<=^sha256 ).*$' \
 )"
-
-fsverity_id="$($composefs_cmd oci compute-id "$image_id")"
+image_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=^sha256 ).*$')"
+fsverity_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=verity ).*$')"
+composefs_id="$($composefs_cmd oci compute-id --bootable "$image_id" "$fsverity_id")"
 
 # Rebuild the container with composefs fsverity info
 podman build \
-    --build-arg="COMPOSEFS_FSVERITY=$fsverity_id" \
+    --build-arg="COMPOSEFS_ID=$composefs_id" \
     --file="$script_dir/Containerfile" \
     --inherit-annotations=true \
     --inherit-labels \

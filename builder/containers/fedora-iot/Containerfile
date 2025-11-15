@@ -5,7 +5,7 @@
 FROM localhost:!!registry.port!!/fedora-iot-base:latest as base
 
 FROM base as kernel
-ARG COMPOSEFS_FSVERITY
+ARG COMPOSEFS_ID
 RUN <<EOF
     set -euo pipefail
 
@@ -24,7 +24,7 @@ RUN <<EOF
     kernel_path="/usr/lib/modules/$kver"
 
     # Create cmdline file
-    echo "composefs=${COMPOSEFS_FSVERITY} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown rw" > /etc/cmdline
+    echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown rw" > /etc/cmdline
 
     # Dracut configuration
     mkdir -p /etc/dracut.conf.d/

@@ -11,7 +11,7 @@ depends() {
 
 install() {
     inst \
-        "/usr/local/bin/composefs-setup-root" /bin/composefs-setup-root
+        "/usr/bin/composefs-setup-root" /bin/composefs-setup-root
     inst \
         "${moddir}/composefs-setup-root.service" \
         "${systemdsystemunitdir}/composefs-setup-root.service"
