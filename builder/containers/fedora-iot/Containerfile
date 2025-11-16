@@ -7,7 +7,7 @@ FROM localhost:!!registry.port!!/fedora-iot-base:latest as base
 FROM base as kernel
 ARG COMPOSEFS_ID
 RUN <<EOF
-    set -euo pipefail
+    set -euxo pipefail
 
     # Install required packages
     dnf5 install \
@@ -16,7 +16,7 @@ RUN <<EOF
         --setopt=install_weak_deps=false \
         --setopt=keepcache=true \
         --use-host-config \
-        sbsigntools \
+        systemd-boot-unsigned \
         systemd-ukify
 
     # Determine kernel version
@@ -26,27 +26,30 @@ RUN <<EOF
     # Create cmdline file
     echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown rw" > /etc/cmdline
 
+    # Reenable dracut
+    mv /usr/libexec/dracut /usr/bin/dracut
+
     # Dracut configuration
     mkdir -p /etc/dracut.conf.d/
     echo "export DRACUT_NO_XATTR=1" > /etc/dracut.conf.d/no-xattr.conf
     dracut --verbose --force --reproducible --zstd --no-hostonly --kver="$kver" "$kernel_path/initramfs.img"
 
     # Build systemd-boot EFI executable
-    mkdir -p /boot/efi/EFI/Linux/
+    mkdir -p /boot/EFI/Linux/
     ukify build \
         --linux="$kernel_path/vmlinuz" \
         --initrd="$kernel_path/initramfs.img" \
         --cmdline="@/etc/cmdline" \
         --uname="$kver" \
         --measure \
-        --output="/boot/efi/EFI/Linux/$kver.efi"
+        --output="/boot/EFI/Linux/$kver.efi"
 
-    mkdir -p /boot/efi/EFI/BOOT/ /boot/efi/EFI/systemd/
-    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
-    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/systemd-bootx64.efi
+    mkdir -p /boot/EFI/BOOT/ /boot/EFI/systemd/
+    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/BOOT/BOOTX64.EFI
+    cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
-    mkdir -p /boot/efi/loader/
-    echo 'timeout 1' > /boot/efi/loader/loader.conf
+    mkdir -p /boot/loader/
+    echo 'timeout 1' > /boot/loader/loader.conf
 
     bootc container lint || true
 EOF

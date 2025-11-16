@@ -14,6 +14,8 @@ trap 'rm -rf "$temp_dir"' EXIT
 cd "$temp_dir"
 
 # Build the container
+base_image="localhost:!!registry.port!!/fedora-iot-base:latest"
+
 podman run \
     --cap-add=NET_ADMIN \
     --cap-add=SYS_ADMIN \
@@ -37,18 +39,16 @@ podman run \
         --cachedir="/var/cache/rpm-ostree" \
         --max-layers=200 \
         "/root/source/fedora-iot.yaml" \
-        "localhost:!!registry.port!!/fedora-iot-base:latest" \
+        "$base_image" \
 
 # Get the composefs command
 composefs_cmd="cfsctl --repo=$temp_dir/composefs-repo/"
 mkdir -p "$temp_dir/composefs-repo/"
 
 # Get the composefs info
-composefs_output="$(\
-    $composefs_cmd oci pull "docker://localhost:!!registry.port!!/fedora-iot-base:latest" \
-)"
-image_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=^sha256 ).*$')"
-fsverity_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=verity ).*$')"
+composefs_output="$($composefs_cmd oci pull "docker://$base_image")"
+image_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=^sha256 )\S+')"
+fsverity_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=verity )\S+')"
 composefs_id="$($composefs_cmd oci compute-id --bootable "$image_id" "$fsverity_id")"
 
 # Rebuild the container with composefs fsverity info
@@ -60,9 +60,12 @@ podman build \
     --label="containers.bootc=sealed" \
     --label="containers.composefs.fsverity=$fsverity_id" \
     --no-cache \
-    --tag=maxchernoff.ca/fedora-iot:latest \
+    --tag="maxchernoff.ca/fedora-iot:latest" \
     --unsetlabel="ostree.bootable" \
     --unsetlabel="ostree.linux" \
+    --unsetlabel="ostree.commit" \
+    --unsetlabel="ostree.final-diffid" \
+    --unsetlabel="rpmostree.inputhash" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     "$script_dir"
 

@@ -9,6 +9,7 @@ edition: "2024"
 # What to call our container
 ref: maxchernoff.ca/fedora-iot-base
 mutate-os-release: "${releasever}"
+automatic-version-prefix: "${releasever}.<date:%Y%m%d>"
 
 # Use the host's Fedora repos
 releasever: "!!fedora.version!!"
@@ -96,7 +97,6 @@ packages:
   - strace
   - sudo
   - systemd
-  - systemd-boot-unsigned
   - systemd-container # systemd-nspawn
   - systemd-journal-remote # For journald remote logging
   - systemd-networkd
@@ -143,11 +143,13 @@ postprocess:
     rm -rf /etc/systemd/user/*
     systemctl --user --global preset-all
 
-    # vi -> vim
-    ln -s /usr/bin/vim /usr/bin/vi
-
     # Set SELinux context for prometheus-podman-exporter
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
+
+    # A horrible hack to prevent dracut from running
+    mv /usr/bin/dracut /usr/libexec/dracut
+    printf '#!/usr/bin/bash\ntouch /tmp/initramfs.img' > /usr/bin/dracut
+    chmod a+x /usr/bin/dracut
 
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
