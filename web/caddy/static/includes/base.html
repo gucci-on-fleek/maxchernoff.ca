@@ -17,6 +17,10 @@
     <link rel="apple-touch-icon" href="{{ $root }}apple-touch-icon.png" />
     <link rel="alternate" title="Posts" type="application/atom+xml" href="https://www.maxchernoff.ca/atom.xml" />
 
+    {{- if ne (get $args "inject-head") "" -}}
+        {{ get $args "inject-head" }}
+    {{- end -}}
+
     <title>{{ cat (get $args "title") (get $args "title-trailer") }}</title>
     {{- if ne (get $args "description") "" -}}
         <meta name="description" content="{{ get $args "description" }}" />

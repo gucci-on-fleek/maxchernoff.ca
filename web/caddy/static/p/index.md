@@ -50,6 +50,8 @@ Tools
 
 - [Container Registry](https://registry.maxchernoff.ca/)
 
+- [Speedtest](/tools/speedtest)
+
 </nav>
 
 

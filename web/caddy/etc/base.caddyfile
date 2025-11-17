@@ -215,6 +215,15 @@
 	redir /tools/Stardew-Valley-Item-Finder/robots.txt /robots.txt permanent
 	redir /tools/stardew-valley-item-finder /tools/Stardew-Valley-Item-Finder/ permanent
 
+	# Speedtest
+	@speedtest-html {
+		expression `!(query({"bytes": "*"}) || method("POST"))`
+	}
+	handle /tools/speedtest {
+		rewrite @speedtest-html /includes/index.html
+		# speedtest
+	}
+
 	# Convert Markdown files to HTML
 	templates
 	rewrite /p/* /includes/index.html

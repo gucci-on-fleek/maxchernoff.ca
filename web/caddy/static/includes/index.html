@@ -21,4 +21,5 @@
     "body"          (markdown $markdown_file.Body)
     "date"          (default "" (cat "<time>" $markdown_file.Meta.date "</time>"))
     "description"   (default "" $markdown_file.Meta.description)
+    "inject-head"   (default "" (index $markdown_file.Meta "inject-head"))
 ) -}}
