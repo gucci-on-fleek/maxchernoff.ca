@@ -143,8 +143,7 @@
 		"/wp-*",
 		"/honeypot/seriously-there-is-nothing-here*"
 		) &&
-		!path("/.well-known/*")) ||
-		header({"User-Agent": "Go-http-client/*"})
+		!path("/.well-known/*"))
 		`
 	}
 	@has-zstd {
@@ -216,12 +215,12 @@
 	redir /tools/stardew-valley-item-finder /tools/Stardew-Valley-Item-Finder/ permanent
 
 	# Speedtest
-	@speedtest-html {
-		expression `!(query({"bytes": "*"}) || method("POST"))`
+	@speedtest {
+		expression `query({"bytes": "*"}) || method("POST")`
 	}
 	handle /tools/speedtest {
-		rewrite @speedtest-html /includes/index.html
-		# speedtest
+		speedtest @speedtest
+		rewrite /includes/index.html
 	}
 
 	# Convert Markdown files to HTML
@@ -278,6 +277,7 @@
 		expression `{query} != ""`
 		not path /.well-known/*
 		not path /v2/*
+		not query bytes=*
 	}
 	redir @has-query {path} temporary
 

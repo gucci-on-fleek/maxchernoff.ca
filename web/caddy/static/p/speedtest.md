@@ -79,7 +79,7 @@ test services. However, feel free to use it for manually by typing a
 `curl`/`wget` command into your terminal.
 
 As long as you follow the usage instructions above, you can access it at
-[`maxchernoff.ca/tools/speedtest`](https://maxchernoff.ca/tools/speedtest).
+[`www.maxchernoff.ca/tools/speedtest`](https://www.maxchernoff.ca/tools/speedtest).
 
 
 Why does this exist?
