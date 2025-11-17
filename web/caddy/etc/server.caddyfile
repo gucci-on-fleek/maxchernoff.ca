@@ -58,9 +58,7 @@ import base.caddyfile
 		api {
 			prometheus
 		}
-		regex {
-			exclude "^/files/.*qcow.*"
-		}
+		max_cacheable_body_bytes 50000000 # 50 MB
 	}
 
 	# Configure (non-request) logging
