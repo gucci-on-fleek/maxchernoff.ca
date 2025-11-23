@@ -41,15 +41,21 @@ podman run \
         "/root/source/fedora-iot.yaml" \
         "$base_image" \
 
-# Get the composefs command
-composefs_cmd="cfsctl --repo=$temp_dir/composefs-repo/"
-mkdir -p "$temp_dir/composefs-repo/"
-
 # Get the composefs info
-composefs_output="$($composefs_cmd oci pull "docker://$base_image")"
-image_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=^sha256 )\S+')"
-fsverity_id="$(echo $composefs_output | grep --only-matching --perl-regexp '(?<=verity )\S+')"
-composefs_id="$($composefs_cmd oci compute-id --bootable "$image_id" "$fsverity_id")"
+mkdir -p "$temp_dir/composefs/tmp/"
+composefs_id="$(\
+    podman run \
+        --network=none \
+        --privileged \
+        --pull=always \
+        --read-only \
+        --rm \
+        --userns=host \
+        --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
+        --volume="$temp_dir/composefs/:/var:rw" \
+        "$base_image" \
+        bootc container compute-composefs-digest
+)"
 
 # Rebuild the container with composefs fsverity info
 podman build \
@@ -58,7 +64,6 @@ podman build \
     --inherit-annotations=true \
     --inherit-labels \
     --label="containers.bootc=sealed" \
-    --label="containers.composefs.fsverity=$fsverity_id" \
     --no-cache \
     --tag="maxchernoff.ca/fedora-iot:latest" \
     --unsetlabel="ostree.bootable" \
@@ -72,13 +77,13 @@ podman build \
 # Push the container
 skopeo copy \
     --all \
-    --dest-compress-format=zstd:chunked \
+    --dest-compress-format="zstd:chunked" \
     --dest-compress-level=15 \
     --dest-precompute-digests \
     --dest-tls-verify=false \
     --image-parallel-copies=4 \
     --preserve-digests \
-    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-    --sign-identity=maxchernoff.ca/fedora-iot:latest \
+    --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
+    --sign-identity="maxchernoff.ca/fedora-iot:latest" \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \
     "docker://localhost:!!registry.port!!/fedora-iot:latest"
