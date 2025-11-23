@@ -112,14 +112,6 @@ import base.caddyfile
 	}
 }
 
-(cache) {
-	# Block access to the Souin API
-	route {
-		error /souin-api/* 404
-		cache
-	}
-}
-
 http:// {
 	bind fd/3
 	redir https://{host}{uri} permanent
@@ -148,7 +140,7 @@ maxchernoff.ca {
 # The main site
 www.maxchernoff.ca {
 	root * /srv
-	import cache
+	cache
 	import www.maxchernoff.ca
 }
 
@@ -192,7 +184,7 @@ api.maxchernoff.ca {
 	import domain-info
 
 	header Cache-Control max-age=5
-	import cache
+	cache
 
 	reverse_proxy systemd-flask:8080
 }
@@ -201,7 +193,7 @@ api.maxchernoff.ca {
 registry.maxchernoff.ca {
 	import default
 	import domain-info
-	import cache
+	cache
 
 	@manifest path /v2/*/manifests/* /v2/_catalog
 	header @manifest Cache-Control max-age=15
