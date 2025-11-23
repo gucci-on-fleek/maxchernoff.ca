@@ -223,6 +223,15 @@
 		rewrite /includes/index.html
 	}
 
+	# Don't log go-get requests, and cache for a really long time
+	@go-get {
+		query go-get=1
+	}
+	handle @go-get {
+		header Cache-Control max-age=1209600 # 2 weeks
+		log_skip
+	}
+
 	# Convert Markdown files to HTML
 	templates
 	rewrite /p/* /includes/index.html
@@ -278,6 +287,7 @@
 		not path /.well-known/*
 		not path /v2/*
 		not query bytes=*
+		not query go-get=1
 	}
 	redir @has-query {path} temporary
 
