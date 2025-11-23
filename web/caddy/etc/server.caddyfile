@@ -99,7 +99,7 @@ import base.caddyfile
 		output file /var/log/caddy/access.log {
 			roll_keep_for 1000d
 			roll_keep 100
-			mode 640
+			mode 644
 		}
 		format json
 	}
