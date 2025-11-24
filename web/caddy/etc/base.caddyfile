@@ -214,15 +214,6 @@
 	redir /tools/Stardew-Valley-Item-Finder/robots.txt /robots.txt permanent
 	redir /tools/stardew-valley-item-finder /tools/Stardew-Valley-Item-Finder/ permanent
 
-	# Speedtest
-	@speedtest {
-		expression `query({"bytes": "*"}) || method("POST")`
-	}
-	handle /tools/speedtest {
-		speedtest @speedtest
-		rewrite /includes/index.html
-	}
-
 	# Don't log go-get requests, and cache for a really long time
 	@go-get {
 		query go-get=1
@@ -230,6 +221,15 @@
 	handle @go-get {
 		header Cache-Control max-age=1209600 # 2 weeks
 		log_skip
+	}
+
+	# Speedtest
+	@speedtest {
+		expression `query({"bytes": "*"}) || method("POST")`
+	}
+	handle /tools/speedtest {
+		speedtest @speedtest
+		rewrite /includes/index.html
 	}
 
 	# Convert Markdown files to HTML
