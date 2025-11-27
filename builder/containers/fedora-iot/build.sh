@@ -39,37 +39,48 @@ podman run \
         --cachedir="/var/cache/rpm-ostree" \
         --max-layers=200 \
         "/root/source/fedora-iot.yaml" \
-        "$base_image" \
+        "$base_image"
+
+# Weird hack
+podman image rm "localhost/fedora-iot-tmp:latest" || true
+podman build \
+    --file="$script_dir/base.containerfile" \
+    --inherit-annotations=true \
+    --inherit-labels \
+    --no-cache \
+    --pull=always \
+    --tag="localhost/fedora-iot-tmp:latest" \
+    "$script_dir"
 
 # Get the composefs info
 mkdir -p "$temp_dir/composefs/tmp/"
 composefs_id="$(\
     podman run \
-        --network=none \
+        --network="none" \
         --privileged \
-        --pull=always \
+        --pull=never \
         --read-only \
         --rm \
         --userns=host \
         --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
         --volume="$temp_dir/composefs/:/var:rw" \
-        "$base_image" \
+        "localhost/fedora-iot-tmp:latest" \
         bootc container compute-composefs-digest
 )"
 
 # Rebuild the container with composefs fsverity info
 podman build \
     --build-arg="COMPOSEFS_ID=$composefs_id" \
-    --file="$script_dir/Containerfile" \
+    --file="$script_dir/final.containerfile" \
     --inherit-annotations=true \
     --inherit-labels \
     --label="containers.bootc=sealed" \
     --no-cache \
     --tag="maxchernoff.ca/fedora-iot:latest" \
     --unsetlabel="ostree.bootable" \
-    --unsetlabel="ostree.linux" \
     --unsetlabel="ostree.commit" \
     --unsetlabel="ostree.final-diffid" \
+    --unsetlabel="ostree.linux" \
     --unsetlabel="rpmostree.inputhash" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     "$script_dir"
@@ -77,7 +88,7 @@ podman build \
 # Push the container
 skopeo copy \
     --all \
-    --dest-compress-format="zstd:chunked" \
+    --dest-compress-format="zstd" \
     --dest-compress-level=15 \
     --dest-precompute-digests \
     --dest-tls-verify=false \

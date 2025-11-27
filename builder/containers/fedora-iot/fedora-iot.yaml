@@ -16,7 +16,7 @@ releasever: "!!fedora.version!!"
 repos:
   - fedora
   - updates
-  - updates-testing
+  # - updates-testing
 
 # Keep the security attributes
 selinux: true
@@ -51,7 +51,7 @@ packages:
   - audit-rules # auditctl
   - authselect # PAM configuration
   - bees # Btrfs deduplication
-  - bootc-1.10.0-2.fc43  # TODO: unhardcode version when possible
+  - bootc
   - borgbackup
   - btrfs-progs # /usr/bin/btrfs
   - btrfsmaintenance
@@ -97,6 +97,7 @@ packages:
   - strace
   - sudo
   - systemd
+  - systemd-boot-unsigned
   - systemd-container # systemd-nspawn
   - systemd-journal-remote # For journald remote logging
   - systemd-networkd
