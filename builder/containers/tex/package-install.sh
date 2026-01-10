@@ -38,6 +38,10 @@ dnf_packages=(
     llvm # For `llvm-lipo`
     prename
     zip
+
+    # gucci-on-fleek/context-wiki-mirror
+    uv
+    vips
 )
 
 for _ in $(seq 3); do
