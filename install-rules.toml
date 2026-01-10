@@ -44,6 +44,7 @@ module --add /usr/share/udica/templates/net_container.cil
 # Set the container file contexts
 fcontext --deleteall
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{web}caddy/context-wiki(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}dmarc-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}grafana/data(/.*)?'
@@ -323,6 +324,24 @@ permissions."web/root" = "r"
 permissions."web" = "r"
 owner = "repo"
 recursive_permissions = true
+
+[[folder]]
+if = { hostname = "maxchernoff.ca" }
+base = "{web}/caddy/static/tools/"
+paths = ["context-wiki/"]
+permissions."web/root" = "rw"
+permissions."web" = "rw"
+owner = "web"
+recursive_permissions = false
+
+[[folder]]
+if = { hostname = "maxchernoff.ca" }
+base = "{web}/caddy/"
+paths = ["context-wiki/"]
+permissions."web/root" = "r"
+permissions."web" = "rw"
+owner = "web"
+recursive_permissions = false
 
 [[touch]]
 if = { hostname = "maxchernoff.ca" }

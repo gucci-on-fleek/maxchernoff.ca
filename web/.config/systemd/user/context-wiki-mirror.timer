@@ -1,0 +1,14 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Unit]
+Description=Update Context Wiki Mirror
+
+[Timer]
+OnCalendar=05:45:00 UTC
+Unit=context-wiki-mirror.service
+
+[Install]
+WantedBy=timers.target
+Also=context-wiki-mirror.service

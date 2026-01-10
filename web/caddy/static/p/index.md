@@ -52,6 +52,8 @@ Tools
 
 - [Speedtest](/tools/speedtest)
 
+- [Context Wiki Mirror](/tools/context-wiki/)
+
 </nav>
 
 
