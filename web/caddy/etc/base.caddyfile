@@ -223,8 +223,13 @@
 		rewrite /includes/index.html
 	}
 
+	# ConTeXt Wiki mirror
+	@not-context-wiki {
+		not path /tools/context-wiki/*
+	}
+
 	# Convert Markdown files to HTML
-	templates
+	templates @not-context-wiki
 	rewrite /p/* /includes/index.html
 	rewrite / /includes/index
 
