@@ -52,7 +52,7 @@ function reboot
 end
 
 function journalctl
-    command journalctl --exclude-identifier='sshd-session' $argv
+    command journalctl --exclude-identifier='sshd-session' --exclude-identifier='dmarc-metrics' $argv
 end
 
 function ls
