@@ -2,7 +2,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2025 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 set -euxo pipefail
 
 # Get the script directory
@@ -28,7 +28,6 @@ podman run \
     --security-opt=label=user:user_u \
     --userns=host \
     --volume="/etc/containers/:/etc/containers/:ro" \
-    --volume="/usr/local/bin/composefs-setup-root:/usr/local/bin/composefs-setup-root:ro" \
     --volume="$HOME/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z" \
     --volume="$script_dir:/root/source/:ro" \
     --volume="$temp_dir:/root/output/:rw,z" \
@@ -65,7 +64,7 @@ composefs_id="$(\
         --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
         --volume="$temp_dir/composefs/:/var:rw" \
         "localhost/fedora-iot-tmp:latest" \
-        bootc container compute-composefs-digest
+        bootc container compute-composefs-digest-from-storage
 )"
 
 # Rebuild the container with composefs fsverity info
@@ -83,6 +82,7 @@ podman build \
     --unsetlabel="ostree.linux" \
     --unsetlabel="rpmostree.inputhash" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
+    --volume="/usr/local/bin/composefs-setup-root:/tmp/composefs-setup-root:ro" \
     "$script_dir"
 
 # Push the container

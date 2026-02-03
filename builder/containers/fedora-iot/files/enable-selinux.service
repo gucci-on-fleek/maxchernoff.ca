@@ -1,0 +1,16 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Unit]
+Description=Enable SELinux
+DefaultDependencies=false
+
+After=local-fs-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=-setenforce Enforcing
+
+[Install]
+WantedBy=local-fs-pre.target

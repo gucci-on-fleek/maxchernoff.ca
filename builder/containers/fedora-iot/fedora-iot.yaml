@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2025 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 
 # Use the newer treefile defaults
 edition: "2024"
@@ -28,6 +28,9 @@ rpmdb-normalize: true
 
 # Don't generate an initramfs
 # no-initramfs: true  # TODO: not released yet
+
+# Don't create an /etc/machine-id file
+machineid-compat: false
 
 # Global package installation options
 recommends: false
@@ -110,19 +113,6 @@ packages:
   - xz # Needed for TeX Live
   - zram-generator
 
-# systemd units to enable
-units:
-  - audit-rules.service
-  - btrfs-balance.timer
-  - btrfs-defrag.timer
-  - btrfs-scrub.timer
-  - btrfs-trim.timer
-  - btrfsmaintenance-refresh.path
-  - firewalld.service
-  - fstrim.timer
-  - sshd.service
-  - systemd-networkd.service
-
 add-files:
   - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
@@ -132,7 +122,9 @@ add-files:
   - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
   - ["files/composefs-module-setup.sh", "/usr/lib/dracut/modules.d/37composefs/module-setup.sh"]
   - ["files/composefs-setup-root.service", "/usr/lib/dracut/modules.d/37composefs/composefs-setup-root.service"]
-  - ["files/composefs-setup-root", "/usr/bin/composefs-setup-root"]
+  - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
+  - ["files/fix-etc.service", "/usr/lib/systemd/system/fix-etc.service"]
+  - ["files/enable-selinux.service", "/usr/lib/systemd/system/enable-selinux.service"]
 
 postprocess:
   - |

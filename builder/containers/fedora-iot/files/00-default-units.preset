@@ -1,0 +1,15 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+enable audit-rules.service
+enable btrfs-balance.timer
+enable btrfs-defrag.timer
+enable btrfs-scrub.timer
+enable btrfs-trim.timer
+enable btrfsmaintenance-refresh.path
+enable firewalld.service
+enable fix-etc.service
+enable fstrim.timer
+enable sshd.service
+enable systemd-networkd.service
