@@ -6,7 +6,7 @@
 Description=Update TeX Live
 
 [Timer]
-OnCalendar=00:30:00 America/Edmonton
+OnCalendar=23:30:00 America/Edmonton
 Unit=update-texlive.service
 
 [Install]

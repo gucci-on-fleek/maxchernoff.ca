@@ -12,6 +12,9 @@ export PATH="/var/home/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 # because we've uninstalled it, so ignore any errors.
 tlmgr update --all --self || true
 
+# Reset the ls-R dates so that ConTeXt doesn't auto-remake its formats
+touch --date='2 days ago' /var/home/tex/texlive/texmf-{config,dist,local,var}/ls-R
+
 # Remake the ConTeXt formats
 context --make > /dev/null
 context --luatex --make > /dev/null
