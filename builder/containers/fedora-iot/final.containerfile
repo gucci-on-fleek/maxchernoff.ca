@@ -42,6 +42,21 @@ RUN <<EOF
         echo "${OSTREE_VERSION//./-}" \
     )"
 
+    # Build profiles
+    mkdir -p /tmp/profiles/
+
+    ukify build \
+        --profile="TITLE=$uki_name: Debug Mode
+ID=debug" \
+        --cmdline="$(cat /etc/cmdline) systemd.log_level=debug udev.log_level=error systemd.log_target=kmsg log_buf_len=1M printk.devkmsg=on systemd.debug_shell=1 console=tty1 enforcing=0" \
+        --output="/tmp/profiles/debug.efi"
+
+    ukify build \
+        --profile="TITLE=$uki_name: Emergency Mode
+ID=debug" \
+        --cmdline="$(cat /etc/cmdline) rd.systemd.unit=emergency.target" \
+        --output="/tmp/profiles/emergency.efi"
+
     # Build systemd-boot EFI executable
     mkdir -p "/boot/EFI/Linux/"
     ukify build \
@@ -49,15 +64,12 @@ RUN <<EOF
         --initrd="$kernel_path/initramfs.img" \
         --cmdline="@/etc/cmdline" \
         --os-release="@/usr/lib/os-release" \
+        --profile="TITLE=$uki_name: Main" \
+        --join-profile="/tmp/profiles/debug.efi" \
+        --join-profile="/tmp/profiles/emergency.efi" \
         --uname="$kver" \
         --measure \
         --output="/boot/EFI/Linux/$uki_name.efi"
-
-    # # Build debug addon UKI
-    mkdir -p "/boot/loader/addons/"
-    ukify build \
-        --cmdline='debug systemd.log_level=debug udev.log_level=error systemd.log_target=kmsg log_buf_len=1M printk.devkmsg=on systemd.debug_shell=1 console=tty1 systemd.unit=rescue.target enforcing=0' \
-        --output="/boot/loader/addons/debug.addon.efi"
 
     mkdir -p /boot/EFI/BOOT/ /boot/EFI/systemd/
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/BOOT/BOOTX64.EFI

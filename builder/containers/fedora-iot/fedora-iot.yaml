@@ -124,7 +124,6 @@ add-files:
   - ["files/composefs-setup-root.service", "/usr/lib/dracut/modules.d/37composefs/composefs-setup-root.service"]
   - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
   - ["files/fix-etc.service", "/usr/lib/systemd/system/fix-etc.service"]
-  - ["files/enable-selinux.service", "/usr/lib/systemd/system/enable-selinux.service"]
 
 postprocess:
   - |
@@ -151,6 +150,9 @@ postprocess:
     semanage user --modify user_u --range s0-s0:c0.c1023
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semodule --install=/etc/tmp/local-required-fallbacks.cil
+
+    # Fix all permissions
+    restorecon -RF / || true
 
     # Remove the temporary files
     rm -rf /etc/tmp/
