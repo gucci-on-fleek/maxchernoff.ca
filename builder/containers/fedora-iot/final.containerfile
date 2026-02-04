@@ -69,7 +69,7 @@ ID=debug" \
         --join-profile="/tmp/profiles/emergency.efi" \
         --uname="$kver" \
         --measure \
-        --output="/boot/EFI/Linux/$uki_name.efi"
+        --output="/boot/EFI/Linux/$uki_name+03-00.efi"
 
     mkdir -p /boot/EFI/BOOT/ /boot/EFI/systemd/
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/BOOT/BOOTX64.EFI

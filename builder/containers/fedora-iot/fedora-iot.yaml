@@ -114,26 +114,30 @@ packages:
   - zram-generator
 
 add-files:
-  - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
-  - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
-  - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
-  - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
+  - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
   - ["files/00-fedora-iot.toml", "/usr/lib/bootc/install/00-fedora-iot.toml"]
-  - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
   - ["files/composefs-module-setup.sh", "/usr/lib/dracut/modules.d/37composefs/module-setup.sh"]
   - ["files/composefs-setup-root.service", "/usr/lib/dracut/modules.d/37composefs/composefs-setup-root.service"]
-  - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
+  - ["files/console-colors.service", "/usr/lib/systemd/system/console-colors.service"]
+  - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
   - ["files/fix-etc.service", "/usr/lib/systemd/system/fix-etc.service"]
+  - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
+  - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
+  - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
+  - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
 
 postprocess:
   - |
     set -euo pipefail
 
-    # From https://pagure.io/fedora-iot/ostree/blob/f41/f/treecompose-post.sh
+    # From https://pagure.io/fedora-iot/ostree/blob/f43/f/treecompose-post.sh
     rm -rf /etc/systemd/system/*
     systemctl preset-all
     rm -rf /etc/systemd/user/*
     systemctl --user --global preset-all
+
+    # Enable systemd-networkd
+    ln -s /usr/lib/systemd/network/89-ethernet.network.example /etc/systemd/network/89-ethernet.network
 
     # Set SELinux context for prometheus-podman-exporter
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
@@ -148,6 +152,7 @@ postprocess:
 
     # Rebuild the SELinux modules
     semanage user --modify user_u --range s0-s0:c0.c1023
+    semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
