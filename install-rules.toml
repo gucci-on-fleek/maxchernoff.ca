@@ -43,8 +43,10 @@ module --add /usr/share/udica/templates/net_container.cil
 
 # Set the container file contexts
 fcontext --deleteall
+fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{repo-user}triggers(/.*)?'
-fcontext --add --seuser user_u --type container_ro_file_t '{web}caddy/context-wiki(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{tex}context-installer/tex(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '{tex}texlive(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}caddy/logs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}dmarc-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}grafana/data(/.*)?'
@@ -55,8 +57,6 @@ fcontext --add --seuser user_u --type container_file_t    '{web}victoria-logs/da
 fcontext --add --seuser user_u --type container_file_t    '{web}victoria-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{web}woodpecker/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecker/config(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '{tex}context-installer/tex(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '{tex}texlive(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}builder/containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?'
@@ -69,6 +69,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/grafana(/.*
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/knot(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/maddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/victoria-metrics/config(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{web}caddy/context-wiki(/.*)?'
 
 # Set the file context equivalents
 fcontext --add '{repo}builder/.config' --equal '{builder}.config'
@@ -607,3 +608,11 @@ base = "{builder}/.cache/"
 paths = ["go-modules"]
 permissions.builder = "rw"
 permissions.other = "r"
+
+[[permissions]]
+if = { hostname = "maxchernoff.ca" }
+base = "{builder}/containers/"
+paths = ["fedora-iot"]
+permissions.builder = "rw"
+permissions.other = "r"
+recursive_permissions = true

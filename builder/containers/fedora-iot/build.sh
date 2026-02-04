@@ -82,7 +82,6 @@ podman build \
     --unsetlabel="ostree.linux" \
     --unsetlabel="rpmostree.inputhash" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
-    --volume="/usr/local/bin/composefs-setup-root:/tmp/composefs-setup-root:ro" \
     "$script_dir"
 
 # Push the container

@@ -12,9 +12,15 @@ Before=dbus-broker.service
 After=local-fs.target
 
 [Service]
+RuntimeDirectory=%N-sysroot
 Type=oneshot
 ExecStart=chmod a+rx /etc
 ExecStart=restorecon -vRF /etc /var
+ExecStart=mount --options=rw --source=/dev/gpt-auto-root --target=%t/%N-sysroot
+ExecStart=chcon --recursive --user=system_u --role=object_r --type=lib_t %t/%N-sysroot/composefs
+ExecStart=umount %t/%N-sysroot
+ExecStart=sed -i 's/permissive/enforcing/' /etc/selinux/config
+ExecStart=setenforce Enforcing
 
 [Install]
 WantedBy=sysinit.target

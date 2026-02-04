@@ -116,13 +116,12 @@ packages:
 add-files:
   - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
   - ["files/00-fedora-iot.toml", "/usr/lib/bootc/install/00-fedora-iot.toml"]
-  - ["files/composefs-module-setup.sh", "/usr/lib/dracut/modules.d/37composefs/module-setup.sh"]
-  - ["files/composefs-setup-root.service", "/usr/lib/dracut/modules.d/37composefs/composefs-setup-root.service"]
   - ["files/console-colors.service", "/usr/lib/systemd/system/console-colors.service"]
   - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
   - ["files/fix-etc.service", "/usr/lib/systemd/system/fix-etc.service"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
   - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
+  - ["files/journal.conf", "/etc/systemd/journald.conf"]
   - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
   - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
 
@@ -154,6 +153,8 @@ postprocess:
     semanage user --modify user_u --range s0-s0:c0.c1023
     semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
+    semanage fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
+    sed -i 's/enforcing/permissive/' /etc/selinux/config
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
     # Fix all permissions

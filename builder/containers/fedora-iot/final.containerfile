@@ -25,15 +25,15 @@ RUN <<EOF
     kernel_path="/usr/lib/modules/$kver"
 
     # Create cmdline file
-    echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown=confidentiality systemd.debug_shell=1 console=tty1 enforcing=0 rw" > /etc/cmdline
+    echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown=confidentiality rw" > /etc/cmdline
 
     # Reenable dracut
     mv /usr/libexec/dracut /usr/bin/dracut
-    cp /tmp/composefs-setup-root /usr/bin/composefs-setup-root
 
     # Dracut configuration
     mkdir -p /etc/dracut.conf.d/
     echo "export DRACUT_NO_XATTR=1" > /etc/dracut.conf.d/no-xattr.conf
+    echo 'add_dracutmodules+=" bootc "' > /etc/dracut.conf.d/composefs.conf
     dracut --verbose --force --reproducible --zstd --no-hostonly --kver="$kver" "$kernel_path/initramfs.img"
 
     # Get the UKI name
