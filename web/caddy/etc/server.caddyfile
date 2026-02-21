@@ -60,6 +60,10 @@ import base.caddyfile
 		}
 		max_cacheable_body_bytes 50000000 # 50 MB
 		mode bypass_request
+
+		regex {
+			exclude /files/.*
+		}
 	}
 
 	# Configure (non-request) logging
