@@ -42,6 +42,9 @@ dnf_packages=(
     # gucci-on-fleek/context-wiki-mirror
     uv
     vips
+
+    # github.com/gucci-on-fleek/network-install
+    zig # For `zig cc`
 )
 
 for _ in $(seq 3); do
