@@ -45,6 +45,7 @@ dnf_packages=(
 
     # github.com/gucci-on-fleek/network-install
     zig # For `zig cc`
+    make
 )
 
 for _ in $(seq 3); do
