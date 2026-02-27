@@ -96,6 +96,11 @@
 		rewrite /favicon.ico /assets/favicon.ico
 		rewrite /favicon.svg /assets/favicon.svg
 		rewrite /touch-icon*.png /assets/apple-touch-icon.png
+
+		# PGP wildcard
+		handle /.well-known/openpgpkey/hu/* {
+			try_files {path} /.well-known/openpgpkey/hu/57cnjdnbjh4n3yxyk44yz5o14f7ytx5b
+		}
 	}
 
 	header /assets/* {

@@ -9,12 +9,15 @@
 
 // Select our DNS providers
 var DSP_KNOT = NewDnsProvider("knot")
-var DSP_CLOUDFLARE = NewDnsProvider("cloudflare");
+var DSP_CLOUDFLARE = NewDnsProvider("cloudflare")
 var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
 var IPv4 = "!!network.ipv4!!" // "152.53.36.213"
 var IPv6 = "!!network.ipv6!!" // "2a0a:4cc0:2000:172::1"
+
+// The long PGP key
+var pgp_key = "mDMEXe/42hYJKwYBBAHaRw8BAQdAq4QQX4dlf7oyRLp44VqxuLPKnfeIncUQVW5ETWyZ7I20H01heCBDaGVybm9mZiA8KkBtYXhjaGVybm9mZi5jYT6IlgQTFgoAPgULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAIZARYhBFxpZAj1YebCoSoroI/UQATbK3V+BQJnMbApAhsDAAoJEI/UQATbK3V+XxoBAPcS/SYPPI58B1LEWOp+YcfGA+1dHvVnsbCX77GLBz3TAQD5DYtoC2NISKmvaOiiob/ypiOyIS0klUCa43JNHNuFDLRBZ3VjY2ktb24tZmxlZWsgPDQ5MDg2NDI5K2d1Y2NpLW9uLWZsZWVrQHVzZXJzLm5vcmVwbHkuZ2l0aHViLmNvbT6IkwQTFgoAOwIbAQULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBFxpZAj1YebCoSoroI/UQATbK3V+BQJnMa+eAAoJEI/UQATbK3V+67EA/1r+FQgitRqksP6gDX64qUXBGvZq2v1ZavkUXZ0QtqRhAQDcUJ07yT1cE0qqmoIo40EtXxxleTCZA4ka8HvwxyhHD7QhTWF4IENoZXJub2ZmIDxnaXRAbWF4Y2hlcm5vZmYuY2E+iJMEExYKADsWIQRcaWQI9WHmwqEqK6CP1EAE2yt1fgUCZzHjIwIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRCP1EAE2yt1fnj2AP9PeaNjUUF+6zW/WIahjTZIwYhN7JLIeJ8JISfNetwI2QEAxmE+YJQ6TglOULht0GTjS4iO9Xfpx0sFmPqK93aghgS4OARnMZ8yEgorBgEEAZdVAQUBAQdAiikLaRb1971wd/Ej92PbH0OxiDiPdlS5twu5DW7yvTkDAQgHiHgEGBYKACAWIQRcaWQI9WHmwqEqK6CP1EAE2yt1fgUCZzGfagIbDAAKCRCP1EAE2yt1fl6YAP9WrxMoA6rmMuwb0eVnk1sgoOWZX6jFzAvLIgKPTApW8wD+ON375RINwzsX8xf+GZVUKMhGWEOCwveggiE6yGeR1Q4="
 
 // Handle the DANE TLSA records
 function dane(name) {
@@ -199,6 +202,17 @@ D("maxchernoff.ca", REG_MONITOR,
         2, // Hash Algorithm: SHA-256
         "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
     ),
+
+    // // PGP
+    // OPENPGPKEY( // git@maxchernoff.ca
+    //     "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975._openpgpkey",
+    //     pgp_key,
+    // ),
+
+    // OPENPGPKEY( // *@maxchernoff.ca
+    //     "*._openpgpkey",
+    //     pgp_key,
+    // ),
 
     /////////////
     /// Email ///
