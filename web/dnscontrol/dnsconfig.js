@@ -16,9 +16,6 @@ var REG_MONITOR = NewRegistrar("DoH")
 var IPv4 = "!!network.ipv4!!" // "152.53.36.213"
 var IPv6 = "!!network.ipv6!!" // "2a0a:4cc0:2000:172::1"
 
-// The long PGP key
-var pgp_key = "mDMEXe/42hYJKwYBBAHaRw8BAQdAq4QQX4dlf7oyRLp44VqxuLPKnfeIncUQVW5ETWyZ7I20H01heCBDaGVybm9mZiA8KkBtYXhjaGVybm9mZi5jYT6IlgQTFgoAPgULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAIZARYhBFxpZAj1YebCoSoroI/UQATbK3V+BQJnMbApAhsDAAoJEI/UQATbK3V+XxoBAPcS/SYPPI58B1LEWOp+YcfGA+1dHvVnsbCX77GLBz3TAQD5DYtoC2NISKmvaOiiob/ypiOyIS0klUCa43JNHNuFDLRBZ3VjY2ktb24tZmxlZWsgPDQ5MDg2NDI5K2d1Y2NpLW9uLWZsZWVrQHVzZXJzLm5vcmVwbHkuZ2l0aHViLmNvbT6IkwQTFgoAOwIbAQULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBFxpZAj1YebCoSoroI/UQATbK3V+BQJnMa+eAAoJEI/UQATbK3V+67EA/1r+FQgitRqksP6gDX64qUXBGvZq2v1ZavkUXZ0QtqRhAQDcUJ07yT1cE0qqmoIo40EtXxxleTCZA4ka8HvwxyhHD7QhTWF4IENoZXJub2ZmIDxnaXRAbWF4Y2hlcm5vZmYuY2E+iJMEExYKADsWIQRcaWQI9WHmwqEqK6CP1EAE2yt1fgUCZzHjIwIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRCP1EAE2yt1fnj2AP9PeaNjUUF+6zW/WIahjTZIwYhN7JLIeJ8JISfNetwI2QEAxmE+YJQ6TglOULht0GTjS4iO9Xfpx0sFmPqK93aghgS4OARnMZ8yEgorBgEEAZdVAQUBAQdAiikLaRb1971wd/Ej92PbH0OxiDiPdlS5twu5DW7yvTkDAQgHiHgEGBYKACAWIQRcaWQI9WHmwqEqK6CP1EAE2yt1fgUCZzGfagIbDAAKCRCP1EAE2yt1fl6YAP9WrxMoA6rmMuwb0eVnk1sgoOWZX6jFzAvLIgKPTApW8wD+ON375RINwzsX8xf+GZVUKMhGWEOCwveggiE6yGeR1Q4="
-
 // Handle the DANE TLSA records
 function dane(name) {
     return [
@@ -27,7 +24,7 @@ function dane(name) {
             0,    // Certificate Usage: CA Constraint
             1,    // Selector: Public Key
             1,    // Matching Type: SHA-256
-                  // ISRG Root X1 (Let's Encrypt RSA)
+            // ISRG Root X1 (Let's Encrypt RSA)
             "0b9fa5a59eed715c26c1020c711b4f6ec42d58b0015e14337a39dad301c5afc3"
         ),
         TLSA(
@@ -35,7 +32,7 @@ function dane(name) {
             0,    // Certificate Usage: CA Constraint
             1,    // Selector: Public Key
             1,    // Matching Type: SHA-256
-                  // ISRG Root X2 (Let's Encrypt ECDSA)
+            // ISRG Root X2 (Let's Encrypt ECDSA)
             "762195c225586ee6c0237456e2107dc54f1efc21f61a792ebd515913cce68332"
         ),
     ]
@@ -92,7 +89,7 @@ function web(name) {
 var default_caa = CAA_BUILDER({
     label: "@", // Apply this to the root domain
     iodef: "mailto:acme-certificates@maxchernoff.ca", // Email Address
-    issue: [ "letsencrypt.org" ], // Allowed certificate issuers
+    issue: ["letsencrypt.org"], // Allowed certificate issuers
     issuewild: "none", // No wildcard certificates
     issue_critical: true, // Mark all records as critical
     iodef_critical: true,
@@ -203,16 +200,42 @@ D("maxchernoff.ca", REG_MONITOR,
         "6d270177a80068335a4f80983ab964f803c40581d94feccca8896a1101925a01"
     ),
 
-    // // PGP
-    // OPENPGPKEY( // git@maxchernoff.ca
-    //     "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975._openpgpkey",
-    //     pgp_key,
-    // ),
+    // PGP
+    OPENPGPKEY( // git@maxchernoff.ca
+        "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975._openpgpkey",
+        "9833045deff8da16092b06010401da470f01010740ab84105f87657fba32" +
+        "44ba78e15ab1b8b3ca9df7889dc510556e444d6c99ec8db4214d61782043" +
+        "6865726e6f6666203c676974406d6178636865726e6f66662e63613e8893" +
+        "0413160a003b1621045c696408f561e6c2a12a2ba08fd44004db2b757e05" +
+        "026731e323021b03050b0908070202220206150a09080b02041602030102" +
+        "1e07021780000a09108fd44004db2b757e78f600ff4f79a36351417eeb35" +
+        "bf5886a18d3648c1884dec92c8789f092127cd7adc08d90100c6613e6094" +
+        "3a4e094e50b86dd064e34b888ef577e9c74b0598fa8af776a08604b83804" +
+        "67319f32120a2b0601040197550105010107408a290b6916f5f7bd7077f1" +
+        "23f763db1f43b188388f7654b9b70bb90d6ef2bd39030108078878041816" +
+        "0a00201621045c696408f561e6c2a12a2ba08fd44004db2b757e05026731" +
+        "9f6a021b0c000a09108fd44004db2b757e5e9800ff56af132803aae632ec" +
+        "1bd1e567935b20a0e5995fa8c5cc0bcb22028f4c0a56f300fe38ddfbe512" +
+        "0dc33b17f317fe19955428c846584382c2f7a082213ac86791d50e",
+    ),
 
-    // OPENPGPKEY( // *@maxchernoff.ca
-    //     "*._openpgpkey",
-    //     pgp_key,
-    // ),
+    OPENPGPKEY( // *@maxchernoff.ca
+        "*._openpgpkey",
+        "9833045deff8da16092b06010401da470f01010740ab84105f87657fba32" +
+        "44ba78e15ab1b8b3ca9df7889dc510556e444d6c99ec8db41f4d61782043" +
+        "6865726e6f6666203c2a406d6178636865726e6f66662e63613e88960413" +
+        "160a003e050b0908070202220206150a09080b020416020301021e070217" +
+        "800219011621045c696408f561e6c2a12a2ba08fd44004db2b757e050267" +
+        "31b029021b03000a09108fd44004db2b757e5f1a0100f712fd260f3c8e7c" +
+        "0752c458ea7e61c7c603ed5d1ef567b1b097efb18b073dd30100f90d8b68" +
+        "0b634848a9af68e8a2a1bff2a623b2212d2495409ae3724d1cdb850cb838" +
+        "0467319f32120a2b0601040197550105010107408a290b6916f5f7bd7077" +
+        "f123f763db1f43b188388f7654b9b70bb90d6ef2bd390301080788780418" +
+        "160a00201621045c696408f561e6c2a12a2ba08fd44004db2b757e050267" +
+        "319f6a021b0c000a09108fd44004db2b757e5e9800ff56af132803aae632" +
+        "ec1bd1e567935b20a0e5995fa8c5cc0bcb22028f4c0a56f300fe38ddfbe5" +
+        "120dc33b17f317fe19955428c846584382c2f7a082213ac86791d50e",
+    ),
 
     /////////////
     /// Email ///
