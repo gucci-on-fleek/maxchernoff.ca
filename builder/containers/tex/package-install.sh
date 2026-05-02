@@ -42,6 +42,9 @@ dnf_packages=(
     # gucci-on-fleek/context-wiki-mirror
     uv
     vips
+
+    # anss-ce/ANSS-CE
+    make
 )
 
 for _ in $(seq 3); do
