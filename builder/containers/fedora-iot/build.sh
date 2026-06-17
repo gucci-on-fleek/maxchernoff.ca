@@ -33,7 +33,7 @@ podman run \
     --volume="$temp_dir:/root/output/:rw,z" \
     "maxchernoff.ca/bootc-builder:latest" \
     rpm-ostree compose image \
-        --initialize-mode=query \
+        --initialize-mode=if-not-exists \
         --format=registry \
         --cachedir="/var/cache/rpm-ostree" \
         --max-layers=200 \

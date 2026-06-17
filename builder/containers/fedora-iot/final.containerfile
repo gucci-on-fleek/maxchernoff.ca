@@ -16,6 +16,7 @@ RUN <<EOF
         --setopt=install_weak_deps=false \
         --setopt=keepcache=true \
         --use-host-config \
+        dracut-config-generic \
         strip \
         systemd-boot-unsigned \
         systemd-ukify
@@ -26,9 +27,6 @@ RUN <<EOF
 
     # Create cmdline file
     echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown=confidentiality rw" > /etc/cmdline
-
-    # Reenable dracut
-    mv /usr/libexec/dracut /usr/bin/dracut
 
     # Dracut configuration
     mkdir -p /etc/dracut.conf.d/

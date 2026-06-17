@@ -27,7 +27,7 @@ readonly-executables: true
 rpmdb-normalize: true
 
 # Don't generate an initramfs
-# no-initramfs: true  # TODO: not released yet
+no-initramfs: true
 
 # Don't create an /etc/machine-id file
 machineid-compat: false
@@ -63,7 +63,6 @@ packages:
   - curl
   - dnf5
   - dosfstools # fsck for the EFI partition
-  - dracut-config-generic # Creates a non-host-specific initramfs
   - efibootmgr
   - fedora-release-iot
   - firewalld
@@ -118,7 +117,6 @@ add-files:
   - ["files/00-fedora-iot.toml", "/usr/lib/bootc/install/00-fedora-iot.toml"]
   - ["files/console-colors.service", "/usr/lib/systemd/system/console-colors.service"]
   - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
-  - ["files/fix-etc.service", "/usr/lib/systemd/system/fix-etc.service"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
   - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
   - ["files/journal.conf", "/etc/systemd/journald.conf"]
@@ -141,11 +139,6 @@ postprocess:
     # Set SELinux context for prometheus-podman-exporter
     semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
 
-    # A horrible hack to prevent dracut from running
-    mv /usr/bin/dracut /usr/libexec/dracut
-    printf '#!/usr/bin/bash\ntouch /tmp/initramfs.img' > /usr/bin/dracut
-    chmod a+x /usr/bin/dracut
-
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
 
@@ -154,7 +147,6 @@ postprocess:
     semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semanage fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
-    sed -i 's/enforcing/permissive/' /etc/selinux/config
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
     # Fix all permissions

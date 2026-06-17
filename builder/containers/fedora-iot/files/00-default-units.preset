@@ -10,7 +10,6 @@ enable btrfs-trim.timer
 enable btrfsmaintenance-refresh.path
 enable console-colors.service
 enable firewalld.service
-enable fix-etc.service
 enable fstrim.timer
 enable sshd.service
 enable systemd-networkd.service
