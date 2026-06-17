@@ -40,17 +40,6 @@ podman run \
         "/root/source/fedora-iot.yaml" \
         "$base_image"
 
-# Weird hack
-podman image rm "localhost/fedora-iot-tmp:latest" || true
-podman build \
-    --file="$script_dir/base.containerfile" \
-    --inherit-annotations=true \
-    --inherit-labels \
-    --no-cache \
-    --pull=always \
-    --tag="localhost/fedora-iot-tmp:latest" \
-    "$script_dir"
-
 # Get the composefs info
 mkdir -p "$temp_dir/composefs/tmp/"
 composefs_id="$(\
@@ -63,7 +52,7 @@ composefs_id="$(\
         --userns=host \
         --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
         --volume="$temp_dir/composefs/:/var:rw" \
-        "localhost/fedora-iot-tmp:latest" \
+        "$base_image" \
         bootc container compute-composefs-digest-from-storage
 )"
 
@@ -87,7 +76,7 @@ podman build \
 # Push the container
 skopeo copy \
     --all \
-    --dest-compress-format="zstd" \
+    --dest-compress-format="zstd:chunked" \
     --dest-compress-level=15 \
     --dest-precompute-digests \
     --dest-tls-verify=false \

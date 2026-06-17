@@ -26,7 +26,8 @@ RUN <<EOF
     kernel_path="/usr/lib/modules/$kver"
 
     # Create cmdline file
-    echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown=confidentiality rw" > /etc/cmdline
+    mkdir -p /etc/kernel/
+    echo "composefs=${COMPOSEFS_ID} root=gpt-auto rootflags=compress=zstd:3,noatime lockdown=confidentiality rw" > /etc/kernel/cmdline
 
     # Dracut configuration
     mkdir -p /etc/dracut.conf.d/
@@ -46,13 +47,13 @@ RUN <<EOF
     ukify build \
         --profile="TITLE=$uki_name: Debug Mode
 ID=debug" \
-        --cmdline="$(cat /etc/cmdline) systemd.log_level=debug udev.log_level=error systemd.log_target=kmsg log_buf_len=1M printk.devkmsg=on systemd.debug_shell=1 console=tty1 enforcing=0" \
+        --cmdline="$(cat /etc/kernel/cmdline) systemd.log_level=debug udev.log_level=error systemd.log_target=kmsg log_buf_len=1M printk.devkmsg=on systemd.debug_shell=1 console=tty1 enforcing=0" \
         --output="/tmp/profiles/debug.efi"
 
     ukify build \
         --profile="TITLE=$uki_name: Emergency Mode
 ID=debug" \
-        --cmdline="$(cat /etc/cmdline) rd.systemd.unit=emergency.target" \
+        --cmdline="$(cat /etc/kernel/cmdline) rd.systemd.unit=emergency.target" \
         --output="/tmp/profiles/emergency.efi"
 
     # Build systemd-boot EFI executable
@@ -60,7 +61,7 @@ ID=debug" \
     ukify build \
         --linux="$kernel_path/vmlinuz" \
         --initrd="$kernel_path/initramfs.img" \
-        --cmdline="@/etc/cmdline" \
+        --cmdline="@/etc/kernel/cmdline" \
         --os-release="@/usr/lib/os-release" \
         --profile="TITLE=$uki_name: Main" \
         --join-profile="/tmp/profiles/debug.efi" \
@@ -74,7 +75,7 @@ ID=debug" \
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
     # Lint the bootc container
-    rm -f /var/log/dnf5.log
+    rm -rf {/var/log,/run/dnf,/tmp,/var/lib}/{.,}*
     bootc container lint || true
 EOF
 

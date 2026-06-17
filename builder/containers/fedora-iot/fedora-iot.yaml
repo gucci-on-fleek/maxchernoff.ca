@@ -16,7 +16,6 @@ releasever: "!!fedora.version!!"
 repos:
   - fedora
   - updates
-  # - updates-testing
 
 # Keep the security attributes
 selinux: true
@@ -151,6 +150,9 @@ postprocess:
 
     # Fix all permissions
     restorecon -RF / || true
+
+    # Set the default root shell
+    chsh --shell /bin/fish root
 
     # Remove the temporary files
     rm -rf /etc/tmp/
