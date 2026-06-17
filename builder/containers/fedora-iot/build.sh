@@ -46,7 +46,7 @@ composefs_id="$(\
     podman run \
         --network="none" \
         --privileged \
-        --pull=never \
+        --pull=always \
         --read-only \
         --rm \
         --userns=host \

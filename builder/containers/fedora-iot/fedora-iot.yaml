@@ -145,7 +145,6 @@ postprocess:
     semanage user --modify user_u --range s0-s0:c0.c1023
     semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
-    semanage fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
     semodule --install=/etc/tmp/local-required-fallbacks.cil
 
     # Fix all permissions

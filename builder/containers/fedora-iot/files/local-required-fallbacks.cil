@@ -75,3 +75,12 @@
 
 ;; Failed to resolve typeattributeset statement at /etc/selinux/targeted/tmp/modules/100/systemd/cil:556
 (type xserver_etc_t)
+
+;; Required for "bootc upgrade"
+(typeattributeset cil_gen_require loop_control_device_t)
+(typeattributeset cil_gen_require sysadm_t)
+(typeattributeset cil_gen_require fs_t)
+
+(allow sysadm_t fs_t (filesystem (mount)))
+(allow sysadm_t loop_control_device_t (chr_file (ioctl write open read)))
+(allow sysadm_t self (capability2 (mac_admin)))
