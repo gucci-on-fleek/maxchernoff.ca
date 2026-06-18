@@ -69,13 +69,13 @@ podman build \
     --unsetlabel="ostree.commit" \
     --unsetlabel="ostree.final-diffid" \
     --unsetlabel="ostree.linux" \
-    --unsetlabel="rpmostree.inputhash" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     "$script_dir"
 
 # Push the container
 skopeo copy \
     --all \
+    --dest-force-compress-format \
     --dest-compress-format="zstd:chunked" \
     --dest-compress-level=15 \
     --dest-precompute-digests \

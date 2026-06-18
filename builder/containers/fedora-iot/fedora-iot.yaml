@@ -120,11 +120,10 @@ add-files:
   - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
   - ["files/journal.conf", "/etc/systemd/journald.conf"]
   - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
-  - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
 
 postprocess:
   - |
-    set -euo pipefail
+    set -euxo pipefail
 
     # From https://pagure.io/fedora-iot/ostree/blob/f43/f/treecompose-post.sh
     rm -rf /etc/systemd/system/*
