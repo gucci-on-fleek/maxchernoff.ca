@@ -29,7 +29,8 @@ RUN <<EOF
 	mkdir -p /etc/dracut.conf.d/
 	cat <<-'EODRACUT' > /etc/dracut.conf.d/99-composefs.conf
 		export DRACUT_NO_XATTR=1
-		add_dracutmodules+=" bootc "
+		add_dracutmodules+=" bootc "  # To mount the composefs root
+		add_dracutmodules+=" busybox " # For debugging and rescue
 		filesystems+=" btrfs overlay vfat "
 		hostonly="no"
 		compress="zstd"
