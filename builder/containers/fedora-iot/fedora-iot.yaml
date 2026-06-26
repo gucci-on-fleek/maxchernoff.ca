@@ -76,7 +76,7 @@ packages:
   - htop
   - iproute # /usr/bin/ip
   - iputils # ping, etc.
-  - kernel
+  - kernel-modules-core # Don't install the extra kernel modules
   - less
   - man-db # man pages
   - microcode_ctl
@@ -113,9 +113,6 @@ packages:
   - xz # Needed for TeX Live
   - zram-generator
 
-add-files:
-  - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
-
 postprocess:
   - |
     set -euxo pipefail
@@ -128,9 +125,6 @@ postprocess:
 
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
-
-    # Enable systemd-networkd
-    ln -s /usr/lib/systemd/network/89-ethernet.network.example /etc/systemd/network/89-ethernet.network
 
     # Run image-minimizer
     INSTALL_ROOT=/ /etc/tmp/image-minimizer.py /etc/tmp/image-minimize.txt
