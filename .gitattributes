@@ -14,14 +14,14 @@ variables.toml     filter=
 #
 #     # .git/config
 #     [filter "git-filter-params"]
-#         process = ./usrlocal/bin/git-filter-params --check-only
+#         process = ./usr/local/bin/git-filter-params --check-only
 #         required
 #
 # On the deployment server:
 #
 #     # .git/config
 #     [filter "git-filter-params"]
-#         process = ./usrlocal/bin/git-filter-params
+#         process = ./usr/local/bin/git-filter-params
 #         required
 
 ###########################

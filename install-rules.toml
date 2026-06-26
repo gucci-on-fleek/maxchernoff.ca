@@ -159,12 +159,12 @@ owner = "root"
 permissions.other = "r"
 
 
-#################
-### usr/local ###
-#################
+###########
+### usr ###
+###########
 
 [[copy]]
-source = "{repo}/usrlocal/"
+source = "{repo}/usr/local/"
 destination = "/usr/local/"
 paths = ["**/*"]
 owner = "root"

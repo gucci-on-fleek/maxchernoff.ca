@@ -114,18 +114,7 @@ packages:
   - zram-generator
 
 add-files:
-  - ["files/00-default-units.preset", "/etc/systemd/system-preset/00-default-units.preset"]
-  - ["files/console-colors.service", "/usr/lib/systemd/system/console-colors.service"]
-  - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
-  - ["files/image-minimizer.py", "/etc/tmp/image-minimizer.py"]
-  - ["files/journal.conf", "/etc/systemd/journald.conf"]
-  - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
-  - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
-  - ["files/system-generated-completions.fish", "/usr/share/fish/vendor_conf.d/system-generated-completions.fish"]
-  - ["files/dracut-composefs.conf", "/etc/dracut.conf.d/99-composefs.conf"]
-  - ["files/kernel-install-composefs.conf", "/usr/lib/kernel/install.conf.d/37composefs.conf"]
-  - ["files/kernel-cmdline.conf", "/etc/kernel/cmdline"]
 
 postprocess:
   - |

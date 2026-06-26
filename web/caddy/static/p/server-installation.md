@@ -239,7 +239,7 @@ Downloading the repository
         required
     EOF
     % rm ./.git/index
-    % PATH=$HOME/maxchernoff.ca/usrlocal/bin:/usr/bin git reset --hard @
+    % PATH=$HOME/maxchernoff.ca/usr/local/bin:/usr/bin git reset --hard @
     ```
 
 5. Decrypt the credentials' repository:
@@ -254,14 +254,14 @@ Downloading the repository
         required
     EOF
     % rm ./.git/index
-    % PATH=$HOME/maxchernoff.ca/usrlocal/bin:/usr/bin git reset --hard @
+    % PATH=$HOME/maxchernoff.ca/usr/local/bin:/usr/bin git reset --hard @
     ```
 
 6. Install the files:
 
     ```shell-session
     % exit
-    $ sudo cp -r ~repo/maxchernoff.ca/usrlocal/{lib,bin} /usr/local/
+    $ sudo cp -r ~repo/maxchernoff.ca/usr/local/{lib,bin} /usr/local/
     $ sudo web-install ~repo/maxchernoff.ca/install-rules.toml
     ```
 
