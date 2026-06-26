@@ -46,10 +46,10 @@ composefs_id="$(\
     podman run \
         --network="none" \
         --privileged \
-        --pull=always \
+        --pull="always" \
         --read-only \
         --rm \
-        --userns=host \
+        --userns="host" \
         --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
         --volume="$temp_dir/composefs/:/var:rw" \
         "$base_image" \
@@ -60,10 +60,11 @@ composefs_id="$(\
 podman build \
     --build-arg="COMPOSEFS_ID=$composefs_id" \
     --file="$script_dir/final.containerfile" \
-    --inherit-annotations=true \
+    --inherit-annotations="true" \
     --inherit-labels \
     --label="containers.bootc=sealed" \
     --no-cache \
+    --pull="never" \
     --tag="maxchernoff.ca/fedora-iot:latest" \
     --unsetlabel="ostree.bootable" \
     --unsetlabel="ostree.commit" \
@@ -75,13 +76,13 @@ podman build \
 # Push the container
 skopeo copy \
     --all \
-    --dest-force-compress-format \
+    --debug \
+    --dest-compress \
     --dest-compress-format="zstd:chunked" \
-    --dest-compress-level=15 \
-    --dest-precompute-digests \
-    --dest-tls-verify=false \
-    --image-parallel-copies=4 \
-    --preserve-digests \
+    --dest-compress-level="15" \
+    --dest-force-compress-format \
+    --dest-tls-verify="false" \
+    --image-parallel-copies="4" \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-iot:latest" \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \

@@ -122,6 +122,7 @@ add-files:
   - ["files/journal.conf", "/etc/systemd/journald.conf"]
   - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
   - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
+  - ["files/system-generated-completions.fish", "/usr/share/fish/vendor_conf.d/system-generated-completions.fish"]
 
 postprocess:
   - |
@@ -132,6 +133,12 @@ postprocess:
     systemctl preset-all
     rm -rf /etc/systemd/user/*
     systemctl --user --global preset-all
+
+    # Generate fish completions for the whole system
+    fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
+
+    # Remove the broken /ostree symlink
+    rm -f /ostree
 
     # Enable systemd-networkd
     ln -s /usr/lib/systemd/network/89-ethernet.network.example /etc/systemd/network/89-ethernet.network
