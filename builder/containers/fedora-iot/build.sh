@@ -30,7 +30,6 @@ podman run \
     --volume="/etc/containers/:/etc/containers/:ro" \
     --volume="$HOME/.cache/rpm-ostree/:/var/cache/rpm-ostree:rw,z" \
     --volume="$script_dir:/root/source/:ro" \
-    --volume="$temp_dir:/root/output/:rw,z" \
     "maxchernoff.ca/bootc-builder:latest" \
     rpm-ostree compose image \
         --initialize-mode="if-not-exists" \
@@ -40,38 +39,16 @@ podman run \
         "/root/source/fedora-iot.yaml" \
         "$base_image"
 
-# Recompress the container
-skopeo copy \
-    --all \
-    --dest-compress-format="zstd:chunked" \
-    --dest-compress-level="15" \
-    --dest-force-compress-format \
-    --dest-precompute-digests \
-    --dest-tls-verify="false" \
-    --image-parallel-copies="4" \
-    --format="oci" \
-    "docker://$base_image" \
-    "docker://$base_image"
-
-# Get the composefs info
-mkdir -p "$temp_dir/composefs/tmp/"
-composefs_id="$(\
-    podman run \
-        --network="none" \
-        --privileged \
-        --pull="always" \
-        --read-only \
-        --rm \
-        --userns="host" \
-        --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
-        --volume="$temp_dir/composefs/:/var:rw" \
-        "$base_image" \
-        bootc container compute-composefs-digest-from-storage
-)"
-
 # Rebuild the container with composefs fsverity info
+chcon \
+    --reference="$HOME/.local/share/containers/storage/overlay" \
+    "$HOME/.local/share/containers/storage"
+
 podman build \
-    --build-arg="COMPOSEFS_ID=$composefs_id" \
+    --build-arg="IMAGE_ID=$(\
+        podman image inspect --format='{{.Id}}' "$base_image" \
+    )" \
+    --cap-add="SYS_ADMIN" \
     --disable-compression="false" \
     --file="$script_dir/final.containerfile" \
     --inherit-annotations="true" \
@@ -84,7 +61,9 @@ podman build \
     --unsetlabel="ostree.commit" \
     --unsetlabel="ostree.final-diffid" \
     --unsetlabel="ostree.linux" \
+    --volume="$(podman system info -f '{{.Store.GraphRoot}}'):/run/host-container-storage:ro" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
+    --volume="$temp_dir:/var/lib/containers:U,z" \
     "$script_dir"
 
 # Push the container

@@ -118,11 +118,14 @@ add-files:
   - ["files/console-colors.service", "/usr/lib/systemd/system/console-colors.service"]
   - ["files/console-colors.sh", "/usr/bin/console-colors.sh"]
   - ["files/image-minimize.txt", "/etc/tmp/image-minimize.txt"]
-  - ["files/image-minimizer.py", "/usr/bin/image-minimizer"]
+  - ["files/image-minimizer.py", "/etc/tmp/image-minimizer.py"]
   - ["files/journal.conf", "/etc/systemd/journald.conf"]
   - ["files/local-required-fallbacks.cil", "/etc/tmp/local-required-fallbacks.cil"]
   - ["files/prepare-root.conf", "/usr/lib/ostree/prepare-root.conf"]
   - ["files/system-generated-completions.fish", "/usr/share/fish/vendor_conf.d/system-generated-completions.fish"]
+  - ["files/dracut-composefs.conf", "/etc/dracut.conf.d/99-composefs.conf"]
+  - ["files/kernel-install-composefs.conf", "/usr/lib/kernel/install.conf.d/37composefs.conf"]
+  - ["files/kernel-cmdline.conf", "/etc/kernel/cmdline"]
 
 postprocess:
   - |
@@ -137,17 +140,11 @@ postprocess:
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 
-    # Remove the broken /ostree symlink
-    rm -f /ostree
-
     # Enable systemd-networkd
     ln -s /usr/lib/systemd/network/89-ethernet.network.example /etc/systemd/network/89-ethernet.network
 
-    # Set SELinux context for prometheus-podman-exporter
-    semanage fcontext --add '/usr/bin/prometheus-podman-exporter' --type container_runtime_exec_t
-
     # Run image-minimizer
-    INSTALL_ROOT=/ /usr/bin/image-minimizer /etc/tmp/image-minimize.txt
+    INSTALL_ROOT=/ /etc/tmp/image-minimizer.py /etc/tmp/image-minimize.txt
 
     # Rebuild the SELinux modules
     semanage user --modify user_u --range s0-s0:c0.c1023
