@@ -43,7 +43,6 @@ podman run \
 # Recompress the container
 skopeo copy \
     --all \
-    --debug \
     --dest-compress-format="zstd:chunked" \
     --dest-compress-level="15" \
     --dest-force-compress-format \
@@ -73,6 +72,7 @@ composefs_id="$(\
 # Rebuild the container with composefs fsverity info
 podman build \
     --build-arg="COMPOSEFS_ID=$composefs_id" \
+    --disable-compression="false" \
     --file="$script_dir/final.containerfile" \
     --inherit-annotations="true" \
     --inherit-labels \
@@ -92,10 +92,11 @@ skopeo copy \
     --all \
     --dest-compress-format="zstd:chunked" \
     --dest-compress-level="15" \
+    --dest-force-compress-format \
     --dest-precompute-digests \
     --dest-tls-verify="false" \
+    --format="oci" \
     --image-parallel-copies="4" \
-    --preserve-digests \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-iot:latest" \
     "containers-storage:maxchernoff.ca/fedora-iot:latest" \
