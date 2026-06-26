@@ -144,7 +144,15 @@ permissions.other = ""
 ###########
 
 [[copy]]
-source = "{repo}/etc/"
+source = "{repo}/etc/common/"
+destination = "{etc}/"
+paths = ["**/*"]
+owner = "root"
+permissions.other = "r"
+
+[[copy]]
+if = { hostname = "maxchernoff.ca" }
+source = "{repo}/etc/maxchernoff.ca/"
 destination = "{etc}/"
 paths = ["**/*"]
 owner = "root"
