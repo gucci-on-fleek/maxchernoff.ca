@@ -6,8 +6,8 @@
 # Base image
 FROM maxchernoff.ca/tex:latest
 
-RUN \
-    for _ in $(seq 3); do \
+RUN <<EOF
+    for _ in $(seq 3); do
         dnf install \
             --assumeyes \
             --nodocs \
@@ -15,6 +15,7 @@ RUN \
             --setopt=keepcache=true \
             wine-core \
         && break \
-        || sleep $((30 + RANDOM % 90)); \
-    done \
-    && wine64 "$(type -p texlua.exe)" --help
+        || sleep $((30 + RANDOM % 90))
+    done
+    wine64 "$(type -p texlua.exe)" --help
+EOF
