@@ -9,7 +9,7 @@
 \setuphead[section][style=type]
 
 \starttext
-    \startprocesscommalist[
+    \edef\FontList{
         adventor,
         antykwa,
         antykwapoltawskiego,
@@ -22,8 +22,10 @@
         euler,
         gentium,
         heros,
+        \ifcase\contextlmtxmode\or
         iwona,
         kurier,
+        \fi
         libertinus,
         modern,
         pagella,
@@ -33,8 +35,9 @@
         stix,
         stixtwo,
         termes,
-        xits,
-    ]
+        xits
+    }
+    \startprocesscommacommand[\FontList]
         \startTEXpage[offset=1em]
             \section{#1}
             \switchtobodyfont[#1]
@@ -45,9 +48,11 @@
                 {\tt ##1 The quick brown fox jumps over the lazy dog.\par}
             }
 
-            \startformula
-                x_{1, 2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-            \stopformula
+            \doifnotinset{#1}{antykwa,iwona,kurier,euler}{
+                \startformula
+                    x_{1, 2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+                \stopformula
+            }
         \stopTEXpage
-    \stopprocesscommalist
+    \stopprocesscommacommand
 \stoptext
