@@ -8,7 +8,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Run the build script
 RUN \
-    --mount=type=bind,source=./container-build.sh,target=/usr/local/sbin/container-build.sh,ro \
+    --mount=from=realpath,source=container-build.sh,target=/usr/local/sbin/container-build.sh,ro \
     /usr/local/sbin/container-build.sh
 
 # Create the new container

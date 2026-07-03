@@ -13,7 +13,7 @@ StartLimitBurst=2
 Type=oneshot
 RemainAfterExit=no
 
-ExecStart=podman build \
+ExecStart=sh -c 'podman build \
     --disable-compression=false \
     --no-cache \
     --pull=always \
@@ -25,7 +25,8 @@ ExecStart=podman build \
     --volume=%h/.cache/go-build/:/root/.cache/go-build/:rw,z \
     --volume=%h/.cache/go-modules/:/go/:rw,z \
     --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
-    %h/containers/%i/
+    --build-context="realpath=$(realpath %h/containers/%i/)" \
+    %h/containers/%i/'
 
 ExecStart=skopeo copy \
     --all \

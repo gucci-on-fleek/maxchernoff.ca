@@ -16,5 +16,5 @@ RUN \
 
 # Install the packages
 RUN \
-    --mount=type=bind,source=./container-build.sh,target=/usr/local/sbin/container-build.sh,ro \
-    /usr/local/sbin/container-build.sh
+    --mount=type=bind,source=./package-install.sh,target=/usr/local/sbin/package-install.sh,ro \
+    /usr/local/sbin/package-install.sh

@@ -588,7 +588,7 @@ if = { hostname = "maxchernoff.ca" }
 base = "{repo}"
 paths = ["builder/"]
 owner = "repo"
-permissions.builder = "r"
+permissions.other = "r"
 recursive_permissions = true
 
 [[link]]
