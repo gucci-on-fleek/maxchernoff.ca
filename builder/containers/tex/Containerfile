@@ -6,15 +6,15 @@
 # Base image
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!!
 
+# Add the files
+COPY ["tex-cache.sh", "package-install.sh", "/usr/local/sbin/"]
+COPY ["context-cache.tex", "latex-cache.tex", "/root/make-font-cache/"]
+
 # Set the environment variables
 ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/opt/texlive/bin/windows:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 
 # Generate the TeX caches
-RUN \
-    --mount=type=bind,source=./make-font-cache,target=/root/make-font-cache,rw \
-    /root/make-font-cache/tex-cache.sh
+RUN /usr/local/sbin/tex-cache.sh
 
 # Install the packages
-RUN \
-    --mount=type=bind,source=./package-install.sh,target=/usr/local/sbin/package-install.sh,ro \
-    /usr/local/sbin/package-install.sh
+RUN /usr/local/sbin/package-install.sh

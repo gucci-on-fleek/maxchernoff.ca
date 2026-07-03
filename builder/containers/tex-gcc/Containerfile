@@ -6,8 +6,8 @@
 # Base image
 FROM maxchernoff.ca/tex:latest
 
-RUN <<EOF
-    for _ in $(seq 3); do
+RUN \
+    for _ in $(seq 3); do \
         dnf install \
             --assumeyes \
             --nodocs \
@@ -20,6 +20,5 @@ RUN <<EOF
             texinfo \
             zig \
         && break \
-        || sleep $((30 + RANDOM % 90))
+        || sleep $((30 + RANDOM % 90)); \
     done
-EOF

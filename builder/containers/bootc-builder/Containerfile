@@ -7,8 +7,8 @@
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Install dependencies
-RUN <<EOF
-    for _ in $(seq 3); do
+RUN \
+    for _ in $(seq 3); do \
         dnf5 install \
             --assumeyes \
             --nodocs \
@@ -19,6 +19,5 @@ RUN <<EOF
             selinux-policy-targeted \
             skopeo \
         && break \
-        || sleep $((30 + RANDOM % 90))
+        || sleep $((30 + RANDOM % 90)); \
     done
-EOF

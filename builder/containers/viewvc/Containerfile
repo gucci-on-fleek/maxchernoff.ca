@@ -7,12 +7,11 @@
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Add the files
+COPY ["container-build.sh", "/usr/local/sbin/"]
 COPY --chmod=644 ["cgi.py", "/root/"]
 
 # Run the build script
-RUN \
-    --mount=type=bind,source=./container-build.sh,target=/usr/local/sbin/container-build.sh,ro \
-    /usr/local/sbin/container-build.sh
+RUN /usr/local/sbin/container-build.sh
 
 # Pull Caddy
 FROM maxchernoff.ca/caddy:latest AS caddy
