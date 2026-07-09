@@ -13,8 +13,49 @@ COPY ["context-cache.tex", "latex-cache.tex", "/root/make-font-cache/"]
 # Set the environment variables
 ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/opt/texlive/bin/windows:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 
-# Generate the TeX caches
-RUN /usr/local/sbin/tex-cache.sh
+COPY ["make-font-cache", "/root/make-font-cache"]
+
+@run[mounts=tex](
+    /root/make-font-cache/tex-cache.sh
+)
 
 # Install the packages
-RUN /usr/local/sbin/package-install.sh
+@dnf_install(
+    # Base dependencies
+    git
+    libxcrypt-compat  # For `biber`
+
+    # For TeX Live
+    perl-File-Find
+    perl-interpreter
+    perl-LWP-Protocol-https
+    tar
+    xz
+
+    # gucci-on-fleek/lua-widow-control
+    curl
+    libxslt
+    moreutils
+    pandoc
+    poppler-utils
+
+    # gucci-on-fleek/extractbb
+    diffutils
+    groff-perl
+    parallel
+    perl-Compress-Zlib
+
+    # gucci-on-fleek/context-packaging
+    add-determinism
+    dos2unix # For EOL conversion
+    llvm # For `llvm-lipo`
+    prename
+    zip
+
+    # gucci-on-fleek/context-wiki-mirror
+    uv
+    vips
+
+    # anss-ce/ANSS-CE
+    make
+)

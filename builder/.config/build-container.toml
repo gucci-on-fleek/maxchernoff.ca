@@ -1,0 +1,38 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+tag_domain = "maxchernoff.ca"
+registry = "localhost:!!registry.port!!"
+sigstore_path = "/var/home/repo/credentials/builder/sigstore-builder.yaml"
+
+[[mounts]]
+type = "cache"
+name = "dnf"
+host_path = "~/.cache/podman-dnf/"
+container_path = "/var/cache/libdnf5/"
+
+[[mounts]]
+type = "read-only"
+category = "tex"
+host_path = "/var/home/tex/context"
+container_path = "/opt/context"
+
+[[mounts]]
+type = "read-only"
+category = "tex"
+host_path = "/var/home/tex/texlive"
+container_path = "/opt/texlive"
+
+[[mounts]]
+type = "cache"
+category = "go"
+host_path = "~/.cache/go-build/"
+container_path = "/root/.cache/go-build/"
+
+[[mounts]]
+type = "cache"
+category = "go"
+host_path = "~/.cache/go-modules"
+container_path = "/go/"

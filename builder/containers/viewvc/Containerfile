@@ -10,8 +10,76 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 COPY ["container-build.sh", "/usr/local/sbin/"]
 COPY --chmod=644 ["cgi.py", "/root/"]
 
-# Run the build script
-RUN /usr/local/sbin/container-build.sh
+# Install the builder packages
+@dnf_install(
+    gzip
+    tar
+)
+
+@dnf_install[install_root=/mnt/build/](
+    coreutils-single
+    curl
+    diffutils
+    generic-release
+    glibc-minimal-langpack
+    mailcap
+    python3-subversion
+    python3-waitress
+)
+
+@run(
+    # Install ViewVC
+    mkdir -p ~/viewvc
+    cd ~/viewvc
+
+    curl -L https://github.com/viewvc/viewvc/archive/refs/heads/master.tar.gz | tar xz
+
+    python_version="$(basename "$(realpath /mnt/build/usr/bin/python3)")"
+    mkdir -p /mnt/build/usr/local/lib/$python_version/site-packages/
+    cp -r ./viewvc-*/lib/* /mnt/build/usr/local/lib/$python_version/site-packages/
+
+    mkdir -p /mnt/build/usr/local/share/viewvc/
+    cp -r ./viewvc-*/templates/default/* /mnt/build/usr/local/share/viewvc/
+
+    mkdir -p /mnt/build/etc/viewvc/
+    for name in viewvc mimetypes; do
+        cp ./viewvc-*/conf/$name.conf.dist /mnt/build/etc/viewvc/$name.conf
+    done
+
+    # Patch ViewVC
+    cp /root/cgi.py /mnt/build/usr/local/lib/$python_version/site-packages/cgi.py
+    sed -i '/self.closed = 0/d' /mnt/build/usr/local/lib/$python_version/site-packages/sapi.py
+
+    # Pablo prefers the old colour scheme
+    cat <<'EOF' >> /mnt/build/usr/local/share/viewvc/docroot/styles.css
+    .vc_diff_remove { background: rgb(100%,60%,60%); }
+    .vc_diff_add { background: rgb(60%,100%,60%); }
+    .vc_diff_changes1 { background: rgb(100%,100%,70%); color: rgb(50%,50%,50%); text-decoration: line-through; }
+    .vc_diff_changes2 { background: rgb(100%,100%,0%); }
+    EOF
+
+    # Create the ViewVC user
+    useradd --root=/mnt/build/ viewvc
+
+    # Links
+    mkdir -p \
+        /mnt/build/etc/caddy \
+        /mnt/build/etc/viewvc \
+        /mnt/build/home/viewvc/.config/ \
+        /mnt/build/home/viewvc/.local/share/
+
+    ln -sf /srv/Caddyfile /mnt/build/etc/caddy/Caddyfile
+    ln -sfT /srv/data/caddy-config /mnt/build/home/viewvc/.config/caddy
+    ln -sfT /srv/data/caddy-data /mnt/build/home/viewvc/.local/share/caddy
+    ln -sf /srv/mimetypes.conf /mnt/build/etc/viewvc/mimetypes.conf
+    ln -sf /srv/viewvc.conf /mnt/build/etc/viewvc/viewvc.conf
+
+    # GeoIP folder
+    mkdir -p /mnt/build/usr/local/share/GeoIP/
+    chmod -R a+rX /mnt/build/usr/local/share/GeoIP/
+    curl -L 'https://cdn.jsdelivr.net/npm/@ip-location-db/asn-mmdb/asn.mmdb' -o /mnt/build/usr/local/share/GeoIP/asn.mmdb
+    chmod a=r,u+w /mnt/build/usr/local/share/GeoIP/asn.mmdb
+)
 
 # Pull Caddy
 FROM maxchernoff.ca/caddy:latest AS caddy

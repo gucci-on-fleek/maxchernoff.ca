@@ -13,32 +13,9 @@ StartLimitBurst=2
 Type=oneshot
 RemainAfterExit=no
 
-ExecStart=podman build \
-    --disable-compression=false \
-    --no-cache \
-    --pull=always \
-    --security-opt=label=role:user_r \
-    --security-opt=label=user:user_u \
-    --tag=maxchernoff.ca/%i:latest \
-    --volume=/var/home/tex/context:/opt/context:ro \
-    --volume=/var/home/tex/texlive:/opt/texlive:ro \
-    --volume=%h/.cache/go-build/:/root/.cache/go-build/:rw,z \
-    --volume=%h/.cache/go-modules/:/go/:rw,z \
-    --volume=%h/.cache/podman-dnf/:/var/cache/libdnf5/:rw,z \
-    %h/containers/%i/
-
-ExecStart=skopeo copy \
-    --all \
-    --dest-compress-format=zstd:chunked \
-    --dest-compress-level=15 \
-    --dest-force-compress-format \
-    --dest-precompute-digests \
-    --dest-tls-verify=false \
-    --format="oci" \
-    --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-    --sign-identity=maxchernoff.ca/%i:latest \
-    containers-storage:maxchernoff.ca/%i:latest \
-    docker://localhost:!!registry.port!!/%i:latest
+ExecStart=/usr/local/bin/build-container \
+    --directory=%h/containers/%i \
+    --tag=%i:latest
 
 Restart=on-failure
 RestartSec=5min

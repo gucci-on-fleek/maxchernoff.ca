@@ -6,15 +6,5 @@
 # Base image
 FROM maxchernoff.ca/tex:latest
 
-RUN \
-    for _ in $(seq 3); do \
-        dnf install \
-            --assumeyes \
-            --nodocs \
-            --setopt=install_weak_deps=False \
-            --setopt=keepcache=true \
-            wine-core \
-        && break \
-        || sleep $((30 + RANDOM % 90)); \
-    done \
-    && wine64 "$(type -p texlua.exe)" --help
+@dnf_install(wine-core)
+RUN wine64 "$(type -p texlua.exe)" --help

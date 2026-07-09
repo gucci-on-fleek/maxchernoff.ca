@@ -92,6 +92,11 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
+            "quay.io/coreos": [
+                {
+                    "type": "insecureAcceptAnything"
+                }
+            ],
             "quay.io/prometheuscommunity": [
                 {
                     "type": "insecureAcceptAnything"
@@ -103,7 +108,7 @@
                 }
             ]
         },
-        "oci": {
+        "oci-archive": {
             "": [
                 {
                     "type": "insecureAcceptAnything"

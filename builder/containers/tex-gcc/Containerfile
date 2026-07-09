@@ -6,19 +6,11 @@
 # Base image
 FROM maxchernoff.ca/tex:latest
 
-RUN \
-    for _ in $(seq 3); do \
-        dnf install \
-            --assumeyes \
-            --nodocs \
-            --setopt=install_weak_deps=False \
-            --setopt=keepcache=true \
-            byacc \
-            flex \
-            gcc \
-            make \
-            texinfo \
-            zig \
-        && break \
-        || sleep $((30 + RANDOM % 90)); \
-    done
+@dnf_install(
+    byacc
+    flex
+    gcc
+    make
+    texinfo
+    zig
+)

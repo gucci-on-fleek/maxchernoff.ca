@@ -6,11 +6,24 @@
 # Base image
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
-# Add the files
-COPY ["container-build.sh", "/usr/local/sbin/"]
+# Install the base packages
+@dnf_install[install_root=/mnt/build/](
+    coreutils-single
+    generic-release
+    glibc-minimal-langpack
+    python3-flask
+    python3-waitress
+)
 
-# Run the build script
-RUN /usr/local/sbin/container-build.sh
+@rpm_erase_all_except[install_root=/mnt/build/](
+    *lib*
+    *python3*
+    basesystem
+    filesystem
+    setup
+    generic-release
+    ca-certificates
+)
 
 # Create the new container
 FROM scratch

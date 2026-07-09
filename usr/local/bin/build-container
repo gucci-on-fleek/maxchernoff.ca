@@ -1,0 +1,948 @@
+#!/usr/bin/env python3
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+"""Builds a Podman container image."""
+
+###############
+### Imports ###
+###############
+
+from abc import ABC, abstractmethod
+from annotationlib import get_annotations
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+from collections.abc import Generator, Iterable, Iterator
+from dataclasses import dataclass, replace as dataclass_replace
+from functools import cache, cached_property
+from hashlib import shake_128
+from os import mkfifo
+from pathlib import Path
+from pprint import pp as pprint
+from re import Pattern, compile as regex
+from shlex import split as shlex_split
+from subprocess import PIPE, CalledProcessError, Popen, run as subprocess_run
+from sys import exit
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+from textwrap import dedent
+from tomllib import load as toml_load
+from types import MappingProxyType
+from typing import (
+    Any,
+    ClassVar,
+    Final,
+    Literal,
+    Protocol,
+    Self,
+    cast,
+    final,
+    overload,
+    override,
+    runtime_checkable,
+)
+
+
+#################
+### Constants ###
+#################
+
+_SCRIPT_PERMISSIONS = 0o555
+"""The chmod permissions to use for temporary shell scripts."""
+
+_HASH_DIGEST_LENGTH = 8
+"""The number of characters to use for the hash of temporary shell scripts."""
+
+
+########################
+### Type Definitions ###
+########################
+
+if not hasattr(__builtins__, "frozendict"):
+    frozendict = MappingProxyType
+
+
+class _ProtocolCheck(type(Protocol)):
+    @override
+    def __instancecheck__(cls, instance: object) -> bool:
+        if (hook := getattr(cls, "__instancehook__", None)) is not None:
+            return hook(instance)
+        else:
+            return super().__instancecheck__(instance)
+
+
+@runtime_checkable
+class MacroFunction(Protocol, metaclass=_ProtocolCheck):
+    """A protocol for macro functions."""
+
+    __name__: str
+
+    def __call__(self, body: str, **options: str) -> str:
+        """Called when a macro is expanded.
+
+        Arguments:
+            body: The body (parameter) of the macro.
+            **options: Any extra options for the macro.
+
+        Returns:
+            What the macro should be replaced with.
+        """
+        ...
+
+    @classmethod
+    def __instancehook__(cls, instance: Any) -> bool:  # noqa: PLW3201
+        try:
+            return all((
+                callable(instance),
+                isinstance(instance.__name__, str),
+                not instance.__name__.startswith("_"),
+                get_annotations(instance)["body"] is str,
+                get_annotations(instance)["return"] is str,
+            ))
+        except Exception:
+            return False
+
+
+@runtime_checkable
+class _BuildContextFunction(Protocol):
+    """A protocol for functions that add a build context."""
+
+    def __call__(
+        self, path: Path, name: str | None = None
+    ) -> tuple[str, Path]: ...
+
+
+class CmdlineOptionBase(ABC):
+    """A command-line option."""
+
+    cmdline_key: ClassVar[str] | str
+    """The name of the option (example: `--file`)."""
+
+    @property
+    @abstractmethod
+    def cmdline_value(self) -> str | None:
+        """The value of the option (example: `Containerfile`)."""
+        ...
+
+    @final
+    @override
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, CmdlineOptionBase):
+            return NotImplemented
+        return (self.cmdline_key, self.cmdline_value) == (
+            other.cmdline_key,
+            other.cmdline_value,
+        )
+
+    @final
+    @override
+    def __hash__(self) -> int:
+        return hash((self.cmdline_key, self.cmdline_value))
+
+    @final
+    @override
+    def __str__(self) -> str:
+        out = f"--{self.cmdline_key}"
+        if self.cmdline_value is not None:
+            out += f"={self.cmdline_value}"
+        return out
+
+    @overload
+    @staticmethod
+    def convert(*options: CmdlineOptionBase) -> Iterator[str]: ...
+
+    @overload
+    @staticmethod
+    def convert(
+        option: Iterable[CmdlineOptionBase | str], /
+    ) -> Iterator[str]: ...
+
+    @final
+    @staticmethod
+    def convert(
+        *args: CmdlineOptionBase | Iterable[CmdlineOptionBase | str],
+    ) -> Iterator[str]:
+        """Converts a list of command-line options to strings."""
+
+        options: Iterable[CmdlineOptionBase | str]
+        if len(args) == 1 and isinstance(args[0], Iterable):
+            options = args[0]
+        else:
+            options = cast(Iterable[CmdlineOptionBase | str], args)
+
+        return map(str, options)
+
+
+###################
+### Dataclasses ###
+###################
+
+
+@dataclass(kw_only=False, slots=True, frozen=True, eq=True)
+class CmdlineOption(CmdlineOptionBase):
+    """A command-line option."""
+
+    cmdline_key: str
+    """The name of the option (example: `--file`)."""
+
+    cmdline_value: str | None = None  # pyright: ignore[reportIncompatibleMethodOverride]
+    """The value of the option (example: `Containerfile`)."""
+
+
+@final
+@dataclass(kw_only=True, slots=True, frozen=True)
+class _RunMountOption(CmdlineOptionBase):
+    """The `--mount` option for a `RUN` command."""
+
+    from_: tuple[str, Path] | None
+    """The build context to mount from (optional)."""
+
+    type: Literal["bind"] = "bind"
+    """The type of the mount (default: `bind`)."""
+
+    source: Path
+    """The source path on the host."""
+
+    target: Path
+    """The target path in the container."""
+
+    read_only: bool
+    """Whether the mount is read-only (default: `True`)."""
+
+    selinux: Literal["private", "shared"] | None
+    """How and whether to relabel the mount for SELinux."""
+
+    cmdline_key = "mount"
+
+    @property
+    def cmdline_value(self) -> str:  # pyright: ignore[reportImplicitOverride]
+        options = [
+            f"type={self.type}",
+            f"target={self.target.absolute()}",
+            "ro" if self.read_only else "rw",
+        ]
+
+        if self.selinux is not None:
+            options.append(f"relabel={self.selinux}")
+
+        if self.from_ is not None:
+            options += [
+                f"from={self.from_[0]}",
+                f"source={self.source.relative_to(self.from_[1])}",
+            ]
+        else:
+            options.append(f"source={self.source.absolute()}")
+
+        return ",".join(options)
+
+
+@dataclass(kw_only=True, slots=True, frozen=True)
+class _MountConfig:
+    """The configuration for a mount."""
+
+    name: str | None = None
+    """The name of the mount (optional)."""
+
+    category: str | None = None
+    """The category of the mount (optional)."""
+
+    type: Literal["cache", "read-only"]
+    """The type of the mount.
+
+    `cache` mounts are read-write and automatically relabel their contents for
+    SELinux, while `read-only` mounts are read-only and do not relabel their
+    contents.
+    """
+
+    host_path: Path
+    """The path on the host."""
+
+    container_path: Path
+    """The path in the container."""
+
+    def __post_init__(self) -> None:
+        """Make sure that the paths are `Path` objects."""
+
+        object.__setattr__(
+            self, "host_path", Path(self.host_path).expanduser().absolute()
+        )
+        object.__setattr__(
+            self,
+            "container_path",
+            Path(self.container_path).expanduser().absolute(),
+        )
+
+    def to_option(self, func: _BuildContextFunction) -> _RunMountOption:
+        """Converts the mount configuration to a `--mount` option."""
+
+        return _RunMountOption(
+            from_=func(self.host_path),
+            source=self.host_path,
+            target=self.container_path,
+            read_only=self.type == "read-only",
+            selinux="shared" if self.type == "cache" else None,
+        )
+
+    replace: ClassVar[Final] = dataclass_replace
+
+
+@dataclass(kw_only=True, frozen=True)
+class BuildConfig:
+    """The build configuration."""
+
+    mounts: tuple[_MountConfig, ...]
+    """The mounts to use for the build."""
+
+    tag_domain: str
+    """The domain to use for the image tag."""
+
+    registry: str
+    """The domain of the registry to push the image to."""
+
+    sigstore_path: str
+    """The path to the Sigstore configuration file."""
+
+    # Required for `cached_property` to work with frozen dataclasses.
+    __slots__: ClassVar[Final] = ("__dict__", "mounts")
+
+    @classmethod
+    def from_path(cls, path: Path) -> Self:
+        """Loads the build configuration from a TOML file.
+
+        Arguments:
+            path: The path to the TOML file.
+
+        Returns:
+            The build configuration.
+        """
+
+        # Read the TOML file.
+        with path.open("rb") as file:
+            data = toml_load(file)
+
+        # Convert the data.
+        for i, mount in enumerate(mounts := data.get("mounts", [])):
+            mounts[i] = _MountConfig(**mount)
+        data["mounts"] = tuple(mounts)
+
+        # Return the parsed build configuration.
+        try:
+            return cls(**data)
+        except TypeError as e:
+            raise ValueError(f"Invalid build configuration: {e}") from e
+
+    @cached_property
+    def mounts_by_name(self) -> frozendict[str, _MountConfig]:
+        """A dictionary of mounts by name."""
+
+        mounts_by_name: dict[str, _MountConfig] = {}
+        for mount in self.mounts:
+            if mount.name is not None:
+                if mount.name in mounts_by_name:
+                    raise ValueError(f"Duplicate mount name: {mount.name}")
+                mounts_by_name[mount.name] = mount
+        return frozendict(mounts_by_name)
+
+    @cached_property
+    def mounts_by_category(self) -> frozendict[str, tuple[_MountConfig, ...]]:
+        """A dictionary of mounts by category."""
+
+        mounts_by_category: dict[str, list[_MountConfig]] = {}
+        for mount in self.mounts:
+            if mount.category is not None:
+                mounts_by_category.setdefault(mount.category, []).append(mount)
+        return frozendict({
+            category: tuple(mounts)
+            for category, mounts in mounts_by_category.items()
+        })
+
+
+#########################
+### Class Definitions ###
+#########################
+
+
+class _Parser:
+    """Parse and expand the macros."""
+
+    _parentheses: Final[Pattern[str]] = regex(r"([\(\)])")
+    _brackets: Final[Pattern[str]] = regex(r"([\[\]])")
+    _command: Final[Pattern[str]] = regex(r"@(\w+)")
+
+    @classmethod
+    def _balance(
+        cls, s: str, pattern: Pattern[str], level: int = 0
+    ) -> Generator[str]:
+        """Yields the text inside balanced parentheses in a string."""
+
+        if len(match := pattern.split(s, maxsplit=1)) == 3:
+            yield from match[:2]
+            level += 1 if (sep := match[1]) in "([" else -1
+            if level != 0 or sep not in ")]":
+                yield from cls._balance(match[2], pattern, level)
+
+    def expand(self, text: str) -> str:
+        """Expands the macros in a string.
+
+        Arguments:
+            text: The string to expand.
+
+        Returns:
+            The expanded string.
+        """
+
+        out: list[str] = []
+        while (match := self._command.search(text)) is not None:
+            # Get the macro's contents
+            start, end, cmd = match.start(), match.end(), match[1]
+
+            options = (
+                "".join(self._balance(text[end:], self._brackets))
+                if text[end] == "["
+                else ""
+            )
+            body = "".join(
+                self._balance(text[end + len(options) :], self._parentheses)
+            )
+
+            # Update the state for the next iteration
+            out.append(text[:start])
+            text = text[end + len(body) + len(options) :]
+
+            # Parse the macro
+            body = body[1:-1]  # Remove the parentheses
+            options_dict = {
+                k: v
+                for k, v in (
+                    option.split("=", maxsplit=1)
+                    for option in options[1:-1].split(",")
+                    if option
+                )
+            }
+
+            # Run the macro
+            if isinstance(func := getattr(self, cmd, None), MacroFunction):
+                out.append(func(body, **options_dict))
+            else:
+                raise ValueError(f"Unknown macro: {cmd}")
+
+        out.append(text)
+        return "".join(out)
+
+
+class Containerfile(_Parser):
+    """Generates an executable Containerfile from a template with macros."""
+
+    # Initialization functions
+    def __init__(self, *, source: Path, config: BuildConfig) -> None:
+        """Initializes the Containerfile.
+
+        Arguments:
+            source: The path to the source (unprocessed) Containerfile.
+            config: The build configuration.
+        """
+
+        self._source_path: Path = source
+        self._source_contents: str | None = None
+        self.__temp_dir_obj: TemporaryDirectory[str] | None = None
+        self._temp_dir: Path | None = None
+        self._podman_args: set[CmdlineOptionBase] = set()
+        self._config: BuildConfig = config
+        self._build_contexts: dict[Path, str] = {}
+
+    def __enter__(self) -> Self:
+        """Initialize the instance."""
+
+        # Create a temporary directory.
+        if self.__temp_dir_obj is not None:
+            raise RuntimeError("Already initialized.")
+
+        self.__temp_dir_obj = TemporaryDirectory(
+            delete=True,
+            ignore_cleanup_errors=True,
+            prefix="container-build-",
+        )
+        self._temp_dir = Path(self.__temp_dir_obj.name)
+        self._build_context(self._temp_dir, name="temp_dir")
+
+        # Read the source Containerfile.
+        self._source_contents = self._source_path.read_text()
+
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        """Cleans up the temporary directory."""
+
+        if self.__temp_dir_obj is not None:
+            self.__temp_dir_obj.cleanup()
+            self.__temp_dir_obj = None
+            self._temp_dir = None
+
+    # Parsing functions
+    @cache
+    def _parse(self) -> Path:
+        """Parse the source Containerfile.
+
+        Returns:
+            The path to the parsed Containerfile, with all macros expanded.
+        """
+
+        if self._temp_dir is None or self._source_contents is None:
+            raise RuntimeError(
+                '"Containerfile" must be used as a context manager.'
+            )
+
+        out_path = self._temp_file(extension="containerfile")
+        with out_path.open("w") as out_file:
+            out_file.write(self.expand(self._source_contents))
+
+        return out_path
+
+    @property
+    def podman_args(self) -> frozenset[CmdlineOptionBase]:
+        """The arguments to pass to Podman to use this Containerfile."""
+
+        return frozenset(
+            self._podman_args
+            | {(CmdlineOption("file", self._parse().absolute().as_posix()))}
+        )
+
+    # Helper functions
+    def _temp_file(self, extension: str, filename: str | None = None) -> Path:
+        """Returns a temporary file that is automatically cleaned up.
+
+        Arguments:
+            extension: The file extension to use for the temporary file.
+            filename: The name of the temporary file (optional).
+
+        Returns:
+            The path to the temporary file.
+        """
+
+        if self._temp_dir is None:
+            raise RuntimeError(
+                '"Containerfile" must be used as a context manager.'
+            )
+
+        if filename:
+            return (self._temp_dir / filename).with_suffix(f".{extension}")
+        else:
+            with NamedTemporaryFile(
+                delete=False,
+                dir=self._temp_dir,
+                prefix="tmp-",
+                suffix=f".{extension}",
+            ) as temp_file:
+                return Path(temp_file.name)
+
+    def _build_context(
+        self, path: Path, name: str | None = None
+    ) -> tuple[str, Path]:
+        """Adds the given path to the build context.
+
+        Arguments:
+            path: The path to add to the build context.
+            name: The name to use for the build context (optional).
+
+        Returns:
+            A tuple of the name and path of the build context.
+        """
+
+        # Parse the arguments.
+        path = path.absolute()
+
+        if name is None:
+            name = str(path).replace("=", "-")
+
+        # Return the previous value if the path is already in the build context.
+        if path in self._build_contexts:
+            return (self._build_contexts[path], path)
+
+        # Make sure that the name is unique.
+        if name in self._build_contexts.values():
+            raise ValueError("Build context name must be unique.")
+
+        # Now add the path to the build context.
+        self._podman_args.add(
+            CmdlineOption("build-context", f"{name}={path.absolute()}")
+        )
+        self._build_contexts[path] = name
+
+        return (name, path)
+
+    def _mount_run(self, body: str) -> tuple[_RunMountOption, Path]:
+        """Mounts a shell script to be used in a `RUN` command."""
+
+        if self._temp_dir is None:
+            raise RuntimeError(
+                '"Containerfile" must be used as a context manager.'
+            )
+
+        # Use a deterministic filename so that the Containerfile doesn't change
+        # every time we build the container.
+        host_script_path = self._temp_file(
+            filename=shake_128(body.encode()).hexdigest(
+                _HASH_DIGEST_LENGTH // 2
+            ),
+            extension="sh",
+        )
+
+        # Create a temporary shell script with the body of the macro
+        with host_script_path.open("w") as script_file:
+            script_file.write(
+                dedent(f"""
+                    #!/bin/sh
+                    set -eu
+                    export SOURCE_DATE_EPOCH=0
+                    {body}
+                """)
+            )
+        host_script_path.chmod(_SCRIPT_PERMISSIONS)
+
+        # Run the shell script in the container.
+        container_script_path = Path(f"/run/scripts/{host_script_path.name}")
+        mount_arg = _RunMountOption(
+            from_=self._build_context(host_script_path.parent),
+            source=host_script_path,
+            target=container_script_path,
+            read_only=True,
+            selinux="private",
+        )
+        return mount_arg, container_script_path
+
+    # Macro functions
+    def run(self, body: str, mounts: str | None = None) -> str:
+        """Run a shell command.
+
+        We use this macro instead of using `RUN` directly because this lets us
+        write multi-line shell commands without having to escape the newlines.
+
+        Arguments:
+            body: The shell command to run.
+
+            mounts: The categories of mounts to use for the duration of this
+                command (optional). Mounts are separated by space characters.
+
+        Returns:
+            The `RUN` command to use in the Containerfile.
+        """
+
+        cmd: list[str | CmdlineOptionBase] = ["RUN"]
+
+        # Add the mounts to the command.
+        if mounts is not None:
+            for category in mounts.split():
+                try:
+                    for mount in self._config.mounts_by_category[category]:
+                        cmd.append(mount.to_option(self._build_context))
+                except KeyError:
+                    raise ValueError(f"Unknown mount category: {category}")
+
+        # Run the command in the container.
+        script_arg, script_path = self._mount_run(body)
+        cmd += [script_arg, script_path.as_posix()]
+
+        return " ".join(CmdlineOptionBase.convert(cmd))
+
+    def dnf_install(
+        self,
+        body: str,
+        install_root: str | None = None,
+        documentation: bool = False,
+    ) -> str:
+        """Install packages using DNF.
+
+        Arguments:
+            body: The list of packages to install. Packages are separated by
+                whitespace, and comments can be added using `#`.
+
+            install_root: The root directory to install the packages to
+                (optional).
+
+            documentation: Whether to install documentation files (default:
+                `False`).
+
+        Returns:
+            The `RUN` command to use in the Containerfile.
+        """
+
+        cmd: list[str | CmdlineOptionBase] = ["RUN"]
+
+        # Link the DNF cache directory to the container
+        try:
+            dnf_cache = self._config.mounts_by_name["dnf"]
+        except KeyError:
+            raise ValueError(
+                "The build configuration must contain a mount named 'dnf'."
+            )
+        dnf_cache.host_path.mkdir(parents=True, exist_ok=True)
+
+        cmd.append(dnf_cache.to_option(self._build_context))
+
+        if install_root is not None:
+            cmd.append(
+                dnf_cache.replace(
+                    container_path=Path(install_root) / "var/cache/libdnf5/"
+                ).to_option(self._build_context)
+            )
+
+        # Get the list of packages
+        packages = shlex_split(body, comments=True)
+
+        # Generate the install script
+        script_arg, script_path = self._mount_run(
+            " \\\n".join([
+                # We need to use the loop in here because if we're building
+                # multiple containers at the same time, DNF may fail to lock the
+                # cache database.
+                "for _ in $(seq 3); do",
+                "    dnf install",
+                "    --assumeyes",
+                "    --nodocs" if not documentation else "",
+                f"   --installroot={install_root}" if install_root else "",
+                '    --setopt="install_weak_deps=false"',
+                '    --setopt="keepcache=true"',
+                "    --use-host-config",
+                *packages,
+                "    && break",
+                "    || sleep $((30 + RANDOM % 90));",
+                "done;",
+                f"rm -rf {install_root or ''}/var/{{log,lib}}/dnf*;",
+            ])
+        )
+        cmd += [script_arg, script_path.as_posix()]
+
+        # Generate the final command
+        result: list[str] = []
+
+        if install_root is not None:
+            result.append(f"RUN mkdir -p {install_root}/var/cache/")
+
+        result.append(" ".join(CmdlineOptionBase.convert(cmd)))
+        return "\n\n".join(result)
+
+    def rpm_erase_all_except(
+        self,
+        body: str,
+        install_root: str | None = None,
+    ) -> str:
+        """Erase all RPM packages (incl. dependencies) except those listed.
+
+        Arguments:
+            body: The list of packages to keep. Packages are separated by
+                whitespace, and comments can be added using `#`.
+
+            install_root: The root directory to erase the packages from
+                (optional).
+
+        Returns:
+            The `RUN` command to use in the Containerfile.
+        """
+
+        packages = shlex_split(body, comments=True)
+        mount_arg, container_script_path = self._mount_run(
+            " ".join([
+                "rpm",
+                f"--root={install_root or '/'}",
+                "--nodeps",
+                "--erase",
+                "$(",
+                "    rpm",
+                f"   --root={install_root or '/'}",
+                "    --query",
+                "    --all",
+                "    |",
+                "    grep",
+                "    --extended-regexp",
+                "    --invert-match",
+                f"   '^({'|'.join(packages)})'",
+                ")",
+            ])
+        )
+        return " ".join([
+            "RUN",
+            str(mount_arg),
+            container_script_path.as_posix(),
+        ])
+
+
+############################
+### Function Definitions ###
+############################
+
+
+def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
+    """Builds a Podman container image.
+
+    Arguments:
+        source_dir: The directory containing the Containerfile.
+        config: The build configuration.
+        tag: The tag to apply to the built image.
+    """
+
+    # Validate the arguments.
+    in_path = source_dir / "Containerfile"
+    if not in_path.is_file():
+        raise FileNotFoundError(f'"Containerfile" not found in {source_dir}')
+
+    # Build the container image.
+    with Containerfile(source=in_path, config=config) as containerfile:
+        args = containerfile.podman_args | {
+            CmdlineOption("no-cache"),
+            CmdlineOption("pull", "always"),
+            CmdlineOption("security-opt", "label=role:user_r"),
+            CmdlineOption("security-opt", "label=user:user_u"),
+            CmdlineOption("tag", f"{config.tag_domain}/{tag}"),
+            CmdlineOption("squash"),
+            CmdlineOption("timestamp", "0"),
+            CmdlineOption("rewrite-timestamp"),
+            CmdlineOption("format", "oci"),
+        }
+        subprocess_run(
+            [
+                "podman",
+                "build",
+                *CmdlineOptionBase.convert(args),
+                source_dir.absolute(),
+            ],
+            check=True,
+        )
+
+    # Create the FIFO for the container image.
+    temp_dir = TemporaryDirectory(dir="/var/tmp", prefix="container-build-")
+    fifo = Path(temp_dir.name) / "container.tar"
+    mkfifo(fifo, 0o600)
+
+    # Rechunk the container image.
+    with (
+        Popen(
+            [
+                "podman",
+                "run",
+                *CmdlineOptionBase.convert(
+                    CmdlineOption("rm"),
+                    CmdlineOption("pull", "newer"),
+                    CmdlineOption("userns", "host"),
+                    CmdlineOption(
+                        "mount",
+                        ",".join([
+                            "type=image",
+                            f"source=containers-storage:{config.tag_domain}/{tag}",
+                            "target=/chunkah",
+                        ]),
+                    ),
+                    CmdlineOption(
+                        "volume",
+                        f"{fifo.absolute()}:/run/container.tar:rw,Z,U",
+                    ),
+                ),
+                "docker://quay.io/coreos/chunkah:latest",
+                "build",
+                *CmdlineOptionBase.convert(
+                    CmdlineOption("tag", f"{config.tag_domain}/{tag}"),
+                    CmdlineOption("source-date-epoch", "0"),
+                    CmdlineOption("prune", "/sysroot"),
+                    CmdlineOption("prune", "/var/log/"),
+                    CmdlineOption("prune", "/var/cache/"),
+                    CmdlineOption("max-layers", "200"),
+                    CmdlineOption(
+                        "config-str",
+                        subprocess_run(
+                            [
+                                "podman",
+                                "inspect",
+                                f"containers-storage:{config.tag_domain}/{tag}",
+                            ],
+                            check=True,
+                            text=True,
+                            stdout=PIPE,
+                        ).stdout.strip(),
+                    ),
+                    CmdlineOption("output", "oci-archive:/run/container.tar"),
+                ),
+            ],
+        ) as chunkah,
+        Popen(
+            [
+                "skopeo",
+                "copy",
+                *CmdlineOptionBase.convert(
+                    CmdlineOption("all"),
+                    CmdlineOption("dest-compress-format", "zstd:chunked"),
+                    CmdlineOption("dest-compress-level", "15"),
+                    CmdlineOption("dest-force-compress-format"),
+                    CmdlineOption("dest-precompute-digests"),
+                    CmdlineOption("dest-tls-verify", "false"),
+                    CmdlineOption("format", "oci"),
+                    CmdlineOption("image-parallel-copies", "8"),
+                    CmdlineOption("sign-by-sigstore", config.sigstore_path),
+                    CmdlineOption(
+                        "sign-identity", f"{config.tag_domain}/{tag}"
+                    ),
+                ),
+                f"oci-archive:{fifo.absolute()}",
+                f"docker://{config.registry}/{tag}",
+            ],
+        ) as skopeo,
+    ):
+        if chunkah.wait() != 0:
+            raise CalledProcessError(chunkah.returncode, chunkah.args)
+
+        if skopeo.wait() != 0:
+            raise CalledProcessError(skopeo.returncode, skopeo.args)
+
+
+###################
+### Entry Point ###
+###################
+
+
+def main() -> int:
+    """The main entry point for the script."""
+
+    # Define the command-line arguments.
+    parser = ArgumentParser(
+        description=__doc__,
+        formatter_class=ArgumentDefaultsHelpFormatter,
+    )
+
+    parser.add_argument(
+        "--directory",
+        type=Path,
+        required=True,
+        help="The directory containing the Containerfile.",
+    )
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("~/.config/build-container.toml").expanduser().absolute(),
+        help="The path to the configuration file.",
+    )
+    parser.add_argument(
+        "--tag",
+        type=str,
+        required=True,
+        help="The tag to apply to the built image.",
+    )
+
+    # Parse the command-line arguments.
+    args = parser.parse_args()
+    directory = cast(Path, args.directory)
+    config_path = cast(Path, args.config)
+    tag = cast(str, args.tag)
+
+    if not directory.is_dir():
+        parser.error(f'"{directory}" is not a directory.')
+
+    # Build the container image using Podman.
+    build(
+        source_dir=directory,
+        config=BuildConfig.from_path(config_path),
+        tag=tag,
+    )
+
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())

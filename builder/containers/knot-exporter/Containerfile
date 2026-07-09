@@ -6,11 +6,42 @@
 # Base image
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
-# Add the files
-COPY ["container-build.sh", "/usr/local/sbin/"]
+# Install pip in the build environment
+@dnf_install(
+    python3-pip
+)
 
-# Run the build script
-RUN /usr/local/sbin/container-build.sh
+# Install the base packages
+@dnf_install[install_root=/mnt/build/](
+    coreutils-single
+    generic-release
+    glibc-minimal-langpack
+    knot-libs
+    python3-prometheus_client
+    python3-psutil
+)
+
+@run(
+    pip3 install \
+        --root=/mnt/build/ \
+        --root-user-action=ignore \
+        --break-system-packages \
+        --no-cache-dir \
+        'knot-exporter==3.4.*'  # TODO: questionable hack to work around old Fedora packages
+)
+
+@rpm_erase_all_except(
+    *lib*
+    *python3*
+    basesystem
+    filesystem
+    setup
+    generic-release
+    gnutls
+    p11-kit
+    gmp
+    nettle
+)
 
 # Create the new container
 FROM scratch
