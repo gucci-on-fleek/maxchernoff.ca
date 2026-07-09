@@ -7,4 +7,6 @@
 FROM maxchernoff.ca/tex:latest
 
 @dnf_install(wine-core)
-RUN wine64 "$(type -p texlua.exe)" --help
+@run[mounts=tex](
+    wine64 "$(type -p texlua.exe)" --help
+)

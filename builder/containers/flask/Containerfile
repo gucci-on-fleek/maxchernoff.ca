@@ -16,8 +16,8 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 )
 
 @rpm_erase_all_except[install_root=/mnt/build/](
-    *lib*
-    *python3*
+    .*lib.*
+    .*python3.*
     basesystem
     filesystem
     setup
