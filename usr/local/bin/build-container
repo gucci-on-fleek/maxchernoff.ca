@@ -15,6 +15,7 @@ from annotationlib import get_annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Generator, Iterable, Iterator
 from dataclasses import dataclass, replace as dataclass_replace
+from enum import StrEnum, unique as enum_unique
 from functools import cache, cached_property
 from hashlib import shake_128
 from os import mkfifo
@@ -52,6 +53,9 @@ _SCRIPT_PERMISSIONS = 0o555
 
 _HASH_DIGEST_LENGTH = 8
 """The number of characters to use for the hash of temporary shell scripts."""
+
+_LAYER_SKIP_PATHS = {"/dev", "/proc", "/sys", "/tmp", "/var/tmp", "/run"}
+"""The paths to skip when setting the layer."""
 
 
 ########################
@@ -171,6 +175,15 @@ class CmdlineOptionBase(ABC):
             options = cast(Iterable[CmdlineOptionBase | str], args)
 
         return map(str, options)
+
+
+@enum_unique
+class _UpdateFrequency(StrEnum):
+    daily = "daily"
+    weekly = "weekly"
+    biweekly = "biweekly"
+    monthly = "monthly"
+    quarterly = "quarterly"
 
 
 ###################
@@ -414,9 +427,9 @@ class _Parser:
             options_dict = {
                 k: v
                 for k, v in (
-                    option.split("=", maxsplit=1)
+                    option.strip().split("=", maxsplit=1)
                     for option in options[1:-1].split(",")
-                    if option
+                    if option.strip()
                 )
             }
 
@@ -759,11 +772,139 @@ class Containerfile(_Parser):
                 ")",
             ])
         )
-        return " ".join([
-            "RUN",
-            str(mount_arg),
-            container_script_path.as_posix(),
-        ])
+        return " ".join(
+            CmdlineOptionBase.convert([
+                "RUN",
+                mount_arg,
+                container_script_path.as_posix(),
+            ])
+        )
+
+    def set_layer(
+        self,
+        body: str,
+        layer_name: str,
+        update_frequency: str = _UpdateFrequency.weekly,  # pyright: ignore[reportRedeclaration]
+        filter_rpm: str = "true",  # pyright: ignore[reportRedeclaration]
+    ) -> str:
+        """Sets the image layer for the specified globs.
+
+        Arguments:
+            body: The list of globs to set the layer for. Globs are separated by
+                whitespace, and comments can be added using `#`.
+
+            layer_name: The name of the layer to set.
+
+            update_frequency: The frequency at which the contents of the layer
+                typically change (default: `weekly`).
+
+            filter_rpm: Whether to exclude files managed by RPM from the layer
+                (default: `True`).
+
+        Returns:
+            The `RUN` command to use in the Containerfile.
+        """
+
+        # Parse the arguments.
+        update_frequency: _UpdateFrequency = _UpdateFrequency(update_frequency)
+
+        filter_rpm: bool
+        if filter_rpm.casefold() == "true":
+            filter_rpm = True
+        elif filter_rpm.casefold() == "false":
+            filter_rpm = False
+        else:
+            raise ValueError(f"Invalid value for filter_rpm: {filter_rpm}.")
+
+        # Initialize the command variables.
+        inner_cmd: list[str] = []
+        cmd: list[str | CmdlineOptionBase] = ["RUN"]
+
+        # Copy `busybox` to the temporary directory so that we can mount it into
+        # the container.
+        if self._temp_dir is None:
+            raise RuntimeError(
+                '"Containerfile" must be used as a context manager.'
+            )
+
+        system_busybox = Path("/usr/bin/busybox")
+        container_busybox = Path("/run/scripts/busybox")
+        user_busybox = self._temp_dir / "busybox"
+
+        if not user_busybox.is_file():
+            system_busybox.copy_into(self._temp_dir)
+            user_busybox.chmod(0o555)
+
+        # Add `busybox` to the container to ensure that all the needed commands
+        # are available.
+        cmd.append(
+            _RunMountOption(
+                from_=self._build_context(user_busybox.parent),
+                source=user_busybox,
+                target=container_busybox,
+                read_only=True,
+                selinux="private",
+            )
+        )
+
+        # `chunkah` handles splitting the RPM files itself, so we shouldn't mark
+        # them as belonging to one of our own layers.
+        if filter_rpm:
+            inner_cmd.append(
+                "rpm --query --list --all | sort > /tmp/rpm-files.txt"
+            )
+        else:
+            inner_cmd.append("touch /tmp/rpm-files.txt")
+
+        # Find all files matched by the provided globs.
+        inner_cmd.append(
+            " ".join([
+                f"{container_busybox} find",
+                "/",
+                r"-not \( \(",
+                " -o ".join(f"-path '{path}'" for path in _LAYER_SKIP_PATHS),
+                r"\) -prune \)",
+                "-not -type l",
+                r"\(",
+                " -o ".join(
+                    f"-path '{glob}'"
+                    for glob in shlex_split(body, comments=True)
+                ),
+                r"\)",
+                "-print",
+                "|",
+                f"{container_busybox} sort",
+                "> /tmp/layer-files.txt",
+            ])
+        )
+
+        # Set the xattrs for the files to assign them to the specified layer.
+        inner_cmd.append(
+            " ".join([
+                f"{container_busybox} comm",
+                "-13",
+                "/tmp/rpm-files.txt",
+                "/tmp/layer-files.txt",
+                "|",
+                f"{container_busybox} xargs",
+                "-r",
+                "-P 4",
+                f"{container_busybox} setfattr",
+                "-h",
+                "-n user.component",
+                f"-v {layer_name}",
+                "-n user.update-interval",
+                f"-v {update_frequency}",
+            ])
+        )
+
+        # Run the command in the container.
+        script_mount_arg, container_script_path = self._mount_run(
+            "\n".join(inner_cmd)
+        )
+        cmd += [script_mount_arg, container_script_path.as_posix()]
+
+        return " ".join(CmdlineOptionBase.convert(cmd))
 
 
 ############################

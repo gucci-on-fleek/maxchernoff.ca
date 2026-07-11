@@ -21,3 +21,30 @@ FROM docker.io/library/caddy:2.11-builder AS builder
 FROM docker.io/library/caddy:2.11
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
+@set_layer[
+    layer_name=alpine,
+    update_frequency=weekly,
+    filter_rpm=false,
+](
+    /*
+)
+
+@set_layer[
+    layer_name=caddy-base,
+    update_frequency=monthly,
+    filter_rpm=false,
+](
+    /config/caddy/*
+    /data/caddy/*
+    /etc/caddy/*
+    /usr/share/caddy/*
+)
+
+@set_layer[
+    layer_name=caddy-binary,
+    update_frequency=daily,
+    filter_rpm=false,
+](
+    /usr/bin/caddy
+)
