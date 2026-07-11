@@ -7,7 +7,6 @@
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Add the files
-COPY ["container-build.sh", "/usr/local/sbin/"]
 COPY --chmod=644 ["cgi.py", "/root/"]
 
 # Install the builder packages
