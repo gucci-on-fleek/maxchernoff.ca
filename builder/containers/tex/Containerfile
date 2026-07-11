@@ -11,14 +11,14 @@ COPY [ \
     "context-cache.tex", \
     "latex-cache.tex", \
     "tex-cache.sh", \
-    "/root/make-font-cache/" \
+    "/opt/make-font-cache/" \
 ]
 
 # Set the environment variables
 ENV PATH="/opt/texlive/bin/x86_64-linux:/opt/context/texmf-linux-64/bin:/opt/texlive/bin/windows:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 
 @run[mounts=tex](
-    /root/make-font-cache/tex-cache.sh
+    /opt/make-font-cache/tex-cache.sh
 )
 
 # Install the packages
