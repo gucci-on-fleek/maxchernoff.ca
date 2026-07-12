@@ -985,7 +985,6 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                     CmdlineOption("prune", "/sysroot"),
                     CmdlineOption("prune", "/var/log/"),
                     CmdlineOption("prune", "/var/cache/"),
-                    CmdlineOption("prune", "/root/"),
                     CmdlineOption("max-layers", "200"),
                     CmdlineOption(
                         "config-str",

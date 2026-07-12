@@ -95,5 +95,41 @@ COPY --from=build /mnt/build/ /
 COPY --chmod=755 ["start.py", "/usr/local/bin/"]
 COPY --chmod=755 ["anubis", "/usr/local/bin/"]
 
+@set_layer[
+    layer_name=viewvc,
+    update_frequency=quarterly,
+](
+    /usr/local*
+    /etc/viewvc
+)
+
+@set_layer[
+    layer_name=anubis,
+    update_frequency=monthly,
+](
+    /usr/local/bin/anubis
+)
+
+@set_layer[
+    layer_name=caddy,
+    update_frequency=monthly,
+](
+    /usr/local/bin/caddy
+)
+
+@set_layer[
+    layer_name=geoip,
+    update_frequency=daily,
+](
+    /usr/local/share/GeoIP*
+)
+
+@set_layer[
+    layer_name=start
+    update_frequency=weekly,
+](
+    /usr/local/bin/start.py
+)
+
 USER 1000:1000
 CMD ["/usr/local/bin/start.py"]
