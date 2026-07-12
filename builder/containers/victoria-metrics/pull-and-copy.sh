@@ -2,7 +2,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2025 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 set -euxo pipefail
 
 # Victoria Logs doesn't provide `latest` or semver `v1` tags, so to keep up with
@@ -25,21 +25,8 @@ latest_version="v$(\
     head --lines=1 \
 )"
 
-# Copy the latest version to my own registry
-for _ in $(seq 3); do # This is flaky, so try up to 3 times
-    skopeo copy \
-        --all \
-        --dest-compress-format=zstd:chunked \
-        --dest-compress-level=15 \
-        --dest-force-compress-format \
-        --dest-precompute-digests \
-        --dest-force-compress-format \
-        --dest-tls-verify=false \
-        --format="oci" \
-        --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \
-        --sign-identity="maxchernoff.ca/$base_name:latest" \
-        "docker://$image_name:$latest_version" \
-        "docker://localhost:!!registry.port!!/$base_name:latest" \
-    && break \
-    || sleep 5
-done
+# Download the latest version to our local storage.
+skopeo copy \
+    --all \
+    "docker://$image_name:$latest_version"
+    "containers-storage:localhost/$base_name:latest"
