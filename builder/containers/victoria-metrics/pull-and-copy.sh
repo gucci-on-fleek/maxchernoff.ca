@@ -27,6 +27,6 @@ latest_version="v$(\
 
 # Download the latest version to our local storage.
 skopeo copy \
-    --all \
-    "docker://$image_name:$latest_version"
-    "containers-storage:localhost/$base_name:latest"
+    "docker://$image_name:$latest_version" \
+    "containers-storage:localhost/$base_name:latest" \
+    # (end of arguments)
