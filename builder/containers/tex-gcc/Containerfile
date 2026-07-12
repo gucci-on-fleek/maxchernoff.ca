@@ -14,3 +14,25 @@ FROM maxchernoff.ca/tex:latest
     texinfo
     zig
 )
+
+@set_layer[
+    layer_name=tex-files,
+    update_frequency=monthly,
+](
+    /opt/make-font-cache*
+)
+
+@set_layer[
+    layer_name=texlive-cache,
+    update_frequency=daily,
+](
+    /root/.texlive*
+)
+
+@set_layer[
+    layer_name=context-cache,
+    update_frequency=daily,
+](
+    /root/luametatex-cache*
+    /root/luatex-cache*
+)
