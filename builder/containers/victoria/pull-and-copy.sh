@@ -33,6 +33,7 @@ for _ in $(seq 3); do # This is flaky, so try up to 3 times
         --dest-compress-level=15 \
         --dest-force-compress-format \
         --dest-precompute-digests \
+        --dest-force-compress-format \
         --dest-tls-verify=false \
         --format="oci" \
         --sign-by-sigstore=/var/home/repo/credentials/builder/sigstore-builder.yaml \

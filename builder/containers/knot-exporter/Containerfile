@@ -38,4 +38,4 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 FROM scratch
 COPY --from=build /mnt/build/ /
 USER 1000:1000
-ENTRYPOINT ["/usr/local/bin/knot-exporter"]
+ENTRYPOINT ["/usr/bin/knot-exporter"]

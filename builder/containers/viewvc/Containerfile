@@ -98,6 +98,7 @@ COPY --chmod=755 ["anubis", "/usr/local/bin/"]
 @set_layer[
     layer_name=viewvc,
     update_frequency=quarterly,
+    filter_rpm=false,
 ](
     /usr/local*
     /etc/viewvc
@@ -106,6 +107,7 @@ COPY --chmod=755 ["anubis", "/usr/local/bin/"]
 @set_layer[
     layer_name=anubis,
     update_frequency=monthly,
+    filter_rpm=false,
 ](
     /usr/local/bin/anubis
 )
@@ -113,6 +115,7 @@ COPY --chmod=755 ["anubis", "/usr/local/bin/"]
 @set_layer[
     layer_name=caddy,
     update_frequency=monthly,
+    filter_rpm=false,
 ](
     /usr/local/bin/caddy
 )
@@ -120,13 +123,15 @@ COPY --chmod=755 ["anubis", "/usr/local/bin/"]
 @set_layer[
     layer_name=geoip,
     update_frequency=daily,
+    filter_rpm=false,
 ](
     /usr/local/share/GeoIP*
 )
 
 @set_layer[
-    layer_name=start
+    layer_name=start,
     update_frequency=weekly,
+    filter_rpm=false,
 ](
     /usr/local/bin/start.py
 )
