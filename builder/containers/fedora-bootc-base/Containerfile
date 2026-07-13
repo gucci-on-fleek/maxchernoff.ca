@@ -19,6 +19,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     glibc-minimal-langpack
     iproute  # /usr/bin/ip
     kernel-modules-core  # Do not install the extra kernel modules
+    nss-altfiles
     openssh-clients
     openssh-server
     selinux-policy-targeted
@@ -49,7 +50,9 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     htop
     iputils  # /usr/bin/ping, etc.
     less
+    man  # man pages
     man-db  # man pages
+    man-pages  # man pages
     policycoreutils-python-utils  # /usr/bin/semanage
     python3-cryptography
     python3-pystemd
@@ -118,6 +121,11 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
         echo EXPERIMENT_URL="https://github.com/gucci-on-fleek/maxchernoff.ca"
     } | tee --append /etc/os-release /usr/lib/os-release
 
+    # Remove files that shouldn't be in "/var/"
+    mv /var/lib/alternatives /usr/lib/alternatives
+    ln --symbolic --force /usr/lib/alternatives /var/lib/alternatives
+    rm --force /var/lib/authselect/checksum
+
     # Move the SELinux policy
     echo "store-root=/etc/selinux" >> /etc/selinux/semanage.conf
     cp --archive --no-target-directory \
@@ -133,18 +141,35 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semodule --install=/etc/selinux/local-policies/local-required-fallbacks.cil
 
+    # Remove unneeded directories
+    rmdir /afs /media
+    rm -rf /root/
+    mkdir /root/
+
     # Set the default root shell
     chsh --shell /usr/bin/fish root
+
+    # Remove the backup files
+    rm --force /etc/*- /etc/*.OLD /etc/.pwd.lock
 )
 
 @set_layer[
     layer_name=fish-completions,
     update_frequency=daily,
 ](
-    /*
+    /usr/share/fish/generated_completions*
+)
+
+@set_layer[
+    layer_name=custom-configuration,
+    update_frequency=weekly,
+](
+    /usr/*
+    /etc/*
 )
 
 FROM scratch
+@allow_all_capabilities()
 COPY --from=build /mnt/build/ /
 STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]

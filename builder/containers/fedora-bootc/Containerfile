@@ -28,7 +28,6 @@ RUN <<EOF
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
     # Lint the bootc container
-    rm -rf {/var/log,/run/dnf,/tmp,/var/lib}/{.,}* || true
     bootc container lint || true
 EOF
 

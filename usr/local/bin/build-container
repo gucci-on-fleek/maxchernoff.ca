@@ -15,7 +15,7 @@ from annotationlib import get_annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Generator, Iterable, Iterator
 from dataclasses import dataclass, replace as dataclass_replace
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum, unique as enum_unique
 from functools import cache, cached_property
 from hashlib import shake_128
@@ -592,7 +592,9 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         self._source_contents: str | Initialized = None
         self.__temp_dir_obj: TemporaryDirectory[str] | Initialized = None
         self._temp_dir: Path | Initialized = None
-        self._podman_args: set[CmdlineOptionBase] = set()
+        self._podman_args: set[CmdlineOptionBase] = {
+            LabelOption("io.containers.capabilities", "CAP_NET_BIND_SERVICE"),
+        }
         self._config: BuildConfig = config
         self._build_contexts: dict[Path, str] = {}
         self.commit: _GitCommit | Initialized = None
@@ -876,7 +878,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
                 "for _ in $(seq 3); do",
                 "    dnf install",
                 "    --assumeyes",
-                "    --nodocs" if not documentation else "",
+                "    --no-docs" if not documentation else "",
                 f"   --installroot={install_root}" if install_root else "",
                 '    --setopt="install_weak_deps=false"',
                 '    --setopt="keepcache=true"',
@@ -961,6 +963,17 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
             f" ({self.commit.count:>4d}+{self.commit.hash[:8]})",
             '"',
         ])
+
+    def allow_all_capabilities(self: Containerfile[Never], body: str) -> str:
+        """Allows all capabilities in the container."""
+
+        if body.strip():
+            raise ValueError("The body of the macro must be empty.")
+
+        self._podman_args.discard(
+            LabelOption("io.containers.capabilities", "CAP_NET_BIND_SERVICE")
+        )
+        return ""
 
     def set_layer(
         self: Containerfile[Never],
@@ -1113,9 +1126,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
             CmdlineOption("format", "oci"),
             LabelOption(
                 "created",
-                datetime.now(tz=datetime.now().astimezone().tzinfo).isoformat(
-                    timespec="minutes"
-                ),
+                datetime.now(tz=UTC).isoformat(timespec="seconds"),
             ),
             LabelOption(
                 "authors",
@@ -1123,7 +1134,10 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
             ),
             LabelOption(
                 "ca.maxchernoff.container.commit.date",
-                containerfile.commit.date.isoformat(),
+                containerfile.commit.date
+                .astimezone()
+                .replace(tzinfo=None)
+                .isoformat(sep=" ", timespec="minutes"),
             ),
             LabelOption(
                 "ca.maxchernoff.container.commit.hash",
@@ -1137,8 +1151,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
             LabelOption("source", containerfile.commit.repo_url),
             LabelOption("url", containerfile.commit.repo_url),
             LabelOption("title", f"{tag.split(':', maxsplit=1)[0]}"),
-            LabelOption("io.containers.capabilities", "CAP_NET_BIND_SERVICE"),
-            LabelOption("io.buildah.version", "will-be-replaced"),
+            LabelOption("io.buildah.version", ""),
             CmdlineOption("no-cache"),
             CmdlineOption("pull", "always"),
             CmdlineOption("rewrite-timestamp"),
@@ -1192,9 +1205,21 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                 *CmdlineOptionBase.convert(
                     CmdlineOption("tag", f"{config.tag_domain}/{tag}"),
                     CmdlineOption("source-date-epoch", "0"),
-                    CmdlineOption("prune", "/sysroot"),
-                    CmdlineOption("prune", "/var/log/"),
-                    CmdlineOption("prune", "/var/cache/"),
+                    *(
+                        CmdlineOption("prune", path)
+                        for path in (
+                            "/boot/",
+                            "/dev/",
+                            "/proc/",
+                            "/run/",
+                            "/sys/",
+                            "/sysroot/",
+                            "/tmp/",
+                            "/var/cache/",
+                            "/var/log/",
+                            "/var/tmp/",
+                        )
+                    ),
                     CmdlineOption("max-layers", "200"),
                     CmdlineOption(
                         "config-str",
