@@ -1,0 +1,149 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
+
+# Install the packages
+@dnf_install[
+    install_root=/mnt/build/,
+    documentation=true,
+](
+    # Base system
+    authselect  # PAM configuration
+    btrfs-progs  # /usr/bin/btrfs
+    fedora-release-iot
+    firewalld
+    glibc-langpack-en
+    glibc-minimal-langpack
+    iproute  # /usr/bin/ip
+    kernel-modules-core  # Do not install the extra kernel modules
+    openssh-clients
+    openssh-server
+    selinux-policy-targeted
+    sudo
+    systemd
+    systemd-networkd
+    systemd-resolved
+
+    # Booting and updating
+    bootc
+    dnf5
+    dosfstools  # fsck for the EFI partition
+    dracut-config-generic  # Creates a non-host-specific initramfs
+    efibootmgr
+    fwupd-efi
+    microcode_ctl
+    systemd-boot-unsigned
+    strip  # To strip the initramfs and kernel for smaller size
+    systemd-ukify  # Creates a unified kernel image (UKI) for booting
+
+    # Command-line Utilities
+    acl  # /usr/bin/{getfacl/setfacl}
+    busybox
+    curl
+    fish
+    git-core  # "-core" excludes the Perl-based extra utilities
+    gnupg2  # GPG
+    htop
+    iputils  # /usr/bin/ping, etc.
+    less
+    man-db  # man pages
+    policycoreutils-python-utils  # /usr/bin/semanage
+    python3-cryptography
+    python3-pystemd
+    ripgrep
+    rsync
+    setools-console
+    strace
+    tmux
+    traceroute
+    vim-enhanced  # "-enhanced" is required for syntax highlighting
+
+    # TeX
+    perl-File-Find  # Required by tlmgr
+    perl-interpreter  # Required by tlmgr
+    perl-LWP-Protocol-https  # Recommended for tlmgr
+    tar  # Required by tlmgr
+    xz  # Required by tlmgr
+    fontconfig  # Required by XeTeX
+
+    # System Services
+    audit-rules  # /usr/bin/auditctl
+    bees  # Btrfs deduplication
+    borgbackup
+    btrfsmaintenance
+    chrony  # NTP client
+    node-exporter  # Prometheus metrics for the entire system
+    qemu-guest-agent  # Recommended for a VM guest
+    snapper  # Btrfs snapshot management
+    systemd-journal-remote  # For journald remote logging
+    zram-generator
+
+    # Containers
+    podman
+    prometheus-podman-exporter  # Prometheus metrics for Podman containers
+    systemd-container  # /usr/bin/systemd-nspawn
+    udica  # Extra SELinux rules for containers
+    skopeo  # For copying container images
+)
+
+# Copy over our custom configuration files
+@run[mounts=system-config](
+    rsync --recursive --archive /run/system-config/ /mnt/build/
+)
+
+# Run some custom configuration commands
+@with_commit_info()
+@run[root=/mnt/build/](
+    # Only use the services that we've explicitly enabled
+    rm -rf /etc/systemd/{system,user}/*
+    systemctl --system preset-all
+    systemctl --user --global preset-all
+
+    # Generate fish completions for the whole system
+    fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
+
+    # Adjust the "os-release" files
+    sed -Ei '/^(IMAGE_ID|IMAGE_VERSION|ARCHITECTURE|VARIANT|VARIANT_ID|RELEASE_TYPE|EXPERIMENT|EXPERIMENT_URL)=/d' \
+        /etc/os-release /usr/lib/os-release
+    {
+        echo IMAGE_ID="maxchernoff.ca-fedora-bootc"
+        echo IMAGE_VERSION="${COMMIT_INFO}"
+        echo ARCHITECTURE="x86-64"
+        echo VARIANT="Personal bootc container"
+        echo VARIANT_ID="personal-bootc"
+        echo RELEASE_TYPE="experiment"
+        echo EXPERIMENT="Personal bootc container"
+        echo EXPERIMENT_URL="https://github.com/gucci-on-fleek/maxchernoff.ca"
+    } | tee --append /etc/os-release /usr/lib/os-release
+
+    # Move the SELinux policy
+    echo "store-root=/etc/selinux" >> /etc/selinux/semanage.conf
+    mv --no-target-directory /var/lib/selinux/targeted /etc/selinux/targeted
+
+    # Run image-minimizer
+    INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /etc/image-minimize.txt
+
+    # Rebuild the SELinux modules
+    semanage user --modify user_u --range s0-s0:c0.c1023
+    semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
+    semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
+    semodule --install=/etc/selinux/local-policies/local-required-fallbacks.cil
+
+    # Set the default root shell
+    chsh --shell /usr/bin/fish root
+)
+
+@set_layer[
+    layer_name=fish-completions,
+    update_frequency=daily,
+](
+    /*
+)
+
+FROM scratch
+COPY --from=build /mnt/build/ /
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]

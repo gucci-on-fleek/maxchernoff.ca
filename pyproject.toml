@@ -117,6 +117,7 @@ reportUnknownArgumentType = "none"
 reportUnknownVariableType = "information"
 reportUnknownLambdaType = "none"
 reportMissingTypeStubs = "information"
+reportCallInDefaultInitializer = "information"
 
 
 ##############################

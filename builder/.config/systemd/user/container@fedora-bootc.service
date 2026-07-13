@@ -1,14 +1,16 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
 After=network-ready.service
+After=container@fedora-bootc-base.service
+Wants=container@fedora-bootc-base.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=no
-ExecStart=%h/containers/fedora-iot/build.sh
+ExecStart=%h/containers/fedora-bootc/build.sh
 
 [Install]
 WantedBy=update-all.target

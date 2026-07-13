@@ -1,0 +1,35 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+disable auditd.service
+disable sshd-keygen@dsa.service
+disable sshd-keygen@ecdsa.service
+disable sshd-keygen@rsa.service
+disable systemd-boot-update.service
+disable systemd-timesyncd.service
+
+enable audit-rules.service
+enable authselect-apply-changes.service
+enable beesd.service
+enable bootc-fetch-apply-updates.timer
+enable bootloader-update.service
+enable btrfs-*.timer
+enable btrfsmaintenance-refresh.path
+enable chrony-wait.service
+enable chronyd.service
+enable console-colors.service
+enable dbus-broker.service
+enable dbus.socket
+enable firewalld.service
+enable fstrim.timer
+enable fwupd-refresh.timer
+enable greenboot-*.service
+enable network-ready.service
+enable prometheus-node-exporter.service
+enable qemu-guest-agent.service
+enable redboot-*.service
+enable rpm-ostree-countme.timer
+enable snapper-*.timer
+enable sshd.*
+enable systemd-oomd.*

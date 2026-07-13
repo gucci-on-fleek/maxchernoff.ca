@@ -119,6 +119,20 @@ owner = "repo"
 permissions.other = ""
 recursive_permissions = true
 
+[[permissions]]
+base = "{repo}/"
+paths = [".git"]
+owner = "repo"
+permissions.other = "r"
+recursive_permissions = false
+
+[[permissions]]
+base = "{repo}/.git/"
+paths = ["packed-refs", "HEAD", "refs/", "config"]
+owner = "repo"
+permissions.other = "r"
+recursive_permissions = true
+
 [[folder]]
 base = "{repo-user}"
 paths = ["triggers"]
@@ -617,11 +631,3 @@ base = "{builder}/.cache/"
 paths = ["go-modules"]
 permissions.builder = "rw"
 permissions.other = "r"
-
-[[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{builder}/containers/"
-paths = ["fedora-iot"]
-permissions.builder = "rw"
-permissions.other = "r"
-recursive_permissions = true

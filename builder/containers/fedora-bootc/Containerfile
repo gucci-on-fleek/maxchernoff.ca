@@ -2,23 +2,12 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
-FROM localhost:!!registry.port!!/fedora-iot-base:latest as base
+FROM maxchernoff.ca/fedora-bootc-base:latest as base
 
 FROM base as kernel
 ARG IMAGE_ID
 RUN <<EOF
     set -euxo pipefail
-
-    # Install required packages
-    dnf5 install \
-        --assumeyes \
-        --nodocs \
-        --setopt=install_weak_deps=false \
-        --setopt=keepcache=true \
-        --use-host-config \
-        strip \
-        systemd-boot-unsigned \
-        systemd-ukify
 
     # Get the composefs ID
     {

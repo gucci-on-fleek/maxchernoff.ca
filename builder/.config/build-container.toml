@@ -6,6 +6,7 @@
 tag_domain = "maxchernoff.ca"
 registry = "localhost:!!registry.port!!"
 sigstore_path = "/var/home/repo/credentials/builder/sigstore-builder.yaml"
+git_directory = "/var/home/repo/maxchernoff.ca/.git"
 
 [[mounts]]
 type = "cache"
@@ -36,3 +37,15 @@ type = "cache"
 category = "go"
 host_path = "~/.cache/go-modules"
 container_path = "/go/"
+
+[[mounts]]
+type = "read-only"
+category = "system-config"
+host_path = "/var/home/repo/maxchernoff.ca/etc/common"
+container_path = "/run/system-config/etc"
+
+[[mounts]]
+type = "read-only"
+category = "system-config"
+host_path = "/var/home/repo/maxchernoff.ca/usr"
+container_path = "/run/system-config/usr"
