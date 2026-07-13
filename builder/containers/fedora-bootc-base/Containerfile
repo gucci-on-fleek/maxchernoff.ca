@@ -54,7 +54,6 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     python3-cryptography
     python3-pystemd
     ripgrep
-    rsync
     setools-console
     strace
     tmux
@@ -91,7 +90,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Copy over our custom configuration files
 @run[mounts=system-config](
-    rsync --recursive --archive /run/system-config/ /mnt/build/
+    cp --archive --no-target-directory /run/system-config/ /mnt/build/
 )
 
 # Run some custom configuration commands
@@ -121,10 +120,12 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
     # Move the SELinux policy
     echo "store-root=/etc/selinux" >> /etc/selinux/semanage.conf
-    mv --no-target-directory /var/lib/selinux/targeted /etc/selinux/targeted
+    cp --archive --no-target-directory \
+        /var/lib/selinux/targeted /etc/selinux/targeted
+    rm -rf /var/lib/selinux/targeted
 
     # Run image-minimizer
-    INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /etc/image-minimize.txt
+    INSTALL_ROOT=/ /usr/bin/image-minimizer.py /etc/image-minimize.conf
 
     # Rebuild the SELinux modules
     semanage user --modify user_u --range s0-s0:c0.c1023

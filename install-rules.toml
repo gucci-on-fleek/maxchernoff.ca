@@ -59,6 +59,8 @@ fcontext --add --seuser user_u --type container_file_t    '{web}woodpecker/data(
 fcontext --add --seuser user_u --type container_file_t    '{woodpecker}woodpecker/config(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{etc}containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}builder/containers(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}etc/common(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '{repo}usr(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/caddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/container-registry(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '{repo}web/dmarc-metrics(/.*)?'
@@ -128,7 +130,7 @@ recursive_permissions = false
 
 [[permissions]]
 base = "{repo}/.git/"
-paths = ["packed-refs", "HEAD", "refs/", "config"]
+paths = ["packed-refs", "HEAD", "refs/", "config", "objects/"]
 owner = "repo"
 permissions.other = "r"
 recursive_permissions = true
