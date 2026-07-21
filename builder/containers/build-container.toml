@@ -7,6 +7,22 @@ tag_domain = "maxchernoff.ca"
 registry = "localhost:!!registry.port!!"
 sigstore_path = "/var/home/repo/credentials/builder/sigstore-builder.yaml"
 git_directory = "/var/home/repo/maxchernoff.ca/.git"
+filesystem_to_git_prefix = "/var/home/"
+distributor = "Max Chernoff"
+
+containers_policy = """{
+    "transports": {
+        "docker": {
+            "maxchernoff.ca": [
+                {
+                    "type": "sigstoreSigned",
+                    "rekorPublicKeyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFMkcyWSsydGFiZFRWNUJjR2lCSXgwYTlmQUZ3cgprQmJtTFNHdGtzNEwzcVg2eVlZMHp1ZkJuaEM4VXIvaXk1NUdoV1AvOUEvYlkyTGhDMzBNOStSWXR3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo=",
+                    "keyData": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFdU51aWh1SUpOSFhvUUVacTF5SHZPZkZZU1gwYgpYMjlMVUYremQzdWVHS3RKV1Z4WlFJWEJCZVN4YnBxV1djdDQzR1RoUE44QmFHbWpDT0tDTjNrWUp3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCgo="
+                }
+            ]
+        }
+    }
+}"""
 
 [[mounts]]
 type = "cache"

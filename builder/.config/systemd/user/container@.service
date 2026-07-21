@@ -15,7 +15,8 @@ RemainAfterExit=no
 
 ExecStart=/usr/local/bin/build-container \
     --directory=%h/containers/%i \
-    --tag=%i:latest
+    --tag=%i:latest \
+    --config=%h/containers/build-container.toml
 
 Restart=on-failure
 RestartSec=5min

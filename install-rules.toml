@@ -613,7 +613,6 @@ source = "{repo}/builder/"
 destination = "{builder}/"
 paths = [
     ".config/containers/",
-    ".config/build-container.toml",
     ".config/prometheus-podman-exporter",
     ".config/systemd/user/",
     ".config/user-tmpfiles.d",

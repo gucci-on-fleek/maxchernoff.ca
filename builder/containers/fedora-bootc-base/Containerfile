@@ -96,9 +96,13 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     cp --archive --no-target-directory /run/system-config/ /mnt/build/
 )
 
+# Switch to the new root
+FROM scratch
+COPY --from=build /mnt/build/ /
+
 # Run some custom configuration commands
 @with_commit_info()
-@run[root=/mnt/build/](
+@run(
     # Only use the services that we've explicitly enabled
     rm -rf /etc/systemd/{system,user}/*
     systemctl --system preset-all
@@ -153,6 +157,8 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     rm --force /etc/*- /etc/*.OLD /etc/.pwd.lock
 )
 
+# Set the metadata
+@allow_all_capabilities()
 @set_layer[
     layer_name=fish-completions,
     update_frequency=daily,
@@ -168,8 +174,5 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     /etc/*
 )
 
-FROM scratch
-@allow_all_capabilities()
-COPY --from=build /mnt/build/ /
 STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]

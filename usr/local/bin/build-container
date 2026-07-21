@@ -14,16 +14,22 @@ from abc import ABC, abstractmethod
 from annotationlib import get_annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Generator, Iterable, Iterator
-from dataclasses import dataclass, replace as dataclass_replace
+from dataclasses import (
+    dataclass,
+    field as dataclass_field,
+    replace as dataclass_replace,
+)
 from datetime import UTC, datetime
 from enum import StrEnum, unique as enum_unique
 from functools import cache, cached_property
 from hashlib import shake_128
 from os import mkfifo
 from pathlib import Path
+from platform import machine as platform_machine
 from pprint import pp as pprint
 from re import Pattern, compile as regex
 from shlex import split as shlex_split
+from socket import getfqdn
 from subprocess import PIPE, CalledProcessError, Popen, run as subprocess_run
 from sys import exit
 from tempfile import NamedTemporaryFile, TemporaryDirectory
@@ -208,25 +214,6 @@ class CmdlineOption(CmdlineOptionBase):
 
 
 @final
-@dataclass(kw_only=False, slots=True, frozen=True, eq=True)
-class LabelOption(CmdlineOptionBase):
-    """A command-line option."""
-
-    label_name: str
-    label_value: str
-
-    cmdline_key = "label"
-
-    @property
-    def cmdline_value(self) -> str:  # pyright: ignore[reportImplicitOverride]  # noqa: D102
-        label_name = self.label_name
-        if "." not in label_name:
-            label_name = f"org.opencontainers.image.{self.label_name}"
-
-        return f"{label_name}={self.label_value}"
-
-
-@final
 @dataclass(kw_only=True, slots=True, frozen=True)
 class _RunMountOption(CmdlineOptionBase):
     """The `--mount` option for a `RUN` command."""
@@ -342,6 +329,17 @@ class BuildConfig:
     git_directory: Path
     """The path to the Git repository."""
 
+    filesystem_to_git_prefix: Path
+    """The prefix to strip from the Containerfile path in the local file system
+    to get its path in the Git repository."""
+
+    containers_policy: str
+    """The contents of the `/etc/containers/policy.json` file needed to use this
+    container."""
+
+    distributor: str
+    """The name of the person or organization that distributes the image."""
+
     # Required for `cached_property` to work with frozen dataclasses.
     __slots__: ClassVar[Final] = ("__dict__", "mounts")
 
@@ -365,7 +363,11 @@ class BuildConfig:
             mounts[i] = _MountConfig(**mount)
         data["mounts"] = tuple(mounts)
 
-        for path_key in ("sigstore_path", "git_directory"):
+        for path_key in (
+            "sigstore_path",
+            "git_directory",
+            "filesystem_to_git_prefix",
+        ):
             try:
                 path_value = Path(data[path_key]).expanduser().absolute()
                 if not path_value.exists():
@@ -501,6 +503,161 @@ class _GitCommit:
         return cls(**result)  # pyright: ignore[reportArgumentType]
 
 
+@dataclass(slots=True, init=False)
+class ImageMetadata:
+    """The metadata for a container image."""
+
+    image_reference: str | None = None
+    """The image reference. Example: `docker.io/library/ubuntu:latest`."""
+
+    image_name: str | None = None
+    """The human-friendly name of the image."""
+
+    image_description: str | None = None
+    """The human-friendly description of the image."""
+
+    build_date: datetime = dataclass_field(
+        default_factory=lambda: datetime.now(UTC)
+    )
+    """The date the image was built."""
+
+    commit: _GitCommit | None = None
+    """The Git commit used to build the image."""
+
+    restrict_capabilities: list[str] | None = None
+    """Only allow the listed capabilities, or `None` to allow all."""
+
+    distributor: str | None = None
+    """The name of the person or organization that distributes the image."""
+
+    containerfile_path: str | None = None
+    """The path to the Containerfile, relative to the Git repository root."""
+
+    architecture: str = platform_machine()
+    """The architecture of the container image."""
+
+    containers_policy: str | None = None
+    """The contents of the `/etc/containers/policy.json` file."""
+
+    def to_options(self) -> set[CmdlineOptionBase]:
+        """Converts the metadata to a set of command-line options for Podman."""
+
+        out: set[CmdlineOptionBase] = set()
+
+        # First, handle the standard `org.opencontainers.image` labels
+        #     https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
+        assert self.commit
+        opencontainers_labels = {
+            "created": self.build_date.isoformat(timespec="seconds"),
+            "authors": self.distributor,
+            "source": self.commit.repo_url,
+            "url": self.commit.repo_url,
+            "revision": self.commit.hash,
+            "vendor": self.distributor,
+            "title": self.image_name,
+            "description": self.image_description,
+        }
+        for key, value in opencontainers_labels.items():
+            if value is not None:
+                # The `org.opencontainers` values should be added as both labels
+                # and annotations, since it's somewhat unclear where they really
+                # belong.
+                out |= {
+                    CmdlineOption(
+                        "label", f"org.opencontainers.image.{key}={value}"
+                    ),
+                    CmdlineOption(
+                        "annotation", f"org.opencontainers.image.{key}={value}"
+                    ),
+                }
+
+        # Save the image reference.
+        if self.image_reference is not None:
+            out |= {
+                CmdlineOption(
+                    "label",
+                    f"org.opencontainers.image.ref.name={self.image_reference}",
+                ),
+                CmdlineOption(
+                    "label",
+                    f"name={self.image_reference}",
+                ),
+                CmdlineOption(
+                    "annotation",
+                    f"io.containerd.image.name={self.image_reference}",
+                ),
+            }
+
+        # Add the non-standard `com.docker.official-images.bashbrew.arch`
+        # annotation, which appears to be used by quite a few tools.
+        if self.architecture is not None:
+            out |= {
+                CmdlineOption(
+                    "annotation",
+                    f"com.docker.official-images.bashbrew.arch={self.architecture}",
+                )
+            }
+
+        # We don't use OpenShift, but it defines some useful labels
+        #     https://github.com/openshift/openshift-docs/blob/66f2ac61/modules/builds-output-image-labels.adoc
+        # so we'll add them here
+        out |= {
+            CmdlineOption(
+                "label",
+                f"io.openshift.build.commit.author={self.commit.author_name} <{self.commit.author_email}>",
+            ),
+            CmdlineOption(
+                "label",
+                f"io.openshift.build.commit.date={self.commit.date.astimezone().replace(tzinfo=None).isoformat(sep=' ', timespec='minutes')}",
+            ),
+            CmdlineOption(
+                "label",
+                f"io.openshift.build.commit.id={self.commit.hash}",
+            ),
+            CmdlineOption(
+                "label",
+                "io.openshift.build.commit.ref=master",
+            ),
+            CmdlineOption(
+                "label",
+                f"io.openshift.build.source-location={self.commit.repo_url}",
+            ),
+            CmdlineOption(
+                "label",
+                "vcs-type=git",
+            ),
+        }
+
+        # Add the build system's name and version as a label:
+        #     https://github.com/projectatomic/ContainerApplicationGenericLabels/blob/3e158d90/vendor/redhat/labels.md#other-labels
+        out |= {
+            CmdlineOption(
+                "label",
+                f"com.redhat.build-host={getfqdn()}",
+            ),
+            CmdlineOption("identity-label"),
+        }
+
+        # We don't use Hummingbird, but it also defines some useful labels
+        out |= {
+            CmdlineOption(
+                "label",
+                f"io.hummingbird-project.containerfile={self.containerfile_path}",
+            )
+        }
+
+        # Add some custom annotations.
+        if self.containers_policy is not None:
+            out |= {
+                CmdlineOption(
+                    "label",
+                    f"ca.maxchernoff.containers-policy-json={self.containers_policy}",
+                ),
+            }
+
+        return out
+
+
 #########################
 ### Class Definitions ###
 #########################
@@ -588,16 +745,20 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
             config: The build configuration.
         """
 
+        # Initialize the instance variables.
         self._source_path: Path = source
         self._source_contents: str | Initialized = None
         self.__temp_dir_obj: TemporaryDirectory[str] | Initialized = None
         self._temp_dir: Path | Initialized = None
-        self._podman_args: set[CmdlineOptionBase] = {
-            LabelOption("io.containers.capabilities", "CAP_NET_BIND_SERVICE"),
-        }
+        self._podman_args: set[CmdlineOptionBase] = set()
         self._config: BuildConfig = config
         self._build_contexts: dict[Path, str] = {}
-        self.commit: _GitCommit | Initialized = None
+
+        # Initialize the metadata.
+        self.metadata: ImageMetadata = ImageMetadata()
+        self.metadata.containers_policy = self._config.containers_policy
+        self.metadata.distributor = self._config.distributor
+        self.metadata.restrict_capabilities = ["CAP_NET_BIND_SERVICE"]
 
     def __enter__(self: Containerfile[None]) -> Containerfile[Never]:
         """Initialize the instance."""
@@ -618,9 +779,13 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         self._source_contents = self._source_path.read_text()
 
         # Parse the metadata from the Git repository.
-        self.commit = _GitCommit.from_git(
+        self.metadata.commit = _GitCommit.from_git(
             git_directory=self._config.git_directory
         )
+
+        self.metadata.containerfile_path = self._source_path.relative_to(
+            self._config.filesystem_to_git_prefix
+        ).as_posix()
 
         return cast(Containerfile[Never], self)
 
@@ -721,7 +886,6 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
     def _mount_run(
         self: Containerfile[Never],
         body: str,
-        root: Path = Path("/"),
     ) -> tuple[_RunMountOption, Path]:
         """Mounts a shell script to be used in a `RUN` command."""
 
@@ -752,7 +916,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         mount_arg = _RunMountOption(
             from_=self._build_context(host_script_path.parent),
             source=host_script_path,
-            target=root / container_script_path,
+            target=container_script_path,
             read_only=True,
             selinux="private",
         )
@@ -763,7 +927,6 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         self: Containerfile[Never],
         body: str,
         mounts: str | None = None,
-        root: str | None = None,  # pyright: ignore[reportRedeclaration]
     ) -> str:
         """Run a shell command.
 
@@ -776,42 +939,27 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
             mounts: The categories of mounts to use for the duration of this
                 command (optional). Mounts are separated by space characters.
 
-            root: The root directory to run the command in (optional).
-
         Returns:
             The `RUN` command to use in the Containerfile.
         """
 
         # Parse the arguments.
-        args: list[str | CmdlineOptionBase] = ["RUN"]
-        cmd: list[str] = []
-        root: Path = Path(root or "/")
+        cmd: list[str | CmdlineOptionBase] = ["RUN"]
 
         # Add the mounts to the command.
         if mounts is not None:
-            if root != Path("/"):
-                raise ValueError(
-                    'Cannot specify both "mounts" and "root" for a run command.'
-                )
-
             for category in mounts.split():
                 try:
                     for mount in self._config.mounts_by_category[category]:
-                        args.append(mount.to_option(self._build_context))
+                        cmd.append(mount.to_option(self._build_context))
                 except KeyError:
                     raise ValueError(f"Unknown mount category: {category}")
 
         # Run the command in the container.
-        script_mount_arg, script_path = self._mount_run(body, root)
-        args.append(script_mount_arg)
-        cmd.append(script_path.as_posix())
+        script_mount_arg, script_path = self._mount_run(body)
+        cmd += [script_mount_arg, script_path.as_posix()]
 
-        # Handle the root directory.
-        if root != Path("/"):
-            args.append(CmdlineOption("mount", f"type=tmpfs,target={root}/tmp"))
-            cmd.insert(0, f"chroot {root}")
-
-        return " ".join(CmdlineOptionBase.convert(args + cmd))
+        return " ".join(CmdlineOptionBase.convert(cmd))
 
     def dnf_install(
         self: Containerfile[Never],
@@ -953,14 +1101,17 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         if body.strip():
             raise ValueError("The body of the macro must be empty.")
 
+        if not self.metadata.commit:
+            raise ValueError("The commit metadata is not set.")
+
         return "".join([
             "ARG ",
             'COMMIT_INFO="',
-            self.commit.date
+            self.metadata.commit.date
             .astimezone()
             .replace(tzinfo=None)
             .isoformat(sep=" ", timespec="minutes"),
-            f" ({self.commit.count:>4d}+{self.commit.hash[:8]})",
+            f" ({self.metadata.commit.count:>4d}+{self.metadata.commit.hash[:8]})",
             '"',
         ])
 
@@ -970,9 +1121,8 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         if body.strip():
             raise ValueError("The body of the macro must be empty.")
 
-        self._podman_args.discard(
-            LabelOption("io.containers.capabilities", "CAP_NET_BIND_SERVICE")
-        )
+        self.metadata.restrict_capabilities = None
+
         return ""
 
     def set_layer(
@@ -1122,36 +1272,9 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
 
     # Build the container image.
     with Containerfile(source=in_path, config=config) as containerfile:
+        containerfile.metadata.image_reference = f"{config.registry}/{tag}"
         args = containerfile.podman_args | {
             CmdlineOption("format", "oci"),
-            LabelOption(
-                "created",
-                datetime.now(tz=UTC).isoformat(timespec="seconds"),
-            ),
-            LabelOption(
-                "authors",
-                f"{containerfile.commit.author_name} <{containerfile.commit.author_email}>",
-            ),
-            LabelOption(
-                "ca.maxchernoff.container.commit.date",
-                containerfile.commit.date
-                .astimezone()
-                .replace(tzinfo=None)
-                .isoformat(sep=" ", timespec="minutes"),
-            ),
-            LabelOption(
-                "ca.maxchernoff.container.commit.hash",
-                containerfile.commit.hash,
-            ),
-            LabelOption(
-                "ca.maxchernoff.container.commit.count",
-                str(containerfile.commit.count),
-            ),
-            LabelOption("vendor", containerfile.commit.author_name),
-            LabelOption("source", containerfile.commit.repo_url),
-            LabelOption("url", containerfile.commit.repo_url),
-            LabelOption("title", f"{tag.split(':', maxsplit=1)[0]}"),
-            LabelOption("io.buildah.version", ""),
             CmdlineOption("no-cache"),
             CmdlineOption("pull", "always"),
             CmdlineOption("rewrite-timestamp"),
@@ -1251,6 +1374,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                     CmdlineOption("dest-tls-verify", "false"),
                     CmdlineOption("format", "oci"),
                     CmdlineOption("image-parallel-copies", "8"),
+                    CmdlineOption("created-annotation", "false"),
                     CmdlineOption(
                         "sign-by-sigstore", config.sigstore_path.as_posix()
                     ),
@@ -1293,7 +1417,7 @@ def main() -> int:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("~/.config/build-container.toml").expanduser().absolute(),
+        required=True,
         help="The path to the configuration file.",
     )
     parser.add_argument(
@@ -1311,6 +1435,9 @@ def main() -> int:
 
     if not directory.is_dir():
         parser.error(f'"{directory}" is not a directory.')
+
+    if ":" not in tag:
+        parser.error(f'"{tag}" is not a valid tag (must contain a colon).')
 
     # Build the container image using Podman.
     build(
