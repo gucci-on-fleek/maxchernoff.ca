@@ -8,7 +8,7 @@ FROM docker.io/library/caddy:2.11-builder AS builder
 @run[mounts=go](
     xcaddy build \
         --with github.com/caddy-dns/rfc2136 \
-        --with github.com/caddyserver/cache-handler \
+        --with github.com/caddyserver/cache-handler=github.com/darkweak/souin/plugins/caddy@master \
         --with github.com/caddyserver/replace-response \
         --with github.com/caddyserver/transform-encoder \
         --with github.com/darkweak/storages/otter/caddy \
@@ -16,7 +16,7 @@ FROM docker.io/library/caddy:2.11-builder AS builder
         --with github.com/mholt/caddy-ratelimit \
         --with github.com/porech/caddy-maxmind-geolocation \
         --with maxchernoff.ca/tools/speedtest \
-        --replace github.com/darkweak/souin@v1.7.7=github.com/darkweak/souin@f029298f2165ecd70fa3950a0b28e27b71666bf2
+        --replace github.com/darkweak/souin=github.com/darkweak/souin@master
 )
 
 FROM docker.io/library/caddy:2.11

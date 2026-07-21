@@ -33,6 +33,7 @@ PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-logs.sys
 
 
 [Service]
+TimeoutStartSec=5min
 Restart=always
 
 # Run at a lower priority
