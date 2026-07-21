@@ -23,6 +23,7 @@ from datetime import UTC, datetime
 from enum import StrEnum, unique as enum_unique
 from functools import cache, cached_property
 from hashlib import shake_128
+from json import dumps as json_dumps, loads as json_loads
 from os import mkfifo
 from pathlib import Path
 from platform import machine as platform_machine
@@ -503,7 +504,7 @@ class _GitCommit:
         return cls(**result)  # pyright: ignore[reportArgumentType]
 
 
-@dataclass(slots=True, init=False)
+@dataclass(slots=True)
 class ImageMetadata:
     """The metadata for a container image."""
 
@@ -608,7 +609,7 @@ class ImageMetadata:
             ),
             CmdlineOption(
                 "label",
-                f"io.openshift.build.commit.date={self.commit.date.astimezone().replace(tzinfo=None).isoformat(sep=' ', timespec='minutes')}",
+                f"io.openshift.build.commit.date={self.commit.date.isoformat(timespec='seconds')}",
             ),
             CmdlineOption(
                 "label",
@@ -647,11 +648,47 @@ class ImageMetadata:
         }
 
         # Add some custom annotations.
+        commit_info = f"{
+            self.commit.date
+            .astimezone()
+            .replace(tzinfo=None)
+            .isoformat(sep=' ', timespec='minutes')
+        } ({self.commit.count:>4d}+{self.commit.hash[:8]})"
+        local_build_time = (
+            self.build_date
+            .astimezone()
+            .replace(tzinfo=None)
+            .isoformat(sep=" ", timespec="minutes")
+        )
+
+        out |= {
+            CmdlineOption(
+                "annotation",
+                f"ca.maxchernoff.commit-info={commit_info}",
+            ),
+            CmdlineOption(
+                "label",
+                f"ca.maxchernoff.commit-info={commit_info}",
+            ),
+            CmdlineOption(
+                "annotation",
+                f"ca.maxchernoff.local-build-time={local_build_time}",
+            ),
+            CmdlineOption(
+                "label",
+                f"ca.maxchernoff.local-build-time={local_build_time}",
+            ),
+        }
+
         if self.containers_policy is not None:
+            # Minify the JSON to save space and avoid issues with whitespace.
+            minified = json_dumps(
+                json_loads(self.containers_policy), separators=(",", ":")
+            )
             out |= {
                 CmdlineOption(
                     "label",
-                    f"ca.maxchernoff.containers-policy-json={self.containers_policy}",
+                    f"ca.maxchernoff.containers-policy-json={minified}",
                 ),
             }
 
@@ -819,6 +856,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         return frozenset(
             self._podman_args
             | {(CmdlineOption("file", self._parse().absolute().as_posix()))}
+            | self.metadata.to_options()
         )
 
     # Helper functions
@@ -912,7 +950,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         host_script_path.chmod(_SCRIPT_PERMISSIONS)
 
         # Run the shell script in the container.
-        container_script_path = Path(f"run/scripts/{host_script_path.name}")
+        container_script_path = Path(f"/run/scripts/{host_script_path.name}")
         mount_arg = _RunMountOption(
             from_=self._build_context(host_script_path.parent),
             source=host_script_path,
@@ -920,7 +958,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
             read_only=True,
             selinux="private",
         )
-        return mount_arg, Path("/") / container_script_path
+        return mount_arg, container_script_path
 
     # Macro functions
     def run(
@@ -1272,8 +1310,9 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
 
     # Build the container image.
     with Containerfile(source=in_path, config=config) as containerfile:
-        containerfile.metadata.image_reference = f"{config.registry}/{tag}"
+        containerfile.metadata.image_reference = f"{config.tag_domain}/{tag}"
         args = containerfile.podman_args | {
+            CmdlineOption("created-annotation", "false"),
             CmdlineOption("format", "oci"),
             CmdlineOption("no-cache"),
             CmdlineOption("pull", "always"),
@@ -1374,7 +1413,6 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                     CmdlineOption("dest-tls-verify", "false"),
                     CmdlineOption("format", "oci"),
                     CmdlineOption("image-parallel-copies", "8"),
-                    CmdlineOption("created-annotation", "false"),
                     CmdlineOption(
                         "sign-by-sigstore", config.sigstore_path.as_posix()
                     ),
