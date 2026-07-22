@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 disable auditd.service
+disable btrfs-balance.timer
 disable sshd-keygen@dsa.service
 disable sshd-keygen@ecdsa.service
 disable sshd-keygen@rsa.service
