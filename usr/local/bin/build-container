@@ -648,18 +648,9 @@ class ImageMetadata:
         }
 
         # Add some custom annotations.
-        commit_info = f"{
-            self.commit.date
-            .astimezone()
-            .replace(tzinfo=None)
-            .isoformat(sep=' ', timespec='minutes')
-        } ({self.commit.count:>4d}+{self.commit.hash[:8]})"
-        local_build_time = (
-            self.build_date
-            .astimezone()
-            .replace(tzinfo=None)
-            .isoformat(sep=" ", timespec="minutes")
-        )
+        commit_info = f"{pretty_date(self.commit.date)} ({
+            self.commit.count:>4d}+{self.commit.hash[:8]})"
+        local_build_time = pretty_date(self.build_date)
 
         out |= {
             CmdlineOption(
@@ -1142,16 +1133,8 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         if not self.metadata.commit:
             raise ValueError("The commit metadata is not set.")
 
-        return "".join([
-            "ARG ",
-            'COMMIT_INFO="',
-            self.metadata.commit.date
-            .astimezone()
-            .replace(tzinfo=None)
-            .isoformat(sep=" ", timespec="minutes"),
-            f" ({self.metadata.commit.count:>4d}+{self.metadata.commit.hash[:8]})",
-            '"',
-        ])
+        return f'ARG COMMIT_INFO="{pretty_date(self.metadata.commit.date)} ({
+            self.metadata.commit.count:>4d}+{self.metadata.commit.hash[:8]})"'
 
     def allow_all_capabilities(self: Containerfile[Never], body: str) -> str:
         """Allows all capabilities in the container."""
@@ -1292,6 +1275,24 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
 ############################
 ### Function Definitions ###
 ############################
+
+
+def pretty_date(date: datetime) -> str:
+    """Formats a date in a human-readable way.
+
+    Arguments:
+        date: The date to format.
+
+    Returns:
+        The formatted date.
+    """
+
+    return (
+        date
+        .astimezone()
+        .replace(tzinfo=None)
+        .isoformat(sep=" ", timespec="minutes")
+    )
 
 
 def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
