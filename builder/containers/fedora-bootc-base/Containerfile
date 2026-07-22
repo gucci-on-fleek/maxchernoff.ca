@@ -81,7 +81,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     qemu-guest-agent  # Recommended for a VM guest
     snapper  # Btrfs snapshot management
     systemd-journal-remote  # For journald remote logging
-    zram-generator
+    systemd-oomd-defaults
 
     # Containers
     podman
