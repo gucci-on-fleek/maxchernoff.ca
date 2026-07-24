@@ -13,13 +13,13 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     # Base system
     authselect  # PAM configuration
     btrfs-progs  # /usr/bin/btrfs
+    dbus-broker
     fedora-release-iot
     firewalld
     glibc-langpack-en
     glibc-minimal-langpack
     iproute  # /usr/bin/ip
     kernel-modules-core  # Do not install the extra kernel modules
-    nss-altfiles
     openssh-clients
     openssh-server
     selinux-policy-targeted
@@ -49,8 +49,8 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     gnupg2  # GPG
     htop
     iputils  # /usr/bin/ping, etc.
+    jq
     less
-    man  # man pages
     man-db  # man pages
     man-pages  # man pages
     policycoreutils-python-utils  # /usr/bin/semanage
@@ -98,7 +98,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
 # Switch to the new root
 FROM scratch
-COPY --from=build /mnt/build/ /
+COPY --chown=0:0 --from=build /mnt/build/ /
 
 # Run some custom configuration commands
 @with_commit_info()
@@ -152,6 +152,55 @@ COPY --from=build /mnt/build/ /
 
     # Set the default root shell
     chsh --shell /usr/bin/fish root
+
+    # Move the user database to /usr/lib
+    mkdir --parents /usr/lib/userdb/
+    {
+        userdbctl user \
+            --with-dropin=false \
+            --json=short \
+            --disposition=intrinsic \
+            --disposition=system \
+            --disposition=regular
+        userdbctl group \
+            --with-dropin=false \
+            --json=short \
+            --disposition=intrinsic \
+            --disposition=system \
+            --disposition=regular
+    } \
+    | jq --raw-output '
+        del(
+            .status,
+            .passwordChangeNow,
+            .lastPasswordChangeUSec,
+            .passwordChangeMaxUSec,
+            .passwordChangeWarnUSec
+        )
+        | . + {privileged: {hashedPassword: "!*"}}
+        | . + if .userName and .userName != "root" then {locked: true} end
+        | tostring
+    ' | while read -r json; do
+        user="$(echo "$json" | jq --raw-output '.userName | values')"
+        group="$(echo "$json" | jq --raw-output '.groupName | values')"
+        uid="$(echo "$json" | jq --raw-output '.uid | values')"
+        gid="$(echo "$json" | jq --raw-output '.gid | values')"
+
+        if [ -n "$user" ]; then
+            echo "$json" | jq . > "/usr/lib/userdb/${user}.user"
+            ln --symbolic \
+                "/usr/lib/userdb/${user}.user" \
+                "/usr/lib/userdb/${uid}.user"
+        fi
+
+        if [ -n "$group" ]; then
+            echo "$json" | jq . > "/usr/lib/userdb/${group}.group"
+            ln --symbolic \
+                "/usr/lib/userdb/${group}.group" \
+                "/usr/lib/userdb/${gid}.group"
+        fi
+    done
+    rm --force /etc/passwd /etc/group /etc/shadow /etc/gshadow
 
     # Remove the backup files
     rm --force /etc/*- /etc/*.OLD /etc/.pwd.lock

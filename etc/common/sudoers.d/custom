@@ -1,0 +1,22 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+# Adjust the messages
+Defaults insults,!lecture,log_format=json
+
+# Always create a new pseudo-TTY, and only start from a real TTY
+Defaults requiretty,use_pty
+
+# Show asterisks on entered characters
+Defaults pwfeedback
+
+# Only allow a single login attempt
+Defaults passwd_tries=1
+
+# Only authenticate with the source user's password
+Defaults !runaspw,!targetpw
+
+# Switch to the "sysadm" SELinux type and role
+%wheel ALL=(ALL) TYPE=sysadm_t ROLE=sysadm_r ALL

@@ -1059,6 +1059,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
                 f"   --installroot={install_root}" if install_root else "",
                 '    --setopt="install_weak_deps=false"',
                 '    --setopt="keepcache=true"',
+                '    --setopt="tsflags="',  # Needed to install documentation
                 "    --use-host-config",
                 *packages,
                 "    && break",
