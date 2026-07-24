@@ -16,28 +16,6 @@ var REG_MONITOR = NewRegistrar("DoH")
 var IPv4 = "!!network.ipv4!!" // "152.53.36.213"
 var IPv6 = "!!network.ipv6!!" // "2a0a:4cc0:2000:172::1"
 
-// Handle the DANE TLSA records
-function dane(name) {
-    return [
-        TLSA(
-            name, // Port + Protocol + Domain
-            0,    // Certificate Usage: CA Constraint
-            1,    // Selector: Public Key
-            1,    // Matching Type: SHA-256
-            // ISRG Root X1 (Let's Encrypt RSA)
-            "0b9fa5a59eed715c26c1020c711b4f6ec42d58b0015e14337a39dad301c5afc3"
-        ),
-        TLSA(
-            name, // Port + Protocol + Domain
-            0,    // Certificate Usage: CA Constraint
-            1,    // Selector: Public Key
-            1,    // Matching Type: SHA-256
-            // ISRG Root X2 (Let's Encrypt ECDSA)
-            "762195c225586ee6c0237456e2107dc54f1efc21f61a792ebd515913cce68332"
-        ),
-    ]
-}
-
 // Configure subdomains to not have email
 var MAIL_ALLOWED = []
 function no_mail(name) {
@@ -69,15 +47,6 @@ function web(name) {
             // "tls-supported-groups=29,23" // x25519, secp256r1 // TODO: Enable this when DNSControl supports it
         ),
     ]
-
-    // DANE
-    if (name == "@") {
-        out.push(dane("_443._tcp"))
-        out.push(dane("_443._quic"))
-    } else {
-        out.push(dane("_443._tcp." + name))
-        out.push(dane("_443._quic." + name))
-    }
 
     // Prevent email on this domain
     out.push(no_mail(name))
@@ -140,7 +109,6 @@ D("maxchernoff.ca", REG_MONITOR,
         "ipv4hint=" + IPv4 + " " + // IPv4 Address
         "ipv6hint=" + IPv6         // IPv6 Address
     ),
-    dane("_853._tcp.ns"),
 
     // Use Hurricane Electric for the public nameservers
     NAMESERVER("ns2.he.net."),
@@ -201,41 +169,33 @@ D("maxchernoff.ca", REG_MONITOR,
     ),
 
     // PGP
-    // OPENPGPKEY( // git@maxchernoff.ca
-    //     "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975._openpgpkey",
-    //     "9833045deff8da16092b06010401da470f01010740ab84105f87657fba32" +
-    //     "44ba78e15ab1b8b3ca9df7889dc510556e444d6c99ec8db4214d61782043" +
-    //     "6865726e6f6666203c676974406d6178636865726e6f66662e63613e8893" +
-    //     "0413160a003b1621045c696408f561e6c2a12a2ba08fd44004db2b757e05" +
-    //     "026731e323021b03050b0908070202220206150a09080b02041602030102" +
-    //     "1e07021780000a09108fd44004db2b757e78f600ff4f79a36351417eeb35" +
-    //     "bf5886a18d3648c1884dec92c8789f092127cd7adc08d90100c6613e6094" +
-    //     "3a4e094e50b86dd064e34b888ef577e9c74b0598fa8af776a08604b83804" +
-    //     "67319f32120a2b0601040197550105010107408a290b6916f5f7bd7077f1" +
-    //     "23f763db1f43b188388f7654b9b70bb90d6ef2bd39030108078878041816" +
-    //     "0a00201621045c696408f561e6c2a12a2ba08fd44004db2b757e05026731" +
-    //     "9f6a021b0c000a09108fd44004db2b757e5e9800ff56af132803aae632ec" +
-    //     "1bd1e567935b20a0e5995fa8c5cc0bcb22028f4c0a56f300fe38ddfbe512" +
-    //     "0dc33b17f317fe19955428c846584382c2f7a082213ac86791d50e",
-    // ),
+    OPENPGPKEY( // git@maxchernoff.ca
+        "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975._openpgpkey",
+        "mDMEXe/42hYJKwYBBAHaRw8BAQdAq4QQX4dlf7oyRLp44VqxuLPKnfeIncUQ" +
+        "VW5ETWyZ7I20IU1heCBDaGVybm9mZiA8Z2l0QG1heGNoZXJub2ZmLmNhPoiT" +
+        "BBMWCgA7FiEEXGlkCPVh5sKhKiugj9RABNsrdX4FAmcx4yMCGwMFCwkIBwIC" +
+        "IgIGFQoJCAsCBBYCAwECHgcCF4AACgkQj9RABNsrdX549gD/T3mjY1FBfus1" +
+        "v1iGoY02SMGITeySyHifCSEnzXrcCNkBAMZhPmCUOk4JTlC4bdBk40uIjvV3" +
+        "6cdLBZj6ivd2oIYEuDgEZzGfMhIKKwYBBAGXVQEFAQEHQIopC2kW9fe9cHfx" +
+        "I/dj2x9DsYg4j3ZUubcLuQ1u8r05AwEIB4h4BBgWCgAgFiEEXGlkCPVh5sKh" +
+        "Kiugj9RABNsrdX4FAmcxn2oCGwwACgkQj9RABNsrdX5emAD/Vq8TKAOq5jLs" +
+        "G9HlZ5NbIKDlmV+oxcwLyyICj0wKVvMA/jjd++USDcM7F/MX/hmVVCjIRlhD" +
+        "gsL3oIIhOshnkdUO"
+    ),
 
-    // OPENPGPKEY( // *@maxchernoff.ca
-    //     "*._openpgpkey",
-    //     "9833045deff8da16092b06010401da470f01010740ab84105f87657fba32" +
-    //     "44ba78e15ab1b8b3ca9df7889dc510556e444d6c99ec8db41f4d61782043" +
-    //     "6865726e6f6666203c2a406d6178636865726e6f66662e63613e88960413" +
-    //     "160a003e050b0908070202220206150a09080b020416020301021e070217" +
-    //     "800219011621045c696408f561e6c2a12a2ba08fd44004db2b757e050267" +
-    //     "31b029021b03000a09108fd44004db2b757e5f1a0100f712fd260f3c8e7c" +
-    //     "0752c458ea7e61c7c603ed5d1ef567b1b097efb18b073dd30100f90d8b68" +
-    //     "0b634848a9af68e8a2a1bff2a623b2212d2495409ae3724d1cdb850cb838" +
-    //     "0467319f32120a2b0601040197550105010107408a290b6916f5f7bd7077" +
-    //     "f123f763db1f43b188388f7654b9b70bb90d6ef2bd390301080788780418" +
-    //     "160a00201621045c696408f561e6c2a12a2ba08fd44004db2b757e050267" +
-    //     "319f6a021b0c000a09108fd44004db2b757e5e9800ff56af132803aae632" +
-    //     "ec1bd1e567935b20a0e5995fa8c5cc0bcb22028f4c0a56f300fe38ddfbe5" +
-    //     "120dc33b17f317fe19955428c846584382c2f7a082213ac86791d50e",
-    // ),
+    OPENPGPKEY( // *@maxchernoff.ca
+        "*._openpgpkey",
+        "mDMEXe/42hYJKwYBBAHaRw8BAQdAq4QQX4dlf7oyRLp44VqxuLPKnfeIncUQ" +
+        "VW5ETWyZ7I20H01heCBDaGVybm9mZiA8KkBtYXhjaGVybm9mZi5jYT6IlgQT" +
+        "FgoAPgULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAIZARYhBFxpZAj1YebC" +
+        "oSoroI/UQATbK3V+BQJnMbApAhsDAAoJEI/UQATbK3V+XxoBAPcS/SYPPI58" +
+        "B1LEWOp+YcfGA+1dHvVnsbCX77GLBz3TAQD5DYtoC2NISKmvaOiiob/ypiOy" +
+        "IS0klUCa43JNHNuFDLg4BGcxnzISCisGAQQBl1UBBQEBB0CKKQtpFvX3vXB3" +
+        "8SP3Y9sfQ7GIOI92VLm3C7kNbvK9OQMBCAeIeAQYFgoAIBYhBFxpZAj1YebC" +
+        "oSoroI/UQATbK3V+BQJnMZ9qAhsMAAoJEI/UQATbK3V+XpgA/1avEygDquYy" +
+        "7BvR5WeTWyCg5ZlfqMXMC8siAo9MClbzAP443fvlEg3DOxfzF/4ZlVQoyEZY" +
+        "Q4LC96CCITrIZ5HVDg=="
+    ),
 
     /////////////
     /// Email ///
