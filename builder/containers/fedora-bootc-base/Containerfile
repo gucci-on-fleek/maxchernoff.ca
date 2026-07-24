@@ -150,6 +150,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     rm -rf /root/
     mkdir /root/
 
+    # Apply the authselect profile
+    authselect apply-changes
+
     # Set the default root shell
     chsh --shell /usr/bin/fish root
 
