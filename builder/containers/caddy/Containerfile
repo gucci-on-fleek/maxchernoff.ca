@@ -16,7 +16,8 @@ FROM docker.io/library/caddy:2.11-builder AS builder
         --with github.com/mholt/caddy-ratelimit \
         --with github.com/porech/caddy-maxmind-geolocation \
         --with maxchernoff.ca/tools/speedtest \
-        --replace github.com/darkweak/souin=github.com/darkweak/souin@master
+        --replace github.com/darkweak/souin=github.com/darkweak/souin@master \
+        --replace github.com/caddyserver/certmagic@v0.25.3=github.com/caddyserver/certmagic@v0.25.4
 )
 
 FROM docker.io/library/caddy:2.11
