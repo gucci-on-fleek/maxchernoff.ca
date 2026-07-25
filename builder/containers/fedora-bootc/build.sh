@@ -27,6 +27,7 @@ podman build \
         podman system info --format '{{.Store.GraphRoot}}' \
     ):/run/host-container-storage:ro" \
     --cap-add="SYS_ADMIN" \
+    --created-annotation="false" \
     --disable-compression="false" \
     --inherit-annotations="true" \
     --inherit-labels \
@@ -34,7 +35,10 @@ podman build \
     --network="none" \
     --no-cache \
     --pull="always" \
+    --rewrite-timestamp \
+    --squash \
     --tag="maxchernoff.ca/fedora-bootc:latest" \
+    --timestamp="0" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     --volume="$temp_dir:/var/lib/containers:U,z" \
     "$script_dir"

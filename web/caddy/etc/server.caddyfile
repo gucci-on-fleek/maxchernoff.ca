@@ -198,11 +198,9 @@ api.maxchernoff.ca {
 registry.maxchernoff.ca {
 	import default
 	import domain-info
-	cache
 
-	@manifest path /v2/*/manifests/* /v2/_catalog
-	header @manifest Cache-Control max-age=15
-	header ?Cache-Control max-age=3600 # Cache all responses for 1 hour
+	# Do not cache anything, since Souin is buggy here.
+	header Cache-Control no-cache
 
 	@get-head method GET HEAD
 	handle @get-head {
