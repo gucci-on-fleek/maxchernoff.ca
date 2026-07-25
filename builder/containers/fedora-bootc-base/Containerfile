@@ -5,6 +5,11 @@
 
 FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
+# TODO temporary workaround
+@dnf_install(
+    fedora-repos-archive
+)
+
 # Install the packages
 @dnf_install[
     install_root=/mnt/build/,
