@@ -19,6 +19,7 @@ RUN <<EOF
     echo "composefs=$(\
         bootc container compute-composefs-digest-from-storage \
     )" >> /etc/kernel/cmdline
+    grep --perl-regexp --quiet '^composefs=.{5}' /etc/kernel/cmdline
 
     # UKI generation
     kernel-install add-all
