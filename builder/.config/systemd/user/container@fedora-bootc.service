@@ -10,6 +10,7 @@ Wants=container@fedora-bootc-base.service
 [Service]
 Type=oneshot
 RemainAfterExit=no
+Slice=container.slice
 ExecStart=%h/containers/fedora-bootc/build.sh
 
 [Install]

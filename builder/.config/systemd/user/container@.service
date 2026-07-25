@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
 After=podman.socket network-ready.service
 Requires=podman.socket
@@ -12,6 +12,7 @@ StartLimitBurst=2
 [Service]
 Type=oneshot
 RemainAfterExit=no
+Slice=container.slice
 
 ExecStart=/usr/local/bin/build-container \
     --directory=%h/containers/%i \
