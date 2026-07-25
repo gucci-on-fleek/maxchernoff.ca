@@ -1049,6 +1049,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         # Generate the install script
         script_arg, script_path = self._mount_run(
             " \\\n".join([
+                "export DRACUT_NO_XATTR=1;",
                 # We need to use the loop in here because if we're building
                 # multiple containers at the same time, DNF may fail to lock the
                 # cache database.
@@ -1074,9 +1075,21 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
         result: list[str] = []
 
         if install_root is not None:
-            result.append(f"RUN mkdir -p {install_root}/var/cache/")
+            result.append(
+                "RUN "
+                + " && ".join([
+                    f"mkdir -p {install_root}",
+                    # Needed to avoid a systemd warning message
+                    f"ln -s /sys {install_root}/sys",
+                    f"ln -s /proc {install_root}/proc",
+                ])
+            )
 
         result.append(" ".join(CmdlineOptionBase.convert(cmd)))
+
+        if install_root is not None:
+            result.append(f"RUN rm {install_root}/sys {install_root}/proc")
+
         return "\n\n".join(result)
 
     def rpm_erase_all_except(

@@ -27,8 +27,11 @@ RUN <<EOF
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/BOOT/BOOTX64.EFI
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
+    # Cleanup
+    rm -rf /run/containers
+
     # Lint the bootc container
-    bootc container lint || true
+    bootc container lint --no-truncate --fatal-warnings || true
 EOF
 
 FROM base AS bootable

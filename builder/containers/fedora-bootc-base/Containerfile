@@ -111,30 +111,34 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 
+    # Apply the authselect profile
+    authselect apply-changes
+
     # Adjust the "os-release" files
     sed -Ei '/^(IMAGE_ID|IMAGE_VERSION|ARCHITECTURE|VARIANT|VARIANT_ID|RELEASE_TYPE|EXPERIMENT|EXPERIMENT_URL)=/d' \
-        /etc/os-release /usr/lib/os-release
+        /usr/lib/os-release
     {
-        echo IMAGE_ID="maxchernoff.ca-fedora-bootc"
-        echo IMAGE_VERSION="${COMMIT_INFO}"
-        echo ARCHITECTURE="x86-64"
-        echo VARIANT="Personal bootc container"
-        echo VARIANT_ID="personal-bootc"
-        echo RELEASE_TYPE="experiment"
-        echo EXPERIMENT="Personal bootc container"
-        echo EXPERIMENT_URL="https://github.com/gucci-on-fleek/maxchernoff.ca"
-    } | tee --append /etc/os-release /usr/lib/os-release
+        echo IMAGE_ID="'maxchernoff.ca-fedora-bootc'"
+        echo IMAGE_VERSION="'${COMMIT_INFO}'"
+        echo ARCHITECTURE="'x86-64'"
+        echo VARIANT="'Personal bootc container'"
+        echo VARIANT_ID="'personal-bootc'"
+        echo RELEASE_TYPE="'experiment'"
+        echo EXPERIMENT="'Personal bootc container'"
+        echo EXPERIMENT_URL="'https://github.com/gucci-on-fleek/maxchernoff.ca'"
+    } | tee --append /usr/lib/os-release
+    rm --force /etc/os-release
+    ln --symbolic /usr/lib/os-release /etc/os-release
 
     # Remove files that shouldn't be in "/var/"
     mv /var/lib/alternatives /usr/lib/alternatives
-    ln --symbolic --force /usr/lib/alternatives /var/lib/alternatives
     rm --force /var/lib/authselect/checksum
 
     # Move the SELinux policy
     echo "store-root=/etc/selinux" >> /etc/selinux/semanage.conf
     cp --archive --no-target-directory \
         /var/lib/selinux/targeted /etc/selinux/targeted
-    rm -rf /var/lib/selinux/targeted
+    rm -rf /var/lib/selinux/
 
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer.py /etc/image-minimize.conf
@@ -145,16 +149,29 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
     semodule --install=/etc/selinux/local-policies/local-required-fallbacks.cil
 
-    # Remove unneeded directories
-    rmdir /afs /media
+    # Reset the machine-specific resources
+    rm --force \
+        /var/lib/systemd/random-seed \
+        /etc/machine-id \
+        /var/lib/systemd/credential.secret \
+        /etc/hostname \
+        2>/dev/null || true
+
+    # Remove empty directories
     rm -rf /root/
-    mkdir /root/
+    find / -depth -type d -empty -delete 2>/dev/null || true
+    find . -xtype l -delete 2>/dev/null || true
+    find / -depth -type d -empty -delete 2>/dev/null || true
 
-    # Apply the authselect profile
-    authselect apply-changes
+    # Add the bootc links
+    systemd-tmpfiles --create --boot \
+        /usr/lib/tmpfiles.d/bootc-build.conf \
+        /usr/lib/tmpfiles.d/tmp.conf
 
-    # Set the default root shell
-    chsh --shell /usr/bin/fish root
+    # Modify the root user
+    sed -i \
+        '/^root/c\\root:x:0:0:root:/var/roothome:/usr/bin/fish' \
+        /etc/passwd
 
     # Move the user database to /usr/lib
     mkdir --parents /usr/lib/userdb/
@@ -191,22 +208,19 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 
         if [ -n "$user" ]; then
             echo "$json" | jq . > "/usr/lib/userdb/${user}.user"
-            ln --symbolic \
+            ln --symbolic --force \
                 "/usr/lib/userdb/${user}.user" \
                 "/usr/lib/userdb/${uid}.user"
         fi
 
         if [ -n "$group" ]; then
             echo "$json" | jq . > "/usr/lib/userdb/${group}.group"
-            ln --symbolic \
+            ln --symbolic --force \
                 "/usr/lib/userdb/${group}.group" \
                 "/usr/lib/userdb/${gid}.group"
         fi
     done
-    rm --force /etc/passwd /etc/group /etc/shadow /etc/gshadow
-
-    # Remove the backup files
-    rm --force /etc/*- /etc/*.OLD /etc/.pwd.lock
+    rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
 )
 
 # Set the metadata
