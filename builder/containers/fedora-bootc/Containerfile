@@ -8,6 +8,7 @@ FROM base as kernel
 ARG IMAGE_ID
 RUN <<EOF
     set -euxo pipefail
+    export SOURCE_DATE_EPOCH=0
 
     # Get the composefs ID
     {
@@ -33,6 +34,9 @@ RUN <<EOF
 
     # Lint the bootc container
     bootc container lint --no-truncate --fatal-warnings || true
+
+    # Clamp the timestamps
+    find /boot -depth -exec touch --no-dereference --date="@0" '{}' +
 EOF
 
 FROM base AS bootable

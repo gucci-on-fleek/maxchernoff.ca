@@ -5,7 +5,6 @@
 [Unit]
 After=network-ready.service
 After=container@fedora-bootc-base.service
-Wants=container@fedora-bootc-base.service
 
 [Service]
 Type=oneshot

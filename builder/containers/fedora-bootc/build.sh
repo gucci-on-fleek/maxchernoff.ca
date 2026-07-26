@@ -34,9 +34,7 @@ podman build \
     --network="none" \
     --no-cache \
     --pull="always" \
-    --rewrite-timestamp \
     --tag="maxchernoff.ca/fedora-bootc:latest" \
-    --timestamp="0" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     --volume="$temp_dir:/var/lib/containers:U,z" \
     "$script_dir"
