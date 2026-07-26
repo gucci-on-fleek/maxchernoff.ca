@@ -173,12 +173,8 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /usr/lib/tmpfiles.d/bootc-build.conf \
         /usr/lib/tmpfiles.d/tmp.conf
 
-    # Modify the root user
-    sed -i \
-        '/^root/c\\root:x:0:0:root:/var/roothome:/usr/bin/fish' \
-        /etc/passwd
-
     # Move the user database to /usr/lib
+    systemd-sysusers
     mkdir --parents /usr/lib/userdb/
     {
         userdbctl user \
@@ -202,8 +198,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
             .passwordChangeMaxUSec,
             .passwordChangeWarnUSec
         )
-        | . + {privileged: {hashedPassword: "!*"}}
-        | . + if .userName and .userName != "root" then {locked: true} end
+        | . + {privileged: {hashedPassword: "!*"}, locked: true}
         | tostring
     ' | while read -r json; do
         user="$(echo "$json" | jq --raw-output '.userName | values')"
@@ -226,6 +221,11 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         fi
     done
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
+
+    # Modify the root user
+    cat /usr/lib/userdb/root.user | jq '. + {
+        homeDirectory: "/var/roothome", shell: "/usr/bin/fish"
+    }' | tee /usr/lib/userdb/root.user >/dev/null
 )
 
 # Set the metadata
