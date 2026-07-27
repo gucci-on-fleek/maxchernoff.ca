@@ -35,14 +35,15 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
     # Booting and updating
     bootc
+    clevis-dracut  # Full disk encryption
     dnf5
     dosfstools  # fsck for the EFI partition
     dracut-config-generic  # Creates a non-host-specific initramfs
     efibootmgr
     fwupd-efi
     microcode_ctl
-    systemd-boot-unsigned
     strip  # To strip the initramfs and kernel for smaller size
+    systemd-boot-unsigned
     systemd-ukify  # Creates a unified kernel image (UKI) for booting
 
     # Command-line Utilities

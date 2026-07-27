@@ -18,6 +18,8 @@ chcon \
     --reference="$HOME/.local/share/containers/storage/overlay" \
     "$HOME/.local/share/containers/storage"
 
+podman image pull --policy="always" "maxchernoff.ca/fedora-bootc-base:latest"
+
 podman build \
     --build-arg="IMAGE_ID=$(\
         podman image inspect --format='{{.Id}}' \
@@ -33,7 +35,7 @@ podman build \
     --label="containers.bootc=sealed" \
     --network="none" \
     --no-cache \
-    --pull="always" \
+    --pull="never" \
     --squash \
     --tag="maxchernoff.ca/fedora-bootc:latest" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
