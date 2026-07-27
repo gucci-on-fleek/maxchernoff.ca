@@ -24,7 +24,7 @@ from enum import StrEnum, unique as enum_unique
 from functools import cache, cached_property
 from hashlib import shake_128
 from json import dumps as json_dumps, loads as json_loads
-from os import mkfifo
+from os import environ, mkfifo
 from pathlib import Path
 from platform import machine as platform_machine
 from pprint import pp as pprint
@@ -1439,6 +1439,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                 f"oci-archive:{fifo.absolute()}",
                 f"docker://{config.registry}/{tag}",
             ],
+            env={"SOURCE_DATE_EPOCH": "0", **environ},
         ) as skopeo,
     ):
         if chunkah.wait() != 0:

@@ -34,21 +34,22 @@ podman build \
     --network="none" \
     --no-cache \
     --pull="always" \
+    --squash \
     --tag="maxchernoff.ca/fedora-bootc:latest" \
     --volume="$HOME/.cache/podman-dnf/:/var/cache/libdnf5/:rw" \
     --volume="$temp_dir:/var/lib/containers:U,z" \
     "$script_dir"
 
 # Push the container
-skopeo copy \
+SOURCE_DATE_EPOCH=0 skopeo copy \
     --all \
     --dest-compress-format="zstd:chunked" \
     --dest-compress-level="15" \
+    --dest-force-compress-format \
     --dest-precompute-digests \
     --dest-tls-verify="false" \
     --format="oci" \
-    --image-parallel-copies="8" \
-    --preserve-digests \
+    --image-parallel-copies="4" \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-bootc:latest" \
     "containers-storage:maxchernoff.ca/fedora-bootc:latest" \
