@@ -6,9 +6,6 @@
 After=podman.socket network-ready.service
 Requires=podman.socket
 
-StartLimitIntervalSec=15min
-StartLimitBurst=2
-
 [Service]
 Type=oneshot
 RemainAfterExit=no
