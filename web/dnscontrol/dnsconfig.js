@@ -291,6 +291,11 @@ D("maxchernoff.ca", REG_MONITOR,
         vertical_precision: 10,
         size: 100,
     }),
+
+    // Tang
+    TXT("_tierhive-validation.tang",
+        "33eff7159d3d748b01753da7fce670cb32424a434e70d0aa1fd7ab1e98892a86"),
+    A("tang", "149.56.240.225"),
 )
 
 // Secondary domain: duck.tel
