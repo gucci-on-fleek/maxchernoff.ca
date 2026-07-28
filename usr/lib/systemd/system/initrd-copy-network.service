@@ -1,0 +1,21 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+[Unit]
+Description=Copies the network configuration from the ESP
+
+ConditionPathExists=/usr/lib/initrd-release
+DefaultDependencies=no
+After=sysefi.mount systemd-network-generator.service
+Wants=sysefi.mount systemd-network-generator.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/cp \
+    --target-directory=/run/systemd/network/ \
+    /sysefi/loader/*.network
+
+[Install]
+WantedBy=systemd-networkd.service

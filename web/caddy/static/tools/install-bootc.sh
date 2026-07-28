@@ -263,7 +263,7 @@ mount \
 
 # Create the systemd-networkd configuration
 mkdir --parents /mnt/boot/loader/credentials/
-cat <<-EOF > /mnt/boot/loader/credentials/network.network.85-initramfs.cred
+cat <<-EOF > /mnt/boot/loader/85-initramfs.network
 	[Match]
 	Kind=!*
 	Type=ether

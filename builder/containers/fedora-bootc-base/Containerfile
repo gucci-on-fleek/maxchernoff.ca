@@ -118,6 +118,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 
+    # Remove FIPS stuff
+    rpm --query --list crypto-policies | grep -i fips | xargs rm -rf || true
+
     # Apply the authselect profile
     authselect apply-changes
 
