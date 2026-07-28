@@ -198,6 +198,7 @@ EOF
 # Create the auto-update script
 cat > /etc/periodic/daily/auto-update <<-'EOF'
 	#!/bin/sh
+	rc-service --verbose swap restart
 	apk upgrade \
 		--preupgrade-depends="apk-tools" \
 		--available \
@@ -224,16 +225,46 @@ apk add --update-cache tang@testing tang-openrc@testing
 
 # Configure Tang
 cat > /etc/conf.d/tang <<-'EOF'
-	socat_address="tcp6-listen:80,bind=::,fork"
-EOF
-
-# Allow Tang to bind to port 80
-cat > /etc/sysctl.d/99-tang.conf <<-'EOF'
-	net.ipv4.ip_unprivileged_port_start=80
+	tang_port=8080
+	tang_address=127.0.0.1
 EOF
 
 # Enable Tang
 rc-update add tang
+
+# Install nginx
+apk add nginx nginx-openrc
+
+# Allow nginx to bind to port 80
+cat > /etc/sysctl.d/99-nginx.conf <<-'EOF'
+	net.ipv4.ip_unprivileged_port_start=80
+EOF
+
+# Configure nginx to reverse proxy to Tang
+rm -f /etc/nginx/http.d/default.conf
+cat > /etc/nginx/http.d/tang.conf <<-'EOF'
+	server {
+		listen 80 default_server;
+		listen [::]:80 default_server;
+
+		# HAProxy health check
+		location = / {
+			return 200 'OK';
+			add_header Content-Type text/plain;
+		}
+
+		# Pass actual Tang requests (/adv)
+		location / {
+			proxy_pass http://127.0.0.1:8080;
+			proxy_set_header Host $host;
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		}
+	}
+EOF
+
+# Enable nginx
+rc-update add nginx
 
 
 ####################
