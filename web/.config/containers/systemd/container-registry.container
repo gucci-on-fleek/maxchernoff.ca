@@ -24,6 +24,8 @@ PublishPort=!!prometheus.registry.ip!!:!!prometheus.registry.port!!:!!prometheus
 
 [Service]
 Restart=always
+SuccessExitStatus=2
+RuntimeMaxSec=12.25h
 
 [Unit]
 Wants=network-ready.service
