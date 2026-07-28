@@ -39,6 +39,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     dnf5
     dosfstools  # fsck for the EFI partition
     dracut-config-generic  # Creates a non-host-specific initramfs
+    dracut-network
     efibootmgr
     fwupd-efi
     microcode_ctl

@@ -1,6 +1,5 @@
 root=gpt-auto
 rootflags=compress=zstd:3,noatime
 lockdown=confidentiality
-ip=dhcp
 rd.neednet=1
 rw

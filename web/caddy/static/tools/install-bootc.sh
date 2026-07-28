@@ -248,3 +248,36 @@ systemd-cryptenroll \
 	--unlock-key-file="/tmp/luks-keyfile" \
 	"${disk}3"
 rm --force /tmp/luks-keyfile
+
+
+##################
+### Networking ###
+##################
+
+# Mount the boot partition
+mkdir --parents /mnt/boot
+mount \
+	--onlyonce \
+	--source="${disk}1" \
+	--target="/mnt/boot"
+
+# Create the systemd-networkd configuration
+mkdir --parents /mnt/boot/loader/credentials/
+cat <<-EOF > /mnt/boot/loader/credentials/network.network.85-initramfs.cred
+	[Match]
+	Kind=!*
+	Type=ether
+
+	[Network]
+	DHCP=no
+	Address=$(
+		ip --brief addr show scope global | awk '{ print $3 }' | head -n 1
+	)
+	Gateway=$(
+		ip --brief route show default | awk '{ print $3 }' | head -n 1
+	)
+	DNS=1.1.1.1 1.0.0.1
+EOF
+
+# Unmount the boot partition
+umount --all-targets /mnt/boot
