@@ -10,12 +10,13 @@ ConditionPathExists=/usr/lib/initrd-release
 DefaultDependencies=no
 After=sysefi.mount systemd-network-generator.service
 Wants=sysefi.mount systemd-network-generator.service
+Before=systemd-networkd.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/cp \
+ExecStart=sh -c 'cp \
     --target-directory=/run/systemd/network/ \
-    /sysefi/loader/*.network
+    /sysefi/loader/*.network'
 
 [Install]
 WantedBy=systemd-networkd.service

@@ -227,6 +227,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     done
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
 
+    echo "root:x:0:0:root:/var/roothome:/usr/bin/fish" > /etc/passwd
+    echo "root:x:0:" > /etc/group
+
     # Modify the root user
     cat /usr/lib/userdb/root.user | jq '. + {
         homeDirectory: "/var/roothome", shell: "/usr/bin/fish"

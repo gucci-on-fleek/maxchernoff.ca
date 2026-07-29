@@ -157,6 +157,7 @@ clevis luks bind \
 cryptsetup open \
 	--key-file="/tmp/luks-keyfile" \
 	--allow-discards \
+	--persistent \
 	"${disk}3" \
 	"root"
 
