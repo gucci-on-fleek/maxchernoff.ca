@@ -31,6 +31,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     sudo
     systemd
     systemd-networkd
+    systemd-pam
     systemd-resolved
 
     # Booting and updating
@@ -38,11 +39,9 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     clevis-dracut  # Full disk encryption
     dnf5
     dosfstools  # fsck for the EFI partition
-    dracut-config-generic  # Creates a non-host-specific initramfs
     dracut-network
     efibootmgr
     fwupd-efi
-    microcode_ctl
     strip  # To strip the initramfs and kernel for smaller size
     systemd-boot-unsigned
     systemd-ukify  # Creates a unified kernel image (UKI) for booting
@@ -226,9 +225,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         fi
     done
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
-
-    echo "root:x:0:0:root:/var/roothome:/usr/bin/fish" > /etc/passwd
-    echo "root:x:0:" > /etc/group
 
     # Modify the root user
     cat /usr/lib/userdb/root.user | jq '. + {

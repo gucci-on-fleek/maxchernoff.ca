@@ -277,7 +277,6 @@ cat <<-EOF > /mnt/boot/loader/85-initramfs.network
 	Gateway=$(
 		ip --brief route show default | awk '{ print $3 }' | head -n 1
 	)
-	DNS=1.1.1.1 1.0.0.1
 EOF
 
 # Unmount the boot partition
