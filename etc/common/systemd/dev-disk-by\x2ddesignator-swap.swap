@@ -1,0 +1,6 @@
+[Unit]
+Description=Swap Partition
+
+[Swap]
+What=/dev/disk/by-designator/swap
+Options=defaults

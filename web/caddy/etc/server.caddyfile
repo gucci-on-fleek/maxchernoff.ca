@@ -199,9 +199,18 @@ registry.maxchernoff.ca {
 	import default
 	import domain-info
 
-	# Do not cache anything, since Souin is buggy here.
-	header Cache-Control no-cache
+	# Caching
+	cache
 
+	@manifest path /v2/*/manifests/* /v2/_catalog
+	header @manifest Cache-Control "max-age=15"
+
+	@sha256 path /v2/*/blobs/sha256:*
+	header @sha256 Cache-Control "max-age=2592000, immutable" # 30 days
+
+	header ?Cache-Control "max-age=3600" # 1 hour
+
+	# Permissions
 	@get-head method GET HEAD
 	handle @get-head {
 		reverse_proxy systemd-container-registry:!!registry.port!!

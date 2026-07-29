@@ -1428,7 +1428,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                     CmdlineOption("dest-precompute-digests"),
                     CmdlineOption("dest-tls-verify", "false"),
                     CmdlineOption("format", "oci"),
-                    CmdlineOption("image-parallel-copies", "4"),
+                    CmdlineOption("image-parallel-copies", "16"),
                     CmdlineOption(
                         "sign-by-sigstore", config.sigstore_path.as_posix()
                     ),

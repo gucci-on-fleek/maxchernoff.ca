@@ -19,5 +19,7 @@ ExecStart=/usr/local/bin/build-container \
 Restart=on-failure
 RestartSec=5min
 
+!!priorities.low!!
+
 [Install]
 WantedBy=update-all.target

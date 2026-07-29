@@ -51,7 +51,7 @@ SOURCE_DATE_EPOCH=0 skopeo copy \
     --dest-precompute-digests \
     --dest-tls-verify="false" \
     --format="oci" \
-    --image-parallel-copies="4" \
+    --image-parallel-copies="16" \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-bootc:latest" \
     "containers-storage:maxchernoff.ca/fedora-bootc:latest" \

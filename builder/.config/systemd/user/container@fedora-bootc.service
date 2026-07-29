@@ -12,5 +12,7 @@ RemainAfterExit=no
 Slice=container.slice
 ExecStart=%h/containers/fedora-bootc/build.sh
 
+!!priorities.low!!
+
 [Install]
 WantedBy=update-all.target

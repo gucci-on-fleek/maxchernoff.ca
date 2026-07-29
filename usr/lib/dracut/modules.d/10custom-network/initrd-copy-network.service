@@ -14,7 +14,7 @@ Before=systemd-networkd.service
 
 [Service]
 Type=oneshot
-ExecStart=sh -c 'cp /sysefi/loader/*.network /run/systemd/network/'
+ExecStart=sh -c 'cp --no-preserve=mode /sysefi/loader/*.network /run/systemd/network/'
 ExecStart=sh -c 'echo "nameserver 1.1.1.1" >> /etc/resolv.conf'
 ExecStart=sh -c 'echo "nameserver 2606:4700:4700::1001" >> /etc/resolv.conf'
 

@@ -8,6 +8,7 @@ disable sshd-keygen@dsa.service
 disable sshd-keygen@ecdsa.service
 disable sshd-keygen@rsa.service
 disable systemd-boot-update.service
+disable systemd-homed.service
 disable systemd-timesyncd.service
 
 enable audit-rules.service
