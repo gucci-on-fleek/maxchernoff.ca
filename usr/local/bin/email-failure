@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 
+"""Sends an email when a systemd service fails."""
+
 ###############
 ### Imports ###
 ###############
@@ -12,9 +14,13 @@ from argparse import ArgumentParser
 from email.headerregistry import Address
 from email.message import EmailMessage
 from getpass import getuser
+from pathlib import Path
+from pprint import pp as pprint
 from re import sub as replace
 from smtplib import SMTP
 from subprocess import run
+from sys import exit
+
 
 #################
 ### Constants ###
@@ -44,7 +50,7 @@ SYSTEMCTL_REGEX_REPLACE = r": "
 ### Variables ###
 #################
 
-with open(PASSWORD_FILE, "r") as f:
+with Path(PASSWORD_FILE).open(encoding="utf-8") as f:
     smtp_password = f.read().strip()
 
 unix_username = getuser()
@@ -93,12 +99,17 @@ body = replace(
         ],
         capture_output=True,
         text=True,
+        check=True,
     ).stdout,
 )
 
 if ("systemd/transient" in body) and ("podman healthcheck run" in body):
     # Ignore healthcheck failures
     print("Ignoring healthcheck failure")
+    exit(0)
+
+if ("Until: " in body) and ("Active: active" in body):
+    print("Ignoring scheduled restarts")
     exit(0)
 
 msg = EmailMessage()
