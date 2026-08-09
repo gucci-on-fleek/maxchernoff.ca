@@ -9,7 +9,7 @@ set -euo pipefail
 export PATH="/var/home/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 
 # Update the TeX Live installation.
-tlmgr update --all --self
+tlmgr update --all --self || true
 
 # Reset the ls-R dates so that ConTeXt doesn't auto-remake its formats
 touch --date='@0' /var/home/tex/texlive/texmf-{config,dist,local,var}/ls-R
