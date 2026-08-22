@@ -167,6 +167,11 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     find . -xtype l -delete 2>/dev/null || true
     find / -depth -type d -empty -delete 2>/dev/null || true
 
+    # Restore the intentionally empty directories
+    mkdir --parents \
+        '/usr/share/empty.sshd' \
+        '/usr/share/empty'
+
     # Add the bootc links
     systemd-tmpfiles --create --boot \
         /usr/lib/tmpfiles.d/bootc-build.conf \
