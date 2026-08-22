@@ -12,7 +12,7 @@ RUN <<EOF
 
     # Get the composefs ID
     {
-        cat "/run/.containerenv"
+        echo "graphRootMounted=1"
         echo "imageid=$IMAGE_ID"
     } > /run/.containerenv
 

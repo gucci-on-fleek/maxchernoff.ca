@@ -12,18 +12,18 @@ check() {
 
 # Dependencies
 depends() {
-    echo systemd-networkd systemd-udevd
+    echo systemd-udevd
     return 0
 }
 
 # Install the files
 install() {
     for file in \
-        "initrd-copy-network.service" \
-        "sysefi.mount" \
-        "systemd-networkd.service.wants/initrd-copy-network.service" \
+        "dev-mapper-swap.swap" \
+        "swap.target.wants/dev-mapper-swap.swap" \
     ; do
         inst_simple "$moddir/$file" "$systemdsystemunitdir/$file"
     done
+    inst_simple "$moddir/crypttab" "/etc/crypttab"
 }
 

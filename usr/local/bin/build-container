@@ -1062,7 +1062,6 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
                 '    --setopt="keepcache=true"',
                 '    --setopt="tsflags="',  # Needed to install documentation
                 "    --use-host-config",
-                '    --exclude="bootc-1.16.4"',  # TODO temporary workaround
                 *packages,
                 "    && break",
                 "    || sleep $((30 + RANDOM % 90));",

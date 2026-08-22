@@ -240,7 +240,7 @@ umount --all-targets /mnt/boot
 umount --all-targets /var/lib/containers
 
 # Convert the scratch partition to swap
-mkswap --label="swap" "${disk}2"
+blkdiscard "${disk}2"
 
 # Add a recovery key to the LUKS partition and remove the password
 systemd-cryptenroll \
@@ -264,7 +264,7 @@ mount \
 
 # Create the systemd-networkd configuration
 mkdir --parents /mnt/boot/loader/credentials/
-cat <<-EOF > /mnt/boot/loader/85-initramfs.network
+cat <<-EOF | systemd-creds encrypt --with-key="null" - "/mnt/boot/loader/credentials/network.network.85-initramfs.cred"
 	[Match]
 	Kind=!*
 	Type=ether
