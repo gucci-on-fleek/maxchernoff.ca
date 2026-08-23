@@ -10,6 +10,8 @@ Requires=pull-repo@%i.service
 [Service]
 User=root
 Type=oneshot
+RestrictSUIDSGID=false
+
 ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/ /var/usrlocal/bin/
 ExecStart=/usr/local/bin/web-install /home/repo/%i/install-rules.toml
 ExecStart=/usr/bin/systemctl --system daemon-reload
