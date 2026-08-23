@@ -1,0 +1,9 @@
+{
+    "groupName": "max",
+    "gid": 1000,
+    "disposition": "regular",
+    "description": "Max",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}

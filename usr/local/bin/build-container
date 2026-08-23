@@ -1480,12 +1480,19 @@ def main() -> int:
         required=True,
         help="The tag to apply to the built image.",
     )
+    parser.add_argument(
+        "--debug",
+        default=False,
+        action="store_true",
+        help="Enable debug logging.",
+    )
 
     # Parse the command-line arguments.
     args = parser.parse_args()
     directory = cast(Path, args.directory)
     config_path = cast(Path, args.config)
     tag = cast(str, args.tag)
+    debug = cast(bool, args.debug)
 
     if not directory.is_dir():
         parser.error(f'"{directory}" is not a directory.')
@@ -1494,6 +1501,15 @@ def main() -> int:
         parser.error(f'"{tag}" is not a valid tag (must contain a colon).')
 
     # Build the container image using Podman.
+    if debug:
+        from sys import addaudithook, stderr
+
+        def audit_hook(event: str, args: tuple[object, ...]) -> None:
+            if event == "subprocess.Popen":
+                stderr.write(f"Popen: {args[1]}\n")
+
+        addaudithook(audit_hook)
+
     build(
         source_dir=directory,
         config=BuildConfig.from_path(config_path),

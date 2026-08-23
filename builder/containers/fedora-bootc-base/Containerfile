@@ -201,9 +201,11 @@ COPY --chown=0:0 --from=build /mnt/build/ /
             .lastPasswordChangeUSec,
             .passwordChangeMaxUSec,
             .passwordChangeWarnUSec
-        )
-        | . + {privileged: {hashedPassword: "!*"}, locked: true}
-        | tostring
+        ) | . + {
+            privileged: {hashedPassword: "!*"},
+            locked: true,
+            disposition: "system",
+        } | tostring
     ' | while read -r json; do
         user="$(echo "$json" | jq --raw-output '.userName | values')"
         group="$(echo "$json" | jq --raw-output '.groupName | values')"
@@ -225,11 +227,14 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         fi
     done
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
+    rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
 
-    # Modify the root user
+    # Modify the special users
     cat /usr/lib/userdb/root.user | jq '. + {
-        homeDirectory: "/var/roothome", shell: "/usr/bin/fish"
+        homeDirectory: "/var/roothome", shell: "/usr/bin/fish",
     }' | tee /usr/lib/userdb/root.user >/dev/null
+
+    sed -i 's/system/intrinsic/g' /usr/lib/userdb/{root,nobody}.{user,group}
 )
 
 # Set the metadata

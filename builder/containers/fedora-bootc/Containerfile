@@ -22,6 +22,10 @@ RUN <<EOF
     )" >> /etc/kernel/cmdline
     grep --perl-regexp --quiet '^composefs=.{5}' /etc/kernel/cmdline
 
+    # Populate /etc/passwd for Dracut
+    userdbctl --multiplexer="false" --output="classic" user > /etc/passwd
+    userdbctl --multiplexer="false" --output="classic" group > /etc/group
+
     # UKI generation
     kernel-install add-all
 

@@ -4,9 +4,6 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 disable auditd.service
 disable btrfs-balance.timer
-disable sshd-keygen@dsa.service
-disable sshd-keygen@ecdsa.service
-disable sshd-keygen@rsa.service
 disable systemd-boot-update.service
 disable systemd-homed.service
 disable systemd-timesyncd.service

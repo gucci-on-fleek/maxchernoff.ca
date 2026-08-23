@@ -12,6 +12,7 @@ RemainAfterExit=no
 Slice=container.slice
 
 ExecStart=/usr/local/bin/build-container \
+    --debug \
     --directory=%h/containers/%i \
     --tag=%i:latest \
     --config=%h/containers/build-container.toml
