@@ -99,6 +99,11 @@ if ! command -v systemd-cryptenroll &> /dev/null; then
 	fail_with_help "systemd-cryptenroll is not installed."
 fi
 
+# Make sure that dbus-broker is running
+if ! systemctl is-active --quiet dbus-broker; then
+	fail_with_help "dbus-broker is not running."
+fi
+
 
 ####################
 ### Partitioning ###

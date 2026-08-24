@@ -1,1 +1,10 @@
-/usr/lib/systemd/system/debug-shell.service
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+[Unit]
+Description=Starts on Alt-UpArrow, used for debugging
+DefaultDependencies=no
+IgnoreOnIsolate=true
+BindsTo=debug-shell.service
