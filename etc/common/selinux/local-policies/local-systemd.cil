@@ -1,7 +1,7 @@
 ;; Source Code for maxchernoff.ca
 ;; https://github.com/gucci-on-fleek/maxchernoff.ca
 ;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-;; SPDX-FileCopyrightText: 2025 Max Chernoff
+;; SPDX-FileCopyrightText: 2026 Max Chernoff
 
 ;; Includes
 (typeattributeset cil_gen_require admin_home_t               )
@@ -13,24 +13,26 @@
 (typeattributeset cil_gen_require home_root_t                )
 (typeattributeset cil_gen_require hostname_exec_t            )
 (typeattributeset cil_gen_require init_var_run_t             )
-(typeattributeset cil_gen_require init_var_run_t             )
 (typeattributeset cil_gen_require install_t                  )
 (typeattributeset cil_gen_require journalctl_t               )
 (typeattributeset cil_gen_require root_t                     )
 (typeattributeset cil_gen_require snapperd_t                 )
 (typeattributeset cil_gen_require staff_t                    )
 (typeattributeset cil_gen_require sysadm_t                   )
+(typeattributeset cil_gen_require sysctl_vm_t                )
 (typeattributeset cil_gen_require systemd_network_generator_t)
 (typeattributeset cil_gen_require systemd_networkd_t         )
 (typeattributeset cil_gen_require systemd_networkd_var_run_t )
 (typeattributeset cil_gen_require systemd_oomd_t             )
 (typeattributeset cil_gen_require systemd_oomd_var_run_t     )
+(typeattributeset cil_gen_require systemd_tmpfiles_t         )
 (typeattributeset cil_gen_require systemd_unit_file_t        )
 (typeattributeset cil_gen_require tmpfs_t                    )
 (typeattributeset cil_gen_require user_t                     )
 (typeattributeset cil_gen_require user_tmp_t                 )
 (typeattributeset cil_gen_require var_log_t                  )
 (typeattributeset cil_gen_require var_run_t                  )
+
 
 ;; Defines
 (typeattribute    local_user_domains                 )
@@ -91,3 +93,6 @@
 
 ;; Needed for putting the network credentials in the EFI partition
 (allow systemd_network_generator_t init_var_run_t (file (open getattr read)))
+
+;; Allow systemd-tmpfiles to write sysctls
+(allow systemd_tmpfiles_t sysctl_vm_t (file (open write)))

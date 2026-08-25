@@ -1,5 +1,5 @@
 root=gpt-auto
-rootflags=compress=zstd:3,noatime
+rootflags=compress=zstd:3,noatime,lazytime,nodev
 lockdown=confidentiality
 rd.neednet=1
 softdog.soft_active_on_boot=1

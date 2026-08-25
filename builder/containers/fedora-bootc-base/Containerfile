@@ -109,6 +109,10 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     systemctl --system preset-all
     systemctl --user --global preset-all
 
+    # udev fixes
+    sed -i '/LABEL="image_dissect_end"/i OPTIONS+="db_persist"' \
+        /usr/lib/udev/rules.d/90-image-dissect.rules
+
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 
@@ -156,6 +160,13 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Fix the SELinux contexts
     sed -i 's|^/var/home|#/var/home|' \
         /etc/selinux/targeted/contexts/files/file_contexts.subs_dist
+
+    # Set some SELinux booleans
+    setsebool -P \
+        selinuxuser_tcp_server=true \
+        selinuxuser_udp_server=true \
+        container_manage_cgroup=true \
+        domain_can_mmap_files=true
 
     # Install the local SELinux policies
     semodule \

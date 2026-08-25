@@ -88,6 +88,7 @@ boolean --deleteall
 boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
 boolean --modify container_manage_cgroup --on
+boolean --modify domain_can_mmap_files --on
 """
 
 

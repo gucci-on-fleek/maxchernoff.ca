@@ -179,7 +179,7 @@ mount \
 	--onlyonce \
 	--source="/dev/mapper/root" \
 	--target="/mnt/root" \
-	--options="defaults,noatime,compress=zstd:3"
+	--options="defaults,noatime,compress=zstd:3,lazytime,nodev"
 
 
 ####################
@@ -233,6 +233,10 @@ podman run \
 ####################
 ### Finalization ###
 ####################
+
+# Make /var/home a subvolume
+rm --recursive --force /mnt/root/state/os/default/var/home/
+btrfs subvolume create /mnt/root/state/os/default/var/home/
 
 # Unmount the root filesystem
 umount --all-targets /mnt/root
