@@ -1,4 +1,0 @@
-[Unit]
-Wants=
-Wants=sshd-keygen@ed25519.service
-PartOf=sshd.service

@@ -4,30 +4,33 @@
 ;; SPDX-FileCopyrightText: 2025 Max Chernoff
 
 ;; Includes
-(typeattributeset cil_gen_require admin_home_t          )
-(typeattributeset cil_gen_require dosfs_t               )
-(typeattributeset cil_gen_require file_context_t        )
-(typeattributeset cil_gen_require fs_t                  )
-(typeattributeset cil_gen_require gconf_home_t          )
-(typeattributeset cil_gen_require gpg_t                 )
-(typeattributeset cil_gen_require home_root_t           )
-(typeattributeset cil_gen_require hostname_exec_t       )
-(typeattributeset cil_gen_require init_var_run_t        )
-(typeattributeset cil_gen_require install_t             )
-(typeattributeset cil_gen_require journalctl_t          )
-(typeattributeset cil_gen_require root_t                )
-(typeattributeset cil_gen_require snapperd_t            )
-(typeattributeset cil_gen_require staff_t               )
-(typeattributeset cil_gen_require sysadm_t              )
-(typeattributeset cil_gen_require systemd_networkd_t    )
-(typeattributeset cil_gen_require systemd_oomd_t        )
-(typeattributeset cil_gen_require systemd_oomd_var_run_t)
-(typeattributeset cil_gen_require systemd_unit_file_t   )
-(typeattributeset cil_gen_require tmpfs_t               )
-(typeattributeset cil_gen_require user_t                )
-(typeattributeset cil_gen_require user_tmp_t            )
-(typeattributeset cil_gen_require var_log_t             )
-(typeattributeset cil_gen_require var_run_t             )
+(typeattributeset cil_gen_require admin_home_t               )
+(typeattributeset cil_gen_require dosfs_t                    )
+(typeattributeset cil_gen_require file_context_t             )
+(typeattributeset cil_gen_require fs_t                       )
+(typeattributeset cil_gen_require gconf_home_t               )
+(typeattributeset cil_gen_require gpg_t                      )
+(typeattributeset cil_gen_require home_root_t                )
+(typeattributeset cil_gen_require hostname_exec_t            )
+(typeattributeset cil_gen_require init_var_run_t             )
+(typeattributeset cil_gen_require init_var_run_t             )
+(typeattributeset cil_gen_require install_t                  )
+(typeattributeset cil_gen_require journalctl_t               )
+(typeattributeset cil_gen_require root_t                     )
+(typeattributeset cil_gen_require snapperd_t                 )
+(typeattributeset cil_gen_require staff_t                    )
+(typeattributeset cil_gen_require sysadm_t                   )
+(typeattributeset cil_gen_require systemd_network_generator_t)
+(typeattributeset cil_gen_require systemd_networkd_t         )
+(typeattributeset cil_gen_require systemd_networkd_var_run_t )
+(typeattributeset cil_gen_require systemd_oomd_t             )
+(typeattributeset cil_gen_require systemd_oomd_var_run_t     )
+(typeattributeset cil_gen_require systemd_unit_file_t        )
+(typeattributeset cil_gen_require tmpfs_t                    )
+(typeattributeset cil_gen_require user_t                     )
+(typeattributeset cil_gen_require user_tmp_t                 )
+(typeattributeset cil_gen_require var_log_t                  )
+(typeattributeset cil_gen_require var_run_t                  )
 
 ;; Defines
 (typeattribute    local_user_domains                 )
@@ -65,8 +68,9 @@
 (allow sysadm_t snapperd_t (dbus (send_msg)))
 
 ;; Needed for "sudo networkctl ..."
-(allow sysadm_t systemd_networkd_t (dbus               (send_msg )))
-(allow sysadm_t systemd_networkd_t (unix_stream_socket (connectto)))
+(allow sysadm_t systemd_networkd_t         (dbus               (send_msg )))
+(allow sysadm_t systemd_networkd_t         (unix_stream_socket (connectto)))
+(allow sysadm_t systemd_networkd_var_run_t (sock_file          (write    )))
 
 ;; Needed for Victoria Logs
 (portcon tcp 21660 (system_u object_r journal_remote_port_t ((s0) (s0))))
@@ -79,29 +83,11 @@
 (allow local_user_domains systemd_oomd_t (unix_stream_socket (connectto)))
 (allow local_user_domains systemd_oomd_var_run_t (sock_file (write)))
 
-
 ;; Needed for "sudo systemctl --user --machine=USER@ ..."
-; (type systemd_stdio_bridge_t)
-; (type systemd_stdio_bridge_exec_t)
-;
-; (roletype object_r systemd_stdio_bridge_t)
-; (roletype object_r systemd_stdio_bridge_exec_t)
-; (roletype usernetctl_roles systemd_stdio_bridge_t)
-; (typeattributeset domain (systemd_stdio_bridge_t))
-;
-; (typetransition init_t systemd_stdio_bridge_exec_t process systemd_stdio_bridge_t)
-; (allow init_t systemd_stdio_bridge_exec_t (file (getattr open read execute)))
-; (allow systemd_stdio_bridge_t systemd_stdio_bridge_exec_t (file (entrypoint)))
-; (allow init_t systemd_stdio_bridge_t (process (transition)))
-;
-; (typetransition local_user_domains systemd_stdio_bridge_exec_t process systemd_stdio_bridge_t)
-; (allow local_user_domains systemd_stdio_bridge_exec_t (file (getattr open read execute)))
-; (allow systemd_stdio_bridge_t systemd_stdio_bridge_exec_t (file (entrypoint)))
-; (allow local_user_domains systemd_stdio_bridge_t (process (transition)))
-;
-; (filecon "/usr/local/bin/systemd-stdio-bridge" file (system_u object_r systemd_stdio_bridge_exec_t ((s0) (s0))))
-; (allow systemd_stdio_bridge_t admindomain (unix_stream_socket (getattr getopt read setopt write)))
 (allow local_user_domains sysadm_t (unix_stream_socket (getattr getopt read setopt write)))
 
 ;; Needed for ostree
 (allow install_t hostname_exec_t (file (getattr open read unlink)))
+
+;; Needed for putting the network credentials in the EFI partition
+(allow systemd_network_generator_t init_var_run_t (file (open getattr read)))

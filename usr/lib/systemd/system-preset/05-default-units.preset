@@ -30,5 +30,5 @@ enable qemu-guest-agent.service
 enable redboot-*.service
 enable rpm-ostree-countme.timer
 enable snapper-*.timer
-enable sshd.*
+enable sshd.socket
 enable systemd-oomd.*

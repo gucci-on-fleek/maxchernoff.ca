@@ -18,12 +18,13 @@ depends() {
 
 # Install the files
 install() {
-    for file in \
-        "dev-mapper-swap.swap" \
-        "swap.target.wants/dev-mapper-swap.swap" \
-    ; do
-        inst_simple "$moddir/$file" "$systemdsystemunitdir/$file"
-    done
+    inst_simple \
+        "$moddir/dev-mapper-swap.swap" \
+        "$systemdsystemunitdir/dev-mapper-swap.swap"
+
+    $SYSTEMCTL -q --root "$initdir" add-wants \
+        "swap.target" "dev-mapper-swap.swap"
+
     inst_simple "$moddir/crypttab" "/etc/crypttab"
 }
 

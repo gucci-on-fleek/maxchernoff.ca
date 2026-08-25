@@ -1,0 +1,20 @@
+;; Source Code for maxchernoff.ca
+;; https://github.com/gucci-on-fleek/maxchernoff.ca
+;; SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+;; SPDX-FileCopyrightText: 2026 Max Chernoff
+
+;; Includes
+(typeattributeset cil_gen_require fs_t                 )
+(typeattributeset cil_gen_require loop_control_device_t)
+(typeattributeset cil_gen_require root_t               )
+(typeattributeset cil_gen_require sysadm_t             )
+(typeattributeset cil_gen_require usr_t                )
+
+;; Required for "bootc upgrade"
+(allow sysadm_t fs_t (filesystem (mount)))
+(allow sysadm_t loop_control_device_t (chr_file (ioctl write open read)))
+(allow sysadm_t self (capability2 (mac_admin)))
+
+;; Label the bootc files
+(filecon "/sysroot(/.*)?"             any (system_u object_r usr_t  ((s0) (s0))))
+(filecon "/sysroot/state/[^/]*/[^/]*" dir (system_u object_r root_t ((s0) (s0))))

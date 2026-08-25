@@ -277,11 +277,20 @@ cat <<-EOF | systemd-creds encrypt --with-key="null" --name="network.network.85-
 	[Network]
 	DHCP=no
 	Address=$(
-		ip --brief addr show scope global | awk '{ print $3 }' | head -n 1
+		ip -4 --brief addr show scope global | awk '{ print $3 }' | head -n 1
 	)
 	Gateway=$(
-		ip --brief route show default | awk '{ print $3 }' | head -n 1
+		ip -4 --brief route show default | awk '{ print $3 }' | head -n 1
 	)
+	DNS=1.1.1.1 1.0.0.1
+
+	Address=$(
+		ip -6 --brief addr show scope global | awk '{ print $3 }' | head -n 1
+	)
+	Gateway=$(
+		ip -6 --brief route show default | awk '{ print $3 }' | head -n 1
+	)
+	DNS=2606:4700:4700::1111 2606:4700:4700::1001
 EOF
 
 # Unmount the boot partition

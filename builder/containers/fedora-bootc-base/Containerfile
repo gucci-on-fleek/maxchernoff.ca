@@ -105,7 +105,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 @with_commit_info()
 @run(
     # Only use the services that we've explicitly enabled
-    rm -rf /etc/systemd/{system,user}/*
+    find /etc/systemd/{system,user} -type l -xtype f,l -delete
     systemctl --system preset-all
     systemctl --user --global preset-all
 
@@ -147,11 +147,26 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/bin/image-minimizer.py /etc/image-minimize.conf
 
-    # Rebuild the SELinux modules
+    # Use SELinux confined users
     semanage user --modify user_u --range s0-s0:c0.c1023
     semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
-    semanage login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
-    semodule --install=/etc/selinux/local-policies/local-required-fallbacks.cil
+    semanage login --add    --seuser staff_u  --range 's0-s0:c0.c1023' max
+    semanage login --modify --seuser user_u   --range 's0-s0:c0.c1023' __default__
+
+    # Fix the SELinux contexts
+    sed -i 's|^/var/home|#/var/home|' \
+        /etc/selinux/targeted/contexts/files/file_contexts.subs_dist
+
+    # Install the local SELinux policies
+    semodule \
+        --install=/usr/share/udica/templates/base_container.cil \
+        --install=/usr/share/udica/templates/net_container.cil \
+        $(
+            find /etc/selinux/local-policies/ \
+            -iname '*.cil' \
+            -printf '--install=%p\n' \
+            | sort
+        )
 
     # Reset the machine-specific resources
     rm --force \
