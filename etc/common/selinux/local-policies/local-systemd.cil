@@ -19,6 +19,7 @@
 (typeattributeset cil_gen_require journalctl_t               )
 (typeattributeset cil_gen_require root_t                     )
 (typeattributeset cil_gen_require snapperd_t                 )
+(typeattributeset cil_gen_require sshd_t                     )
 (typeattributeset cil_gen_require staff_t                    )
 (typeattributeset cil_gen_require sysadm_t                   )
 (typeattributeset cil_gen_require sysctl_vm_t                )
@@ -99,4 +100,5 @@
 (allow systemd_tmpfiles_t sysctl_vm_t (file (open write)))
 
 ;; No idea...
-(allow chkpwd_t hugetlbfs_t (file (read)))
+(allow chkpwd_t hugetlbfs_t (file   (read  )))
+(allow sshd_t   self        (passwd (rootok)))

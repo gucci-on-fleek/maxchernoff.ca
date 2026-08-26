@@ -255,14 +255,8 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     done
 
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
+    rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
     chmod a=,u+rw /etc/userdb/*-privileged
-
-    # Remove the sysusers dropins, but save them for Dracut
-    mkdir -p /usr/lib/sysusers.d-dracut/
-    mv --target-directory=/usr/lib/sysusers.d-dracut/ \
-        /etc/sysusers.d/* \
-        /usr/lib/sysusers.d/*
-    rmdir /etc/sysusers.d/ /usr/lib/sysusers.d/
 
     # Modify the special users
     cat /usr/lib/userdb/root.user | jq '. + {

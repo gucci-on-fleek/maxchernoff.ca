@@ -27,14 +27,9 @@ install() {
         "../dev-mapper-swap.swap" \
         "$initdir/$systemdsystemunitdir/swap.target.wants/dev-mapper-swap.swap"
 
-    cp -r --target-directory="$initdir/$systemdsystemunitdir/" \
-        /usr/lib/systemd/system/*.device.d
-
-    inst_simple /usr/sbin/swapon
-
-    inst_simple \
-        "$systemdsystemunitdir/systemd-cryptsetup@swap.service.d/override.conf"
-
+    inst_binary /usr/sbin/swapon
+    inst_binary /usr/sbin/mkswap
+    inst_binary /usr/lib/systemd/systemd-makefs
     inst_simple "$moddir/crypttab" "/etc/crypttab"
 }
 

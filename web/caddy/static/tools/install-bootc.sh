@@ -249,7 +249,8 @@ umount --all-targets /mnt/boot
 umount --all-targets /var/lib/containers
 
 # Convert the scratch partition to swap
-blkdiscard --force "${disk}2"
+blkdiscard --force --zeroout "${disk}2"
+printf 'LUKS\xba\xbe' > "${disk}2"
 
 # Add a recovery key to the LUKS partition and remove the password
 systemd-cryptenroll \
