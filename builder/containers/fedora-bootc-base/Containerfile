@@ -252,12 +252,14 @@ COPY --chown=0:0 --from=build /mnt/build/ /
                 "/usr/lib/userdb/${gid}.group"
         fi
     done
+
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
     rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
     chmod a=,u+rw /etc/userdb/*-privileged
 
     # Modify the special users
     cat /usr/lib/userdb/root.user | jq '. + {
+        locked: false,
         homeDirectory: "/var/roothome",
         shell: "/usr/bin/fish",
         umask: 54,
