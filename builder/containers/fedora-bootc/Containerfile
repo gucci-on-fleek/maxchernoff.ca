@@ -23,14 +23,7 @@ RUN <<EOF
     grep --perl-regexp --quiet '^composefs=.{5}' /etc/kernel/cmdline
 
     # Make sure that Dracut can find the user databases
-    userdb_args=(
-        --multiplexer="false"
-        --output="classic"
-        --disposition="system"
-        --disposition="regular"
-    )
-    userdbctl "${userdb_args[@]}" user > /etc/passwd
-    userdbctl "${userdb_args[@]}" group > /etc/group
+    mv /usr/lib/sysusers.d-dracut/ /usr/lib/sysusers.d/
 
     # UKI generation
     kernel-install add-all
@@ -40,7 +33,7 @@ RUN <<EOF
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
     # Cleanup
-    rm -rf /run/containers
+    rm -rf /run/containers /etc/passwd /etc/group
 
     # Lint the bootc container
     bootc container lint --no-truncate --fatal-warnings || true

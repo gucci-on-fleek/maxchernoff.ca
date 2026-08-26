@@ -118,6 +118,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 
     # Remove FIPS stuff
     rpm --query --list crypto-policies | grep -i fips | xargs rm -rf || true
+    rm /usr/lib64/ossl-modules/fips.so
 
     # Apply the authselect profile
     authselect apply-changes
@@ -137,6 +138,10 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     } | tee --append /usr/lib/os-release
     rm --force /etc/os-release
     ln --symbolic /usr/lib/os-release /etc/os-release
+
+    # Minimize the Dracut initramfs
+    sed -i 's/${hostonly-}/yes/g' \
+        /usr/lib/dracut/modules.d/20i18n/module-setup.sh
 
     # Remove files that shouldn't be in "/var/"
     mv /var/lib/alternatives /usr/lib/alternatives
@@ -254,8 +259,14 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     done
 
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
-    rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
     chmod a=,u+rw /etc/userdb/*-privileged
+
+    # Remove the sysusers dropins, but save them for Dracut
+    mkdir -p /usr/lib/sysusers.d-dracut/
+    mv --target-directory=/usr/lib/sysusers.d-dracut/ \
+        /etc/sysusers.d/* \
+        /usr/lib/sysusers.d/*
+    rmdir /etc/sysusers.d/ /usr/lib/sysusers.d/
 
     # Modify the special users
     cat /usr/lib/userdb/root.user | jq '. + {
