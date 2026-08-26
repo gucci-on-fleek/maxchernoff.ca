@@ -5,6 +5,7 @@
 
 ;; Includes
 (typeattributeset cil_gen_require admin_home_t               )
+(typeattributeset cil_gen_require chkpwd_t                   )
 (typeattributeset cil_gen_require dosfs_t                    )
 (typeattributeset cil_gen_require file_context_t             )
 (typeattributeset cil_gen_require fs_t                       )
@@ -12,6 +13,7 @@
 (typeattributeset cil_gen_require gpg_t                      )
 (typeattributeset cil_gen_require home_root_t                )
 (typeattributeset cil_gen_require hostname_exec_t            )
+(typeattributeset cil_gen_require hugetlbfs_t                )
 (typeattributeset cil_gen_require init_var_run_t             )
 (typeattributeset cil_gen_require install_t                  )
 (typeattributeset cil_gen_require journalctl_t               )
@@ -32,7 +34,6 @@
 (typeattributeset cil_gen_require user_tmp_t                 )
 (typeattributeset cil_gen_require var_log_t                  )
 (typeattributeset cil_gen_require var_run_t                  )
-
 
 ;; Defines
 (typeattribute    local_user_domains                 )
@@ -96,3 +97,6 @@
 
 ;; Allow systemd-tmpfiles to write sysctls
 (allow systemd_tmpfiles_t sysctl_vm_t (file (open write)))
+
+;; No idea...
+(allow chkpwd_t hugetlbfs_t (file (read)))

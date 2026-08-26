@@ -109,10 +109,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     systemctl --system preset-all
     systemctl --user --global preset-all
 
-    # udev fixes
-    sed -i '/LABEL="image_dissect_end"/i OPTIONS+="db_persist"' \
-        /usr/lib/udev/rules.d/90-image-dissect.rules
-
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 

@@ -5,5 +5,7 @@ rd.neednet=1
 systemd.image_policy=root=encrypted:swap=encrypted+absent+unused:esp=unprotected
 softdog.soft_active_on_boot=1
 systemd.log_level=debug
-udev.trace
+rd.udev.log_level=info udev.log_level=debug
+rd.break=pre-pivot
+log_buf_len=64M
 rw

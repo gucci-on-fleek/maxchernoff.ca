@@ -22,8 +22,18 @@ install() {
         "$moddir/dev-mapper-swap.swap" \
         "$systemdsystemunitdir/dev-mapper-swap.swap"
 
-    $SYSTEMCTL -q --root "$initdir" add-wants \
-        "swap.target" "dev-mapper-swap.swap"
+    mkdir -p "$initdir/$systemdsystemunitdir/swap.target.wants"
+    ln -s \
+        "../dev-mapper-swap.swap" \
+        "$initdir/$systemdsystemunitdir/swap.target.wants/dev-mapper-swap.swap"
+
+    cp -r --target-directory="$initdir/$systemdsystemunitdir/" \
+        /usr/lib/systemd/system/*.device.d
+
+    inst_simple /usr/sbin/swapon
+
+    inst_simple \
+        "$systemdsystemunitdir/systemd-cryptsetup@swap.service.d/override.conf"
 
     inst_simple "$moddir/crypttab" "/etc/crypttab"
 }

@@ -24,6 +24,14 @@ RUN <<EOF
 
     # Make sure that Dracut can find the user databases
     mv /usr/lib/sysusers.d-dracut/ /usr/lib/sysusers.d/
+    userdb_args=(
+        --multiplexer="false"
+        --output="classic"
+        --disposition="system"
+        --disposition="intrinsic"
+    )
+    userdbctl "${userdb_args[@]}" user > /etc/passwd
+    userdbctl "${userdb_args[@]}" group > /etc/group
 
     # UKI generation
     kernel-install add-all
