@@ -3,4 +3,5 @@ rootflags=compress=zstd:3,noatime,lazytime,nodev
 lockdown=confidentiality
 rd.neednet=1
 softdog.soft_active_on_boot=1
+systemd.log_level=debug
 rw
