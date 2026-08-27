@@ -6,15 +6,19 @@ disable auditd.service
 disable btrfs-balance.timer
 disable systemd-boot-update.service
 disable systemd-homed.service
+disable systemd-homed*.service
+disable systemd-nsresourced.*
 disable systemd-timesyncd.service
 
 enable audit-rules.service
 enable authselect-apply-changes.service
 enable beesd.service
+enable boot.automount
 enable bootc-fetch-apply-updates.timer
 enable bootloader-update.service
 enable btrfs-*.timer
 enable btrfsmaintenance-refresh.path
+enable by-designator-udev.service
 enable chrony-wait.service
 enable chronyd.service
 enable console-colors.service

@@ -1,0 +1,21 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+[Unit]
+Description=Add /dev/disk/by-designator symlinks from the initrd to udev's database
+ConditionPathExists=!/usr/lib/initrd-release
+
+DefaultDependencies=no
+Before=systemd-udevd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStartPre=mkdir -p /run/udev/rules.d
+ExecStart=sh -c 'for dev in /dev/disk/by-designator/*; do echo "SUBSYSTEM==\\"block\\", ENV{DEVNAME}==\\"$(realpath $dev)\\", SYMLINK+=\\"$dev\\""; done > /run/udev/rules.d/99-by-designator.rules'
+
+[Install]
+WantedBy=systemd-udevd.service

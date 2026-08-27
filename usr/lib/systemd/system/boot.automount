@@ -3,4 +3,4 @@ Where=/boot
 TimeoutIdleSec=2min
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=local-fs.target

@@ -3,6 +3,10 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
+[Unit]
+Wants=by-designator-udev.service
+After=by-designator-udev.service
+
 [Mount]
 What=/dev/disk/by-designator/esp
 Where=/boot/
