@@ -201,7 +201,7 @@ permissions.other = ""
 [[copy]]
 source = "{repo}/max/"
 destination = "{max}/"
-paths = [".ssh/known_hosts", ".config/fish/config.fish", ".config/fish/themes/"]
+paths = [".ssh/known_hosts", ".config/fish/config.fish"]
 owner = "max"
 
 # Risky, so we keep this commented out most of the time
