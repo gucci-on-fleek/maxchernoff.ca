@@ -3,15 +3,15 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
-# Configure some interactive fish shell settings system-wide.
-if not status --is-interactive
-    return
-end
-
 # Set the base colour scheme.
 fish_config theme choose ayu 2>/dev/null || fish_config theme choose 'ayu Dark'
 set --global fish_color_cwd cyan
 set --global fish_color_host_remote $fish_color_host
+
+# Exit if we're not interactive.
+if not status --is-interactive
+    return
+end
 
 # Set the user colour. Cases:
 #
