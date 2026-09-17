@@ -74,8 +74,6 @@ TeX Projects
 
 ### Packages
 
-- [ConTeXt packaging for TeX Live](https://github.com/gucci-on-fleek/context-packaging)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/context)
-
 - [`lua-widow-control`](https://github.com/gucci-on-fleek/lua-widow-control)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/lua-widow-control)
 
 - [`extractbb`](https://github.com/gucci-on-fleek/extractbb)&emsp;[(<abbr>CTAN</abbr>)](https://www.ctan.org/pkg/extractbb)
