@@ -210,6 +210,15 @@ registry.maxchernoff.ca {
 
 	header ?Cache-Control "max-age=3600" # 1 hour
 
+	# Public key
+	handle /key.pub {
+		file_server {
+			root /srv
+		}
+		rewrite /assets/containers-public-key.pub
+		header Content-Type "text/x-ssh-public-key"
+	}
+
 	# Permissions
 	@get-head method GET HEAD
 	handle @get-head {
