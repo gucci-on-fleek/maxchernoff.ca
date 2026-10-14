@@ -282,6 +282,11 @@
 		X-Robots-Tag "noindex, nofollow"
 	}
 
+	# Stardew Valley
+	header /files/neohellenic-integral* {
+		-Content-Security-Policy
+	}
+
 	# Remove query parameters
 	@has-query {
 		expression `{query} != ""`

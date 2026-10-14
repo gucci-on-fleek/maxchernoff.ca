@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="text-scale" content="scale" />
+    <title>GFS NeoHellenic Integral Test</title>
+
+    <script type="module">
+        const integral = document.getElementById("integral")
+        customElements.define("x-integral", class extends HTMLElement {
+            constructor() {
+                super()
+                const shadow = this.attachShadow({ mode: "open" })
+                shadow.appendChild(integral.content.cloneNode(true))
+            }
+        })
+
+        const row = document.getElementById("row")
+        customElements.define("x-row", class extends HTMLElement {
+            constructor() {
+                super()
+                const shadow = this.attachShadow({ mode: "open" })
+                shadow.appendChild(row.content.cloneNode(true))
+                shadow.querySelector("span").textContent = this.dataset.size
+            }
+        })
+
+        const textarea = document.querySelector("textarea")
+        textarea.value = integral.content.querySelector("pre").innerHTML
+        textarea.dataset.height = textarea.value.split("\n").length
+        textarea.addEventListener("input", () => {
+            integral.content.querySelector("pre").innerHTML = textarea.value
+            textarea.dataset.height = textarea.value.split("\n").length
+            document.querySelectorAll("x-row").forEach(row => {
+                row.shadowRoot.querySelectorAll("x-integral").forEach(integral => {
+                    integral.replaceWith(integral.cloneNode(true))
+                })
+            })
+        })
+    </script>
+
+    <style>
+        main {
+            display: grid;
+            grid-template-columns: repeat(3, max-content);
+            gap: 1ch;
+            align-items: center;
+            padding: 1ch;
+
+            span:nth-of-type(-n+3) {
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+                background: Canvas;
+                padding: 1ch 0;
+            }
+
+            div {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+
+                textarea,
+                pre {
+                    font-family: ui-monospace, monospace;
+                    margin: 0;
+                    white-space: pre-wrap;
+                }
+
+                textarea {
+                    resize: none;
+                    height: attr(data-height lh);
+                    appearance: none;
+                    background: inherit;
+                    border: none;
+                }
+
+                style {
+                    display: block;
+                    height: 100%;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>GFS NeoHellenic Integral Test</h1>
+    </header>
+
+
+    <main>
+        <div>
+            <textarea></textarea>
+            <pre><style contenteditable>/* Me too! */
+@font-face {
+    font-family: font-a;
+    src: url("https://mathfonts.github.io/Euler/Euler-Math.woff2");
+    /* src: local("GFS NeoHellenic Math"); */
+}
+
+@font-face {
+    font-family: font-b;
+    src: url("https://mathfonts.github.io/GFSNeoHellenic/GFSNeohellenicMath.woff2");
+}</style></pre>
+        </div>
+
+        <span>Size</span>
+        <span>Font A</span>
+        <span>Font B</span>
+
+        <x-row data-size="4"></x-row>
+        <x-row data-size="8"></x-row>
+        <x-row data-size="12"></x-row>
+        <x-row data-size="16"></x-row>
+        <x-row data-size="20"></x-row>
+        <x-row data-size="24"></x-row>
+        <x-row data-size="28"></x-row>
+        <x-row data-size="32"></x-row>
+        <x-row data-size="36"></x-row>
+        <x-row data-size="40"></x-row>
+        <x-row data-size="44"></x-row>
+        <x-row data-size="48"></x-row>
+        <x-row data-size="56"></x-row>
+        <x-row data-size="64"></x-row>
+        <x-row data-size="72"></x-row>
+        <x-row data-size="80"></x-row>
+        <x-row data-size="88"></x-row>
+        <x-row data-size="96"></x-row>
+    </main>
+
+    <template id="integral">
+        <style>
+            :host {
+                --font: attr(data-font);
+            }
+
+            math {
+                font-family: var(--font);
+            }
+
+            pre {
+                display: contents;
+            }
+        </style>
+
+        <pre><math>
+    <!-- You can edit me! -->
+    <msubsup>
+        <mo>∫</mo>
+        <mn>0</mn>
+        <mo>∞</mo>
+    </msubsup>
+    <mrow>
+        <mi>h</mi>
+        <mo>(</mo>
+        <mi>x</mi>
+        <mo>)</mo>
+    </mrow>
+    <mi>d</mi>
+    <mi>x</mi>
+</math></pre>
+    </template>
+
+    <template id="row">
+        <style>
+            :host {
+                display: contents;
+                --size: attr(data-size px);
+            }
+
+            x-integral {
+                font-size: var(--size);
+            }
+        </style>
+
+        <span></span>
+        <x-integral data-font="font-a"></x-integral>
+        <x-integral data-font="font-b"></x-integral>
+    </template>
+</body>
+
+</html>
