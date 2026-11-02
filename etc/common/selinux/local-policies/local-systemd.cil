@@ -64,7 +64,7 @@
 (dontaudit journalctl_t gconf_home_t (file (create rename setattr unlink)))
 
 ;; Miscellaneous
-(allow container_t        container_ro_file_t (file     (relabelto     )))
+(allow container_domain   container_ro_file_t (file     (relabelto     )))
 (allow local_user_domains gpg_t               (process2 (nnp_transition)))
 
 ;; Snapper

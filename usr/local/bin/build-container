@@ -237,7 +237,7 @@ class _RunMountOption(CmdlineOptionBase):
     selinux: Literal["private", "shared"] | None
     """How and whether to relabel the mount for SELinux."""
 
-    cmdline_key = "mount"
+    cmdline_key: str = "mount"
 
     @property
     def cmdline_value(self) -> str:  # pyright: ignore[reportImplicitOverride]
@@ -759,7 +759,7 @@ class _Parser:
         return "".join(out)
 
 
-class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
+class Containerfile[Initialized: Never | None](_Parser):  # noqa: RUF020
     """Generates an executable Containerfile from a template with macros."""
 
     # Initialization functions
@@ -1232,7 +1232,7 @@ class Containerfile[Initialized: None | Never](_Parser):  # noqa: RUF020
             inner_cmd.append("touch /tmp/rpm-files.txt")
 
         # Find all files matched by the provided globs.
-        inner_cmd.append(
+        inner_cmd.append(  # ruff: ignore[repeated-append]
             " ".join([
                 f"{container_busybox} find",
                 "/",
