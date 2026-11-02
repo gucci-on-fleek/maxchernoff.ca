@@ -1,0 +1,10 @@
+// From https://utcc.utoronto.ca/~cks/space/blog/linux/PolkitSulikeAdminAuth
+
+polkit.addAdminRule(function (action, subject) {
+    if (subject.isInGroup("wheel")) {
+        return ["unix-user:0"]
+    } else {
+        // must exist but have a locked password
+        return ["unix-user:nobody"]
+    }
+})

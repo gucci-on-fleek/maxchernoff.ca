@@ -26,7 +26,8 @@ woodpecker = "/var/home/woodpecker/"
 rules = """
 # Allow max to sudo
 login --deleteall
-login --add --seuser staff_u --range 's0-s0:c0.c1023' max
+login --add --seuser staff_u  --range 's0-s0:c0.c1023' max
+login --add --seuser sysadm_u --range 's0-s0:c0.c1023' root
 
 # Let all users run containers
 user --modify user_u --range s0-s0:c0.c1023
@@ -89,6 +90,7 @@ boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
 boolean --modify container_manage_cgroup --on
 boolean --modify domain_can_mmap_files --on
+boolean --modify container_modify_selinux_labels --on
 """
 
 

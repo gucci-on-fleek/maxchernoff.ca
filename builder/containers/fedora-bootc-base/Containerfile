@@ -22,6 +22,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     kernel-modules-core  # Do not install the extra kernel modules
     openssh-clients
     openssh-server
+    polkit
     selinux-policy-targeted
     sudo
     systemd
@@ -196,8 +197,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 
     # Restore the intentionally empty directories
     mkdir --parents \
-        '/usr/share/empty.sshd' \
-        '/usr/share/empty'
+        '/usr/share/empty.sshd/' \
+        '/usr/share/empty/' \
+        '/boot/'
 
     # Add the bootc links
     systemd-tmpfiles --create --boot \
