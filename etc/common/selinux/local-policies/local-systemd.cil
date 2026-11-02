@@ -14,6 +14,7 @@
 (typeattributeset cil_gen_require home_root_t                )
 (typeattributeset cil_gen_require hostname_exec_t            )
 (typeattributeset cil_gen_require hugetlbfs_t                )
+(typeattributeset cil_gen_require init_t                     )
 (typeattributeset cil_gen_require init_var_run_t             )
 (typeattributeset cil_gen_require install_t                  )
 (typeattributeset cil_gen_require journalctl_t               )
@@ -102,3 +103,6 @@
 ;; No idea...
 (allow chkpwd_t hugetlbfs_t (file   (read  )))
 (allow sshd_t   self        (passwd (rootok)))
+
+;; Needed for run0
+(allow staff_t init_t (system (start)))

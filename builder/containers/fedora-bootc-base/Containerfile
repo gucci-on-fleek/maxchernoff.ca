@@ -201,6 +201,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         '/usr/share/empty/' \
         '/boot/'
 
+    # Polkit permission fixes
+    chmod a+rX --recursive /etc/polkit-1/
+
     # Add the bootc links
     systemd-tmpfiles --create --boot \
         /usr/lib/tmpfiles.d/bootc-build.conf \
