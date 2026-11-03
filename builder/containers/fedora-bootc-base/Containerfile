@@ -30,6 +30,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     systemd-resolved
 
     # Booting and updating
+    binutils  # To unpack initrds
     bootc
     dnf5
     dosfstools  # fsck for the EFI partition
