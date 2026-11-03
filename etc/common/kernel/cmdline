@@ -7,4 +7,6 @@ softdog.soft_active_on_boot=1
 systemd.credentials_boot_policy=off
 systemd.tpm2_software_fallback=1
 systemd.tpm2_measured_os=1
+SYSTEMD_SULOGIN_FORCE=1
+systemd.tpm2_wait=0
 rw
