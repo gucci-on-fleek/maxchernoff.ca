@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
 [Unit]
+DefaultDependencies=no
 Wants=by-designator-udev.service
 After=by-designator-udev.service
 
