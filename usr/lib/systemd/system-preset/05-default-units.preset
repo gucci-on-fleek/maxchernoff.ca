@@ -36,3 +36,4 @@ enable rpm-ostree-countme.timer
 enable snapper-*.timer
 enable sshd.socket
 enable systemd-oomd.*
+enable systemd-tpm2-swtpm.service

@@ -30,6 +30,7 @@ install() {
     inst_binary /usr/sbin/swapon
     inst_binary /usr/sbin/mkswap
     inst_binary /usr/lib/systemd/systemd-makefs
+    inst_binary /usr/bin/swtpm
     inst_simple "$moddir/crypttab" "/etc/crypttab"
 }
 
