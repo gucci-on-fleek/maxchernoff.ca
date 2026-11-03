@@ -12,7 +12,7 @@ check() {
 
 # Dependencies
 depends() {
-    echo systemd-udevd
+    echo systemd-udevd tpm2-tss
     return 0
 }
 

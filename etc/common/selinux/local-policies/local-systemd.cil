@@ -29,9 +29,11 @@
 (typeattributeset cil_gen_require systemd_networkd_var_run_t )
 (typeattributeset cil_gen_require systemd_oomd_t             )
 (typeattributeset cil_gen_require systemd_oomd_var_run_t     )
+(typeattributeset cil_gen_require systemd_passwd_agent_t     )
 (typeattributeset cil_gen_require systemd_tmpfiles_t         )
 (typeattributeset cil_gen_require systemd_unit_file_t        )
 (typeattributeset cil_gen_require tmpfs_t                    )
+(typeattributeset cil_gen_require user_home_dir_t            )
 (typeattributeset cil_gen_require user_t                     )
 (typeattributeset cil_gen_require user_tmp_t                 )
 (typeattributeset cil_gen_require var_log_t                  )
@@ -61,8 +63,12 @@
 (allow local_user_domains systemd_unit_file_t (lnk_file (create unlink                          )))
 
 ;; Needed for journalctl (with the "less" pager) to stop complaining
-(dontaudit journalctl_t gconf_home_t (dir  (add_name remove_name write  )))
-(dontaudit journalctl_t gconf_home_t (file (create rename setattr unlink)))
+(dontaudit journalctl_t gconf_home_t    (dir  (add_name remove_name write  )))
+(dontaudit journalctl_t gconf_home_t    (file (create rename setattr unlink)))
+(dontaudit journalctl_t user_home_dir_t (dir  (add_name remove_name write  )))
+
+;; Needed for run0 to stop complaining
+(dontaudit systemd_passwd_agent_t user_tmp_t (dir (add_name write watch read create)))
 
 ;; Miscellaneous
 (allow container_domain   container_ro_file_t (file     (relabelto     )))
