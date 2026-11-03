@@ -24,7 +24,6 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     openssh-server
     polkit
     selinux-policy-targeted
-    sudo
     systemd
     systemd-networkd
     systemd-pam

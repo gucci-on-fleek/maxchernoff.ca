@@ -148,3 +148,13 @@ function rgo
         --only-matching \
         $argv
 end
+
+if ! command --query sudo
+    function sudo
+        command run0 \
+            --background='' \
+            --shell-prompt-prefix='' \
+            --via-shell \
+            $argv
+    end
+end
