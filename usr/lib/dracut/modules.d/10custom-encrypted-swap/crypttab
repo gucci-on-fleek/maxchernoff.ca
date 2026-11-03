@@ -1,1 +1,0 @@
-swap    /dev/disk/by-designator/swap-luks    /dev/urandom    swap,discard,x-initrd.attach,offset=1

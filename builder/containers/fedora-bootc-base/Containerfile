@@ -31,13 +31,12 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 
     # Booting and updating
     bootc
-    clevis-dracut  # Full disk encryption
     dnf5
     dosfstools  # fsck for the EFI partition
-    dracut-network
     efibootmgr
     fwupd-efi
-    strip  # To strip the initramfs and kernel for smaller size
+    mkosi-initrd  # initrd generator
+    python3-pefile  # Needed by mkosi-initrd
     swtpm-tools  # Software TPM emulator
     systemd-boot-unsigned
     systemd-imds  # Instance Metadata Service
@@ -94,8 +93,8 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     skopeo  # For copying container images
 )
 
-# Copy over our custom configuration files
 @run[mounts=system-config](
+    # Copy over our custom configuration files
     cp --archive --no-target-directory /run/system-config/ /mnt/build/
 )
 
@@ -106,6 +105,11 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 # Run some custom configuration commands
 @with_commit_info()
 @run(
+    # Disable dracut
+    rm --force --recursive \
+        /usr/lib/kernel/install.conf.d \
+        /usr/lib/kernel/install.d/*dracut* \
+
     # Only use the services that we've explicitly enabled
     find /etc/systemd/{system,user} -type l -xtype f,l -delete
     systemctl --system preset-all
@@ -136,10 +140,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     } | tee --append /usr/lib/os-release
     rm --force /etc/os-release
     ln --symbolic /usr/lib/os-release /etc/os-release
-
-    # Minimize the Dracut initramfs
-    sed -i 's/${hostonly-}/yes/g' \
-        /usr/lib/dracut/modules.d/20i18n/module-setup.sh
 
     # Remove files that shouldn't be in "/var/"
     mv /var/lib/alternatives /usr/lib/alternatives

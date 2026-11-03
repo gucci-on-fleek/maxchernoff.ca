@@ -1049,7 +1049,6 @@ class Containerfile[Initialized: Never | None](_Parser):  # noqa: RUF020
         # Generate the install script
         script_arg, script_path = self._mount_run(
             " \\\n".join([
-                "export DRACUT_NO_XATTR=1;",
                 # We need to use the loop in here because if we're building
                 # multiple containers at the same time, DNF may fail to lock the
                 # cache database.

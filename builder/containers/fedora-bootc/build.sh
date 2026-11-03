@@ -33,7 +33,6 @@ podman build \
     --inherit-annotations="true" \
     --inherit-labels \
     --label="containers.bootc=sealed" \
-    --network="none" \
     --no-cache \
     --pull="never" \
     --squash \

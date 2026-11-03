@@ -20,17 +20,22 @@ RUN <<EOF
     echo "composefs=$(\
         bootc container compute-composefs-digest-from-storage \
     )" >> /etc/kernel/cmdline
+    echo "rw" >> /etc/kernel/cmdline
     grep --perl-regexp --quiet '^composefs=.{5}' /etc/kernel/cmdline
 
     # UKI generation
-    kernel-install add-all
+    mkdir -p /usr/lib/firmware
+    ln -s /usr/share/pki/rpm-gpg /etc/pki/rpm-gpg
+    dnf makecache
+
+    kernel-install add-all --verbose
 
     mkdir -p /boot/EFI/BOOT/ /boot/EFI/systemd/
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/BOOT/BOOTX64.EFI
     cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
 
     # Cleanup
-    rm -rf /run/containers /etc/passwd /etc/group
+    rm -rf /run/containers
 
     # Lint the bootc container
     bootc container lint --no-truncate --fatal-warnings || true

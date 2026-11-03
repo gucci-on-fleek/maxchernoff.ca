@@ -1,11 +1,6 @@
 root=gpt-auto
 rootflags=compress=zstd:3,noatime,lazytime,nodev
 lockdown=confidentiality
-rd.neednet=1
 systemd.image_policy=root=encrypted:swap=encrypted+absent+unused:esp=unprotected
 softdog.soft_active_on_boot=1
 systemd.credentials_boot_policy=off
-systemd.tpm2_software_fallback=1
-systemd.tpm2_measured_os=1
-systemd.tpm2_wait=1
-rw
