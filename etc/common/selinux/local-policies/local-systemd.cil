@@ -112,3 +112,9 @@
 
 ;; Needed for run0
 (allow staff_t init_t (system (start)))
+
+;; Needed for swtpm
+(optional optional_swtpm
+    (typeattributeset cil_gen_require swtpm_exec_t)
+    (allow init_t swtpm_exec_t (file (execute)))
+)
