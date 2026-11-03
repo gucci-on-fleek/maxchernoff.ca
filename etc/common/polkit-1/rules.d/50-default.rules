@@ -2,7 +2,7 @@
 
 polkit.addAdminRule(function (action, subject) {
     if (subject.isInGroup("wheel")) {
-        return ["unix-user:0"]
+        return ["unix-group:wheel"]
     } else {
         // must exist but have a locked password
         return ["unix-user:nobody"]
