@@ -11,7 +11,7 @@ Wants=systemd-udevd.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/console-colors.sh
+ExecStart=/usr/local/bin/console-colors.sh
 
 [Install]
 WantedBy=initrd.target
