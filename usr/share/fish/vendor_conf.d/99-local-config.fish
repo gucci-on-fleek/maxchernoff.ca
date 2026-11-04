@@ -158,3 +158,7 @@ if ! command --query sudo
             $argv
     end
 end
+
+function reboot
+    sudo systemctl reboot
+end
