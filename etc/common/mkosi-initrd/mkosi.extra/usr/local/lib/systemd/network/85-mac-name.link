@@ -1,0 +1,12 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Match]
+OriginalName=*
+
+[Link]
+NamePolicy=mac slot keep
+AlternativeNamesPolicy=mac slot keep
+MACAddressPolicy=persistent
+Property=ID_NET_MANAGED_BY=io.systemd.Network

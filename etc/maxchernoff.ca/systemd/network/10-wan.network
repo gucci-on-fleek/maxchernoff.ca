@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Match]
-Name=ens3
+Name=ens3 enx1a694f9f7566
 
 [Network]
 Description=WAN Interface
