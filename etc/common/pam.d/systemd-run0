@@ -1,0 +1,9 @@
+#%PAM-1.0
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+auth      required  pam_rootok.so
+account   include   system-auth
+session   include   login
+password  required  pam_debug.so  auth=authinfo_unavail

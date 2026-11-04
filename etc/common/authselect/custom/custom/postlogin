@@ -1,1 +1,8 @@
-/usr/share/authselect/default/local/postlogin
+#%PAM-1.0
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+session  optional  pam_umask.so    silent umask=0066
+session  optional  pam_lastlog2.so silent

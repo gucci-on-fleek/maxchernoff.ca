@@ -109,9 +109,10 @@
 ;; Allow systemd-tmpfiles to write sysctls
 (allow systemd_tmpfiles_t sysctl_vm_t (file (open write)))
 
-;; No idea...
+;; Needed for PAM
 (allow chkpwd_t hugetlbfs_t (file   (read  )))
 (allow sshd_t   self        (passwd (rootok)))
+(allow init_t   self        (passwd (rootok)))
 
 ;; Needed for run0
 (allow staff_t init_t (system (start)))
