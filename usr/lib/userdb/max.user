@@ -3,6 +3,7 @@
     "uid": 1000,
     "gid": 1000,
     "memberOf": [
+        "max",
         "wheel"
     ],
     "disposition": "regular",

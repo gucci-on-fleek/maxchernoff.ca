@@ -1,0 +1,12 @@
+{
+    "groupName": "root",
+    "gid": 0,
+    "members": [
+        "root"
+    ],
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "intrinsic"
+}

@@ -1,0 +1,12 @@
+{
+    "groupName": "nobody",
+    "gid": 65534,
+    "members": [
+        "nobody"
+    ],
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "intrinsic"
+}

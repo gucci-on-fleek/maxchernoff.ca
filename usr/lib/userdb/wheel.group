@@ -1,0 +1,13 @@
+{
+    "groupName": "wheel",
+    "gid": 10,
+    "members": [
+        "root",
+        "max"
+    ],
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

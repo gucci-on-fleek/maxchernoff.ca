@@ -1,0 +1,16 @@
+{
+    "userName": "nobody",
+    "uid": 65534,
+    "gid": 65534,
+    "memberOf": [
+        "nobody"
+    ],
+    "realName": "Kernel Overflow User",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "intrinsic"
+}

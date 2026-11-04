@@ -1,6 +1,9 @@
 {
     "groupName": "max",
     "gid": 1000,
+    "members": [
+        "max"
+    ],
     "disposition": "regular",
     "description": "Max",
     "privileged": {
