@@ -147,6 +147,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     } | tee --append /usr/lib/os-release
     rm --force /etc/os-release
     ln --symbolic /usr/lib/os-release /etc/os-release
+    mkdir --parents /etc/mkosi-initrd/mkosi.extra/usr/lib/
     cp --force /usr/lib/os-release /etc/mkosi-initrd/mkosi.extra/usr/lib/os-release
 
     # Remove files that shouldn't be in "/var/"
