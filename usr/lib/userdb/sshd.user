@@ -1,0 +1,16 @@
+{
+    "userName": "sshd",
+    "uid": 74,
+    "gid": 74,
+    "realName": "Privilege-separated SSH",
+    "homeDirectory": "/usr/share/empty.sshd",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "sshd"
+    ]
+}

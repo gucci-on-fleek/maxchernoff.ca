@@ -1,0 +1,16 @@
+{
+    "userName": "systemd-journal-remote",
+    "uid": 993,
+    "gid": 993,
+    "realName": "systemd Journal Remote",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "systemd-journal-remote"
+    ]
+}

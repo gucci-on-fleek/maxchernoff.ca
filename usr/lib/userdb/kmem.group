@@ -1,0 +1,9 @@
+{
+    "groupName": "kmem",
+    "gid": 9,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

@@ -1,0 +1,9 @@
+{
+    "groupName": "disk",
+    "gid": 6,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

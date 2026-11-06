@@ -1,0 +1,16 @@
+{
+    "userName": "tss",
+    "uid": 59,
+    "gid": 59,
+    "realName": "Account used for TPM access",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "tss"
+    ]
+}

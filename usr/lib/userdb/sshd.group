@@ -1,0 +1,9 @@
+{
+    "groupName": "sshd",
+    "gid": 74,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

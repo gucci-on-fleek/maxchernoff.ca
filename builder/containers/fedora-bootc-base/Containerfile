@@ -219,69 +219,10 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /usr/lib/tmpfiles.d/bootc-build.conf \
         /usr/lib/tmpfiles.d/tmp.conf
 
-    # Move the user database to /usr/lib
-    systemd-sysusers
-    mkdir --parents /usr/lib/userdb/
-    {
-        userdbctl user \
-            --with-dropin=false \
-            --json=short \
-            --disposition=intrinsic \
-            --disposition=system \
-            --disposition=regular
-        userdbctl group \
-            --with-dropin=false \
-            --json=short \
-            --disposition=intrinsic \
-            --disposition=system \
-            --disposition=regular
-    } \
-    | jq --raw-output '
-        del(
-            .status,
-            .passwordChangeNow,
-            .lastPasswordChangeUSec,
-            .passwordChangeMaxUSec,
-            .passwordChangeWarnUSec
-        ) | . + {
-            privileged: {hashedPassword: "!*"},
-            locked: true,
-            disposition: "system",
-        } | tostring
-    ' | while read -r json; do
-        user="$(echo "$json" | jq --raw-output '.userName | values')"
-        group="$(echo "$json" | jq --raw-output '.groupName | values')"
-        uid="$(echo "$json" | jq --raw-output '.uid | values')"
-        gid="$(echo "$json" | jq --raw-output '.gid | values')"
-
-        if [ -n "$user" ] && [ ! -f "/usr/lib/userdb/${user}.user" ]; then
-            echo "$json" | jq . > "/usr/lib/userdb/${user}.user"
-            ln --symbolic --force \
-                "/usr/lib/userdb/${user}.user" \
-                "/usr/lib/userdb/${uid}.user"
-        fi
-
-        if [ -n "$group" ] && [ ! -f "/usr/lib/userdb/${group}.group" ]; then
-            echo "$json" | jq . > "/usr/lib/userdb/${group}.group"
-            ln --symbolic --force \
-                "/usr/lib/userdb/${group}.group" \
-                "/usr/lib/userdb/${gid}.group"
-        fi
-    done
-
+    # Only use the user database already committed to Git.
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
     rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
     chmod a=,u+rw /etc/userdb/*-privileged
-
-    # Modify the special users
-    cat /usr/lib/userdb/root.user | jq '. + {
-        locked: false,
-        homeDirectory: "/var/roothome",
-        shell: "/usr/bin/fish",
-        umask: 54,
-    }' | tee /usr/lib/userdb/root.user >/dev/null
-
-    sed -i 's/system/intrinsic/g' /usr/lib/userdb/{root,nobody}.{user,group}
 )
 
 # Set the metadata

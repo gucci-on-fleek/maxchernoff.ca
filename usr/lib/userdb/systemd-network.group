@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-network",
+    "gid": 192,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

@@ -1,0 +1,16 @@
+{
+    "userName": "chrony",
+    "uid": 992,
+    "gid": 992,
+    "realName": "chrony system user",
+    "homeDirectory": "/var/lib/chrony",
+    "shell": "/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "chrony"
+    ]
+}

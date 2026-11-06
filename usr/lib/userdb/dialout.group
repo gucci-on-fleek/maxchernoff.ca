@@ -1,0 +1,9 @@
+{
+    "groupName": "dialout",
+    "gid": 18,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

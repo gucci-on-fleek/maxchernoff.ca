@@ -1,0 +1,9 @@
+{
+    "groupName": "clock",
+    "gid": 103,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

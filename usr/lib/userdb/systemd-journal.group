@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-journal",
+    "gid": 190,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

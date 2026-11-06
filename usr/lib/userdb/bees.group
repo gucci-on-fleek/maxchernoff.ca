@@ -1,0 +1,9 @@
+{
+    "groupName": "bees",
+    "gid": 990,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

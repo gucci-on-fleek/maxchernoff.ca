@@ -1,0 +1,9 @@
+{
+    "groupName": "dbus",
+    "gid": 81,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

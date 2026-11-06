@@ -1,0 +1,16 @@
+{
+    "userName": "systemd-timesync",
+    "uid": 996,
+    "gid": 996,
+    "realName": "systemd Time Synchronization",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "systemd-timesync"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "groupName": "video",
+    "gid": 39,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

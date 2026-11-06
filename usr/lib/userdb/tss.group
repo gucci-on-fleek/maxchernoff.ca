@@ -1,0 +1,9 @@
+{
+    "groupName": "tss",
+    "gid": 59,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

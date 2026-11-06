@@ -1,0 +1,9 @@
+{
+    "groupName": "kvm",
+    "gid": 36,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

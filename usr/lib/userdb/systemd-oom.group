@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-oom",
+    "gid": 998,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

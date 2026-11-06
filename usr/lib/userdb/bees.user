@@ -1,0 +1,16 @@
+{
+    "userName": "bees",
+    "uid": 990,
+    "gid": 990,
+    "realName": "Bees",
+    "homeDirectory": "/var/lib/bees",
+    "shell": "/usr/bin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "bees"
+    ]
+}

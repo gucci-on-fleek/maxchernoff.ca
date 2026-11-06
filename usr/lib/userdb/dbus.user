@@ -1,0 +1,16 @@
+{
+    "userName": "dbus",
+    "uid": 81,
+    "gid": 81,
+    "realName": "System Message Bus",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "dbus"
+    ]
+}

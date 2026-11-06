@@ -1,0 +1,16 @@
+{
+    "userName": "polkitd",
+    "uid": 114,
+    "gid": 114,
+    "realName": "User for polkitd",
+    "homeDirectory": "/",
+    "shell": "/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "polkitd"
+    ]
+}

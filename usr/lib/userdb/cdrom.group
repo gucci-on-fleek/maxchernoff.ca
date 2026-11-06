@@ -1,0 +1,9 @@
+{
+    "groupName": "cdrom",
+    "gid": 11,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

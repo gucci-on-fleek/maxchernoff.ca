@@ -1,0 +1,16 @@
+{
+    "userName": "systemd-resolve",
+    "uid": 193,
+    "gid": 193,
+    "realName": "systemd Resolver",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "systemd-resolve"
+    ]
+}

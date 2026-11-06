@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-coredump",
+    "gid": 997,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

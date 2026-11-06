@@ -1,0 +1,9 @@
+{
+    "groupName": "polkitd",
+    "gid": 114,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

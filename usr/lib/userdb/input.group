@@ -1,0 +1,9 @@
+{
+    "groupName": "input",
+    "gid": 104,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

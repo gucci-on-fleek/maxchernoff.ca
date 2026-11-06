@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-timesync",
+    "gid": 996,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

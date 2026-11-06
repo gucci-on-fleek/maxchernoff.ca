@@ -1,0 +1,9 @@
+{
+    "groupName": "chrony",
+    "gid": 992,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

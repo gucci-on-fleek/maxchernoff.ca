@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-journal-remote",
+    "gid": 993,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

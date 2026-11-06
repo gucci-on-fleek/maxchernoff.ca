@@ -1,0 +1,9 @@
+{
+    "groupName": "utmp",
+    "gid": 22,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

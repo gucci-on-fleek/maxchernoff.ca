@@ -1,0 +1,16 @@
+{
+    "userName": "prometheus",
+    "uid": 991,
+    "gid": 991,
+    "realName": "Prometheus user account",
+    "homeDirectory": "/var/lib/prometheus",
+    "shell": "/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "prometheus"
+    ]
+}

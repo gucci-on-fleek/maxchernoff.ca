@@ -1,0 +1,16 @@
+{
+    "userName": "systemd-network",
+    "uid": 192,
+    "gid": 192,
+    "realName": "systemd Network Management",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "systemd-network"
+    ]
+}

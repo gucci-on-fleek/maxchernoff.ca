@@ -1,0 +1,16 @@
+{
+    "userName": "systemd-coredump",
+    "uid": 997,
+    "gid": 997,
+    "realName": "systemd Core Dumper",
+    "homeDirectory": "/",
+    "shell": "/usr/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "systemd-coredump"
+    ]
+}

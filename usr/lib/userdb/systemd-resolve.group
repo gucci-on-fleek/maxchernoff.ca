@@ -1,0 +1,9 @@
+{
+    "groupName": "systemd-resolve",
+    "gid": 193,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}

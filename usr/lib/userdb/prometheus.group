@@ -1,0 +1,9 @@
+{
+    "groupName": "prometheus",
+    "gid": 991,
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system"
+}
