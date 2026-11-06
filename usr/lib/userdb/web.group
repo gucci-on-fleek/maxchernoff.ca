@@ -1,0 +1,11 @@
+{
+    "groupName": "web",
+    "gid": 1001,
+    "members": [
+        "web"
+    ],
+    "disposition": "regular",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}

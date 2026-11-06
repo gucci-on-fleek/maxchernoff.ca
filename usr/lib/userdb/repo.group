@@ -1,0 +1,11 @@
+{
+    "groupName": "repo",
+    "gid": 1005,
+    "members": [
+        "repo"
+    ],
+    "disposition": "regular",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}

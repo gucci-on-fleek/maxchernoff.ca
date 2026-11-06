@@ -6,6 +6,7 @@
         "max",
         "wheel"
     ],
+    "locked": false,
     "disposition": "regular",
     "realName": "Max",
     "homeDirectory": "/var/home/max",

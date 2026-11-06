@@ -1,0 +1,11 @@
+{
+    "groupName": "tex",
+    "gid": 1002,
+    "members": [
+        "tex"
+    ],
+    "disposition": "regular",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}

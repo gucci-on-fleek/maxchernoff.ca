@@ -1,0 +1,11 @@
+{
+    "groupName": "woodpecker",
+    "gid": 1003,
+    "members": [
+        "woodpecker"
+    ],
+    "disposition": "regular",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}

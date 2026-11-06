@@ -1,0 +1,26 @@
+{
+    "userName": "repo",
+    "uid": 1005,
+    "gid": 1005,
+    "memberOf": [
+        "repo"
+    ],
+    "locked": false,
+    "disposition": "regular",
+    "shell": "/usr/sbin/nologin",
+    "umask": 54,
+    "privileged": {
+        "hashedPassword": [
+            "!"
+        ]
+    },
+    "perMachine": [
+        {
+            "matchHostname": [
+                "maxchernoff.ca"
+            ],
+            "homeDirectory": "/var/home/repo",
+            "nice": 0
+        }
+    ]
+}

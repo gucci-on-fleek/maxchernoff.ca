@@ -1,0 +1,11 @@
+{
+    "groupName": "builder",
+    "gid": 1006,
+    "members": [
+        "builder"
+    ],
+    "disposition": "regular",
+    "privileged": {
+        "hashedPassword": "!*"
+    }
+}
