@@ -222,7 +222,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Only use the user database already committed to Git.
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
     rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
-    chmod a=,u+rw /etc/userdb/*-privileged
 )
 
 # Set the metadata
