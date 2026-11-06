@@ -27,7 +27,7 @@ rules = """
 # Allow max to sudo
 login --deleteall
 login --add --seuser staff_u  --range 's0-s0:c0.c1023' max
-login --add --seuser sysadm_u --range 's0-s0:c0.c1023' root
+login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
 
 # Let all users run containers
 user --modify user_u --range s0-s0:c0.c1023
@@ -84,12 +84,35 @@ fcontext --add '{repo}woodpecker/.config' --equal '{woodpecker}.config'
 # Missing policy definition
 fcontext --add '/etc/systemd/user' --equal '/usr/lib/systemd/user'
 
-# Let us host the network services as unprivileged users
 boolean --deleteall
+
+# Allow unprivileged users to host network servers
 boolean --modify selinuxuser_tcp_server --on
 boolean --modify selinuxuser_udp_server --on
+
+# Allow unprivileged users to run containers
 boolean --modify container_manage_cgroup --on
 boolean --modify domain_can_mmap_files --on
+
+# Disallow execution of non-system files by the specified users.
+boolean --modify auditadm_exec_content --off
+boolean --modify container_user_exec_content --off
+boolean --modify dbadm_exec_content --off
+boolean --modify guest_exec_content --off
+boolean --modify logadm_exec_content --off
+boolean --modify secadm_exec_content --off
+boolean --modify user_exec_content --off
+
+# Hardening
+boolean --modify container_use_dri_devices --off
+boolean --modify deny_bluetooth --on
+boolean --modify deny_execmem --on
+boolean --modify fips_mode --off
+boolean --modify httpd_builtin_scripting --off
+boolean --modify httpd_enable_cgi --off
+boolean --modify selinuxuser_execmod --off
+boolean --modify selinuxuser_execstack --off
+boolean --modify selinuxuser_rw_noexattrfile --off
 """
 
 
