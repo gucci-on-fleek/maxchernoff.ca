@@ -101,6 +101,11 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
 )
 
 @run[mounts=system-config](
+    # Remove empty directories and broken symlinks
+    find /mnt/build/ -depth -type d -empty -delete 2>/dev/null || true
+    find /mnt/build/ -xtype l -delete 2>/dev/null || true
+    find /mnt/build/ -depth -type d -empty -delete 2>/dev/null || true
+
     # Copy over our custom configuration files
     cp --archive --no-target-directory /run/system-config/ /mnt/build/
 )
@@ -199,10 +204,8 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /etc/hostname \
         2>/dev/null || true
 
-    # Remove empty directories
+    # Remove the root home directory and any empty directories
     rm -rf /root/
-    find / -depth -type d -empty -delete 2>/dev/null || true
-    find . -xtype l -delete 2>/dev/null || true
     find / -depth -type d -empty -delete 2>/dev/null || true
 
     # Restore the intentionally empty directories
