@@ -160,7 +160,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     rm -rf /var/lib/selinux/
 
     # Run image-minimizer
-    INSTALL_ROOT=/ /usr/bin/image-minimizer.py /etc/image-minimize.conf
+    INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /etc/image-minimize.conf
 
     # Use SELinux confined users
     semanage user --modify user_u --range s0-s0:c0.c1023
