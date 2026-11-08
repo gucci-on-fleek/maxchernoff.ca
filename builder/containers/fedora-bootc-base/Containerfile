@@ -118,7 +118,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /usr/lib/kernel/install.d/*dracut* \
 
     # Only use the services that we've explicitly enabled
-    find /etc/systemd/{system,user} -type l -xtype f,l -delete
     systemctl --system preset-all
     systemctl --user --global preset-all
 
@@ -209,12 +208,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         '/usr/share/empty/' \
         '/boot/'
 
-    # Polkit permission fixes
-    chmod a+rX --recursive /etc/polkit-1/
-
     # Add the bootc links
     systemd-tmpfiles --create --boot \
-        /usr/lib/tmpfiles.d/bootc-build.conf \
+        /usr/local/lib/tmpfiles.d/bootc-build.conf \
         /usr/lib/tmpfiles.d/tmp.conf
 
     # Only use the user database already committed to Git.

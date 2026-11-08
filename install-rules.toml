@@ -35,10 +35,10 @@ login --modify --seuser user_u --range 's0-s0:c0.c1023' __default__
 
 # Load the custom policies
 module --deleteall
-module --add /etc/selinux/local-policies/local-allow-containers.cil
-module --add /etc/selinux/local-policies/local-custom-containers.cil
-module --add /etc/selinux/local-policies/local-prometheus.cil
-module --add /etc/selinux/local-policies/local-systemd.cil
+module --add /usr/local/share/selinux/local-allow-containers.cil
+module --add /usr/local/share/selinux/local-custom-containers.cil
+module --add /usr/local/share/selinux/local-prometheus.cil
+module --add /usr/local/share/selinux/local-systemd.cil
 module --add /usr/share/udica/templates/base_container.cil
 module --add /usr/share/udica/templates/net_container.cil
 

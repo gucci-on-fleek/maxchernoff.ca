@@ -19,9 +19,9 @@ RUN <<EOF
     # Add the composefs ID to the kernel command line
     echo "composefs=$(\
         bootc container compute-composefs-digest-from-storage \
-    )" >> /usr/local/lib/cmdline
-    echo "rw" >> /usr/local/lib/cmdline
-    grep --perl-regexp --quiet '^composefs=.{5}' /usr/local/lib/cmdline
+    )" >> /usr/lib/kernel/cmdline
+    echo "rw" >> /usr/lib/kernel/cmdline
+    grep --perl-regexp --quiet '^composefs=.{5}' /usr/lib/kernel/cmdline
 
     # UKI generation
     mkdir -p /usr/lib/firmware
