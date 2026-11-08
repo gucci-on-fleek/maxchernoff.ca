@@ -7,7 +7,7 @@
 <!-- Reject everything NOT listed -->
 <policy target="REJECT">
     <!-- Metadata -->
-    <short>Outgoing</short>
+    <short>Custom Outgoing</short>
     <description>
         Allow outgoing traffic only to the specified ports.
     </description>

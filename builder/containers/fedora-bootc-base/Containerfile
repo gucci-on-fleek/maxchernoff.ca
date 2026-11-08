@@ -80,6 +80,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     borgbackup
     btrfsmaintenance
     chrony  # NTP client
+    greenboot  # Make sure that the updates applied correctly
     node-exporter  # Prometheus metrics for the entire system
     qemu-guest-agent  # Recommended for a VM guest
     snapper  # Btrfs snapshot management
@@ -160,7 +161,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     rm -rf /var/lib/selinux/
 
     # Run image-minimizer
-    INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /etc/image-minimize.conf
+    INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /usr/local/share/image-minimize.conf
 
     # Use SELinux confined users
     semanage user --modify user_u --range s0-s0:c0.c1023

@@ -7,7 +7,7 @@
 <!-- Reject everything NOT listed -->
 <zone target="%%REJECT%%">
     <!-- Metadata -->
-    <short>Incoming</short>
+    <short>Custom Incoming</short>
     <description>
         Allow incoming traffic only from the specified ports.
     </description>
