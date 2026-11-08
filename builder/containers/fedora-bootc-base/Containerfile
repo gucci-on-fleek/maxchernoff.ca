@@ -150,7 +150,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     cp --force /usr/lib/os-release /etc/mkosi-initrd/mkosi.extra/usr/lib/os-release
 
     # Remove files that shouldn't be in "/var/"
-    mv /var/lib/alternatives /usr/lib/alternatives
+    mv /var/lib/alternatives /etc/alternatives
     rm --force /var/lib/authselect/checksum
 
     # Move the SELinux policy
@@ -162,33 +162,24 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Run image-minimizer
     INSTALL_ROOT=/ /usr/local/bin/image-minimizer.py /usr/local/share/image-minimize.conf
 
-    # Use SELinux confined users
-    semanage user --modify user_u --range s0-s0:c0.c1023
-    semanage login --modify --seuser sysadm_u --range 's0-s0:c0.c1023' root
-    semanage login --add    --seuser staff_u  --range 's0-s0:c0.c1023' max
-    semanage login --modify --seuser user_u   --range 's0-s0:c0.c1023' __default__
-
     # Fix the SELinux contexts
     sed -i 's|^/var/home|#/var/home|' \
         /etc/selinux/targeted/contexts/files/file_contexts.subs_dist
 
-    # Set some SELinux booleans
-    setsebool -P \
-        selinuxuser_tcp_server=true \
-        selinuxuser_udp_server=true \
-        container_manage_cgroup=true \
-        domain_can_mmap_files=true
+    # Import the SELinux policy
+    semanage user --modify user_u --range s0-s0:c0.c1023
+    cat /usr/local/share/selinux/semanage.import \
+        | sed 's/#.*$//' \
+        | grep -v 'boolean' \
+        | semanage import
 
-    # Install the local SELinux policies
-    semodule \
-        --install=/usr/share/udica/templates/base_container.cil \
-        --install=/usr/share/udica/templates/net_container.cil \
-        $(
-            find /etc/selinux/local-policies/ \
-            -iname '*.cil' \
-            -printf '--install=%p\n' \
-            | sort
-        )
+    # Set the booleans separately due to an "semanage" bug.
+    setsebool -P $(
+        cat /usr/local/share/selinux/semanage.import \
+        | sed 's/#.*$//' \
+        | grep 'boolean' \
+        | sed -nE -e 's/boolean --modify ([^ ]+) --(on|off)/\1=\2/p' \
+    )
 
     # Reset the machine-specific resources
     rm --force \
