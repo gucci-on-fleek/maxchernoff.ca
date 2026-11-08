@@ -42,12 +42,6 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     systemd-imds  # Instance Metadata Service
     systemd-ukify  # Creates a unified kernel image (UKI) for booting
 
-    # Software TPM emulation.
-    swtpm
-    swtpm-tools
-    tpm2-tools
-    tpm2-tss
-
     # Command-line Utilities
     acl  # /usr/bin/{getfacl/setfacl}
     busybox

@@ -116,14 +116,3 @@
 
 ;; Needed for run0
 (allow staff_t init_t (system (start)))
-
-;; Needed for swtpm
-(optional optional_swtpm
-    (typeattributeset cil_gen_require dosfs_t                 )
-    (typeattributeset cil_gen_require swtpm_exec_t            )
-    (typeattributeset cil_gen_require systemd_tpm2_generator_t)
-
-    (allow init_t dosfs_t      (file (read open setattr create unlink rename lock write)))
-    (allow init_t swtpm_exec_t (file (execute execute_no_trans read open               )))
-    (allow systemd_tpm2_generator_t swtpm_exec_t (file (execute)))
-)
