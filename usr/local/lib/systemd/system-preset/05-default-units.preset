@@ -36,4 +36,6 @@ enable rpm-ostree-countme.timer
 enable snapper-*.timer
 enable sshd-keygen@mldsa.service
 enable sshd.socket
+enable systemd-journal-upload.service
+enable systemd-networkd.service
 enable systemd-oomd.*

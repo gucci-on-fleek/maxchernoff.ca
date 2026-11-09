@@ -118,8 +118,18 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /usr/lib/kernel/install.d/*dracut* \
 
     # Only use the services that we've explicitly enabled
+    rm --force --recursive /etc/systemd/{system,user}/ || true
     systemctl --system preset-all
     systemctl --user --global preset-all
+
+    # Move the presets into /usr/local/
+    cp --archive --recursive --no-target-directory \
+        /etc/systemd/system/ /usr/local/lib/systemd/system/
+
+    cp --archive --recursive --no-target-directory \
+        /etc/systemd/user/ /usr/local/lib/systemd/user/
+
+    rm --force --recursive /etc/systemd/{system,user}/ || true
 
     # Generate fish completions for the whole system
     fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"

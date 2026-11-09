@@ -26,6 +26,7 @@ RUN <<EOF
     # UKI generation
     mkdir -p /usr/lib/firmware
     ln -s /usr/share/pki/rpm-gpg /etc/pki/rpm-gpg
+    cp /usr/lib/kernel/cmdline /etc/kernel/cmdline
     dnf makecache
 
     kernel-install add-all --verbose
