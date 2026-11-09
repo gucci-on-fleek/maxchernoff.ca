@@ -9,7 +9,7 @@ After=network.target
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/update-texlive.sh
-ExecStart=/usr/local/bin/update-context.sh
+ExecStart=-/usr/local/bin/update-context.sh
 ExecStart=restorecon -RDT0 %h/texlive %h/context-installer/tex
 
 CapabilityBoundingSet=
