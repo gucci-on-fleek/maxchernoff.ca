@@ -31,7 +31,7 @@ scrape_configs:
         replacement: "$1"
 
       - source_labels: [host]
-        regex: "^$|^(!!network.ipv4!!|\\[?!!network.ipv6!!\\]?)$|^(.*\\.)?(maxchernoff\\.ca|duck\\.tel)$"
+        regex: "^$|^(!!network.hydrogen.ipv4!!|\\[?!!network.hydrogen.ipv6!!\\]?)$|^(.*\\.)?(maxchernoff\\.ca|duck\\.tel)$"
         action: keep
 
     metrics_path: "/metrics"

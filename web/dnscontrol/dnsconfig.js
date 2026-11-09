@@ -13,8 +13,8 @@ var DSP_CLOUDFLARE = NewDnsProvider("cloudflare")
 var REG_MONITOR = NewRegistrar("DoH")
 
 // Define our IP addresses
-var IPv4 = "!!network.ipv4!!" // "152.53.36.213"
-var IPv6 = "!!network.ipv6!!" // "2a0a:4cc0:2000:172::1"
+var IPv4 = "!!network.hydrogen.ipv4!!" // "152.53.36.213"
+var IPv6 = "!!network.hydrogen.ipv6!!" // "2a0a:4cc0:2000:172::1"
 
 // Configure subdomains to not have email
 var MAIL_ALLOWED = []
@@ -63,6 +63,8 @@ var default_caa = CAA_BUILDER({
     issue_critical: true, // Mark all records as critical
     iodef_critical: true,
     issuewild_critical: true,
+    issuevmc: undefined, // Silence the type checker
+    issuemail: undefined, // Silence the type checker
 })
 
 // DMARC (tells receiving servers to reject spoofed emails)
@@ -287,6 +289,7 @@ D("maxchernoff.ca", REG_MONITOR,
         x: 38.747494,
         y: -77.531749,
         alt: 70.48,
+        // @ts-ignore
         horizontal_precision: 100,
         vertical_precision: 10,
         size: 100,
@@ -295,7 +298,7 @@ D("maxchernoff.ca", REG_MONITOR,
     // Tang
     TXT("_tierhive-validation.tang",
         "33eff7159d3d748b01753da7fce670cb32424a434e70d0aa1fd7ab1e98892a86"),
-    A("tang", "149.56.240.225"),
+    A("tang", "!!network.carbon.ipv4!!"),
 )
 
 // Secondary domain: duck.tel
@@ -349,6 +352,8 @@ D("duck.tel", REG_MONITOR,
         issue_critical: true, // Mark all records as critical
         iodef_critical: true,
         issuewild_critical: true,
+        issuevmc: undefined, // Silence the type checker
+        issuemail: undefined, // Silence the type checker
     }),
 
     LOC_BUILDER_DD({
@@ -356,6 +361,7 @@ D("duck.tel", REG_MONITOR,
         x: 52.3,
         y: -113.8,
         alt: 800,
+        // @ts-ignore
         horizontal_precision: 20e3,
         vertical_precision: 100,
         size: 10,
@@ -432,3 +438,37 @@ D("958386.xyz", REG_MONITOR,
     // libdns testing
     IGNORE("test-*"),
 )
+
+// Give each server a hostname under "duck.tel".
+for (const server of [
+    {
+        name: "hydrogen",
+        ipv4: "!!network.hydrogen.ipv4!!",
+        ipv6: "!!network.hydrogen.ipv6!!",
+    },
+    {
+        name: "helium",
+        ipv4: "!!network.helium.ipv4!!",
+        ipv6: "!!network.helium.ipv6!!",
+    },
+    {
+        name: "lithium",
+        ipv4: "!!network.lithium.ipv4!!",
+        ipv6: "!!network.lithium.ipv6!!",
+    },
+    {
+        name: "boron",
+        ipv4: "!!network.boron.ipv4!!",
+        ipv6: "!!network.boron.ipv6!!",
+    },
+    {
+        name: "carbon",
+        ipv4: "!!network.carbon.ipv4!!",
+        ipv6: "!!network.carbon.ipv6!!",
+    }
+]) {
+    D_EXTEND("duck.tel",
+        A(server.name, server.ipv4),
+        AAAA(server.name, server.ipv6),
+    )
+}

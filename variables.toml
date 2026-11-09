@@ -4,9 +4,21 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 
 [network]
-# The IP addresses of the server
-ipv4 = "152.53.36.213"
-ipv6 = "2a0a:4cc0:2000:172::1"
+# The IP addresses for each server
+hydrogen.ipv4 = "152.53.36.213"
+hydrogen.ipv6 = "2a0a:4cc0:2000:172::1"
+
+helium.ipv4 = "152.53.243.123"
+helium.ipv6 = "2a0a:4cc0:2000:82b7::1"
+
+lithium.ipv4 = "185.99.135.233"
+lithium.ipv6 = "2a0d:d907:3::1552:1"
+
+boron.ipv4 = "216.18.193.121"
+boron.ipv6 = "2607:f2d8:401b:11f1::a"
+
+carbon.ipv4 = "149.56.240.225"
+carbon.ipv6 = "2a11:6c7:2600:9132::2"
 
 
 [woodpecker]

@@ -322,7 +322,7 @@ duck.tel {
 }
 
 # Fallback hosts
-!!network.ipv4!!, [!!network.ipv6!!], * {
+!!network.hydrogen.ipv4!!, [!!network.hydrogen.ipv6!!], * {
 	# I've set the security options here to be as strict as possible since
 	# there's no valid reason for anyone to be here.
 	header {

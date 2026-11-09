@@ -6,14 +6,14 @@
 Image=docker.io/cznic/knot:latest
 
 Network=private
-PublishPort=!!network.ipv4!!:53:53
-PublishPort=!!network.ipv4!!:53:53/udp
-PublishPort=[!!network.ipv6!!]:53:53
-PublishPort=[!!network.ipv6!!]:53:53/udp
+PublishPort=!!network.hydrogen.ipv4!!:53:53
+PublishPort=!!network.hydrogen.ipv4!!:53:53/udp
+PublishPort=[!!network.hydrogen.ipv6!!]:53:53
+PublishPort=[!!network.hydrogen.ipv6!!]:53:53/udp
 
 # Extra DNS port
-PublishPort=[!!network.ipv6!!]:!!dns.altport!!:53
-PublishPort=!!network.ipv4!!:!!dns.altport!!:53
+PublishPort=[!!network.hydrogen.ipv6!!]:!!dns.altport!!:53
+PublishPort=!!network.hydrogen.ipv4!!:!!dns.altport!!:53
 
 Volume=%h/knot/config:/config:ro,z
 Volume=%h/knot/storage:/storage:rw,Z
