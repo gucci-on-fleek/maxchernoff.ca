@@ -20,6 +20,7 @@
 (typeattributeset cil_gen_require journalctl_t               )
 (typeattributeset cil_gen_require root_t                     )
 (typeattributeset cil_gen_require snapperd_t                 )
+(typeattributeset cil_gen_require sshd_auth_t                )
 (typeattributeset cil_gen_require sshd_t                     )
 (typeattributeset cil_gen_require staff_t                    )
 (typeattributeset cil_gen_require sysadm_t                   )
@@ -116,3 +117,6 @@
 
 ;; Needed for run0
 (allow staff_t init_t (system (start)))
+
+;; Needed for sshd
+(dontaudit sshd_auth_t self (unix_dgram_socket (setattr getattr)))
