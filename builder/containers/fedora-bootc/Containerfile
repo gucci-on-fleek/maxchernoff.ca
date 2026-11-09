@@ -23,10 +23,12 @@ RUN <<EOF
     echo "rw" >> /usr/lib/kernel/cmdline
     grep --perl-regexp --quiet '^composefs=.{5}' /usr/lib/kernel/cmdline
 
+    mkdir -p /etc/kernel
+    cp /usr/lib/kernel/cmdline /etc/kernel/cmdline
+
     # UKI generation
     mkdir -p /usr/lib/firmware
     ln -s /usr/share/pki/rpm-gpg /etc/pki/rpm-gpg
-    cp /usr/lib/kernel/cmdline /etc/kernel/cmdline
     dnf makecache
 
     kernel-install add-all --verbose
