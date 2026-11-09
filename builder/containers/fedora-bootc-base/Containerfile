@@ -131,15 +131,13 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 
     rm --force --recursive /etc/systemd/{system,user}/ || true
 
-    # Generate fish completions for the whole system
-    fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
-
     # Remove FIPS stuff
     rpm --query --list crypto-policies | grep -i fips | xargs rm -rf || true
     rm /usr/lib64/ossl-modules/fips.so
 
     # Apply the authselect profile
     authselect apply-changes
+    rm --force /var/lib/authselect/checksum
 
     # Adjust the "os-release" files
     sed -Ei '/^(IMAGE_ID|IMAGE_VERSION|ARCHITECTURE|VARIANT|VARIANT_ID|RELEASE_TYPE|EXPERIMENT|EXPERIMENT_URL)=/d' \
@@ -159,9 +157,14 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     mkdir --parents /etc/mkosi-initrd/mkosi.extra/usr/lib/
     cp --force /usr/lib/os-release /etc/mkosi-initrd/mkosi.extra/usr/lib/os-release
 
-    # Remove files that shouldn't be in "/var/"
-    mv /var/lib/alternatives /etc/alternatives
-    rm --force /var/lib/authselect/checksum
+    # Make the alternatives static.
+    for alt in "$(alternatives --list | cut -f3)"; do
+        ln --symbolic --force "$(realpath "$alt")" "$alt"
+    done
+    rm -rf {/etc,/var/lib,/usr/lib}/alternatives/
+
+    # Generate fish completions for the whole system
+    fish -c "fish_update_completions --directory=/usr/share/fish/generated_completions"
 
     # Move the SELinux policy
     echo "store-root=/etc/selinux" >> /etc/selinux/semanage.conf
