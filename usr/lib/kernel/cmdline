@@ -12,6 +12,7 @@ root=gpt-auto
 rootflags=compress=zstd:3,noatime,lazytime,nodev
 softdog.soft_active_on_boot=1
 systemd.credentials_boot_policy=off
+systemd.getty_auto=container
 systemd.image_policy=root=encrypted:swap=encrypted+absent+unused:esp=unprotected
 systemd.ssh_auto=no
 vsyscall=none
