@@ -86,17 +86,29 @@ victoria-metrics.port = "9090"
 
 [email]
 # Define the IP addresses for the email server
-ipv4 = "10.80.80.1"
+ipv4 = "10.80.1.2"
 
 
 [wireguard]
 # Define the IP addresses for the WireGuard VPN
-subnet.ipv4 = ["10.77.0.0/16", "10.78.1.0/24"]
-subnet.ipv6 = ["fd77:0:0:77::/64", "fd77:0:0:78::/64"]
+home.subnet.ipv4 = ["10.77.0.0/16", "10.78.1.0/24"]
+home.subnet.ipv6 = ["fd77:0:0:77::/64", "fd77:0:0:78::/64"]
+home.self.ipv4 = "10.78.1.4"
+home.self.ipv6 = "fd77:0:0:78::4"
 
-self.ipv4 = "10.78.1.4"
-self.ipv6 = "fd77:0:0:78::4"
+mesh.hydrogen.ipv4 = "10.80.1.0/24"
+mesh.hydrogen.ipv6 = "fd80:80::1:0/120"
 
+mesh.helium.ipv4 = "10.80.2.0/24"
+mesh.helium.ipv6 = "fd80:80::2:0/120"
+
+mesh.lithium.ipv4 = "10.80.3.0/24"
+mesh.lithium.ipv6 = "fd80:80::3:0/120"
+
+mesh.boron.ipv4 = "10.80.4.0/24"
+mesh.boron.ipv6 = "fd80:80::4:0/120"
+
+# (carbon has no VPN connection)
 
 [victoria-logs]
 # The port used to append logs

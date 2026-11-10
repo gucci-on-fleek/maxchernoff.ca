@@ -1,0 +1,25 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Match]
+Host=maxchernoff.ca
+
+[NetDev]
+Name=wg1
+Kind=wireguard
+Description=VPN to my home router
+
+[WireGuard]
+PrivateKey=@network.wireguard.home.private-key
+
+[WireGuardPeer]
+Endpoint=red-deer.maxchernoff.ca:51820
+PublicKey=dIcl7KryWFwChRbxnGrDB5RJv5E0Abj17zAHFIopIw4=
+PresharedKey=@network.wireguard.home.preshared-key
+RouteTable=local
+
+AllowedIPs=!!wireguard.home.subnet.ipv4.1!!
+AllowedIPs=!!wireguard.home.subnet.ipv4.2!!
+AllowedIPs=!!wireguard.home.subnet.ipv6.1!!
+AllowedIPs=!!wireguard.home.subnet.ipv6.2!!

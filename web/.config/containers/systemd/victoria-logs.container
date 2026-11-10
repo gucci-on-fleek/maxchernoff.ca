@@ -28,8 +28,8 @@ PublishPort=!!prometheus.victoria-logs.ip!!:!!prometheus.victoria-logs.port!!:!!
 # Allow access from the trusted networks so that we can append logs
 PublishPort=127.0.0.1:!!victoria-logs.port!!:!!victoria-logs.port!!
 PublishPort=[::1]:!!victoria-logs.port!!:!!victoria-logs.port!!
-PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.port!!:!!victoria-logs.port!!
-PublishPort=!!wireguard.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-logs.syslog!!/udp
+PublishPort=!!wireguard.home.self.ipv4!!:!!victoria-logs.port!!:!!victoria-logs.port!!
+PublishPort=!!wireguard.home.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-logs.syslog!!/udp
 
 
 [Service]

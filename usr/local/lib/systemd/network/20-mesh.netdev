@@ -1,0 +1,11 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[NetDev]
+Name=wg0
+Kind=wireguard
+Description=Mesh VPN between my servers
+
+[WireGuard]
+PrivateKey=@network.wireguard.mesh.private-key
