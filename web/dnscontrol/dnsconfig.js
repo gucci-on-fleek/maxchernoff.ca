@@ -440,7 +440,7 @@ D("958386.xyz", REG_MONITOR,
 )
 
 // Give each server a hostname under "duck.tel".
-for (const server of [
+var servers = [
     {
         name: "hydrogen",
         ipv4: "!!network.hydrogen.ipv4!!",
@@ -466,7 +466,9 @@ for (const server of [
         ipv4: "!!network.carbon.ipv4!!",
         ipv6: "!!network.carbon.ipv6!!",
     }
-]) {
+]
+for (var i = 0; i < servers.length; i++) {
+    var server = servers[i]
     D_EXTEND("duck.tel",
         A(server.name, server.ipv4),
         AAAA(server.name, server.ipv6),
