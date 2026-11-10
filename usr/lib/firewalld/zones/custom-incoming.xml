@@ -28,6 +28,9 @@
     <service name="dns-over-tls"/>
     <port port="!!dns.altport!!" protocol="tcp"/>
 
+    <!-- WireGuard, for the VPN -->
+    <service name="wireguard"/>
+
     <!-- Allow most ICMP packets -->
     <protocol value="icmp"/>
     <protocol value="ipv6-icmp"/>
