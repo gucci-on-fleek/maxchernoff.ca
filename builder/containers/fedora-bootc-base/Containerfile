@@ -95,13 +95,8 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     skopeo  # For copying container images
 )
 
+# Copy over our custom configuration files
 @run[mounts=system-config](
-    # Remove empty directories and broken symlinks
-    find /mnt/build/ -depth -type d -empty -delete 2>/dev/null || true
-    find /mnt/build/ -xtype l -delete 2>/dev/null || true
-    find /mnt/build/ -depth -type d -empty -delete 2>/dev/null || true
-
-    # Copy over our custom configuration files
     cp --archive --no-target-directory /run/system-config/ /mnt/build/
 )
 
@@ -158,9 +153,12 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     cp --force /usr/lib/os-release /etc/mkosi-initrd/mkosi.extra/usr/lib/os-release
 
     # Make the alternatives static.
-    for alt in "$(alternatives --list | cut -f3)"; do
-        ln --symbolic --force "$(realpath "$alt")" "$alt"
-    done
+    find /usr/ -type l -printf '%l\t%p\n' \
+        | grep '^/etc/alternatives' \
+        | cut -f2 \
+        | while read -r alt; do
+            ln --symbolic --force "$(realpath "$alt")" "$alt"
+        done
     rm -rf {/etc,/var/lib,/usr/lib}/alternatives/
 
     # Generate fish completions for the whole system
