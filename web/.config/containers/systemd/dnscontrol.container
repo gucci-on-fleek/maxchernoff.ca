@@ -5,8 +5,7 @@
 [Container]
 Image=ghcr.io/stackexchange/dnscontrol:latest
 
-EnvironmentFile=/var/home/repo/credentials/web/dnscontrol_secrets
-
+EnvironmentFile=%d/dnscontrol_secrets
 Network=private
 Volume=%h/dnscontrol:/dns:ro,z
 Exec=push --full
@@ -21,3 +20,4 @@ After=network-ready.service
 Type=oneshot
 RemainAfterExit=no
 ExecStartPost=sleep 15
+LoadCredential=dnscontrol_secrets

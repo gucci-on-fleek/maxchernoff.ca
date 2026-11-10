@@ -5,8 +5,8 @@
 [Container]
 Image=docker.io/jgosmann/dmarc-metrics-exporter:latest
 StopSignal=SIGINT
-Volume=%h/dmarc-metrics/config/dmarc-metrics-exporter.json:/etc/dmarc-metrics-exporter.json:ro,noexec
 Volume=%h/dmarc-metrics/data/:/var/lib/dmarc-metrics-exporter:rw,Z,noexec
+Volume=%d/dmarc-metrics-exporter.json:/etc/dmarc-metrics-exporter.json:ro,noexec,U,Z
 
 ReadOnly=true
 ReadOnlyTmpfs=false
@@ -20,6 +20,7 @@ After=network-ready.service
 
 [Service]
 Restart=always
+LoadCredential=dmarc-metrics-exporter.json
 
 [Install]
 WantedBy=default.target

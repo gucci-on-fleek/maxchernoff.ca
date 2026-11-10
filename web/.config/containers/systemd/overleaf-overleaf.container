@@ -44,9 +44,9 @@ Environment="OVERLEAF_EMAIL_REPLY_TO=overleaf@maxchernoff.ca"
 Environment="OVERLEAF_EMAIL_SMTP_HOST=systemd-maddy"
 Environment="OVERLEAF_EMAIL_SMTP_PORT=587"
 Environment="OVERLEAF_EMAIL_SMTP_USER=overleaf@noreply.maxchernoff.ca"
-EnvironmentFile=/var/home/repo/credentials/web/overleaf_smtp_password
 Environment="OVERLEAF_EMAIL_SMTP_IGNORE_TLS=true"
 Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
+EnvironmentFile=%d/overleaf_smtp_password
 
 # Metrics
 PublishPort=!!prometheus.overleaf.ip!!:!!prometheus.overleaf.port!!:3000
@@ -60,6 +60,7 @@ Restart=always
 TimeoutStartSec=300s
 TimeoutStopSec=10s
 TimeoutStopFailureMode=kill
+LoadCredential=overleaf_smtp_password
 
 # Run at a lower priority
 !!priorities.low!!

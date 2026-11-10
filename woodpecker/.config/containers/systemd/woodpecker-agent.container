@@ -14,7 +14,7 @@ Environment="WOODPECKER_BACKEND_DOCKER_ENABLE_IPV6=true"
 Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/opt/texlive:ro,/var/home/tex/context:/opt/context:ro"
 Environment="WOODPECKER_MAX_WORKFLOWS=1"
 Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"
-EnvironmentFile=/var/home/repo/credentials/woodpecker/woodpecker_agent_secret
+EnvironmentFile=%d/woodpecker_agent_secret
 
 [Service]
 Restart=always
@@ -22,6 +22,7 @@ ExecStartPre=podman unshare chgrp 1 %t/podman/podman.sock
 RestartSec=5s
 RestartMaxDelaySec=60s
 RestartSteps=5
+LoadCredential=woodpecker_agent_secret
 
 [Unit]
 After=podman.socket

@@ -10,8 +10,7 @@ Network=flask.network
 Volume=%h/flask/:/srv:ro,exec
 Volume=/var/home/repo/triggers/:/root/triggers:rw
 Exec=/srv/app.py
-
-EnvironmentFile=/var/home/repo/credentials/web/webhook_secret
+EnvironmentFile=%d/webhook_secret
 
 ReadOnly=true
 ReadOnlyTmpfs=false
@@ -19,6 +18,7 @@ ReadOnlyTmpfs=false
 [Service]
 Restart=always
 TimeoutStopSec=15s
+LoadCredential=webhook_secret
 
 # Run at a higher priority
 !!priorities.high!!

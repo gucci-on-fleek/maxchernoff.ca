@@ -370,7 +370,16 @@ class BuildConfig:
             "filesystem_to_git_prefix",
         ):
             try:
-                path_value = Path(data[path_key]).expanduser().absolute()
+                path_value = (
+                    Path(
+                        data[path_key].replace(
+                            "$CREDENTIALS_DIRECTORY",
+                            environ.get("CREDENTIALS_DIRECTORY", ""),
+                        )
+                    )
+                    .expanduser()
+                    .absolute()
+                )
                 if not path_value.exists():
                     raise ValueError(f"Path does not exist: {path_value}")
             except (KeyError, RuntimeError, ValueError) as e:

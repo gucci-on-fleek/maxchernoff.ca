@@ -18,6 +18,7 @@ PublishPort=!!network.hydrogen.ipv4!!:!!dns.altport!!:53
 Volume=%h/knot/config:/config:ro,z
 Volume=%h/knot/storage:/storage:rw,Z
 Volume=%t/knot:/rundir:rw,z,U
+Volume=%d/knot-secrets.conf:/config/knot-secrets.conf:ro,noexec,U,Z
 
 Entrypoint=/usr/sbin/knotd
 Exec=
@@ -29,6 +30,7 @@ After=network-ready.service
 [Service]
 Restart=always
 ExecStartPre=mkdir -p %t/knot
+LoadCredential=knot-secrets.conf
 
 # Run at a higher priority
 !!priorities.high!!

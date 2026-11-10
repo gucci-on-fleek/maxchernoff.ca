@@ -5,7 +5,7 @@
 
 tag_domain = "maxchernoff.ca"
 registry = "localhost:!!registry.port!!"
-sigstore_path = "/var/home/repo/credentials/builder/sigstore-builder.yaml"
+sigstore_path = "$CREDENTIALS_DIRECTORY/sigstore-builder.yaml"
 git_directory = "/var/home/repo/maxchernoff.ca/.git"
 filesystem_to_git_prefix = "/var/home/"
 distributor = "Max Chernoff"

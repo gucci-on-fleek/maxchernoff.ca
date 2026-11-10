@@ -11,6 +11,7 @@ User=1000
 
 Volume=%h/maddy/data:/data:rw,Z,noexec
 Volume=%h/maddy/config:/etc/maddy:ro,noexec
+Volume=%d/maddy-users.conf:/etc/maddy/maddy-users.conf:ro,noexec,U,Z
 
 # Allow external access so that we can send to other MX servers
 Network=maddy-external.network
@@ -24,6 +25,7 @@ PublishPort=!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!:!!prometheus.maddy
 
 [Service]
 Restart=always
+LoadCredential=maddy-users.conf
 
 # Run at a higher priority
 !!priorities.high!!

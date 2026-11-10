@@ -13,11 +13,11 @@ Environment="WOODPECKER_ADMIN=gucci-on-fleek"
 Environment="WOODPECKER_HOST=https://woodpecker.maxchernoff.ca"
 Environment="WOODPECKER_OPEN=false"
 Environment="WOODPECKER_GRPC_ADDR=:!!woodpecker.port!!"
-EnvironmentFile=/var/home/repo/credentials/web/woodpecker_agent_secret
+EnvironmentFile=%d/woodpecker_agent_secret
 
 Environment="WOODPECKER_GITHUB=true"
 Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
-EnvironmentFile=/var/home/repo/credentials/web/woodpecker_github_secret
+EnvironmentFile=%d/woodpecker_github_secret
 
 # Metrics
 PublishPort=!!prometheus.woodpecker.ip!!:!!prometheus.woodpecker.port!!:!!prometheus.woodpecker.port!!
@@ -25,6 +25,8 @@ Environment="WOODPECKER_METRICS_SERVER_ADDR=:!!prometheus.woodpecker.port!!"
 
 [Service]
 Restart=always
+LoadCredential=woodpecker_agent_secret
+LoadCredential=woodpecker_github_secret
 
 [Unit]
 Wants=network-ready.service
