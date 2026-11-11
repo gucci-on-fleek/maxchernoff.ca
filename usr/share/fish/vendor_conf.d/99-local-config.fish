@@ -42,7 +42,7 @@ bind \f 'clear && commandline -f repaint'
 bind ctrl-h backward-kill-word
 
 # Variables
-set --export LC_COLLATE "C.UTF-8"
+export (/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
 
 # Strace
 set strace_exclude "$(echo "!\
