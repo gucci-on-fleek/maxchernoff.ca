@@ -947,7 +947,7 @@ class Containerfile[Initialized: Never | None](_Parser):  # noqa: RUF020
                     #!/bin/sh
                     set -euxo pipefail
                     export SOURCE_DATE_EPOCH=0
-                    export SYSTEMD_OFFLINE=1 SYSTEMD_IN_CHROOT=1
+                    export SYSTEMD_OFFLINE=1 SYSTEMD_IN_CHROOT=1 SYSTEMD_TMPFILES_FORCE_SUBVOL=1
                     {body}
                 """)
             )
