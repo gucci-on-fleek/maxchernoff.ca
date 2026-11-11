@@ -9,3 +9,4 @@ Description=Mesh VPN between my servers
 
 [WireGuard]
 PrivateKey=@network.wireguard.mesh.private-key
+ListenPort=51820
