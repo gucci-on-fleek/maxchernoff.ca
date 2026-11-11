@@ -18,9 +18,9 @@ ReadOnlyTmpfs=false
 # Metrics
 Exec=\
     --web-listen-addr=0.0.0.0 \
-    --web-listen-port=!!prometheus.knot.port!!
+    --web-listen-port=!!prometheus.hydrogen.knot.port!!
 
-PublishPort=!!prometheus.knot.ip!!:!!prometheus.knot.port!!:!!prometheus.knot.port!!
+PublishPort=!!prometheus.hydrogen.knot.ip!!:!!prometheus.hydrogen.knot.port!!:!!prometheus.hydrogen.knot.port!!
 
 [Unit]
 Wants=knot.service

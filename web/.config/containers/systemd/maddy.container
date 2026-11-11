@@ -21,7 +21,7 @@ Network=email.network
 PublishPort=!!email.ipv4!!:587:587
 
 # Metrics
-PublishPort=!!prometheus.maddy.ip!!:!!prometheus.maddy.port!!:!!prometheus.maddy.port!!
+PublishPort=!!prometheus.hydrogen.maddy.ip!!:!!prometheus.hydrogen.maddy.port!!:!!prometheus.hydrogen.maddy.port!!
 
 [Service]
 Restart=always

@@ -268,7 +268,7 @@ metrics.maxchernoff.ca {
 		analytics {env.CADDY_HTTP_CREDENTIALS}
 	}
 
-	reverse_proxy systemd-victoria-metrics:!!prometheus.victoria-metrics.port!!
+	reverse_proxy systemd-victoria-metrics:!!prometheus.hydrogen.victoria-metrics.port!!
 }
 
 # Grafana reverse proxy
@@ -356,7 +356,7 @@ duck.tel {
 }
 
 # Metrics
-http://caddy.metrics.maxchernoff.ca:!!prometheus.caddy.port!! {
+http://caddy.metrics.maxchernoff.ca:!!prometheus.hydrogen.caddy.port!! {
 	bind 0.0.0.0
 
 	handle /metrics {

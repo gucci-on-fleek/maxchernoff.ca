@@ -24,7 +24,7 @@ ExecStart=/usr/bin/prometheus-node-exporter \
     --collector.systemd.enable-task-metrics \
     --collector.systemd.unit-exclude=".+\\.(device|mount|swap|automount|scope)" \
     --collector.tcpstat \
-    --web.listen-address="!!prometheus.node.ip!!:!!prometheus.node.port!!"
+    --web.listen-address="!!prometheus.hydrogen.node.ip!!:!!prometheus.hydrogen.node.port!!"
 
 # Sandboxing
 User=prometheus
@@ -33,7 +33,7 @@ NoNewPrivileges=true
 
 RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
 IPAddressDeny=any
-IPAddressAllow=!!prometheus.node.ip!!
+IPAddressAllow=!!prometheus.hydrogen.node.ip!!
 
 ProtectSystem=strict
 PrivateTmp=true

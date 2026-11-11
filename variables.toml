@@ -42,42 +42,39 @@ version = "45"
 altport = "25108"
 
 
-[prometheus]
 # Define the IP addresses for the Prometheus subnet
-subnet = "10.79.79.1/24"
-gateway = "10.79.79.1"
-
-caddy.ip = "10.79.79.2"
+[prometheus.hydrogen]
+caddy.ip = "10.80.1.2"
 caddy.port = "9117"
 
-registry.ip = "10.79.79.3"
+registry.ip = "10.80.1.3"
 registry.port = "9103"
 
-overleaf.ip = "10.79.79.4"
+overleaf.ip = "10.80.1.4"
 overleaf.port = "9101"
 
-maddy.ip = "10.79.79.5"
+maddy.ip = "10.80.1.5"
 maddy.port = "9749"
 
-woodpecker.ip = "10.79.79.6"
+woodpecker.ip = "10.80.1.6"
 woodpecker.port = "9102"
 
-node.ip = "10.79.79.7"
+node.ip = "10.80.1.7"
 node.port = "9100"
 
 podman.port = "9882"
-podman.web.ip = "10.79.79.8"
-podman.woodpecker.ip = "10.79.79.9"
+podman.web.ip = "10.80.1.8"
+podman.woodpecker.ip = "10.80.1.9"
 
-knot.ip = "10.79.79.11"
+knot.ip = "10.80.1.11"
 knot.port = "9434"
 
-dmarc-metrics.ip = "10.79.79.12"
+dmarc-metrics.ip = "10.80.1.12"
 dmarc-metrics.port = "9797"
 
 openwrt.port = "9103"
 
-victoria-logs.ip = "10.79.79.13"
+victoria-logs.ip = "10.80.1.13"
 victoria-logs.port = "9428"
 
 victoria-metrics.ip = "127.0.0.1"
@@ -86,7 +83,7 @@ victoria-metrics.port = "9090"
 
 [email]
 # Define the IP addresses for the email server
-ipv4 = "10.80.1.2"
+ipv4 = "10.80.1.254"
 
 
 [wireguard.home]
@@ -118,6 +115,7 @@ boron.ipv6 = "fd80:80::4:0/120"
 
 [victoria-logs]
 # The port used to append logs
+ip = "10.80.1.13"
 port = "21660"
 
 # The port that Victoria Logs will listen on for syslog messages

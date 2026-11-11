@@ -20,7 +20,7 @@ Environment="OTEL_METRICS_EXPORTER=none"
 Environment="OTEL_TRACES_EXPORTER=none"
 
 # Metrics
-PublishPort=!!prometheus.registry.ip!!:!!prometheus.registry.port!!:!!prometheus.registry.port!!
+PublishPort=!!prometheus.hydrogen.registry.ip!!:!!prometheus.hydrogen.registry.port!!:!!prometheus.hydrogen.registry.port!!
 
 [Service]
 Restart=always

@@ -8,15 +8,15 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 # Prometheus metrics addresses
-!!prometheus.caddy.ip!!               caddy.metrics.maxchernoff.ca.
-!!prometheus.dmarc-metrics.ip!!       dmarc.metrics.maxchernoff.ca.
-!!prometheus.knot.ip!!                knot.metrics.maxchernoff.ca.
-!!prometheus.maddy.ip!!               maddy.metrics.maxchernoff.ca.
-!!prometheus.node.ip!!                node-exporter.metrics.maxchernoff.ca.
-!!prometheus.overleaf.ip!!            overleaf.metrics.maxchernoff.ca.
-!!prometheus.podman.web.ip!!          podman-web.metrics.maxchernoff.ca.
-!!prometheus.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
-!!prometheus.registry.ip!!            container-registry.metrics.maxchernoff.ca.
-!!prometheus.victoria-logs.ip!!       victoria-logs.metrics.maxchernoff.ca.
-!!prometheus.victoria-metrics.ip!!    victoria-metrics.metrics.maxchernoff.ca.
-!!prometheus.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.caddy.ip!!               caddy.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.dmarc-metrics.ip!!       dmarc.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.knot.ip!!                knot.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.maddy.ip!!               maddy.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.node.ip!!                node-exporter.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.overleaf.ip!!            overleaf.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.podman.web.ip!!          podman-web.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.registry.ip!!            container-registry.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.victoria-logs.ip!!       victoria-logs.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.victoria-metrics.ip!!    victoria-metrics.metrics.maxchernoff.ca.
+!!prometheus.hydrogen.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.

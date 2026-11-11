@@ -11,7 +11,7 @@ Volume=%h/victoria-metrics/data/:/victoria-metrics-data:rw,Z,noexec
 Volume=%h/victoria-metrics/config/:/etc/prometheus/:ro,noexec
 Exec=\
     --enableTCP6 \
-    --httpListenAddr=:!!prometheus.victoria-metrics.port!! \
+    --httpListenAddr=:!!prometheus.hydrogen.victoria-metrics.port!! \
     --promscrape.config=/etc/prometheus/prometheus.yml \
     --retentionPeriod=100y \
     --sortLabels=true \

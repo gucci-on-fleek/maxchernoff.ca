@@ -12,7 +12,7 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 
 # Metrics
-PublishPort=!!prometheus.dmarc-metrics.ip!!:!!prometheus.dmarc-metrics.port!!:!!prometheus.dmarc-metrics.port!!
+PublishPort=!!prometheus.hydrogen.dmarc-metrics.ip!!:!!prometheus.hydrogen.dmarc-metrics.port!!:!!prometheus.hydrogen.dmarc-metrics.port!!
 
 [Unit]
 Wants=network-ready.service

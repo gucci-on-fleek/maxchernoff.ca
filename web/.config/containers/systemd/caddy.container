@@ -29,7 +29,7 @@ Network=prometheus.network
 Network=woodpecker.network
 
 # Metrics
-PublishPort=!!prometheus.caddy.ip!!:!!prometheus.caddy.port!!:!!prometheus.caddy.port!!
+PublishPort=!!prometheus.hydrogen.caddy.ip!!:!!prometheus.hydrogen.caddy.port!!:!!prometheus.hydrogen.caddy.port!!
 
 [Service]
 Restart=always
