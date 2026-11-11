@@ -64,4 +64,15 @@
         <port port="!!prometheus.node.port!!-!!prometheus.openwrt.port!!" protocol="tcp"/>
         <accept/>
     </rule>
+
+    <!-- Allow everything over the mesh VPN -->
+    <rule family="ipv4">
+        <source address="!!wireguard.mesh.subnet.ipv4!!"/>
+        <accept/>
+    </rule>
+
+    <rule family="ipv6">
+        <source address="!!wireguard.mesh.subnet.ipv6!!"/>
+        <accept/>
+    </rule>
 </policy>

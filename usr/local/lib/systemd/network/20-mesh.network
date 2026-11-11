@@ -10,3 +10,6 @@ Description=Mesh VPN between my servers
 
 [Link]
 RequiredForOnline=false
+
+[Route]
+Destination=!!wireguard.mesh.subnet.ipv4!!

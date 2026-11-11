@@ -13,7 +13,6 @@ Description=Internal Networks
 Address=!!prometheus.subnet!!
 Scope=host
 
-# For hosting an internal email server
-[Address]
-Address=!!email.ipv4!!/32
-Scope=host
+[Route]
+Type=local
+Destination=!!wireguard.mesh.hydrogen.ipv4!!
