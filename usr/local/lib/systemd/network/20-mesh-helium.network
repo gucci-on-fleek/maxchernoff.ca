@@ -4,12 +4,14 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 [Match]
 Name=wg0
-
-[Network]
-Description=Mesh VPN between my servers
+Host=helium
 
 [Link]
 RequiredForOnline=false
 
 [Route]
 Destination=!!wireguard.mesh.subnet.ipv4!!
+
+[Network]
+Address=!!wireguard.mesh.helium.ipv4!!
+Address=!!wireguard.mesh.helium.ipv6!!

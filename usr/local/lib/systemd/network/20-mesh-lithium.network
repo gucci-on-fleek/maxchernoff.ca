@@ -1,0 +1,17 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Match]
+Name=wg0
+Host=lithium
+
+[Link]
+RequiredForOnline=false
+
+[Route]
+Destination=!!wireguard.mesh.subnet.ipv4!!
+
+[Network]
+Address=!!wireguard.mesh.lithium.ipv4!!
+Address=!!wireguard.mesh.lithium.ipv6!!

@@ -54,4 +54,4 @@ SOURCE_DATE_EPOCH=0 skopeo copy \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-bootc:latest" \
     "containers-storage:maxchernoff.ca/fedora-bootc:latest" \
-    "docker://localhost:!!registry.port!!/fedora-bootc:latest"
+    "docker://!!registry.ip!!:!!registry.port!!/fedora-bootc:latest"

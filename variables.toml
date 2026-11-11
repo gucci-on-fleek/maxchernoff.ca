@@ -29,6 +29,7 @@ port = "40144"
 
 [registry]
 # The port used to push/write to the container registry
+ip = "10.80.1.3"
 port = "23719"
 
 

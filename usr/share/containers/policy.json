@@ -75,11 +75,6 @@
                     "type": "insecureAcceptAnything"
                 }
             ],
-            "localhost:!!registry.port!!": [
-                {
-                    "type": "insecureAcceptAnything"
-                }
-            ],
             "maxchernoff.ca": [
                 {
                     "type": "sigstoreSigned",
