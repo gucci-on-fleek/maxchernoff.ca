@@ -22,7 +22,7 @@ storage:
         rootdirectory: /var/lib/registry
 
 http:
-    addr: ":!!registry.port!!"
+    addr: ":8080"
     debug:
         addr: "0.0.0.0:!!prometheus.hydrogen.registry.port!!"
         prometheus:

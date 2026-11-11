@@ -4,11 +4,12 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
 tag_domain = "maxchernoff.ca"
-registry = "localhost:!!registry.port!!"
-sigstore_path = "$CREDENTIALS_DIRECTORY/sigstore-builder.yaml"
+registry = "registry.maxchernoff.ca"
+sigstore_path = "/var/home/repo/credentials/builder/sigstore-builder.yaml"
 git_directory = "/var/home/repo/maxchernoff.ca/.git"
 filesystem_to_git_prefix = "/var/home/"
 distributor = "Max Chernoff"
+authfile = "$CREDENTIALS_DIRECTORY/containers-auth.json"
 
 containers_policy = """{
     "transports": {
@@ -57,7 +58,7 @@ container_path = "/go/"
 [[mounts]]
 type = "read-only"
 category = "system-config"
-host_path = "/var/home/repo/maxchernoff.ca/etc/common"
+host_path = "/var/home/repo/maxchernoff.ca/etc"
 container_path = "/run/system-config/etc"
 
 [[mounts]]

@@ -10,6 +10,7 @@ Requires=podman.socket
 Type=oneshot
 RemainAfterExit=no
 Slice=container.slice
+LoadCredential=containers-auth.json
 
 ExecStart=/usr/local/bin/build-container \
     --debug \

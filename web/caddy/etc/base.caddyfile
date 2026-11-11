@@ -204,7 +204,7 @@
 		Cache-Control "max-age=60"
 	}
 	basic_auth /analytics/* {
-		analytics {env.CADDY_HTTP_CREDENTIALS}
+		analytics {env.CADDY_ANALYTICS_PASSWORD}
 	}
 
 	# Stardew Valley
@@ -298,7 +298,7 @@
 	redir @has-query {path} temporary
 
 	# Container Registry
-	redir /v2/* https://registry.maxchernoff.ca{uri} temporary
+	redir /v2/* https://registry.maxchernoff.ca{uri} 308
 
 	# Prefetch
 	header ?Speculation-Rules `"/assets/speculation-rules.json"`

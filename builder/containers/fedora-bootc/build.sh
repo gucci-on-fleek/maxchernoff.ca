@@ -44,6 +44,7 @@ podman build \
 # Push the container
 SOURCE_DATE_EPOCH=0 skopeo copy \
     --all \
+    --authfile="$CREDENTIALS_DIRECTORY/containers-auth.json" \
     --dest-compress-format="zstd:chunked" \
     --dest-compress-level="15" \
     --dest-force-compress-format \
@@ -54,4 +55,4 @@ SOURCE_DATE_EPOCH=0 skopeo copy \
     --sign-by-sigstore="/var/home/repo/credentials/builder/sigstore-builder.yaml" \
     --sign-identity="maxchernoff.ca/fedora-bootc:latest" \
     "containers-storage:maxchernoff.ca/fedora-bootc:latest" \
-    "docker://!!registry.ip!!:!!registry.port!!/fedora-bootc:latest"
+    "docker://registry.maxchernoff.ca/fedora-bootc:latest"

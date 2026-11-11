@@ -219,15 +219,20 @@ registry.maxchernoff.ca {
 		header Content-Type "text/x-ssh-public-key"
 	}
 
-	# Permissions
-	@get-head method GET HEAD
-	handle @get-head {
-		reverse_proxy systemd-container-registry:!!registry.port!!
+	# GET requests are allowed unauthenticated, but everything else requires
+	# authentication.
+	@not-get-head not method GET HEAD
+	basic_auth @not-get-head {
+		registry {env.CADDY_REGISTRY_PASSWORD}
 	}
 
-	# Fallback
-	handle {
-		respond "403 Forbidden" 403
+	header www-authenticate `Basic realm="restricted", charset="UTF-8"`
+
+	reverse_proxy systemd-container-registry:8080
+
+	handle_errors 401 {
+		header Content-Type "text/plain; charset=utf-8"
+		respond "Login required for this action" 401
 	}
 }
 
@@ -265,7 +270,7 @@ metrics.maxchernoff.ca {
 	}
 
 	basic_auth {
-		analytics {env.CADDY_HTTP_CREDENTIALS}
+		analytics {env.CADDY_ANALYTICS_PASSWORD}
 	}
 
 	reverse_proxy systemd-victoria-metrics:!!prometheus.hydrogen.victoria-metrics.port!!
@@ -284,7 +289,7 @@ grafana.maxchernoff.ca {
 	}
 
 	basic_auth {
-		analytics {env.CADDY_HTTP_CREDENTIALS}
+		analytics {env.CADDY_ANALYTICS_PASSWORD}
 	}
 
 	reverse_proxy systemd-grafana:3000 {
@@ -301,7 +306,7 @@ logs.maxchernoff.ca {
 	}
 
 	basic_auth {
-		analytics {env.CADDY_HTTP_CREDENTIALS}
+		analytics {env.CADDY_ANALYTICS_PASSWORD}
 	}
 
 	reverse_proxy systemd-victoria-logs:!!victoria-logs.port!!

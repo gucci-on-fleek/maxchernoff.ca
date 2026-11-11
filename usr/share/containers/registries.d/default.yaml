@@ -5,5 +5,5 @@
 docker:
     maxchernoff.ca:
         use-sigstore-attachments: true
-    "!!registry.ip!!:!!registry.port!!":
+    registry.maxchernoff.ca:
         use-sigstore-attachments: true

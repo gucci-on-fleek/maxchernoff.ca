@@ -11,6 +11,7 @@ Type=oneshot
 RemainAfterExit=no
 Slice=container.slice
 ExecStart=%h/containers/fedora-bootc/build.sh
+LoadCredential=containers-auth.json
 
 !!priorities.low!!
 

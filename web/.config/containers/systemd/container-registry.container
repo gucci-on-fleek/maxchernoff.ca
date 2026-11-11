@@ -6,9 +6,6 @@
 Image=docker.io/library/registry:3
 Network=container-registry.network
 
-# Random port number for local-only pushes
-PublishPort=!!registry.ip!!:!!registry.port!!:!!registry.port!!
-
 # Config
 Volume=%h/container-registry/config:/etc/distribution/:ro,noexec
 
