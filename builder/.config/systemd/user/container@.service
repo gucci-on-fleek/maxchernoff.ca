@@ -11,7 +11,6 @@ Type=oneshot
 RemainAfterExit=no
 Slice=container.slice
 
-LoadCredential=sigstore-builder.yaml
 ExecStart=/usr/local/bin/build-container \
     --debug \
     --directory=%h/containers/%i \
