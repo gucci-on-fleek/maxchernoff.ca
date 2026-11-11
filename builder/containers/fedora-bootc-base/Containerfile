@@ -39,7 +39,6 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     mkosi-initrd  # initrd generator
     python3-pefile  # Needed by mkosi-initrd
     systemd-boot-unsigned
-    systemd-imds  # Instance Metadata Service
     systemd-ukify  # Creates a unified kernel image (UKI) for booting
 
     # Command-line Utilities

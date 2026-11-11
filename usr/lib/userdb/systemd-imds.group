@@ -1,9 +1,0 @@
-{
-    "groupName": "systemd-imds",
-    "gid": 994,
-    "privileged": {
-        "hashedPassword": "!*"
-    },
-    "locked": true,
-    "disposition": "system"
-}
