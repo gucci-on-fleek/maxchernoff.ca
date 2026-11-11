@@ -27,7 +27,9 @@ enable dbus.socket
 enable firewalld.service
 enable fstrim.timer
 enable fwupd-refresh.timer
-enable greenboot-*.service
+enable get-status.path
+enable install-repo@credentials.path
+enable install-repo@maxchernoff.ca.path
 enable network-ready.service
 enable prometheus-node-exporter.service
 enable qemu-guest-agent.service
