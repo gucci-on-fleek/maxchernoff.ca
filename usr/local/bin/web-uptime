@@ -11,12 +11,12 @@ STYLE_FADED=$'\x1B[2m'
 STYLE_RESET=$'\x1B[0m'
 
 # Output path
-output="/var/home/repo/triggers/get-status.output"
+output="/var/lib/triggers/get-status.output"
 echo -n > "$output"
 
 # Get the unit statuses
 status="$(mktemp)"
-/usr/local/bin/web-status ~repo/maxchernoff.ca/unit-status.conf > "$status"
+/usr/local/bin/web-status /var/lib/repo/unit-status.conf > "$status"
 
 # Successful units
 printf '\t%sSuccessful Units%s\n' "$STYLE_BOLD" "$STYLE_RESET" >> "$output"

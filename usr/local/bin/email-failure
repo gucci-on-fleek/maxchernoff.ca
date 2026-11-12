@@ -39,7 +39,7 @@ HTML_TEMPLATE = """\
 <style>pre {{overflow-x: auto;}}</style>
 <pre><code>{body}</code></pre>
 """
-PASSWORD_FILE = f"/var/home/repo/credentials/global/{EMAIL_FROM}"
+PASSWORD_FILE = f"/var/lib/credentials-repo/global/{EMAIL_FROM}"
 SMTP_PORT = 587
 SMTP_SERVER = "!!email.ipv4!!"
 SYSTEMCTL_REGEX_FIND = r" M[SD]T [^:]*: "

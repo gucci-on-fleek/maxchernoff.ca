@@ -11,8 +11,7 @@
 builder = "/var/home/builder/"
 etc = "/etc/"
 max = "/var/home/max/"
-repo = "/var/home/repo/maxchernoff.ca/"
-repo-user = "/var/home/repo/"
+repo = "/var/lib/repo/"
 tex = "/var/lib/tex/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
@@ -29,18 +28,6 @@ path = "/usr/local/share/selinux/semanage.import"
 ############
 ### repo ###
 ############
-
-[[permissions]]
-base = "{repo-user}"
-paths = ["*"]
-owner = "repo"
-permissions.other = ""
-
-[[permissions]]
-base = "/var/home/"
-paths = ["repo/", "repo/maxchernoff.ca/", "repo/triggers/"]
-owner = "repo"
-permissions.other = "r"
 
 [[permissions]]
 base = "{repo}"
@@ -69,25 +56,6 @@ paths = ["packed-refs", "HEAD", "refs/", "config", "objects/"]
 owner = "repo"
 permissions.other = "r"
 recursive_permissions = true
-
-[[folder]]
-base = "{repo-user}"
-paths = ["triggers"]
-owner = "repo"
-permissions.other = "r"
-
-[[touch]]
-base = "{repo-user}/triggers/"
-paths = [
-    "install-repo-maxchernoff.ca.trigger",
-    "get-status.trigger",
-    "get-status.output",
-]
-owner = "repo"
-permissions.max = "rw"
-permissions.root = "rw"
-permissions."web/1000" = "rw"
-permissions.other = ""
 
 
 ###########

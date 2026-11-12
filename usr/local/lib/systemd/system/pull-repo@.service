@@ -4,15 +4,22 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Unit]
 Description=Pulls the files from the server Git repository
+
 Wants=network-ready.service
 After=network-ready.service
+
+Wants=initialize-repo@%i.service
+After=initialize-repo@%i.service
+
+AssertPathIsDirectory=/var/lib/%i
+AssertFileNotEmpty=/var/lib/%i/install-rules.toml
 
 [Service]
 # Limit the permissions to the minimum necessary
 User=repo
 
 Type=oneshot
-WorkingDirectory=/home/repo/%i
+WorkingDirectory=/var/lib/%i
 ExecStart=/usr/bin/git fetch --recurse-submodules=yes --jobs=4 --quiet
 ExecStart=/bin/bash -c "\
     set -euo pipefail && \

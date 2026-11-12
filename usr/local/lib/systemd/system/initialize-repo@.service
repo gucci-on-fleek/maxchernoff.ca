@@ -1,0 +1,24 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+[Unit]
+Description=Initializes the server Git repository
+
+Wants=network-ready.service
+After=network-ready.service
+
+ConditionFileNotEmpty=!/var/lib/%i/install-rules.toml
+
+[Service]
+# Limit the permissions to the minimum necessary
+User=repo
+
+Type=oneshot
+WorkingDirectory=/var/lib/%i
+
+# For "generic" repos, do nothing. This will be overridden in the per-repo
+# drop-in files.
+ExecStart=/usr/bin/true
+

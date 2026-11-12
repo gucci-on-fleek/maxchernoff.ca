@@ -13,7 +13,7 @@ Type=oneshot
 RestrictSUIDSGID=false
 
 ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/ /var/usrlocal/bin/
-ExecStart=/usr/local/bin/web-install /home/repo/%i/install-rules.toml
+ExecStart=/usr/local/bin/web-install /var/lib/%i/install-rules.toml
 ExecStart=/usr/bin/systemctl --system daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "builder@" daemon-reload
 ExecStart=/usr/bin/systemctl --user --machine "max@" daemon-reload

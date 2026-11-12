@@ -8,7 +8,7 @@ StopSignal=SIGINT
 Network=flask.network
 
 Volume=%h/flask/:/srv:ro,exec
-Volume=/var/home/repo/triggers/:/root/triggers:rw
+Volume=/var/lib/triggers/:/root/triggers:rw
 Exec=/srv/app.py
 EnvironmentFile=%d/webhook_secret
 
