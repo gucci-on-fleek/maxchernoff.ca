@@ -4,6 +4,9 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Unit]
 Description=Update TeX Live
+
+Wants=install-texlive.service
+After=install-texlive.service
 After=network.target
 
 [Service]
@@ -19,7 +22,6 @@ CapabilityBoundingSet=
 NoNewPrivileges=true
 PrivateDevices=true
 PrivateTmp=true
-ReadWritePaths=/tmp/
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict
