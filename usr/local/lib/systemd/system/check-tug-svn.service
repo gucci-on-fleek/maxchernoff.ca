@@ -8,11 +8,13 @@ After=network-ready.target
 
 [Service]
 Type=oneshot
+User=tex
+Umask=0002
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
-# PrivateDevices=true  # TODO: SELinux
-# PrivateTmp=true
+PrivateDevices=true
+PrivateTmp=true
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict

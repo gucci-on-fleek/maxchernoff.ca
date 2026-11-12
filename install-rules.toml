@@ -13,7 +13,7 @@ etc = "/etc/"
 max = "/var/home/max/"
 repo = "/var/home/repo/maxchernoff.ca/"
 repo-user = "/var/home/repo/"
-tex = "/var/home/tex/"
+tex = "/var/lib/tex/"
 web = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
@@ -149,33 +149,6 @@ owner = "max"
 ###########
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{tex}"
-paths = ["*"]
-owner = "tex"
-permissions.other = ""
-
-[[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}"
-paths = ["tex/"]
-owner = "repo"
-permissions.tex = "r"
-recursive_permissions = true
-
-[[link]]
-if = { hostname = "maxchernoff.ca" }
-source = "{repo}/tex/"
-destination = "{tex}/"
-paths = [
-    ".config/containers/",
-    ".config/systemd/user/",
-    ".config/user-tmpfiles.d",
-]
-owner = "tex"
-
-[[permissions]]
-if = { hostname = "maxchernoff.ca" }
 base = "{tex}"
 paths = ["texlive/", "context-installer/tex/", "context/"]
 owner = "tex"

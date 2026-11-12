@@ -41,8 +41,8 @@ module --add /usr/share/udica/templates/net_container.cil
 fcontext --deleteall
 fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/repo/triggers(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '/var/home/tex/context-installer/tex(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '/var/home/tex/texlive(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '/var/lib/tex/context-installer/tex(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '/var/lib/tex/texlive(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/caddy/logs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/dmarc-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/grafana/data(/.*)?'
@@ -72,7 +72,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '/var/home/web/caddy/c
 # Set the file context equivalents
 fcontext --add '/var/home/repo/maxchernoff.ca/builder/.config' --equal '/var/home/builder/.config'
 fcontext --add '/var/home/repo/maxchernoff.ca/max/.config' --equal '/var/home/max/.config'
-fcontext --add '/var/home/repo/maxchernoff.ca/tex/.config' --equal '/var/home/tex/.config'
+fcontext --add '/var/home/repo/maxchernoff.ca/tex/.config' --equal '/var/lib/tex/.config'
 fcontext --add '/var/home/repo/maxchernoff.ca/web/.config' --equal '/var/home/web/.config'
 fcontext --add '/var/home/repo/maxchernoff.ca/woodpecker/.config' --equal '/var/home/woodpecker/.config'
 

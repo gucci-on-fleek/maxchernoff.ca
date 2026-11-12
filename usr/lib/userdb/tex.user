@@ -1,26 +1,19 @@
 {
     "userName": "tex",
-    "uid": 1002,
-    "gid": 1002,
+    "uid": 501,
+    "gid": 501,
     "memberOf": [
         "tex"
     ],
     "locked": false,
     "disposition": "regular",
     "shell": "/usr/sbin/nologin",
-    "umask": 54,
+    "umask": 2,
     "privileged": {
         "hashedPassword": [
             "!"
         ]
     },
-    "perMachine": [
-        {
-            "matchHostname": [
-                "maxchernoff.ca"
-            ],
-            "homeDirectory": "/var/home/tex",
-            "nice": 10
-        }
-    ]
+    "homeDirectory": "/var/lib/tex",
+    "nice": 10
 }

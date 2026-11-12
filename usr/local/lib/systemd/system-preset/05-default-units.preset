@@ -20,6 +20,7 @@ enable bootloader-update.service
 enable btrfs-*.timer
 enable btrfsmaintenance-refresh.path
 enable by-designator-udev.service
+enable check-tug-svn.timer
 enable chrony-wait.service
 enable chronyd.service
 enable console-colors.service
@@ -42,3 +43,4 @@ enable sshd.service
 enable systemd-journal-upload.service
 enable systemd-networkd.service
 enable systemd-oomd.*
+enable update-texlive.timer

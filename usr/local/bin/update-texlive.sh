@@ -6,13 +6,13 @@
 set -euo pipefail
 
 # Set the environment variables
-export PATH="/var/home/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
+export PATH="/var/lib/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 
 # Update the TeX Live installation.
 tlmgr update --all --self || true
 
 # Reset the ls-R dates so that ConTeXt doesn't auto-remake its formats
-touch --date='@0' /var/home/tex/texlive/texmf-{config,dist,local,var}/ls-R
+touch --date='@0' /var/lib/tex/texlive/texmf-{config,dist,local,var}/ls-R
 
 # Remake the ConTeXt formats
 context --make > /dev/null

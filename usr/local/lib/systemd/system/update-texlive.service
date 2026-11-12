@@ -8,15 +8,19 @@ After=network.target
 
 [Service]
 Type=oneshot
+User=tex
+Umask=0002
+
 ExecStart=/usr/local/bin/update-texlive.sh
 ExecStart=-/usr/local/bin/update-context.sh
-ExecStart=restorecon -RDT0 %h/texlive %h/context-installer/tex
+ExecStart=restorecon -RDT0 /var/lib/tex/texlive /var/lib/tex/context-installer/tex
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
-# PrivateDevices=true  # TODO: SELinux
-# PrivateTmp=true
+PrivateDevices=true
+PrivateTmp=true
 ReadWritePaths=/tmp/
 PrivateUsers=true
 ProtectProc=invisible
 ProtectSystem=strict
+ProtectHome=true

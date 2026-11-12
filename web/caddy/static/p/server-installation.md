@@ -299,7 +299,7 @@ Installing TeX Live
     ```shell-session
     % ./install-tl-*/install-tl \
     >     --repository=https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet \
-    >     --texdir=/var/home/tex/texlive --scheme=full --paper=letter
+    >     --texdir=/var/lib/tex/texlive --scheme=full --paper=letter
     ```
 
 5. Install the TeX Live gpg keys:

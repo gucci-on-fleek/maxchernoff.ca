@@ -6,8 +6,8 @@
 set -euo pipefail
 
 # Set the environment variables
-export PATH="/var/home/tex/context/texmf-linux-64/bin/:/usr/local/bin:/usr/bin"
-cd /var/home/tex/context-installer/
+export PATH="/var/lib/tex/context/texmf-linux-64/bin/:/usr/local/bin:/usr/bin"
+cd /var/lib/tex/context-installer/
 
 # Update the base ConTeXt installation
 ./install.sh
@@ -37,5 +37,5 @@ mtxrun --script fonts --reload > /dev/null
 mtxrun --luatex --script fonts --reload > /dev/null
 
 # Update the ConTeXt modules
-cd /var/home/tex/context/
+cd /var/lib/tex/context/
 mtxrun --script install-modules --install --all > /dev/null

@@ -11,7 +11,7 @@ Volume=%h/woodpecker/config:/etc/woodpecker:rw,Z,noexec
 Volume=%t/podman/podman.sock:/var/run/docker.sock:rw,z
 
 Environment="WOODPECKER_BACKEND_DOCKER_ENABLE_IPV6=true"
-Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/home/tex/texlive:/opt/texlive:ro,/var/home/tex/context:/opt/context:ro"
+Environment="WOODPECKER_BACKEND_DOCKER_VOLUMES=/var/lib/tex/texlive:/opt/texlive:ro,/var/lib/tex/context:/opt/context:ro"
 Environment="WOODPECKER_MAX_WORKFLOWS=1"
 Environment="WOODPECKER_SERVER=127.0.0.1:!!woodpecker.port!!"
 EnvironmentFile=%d/woodpecker_agent_secret
