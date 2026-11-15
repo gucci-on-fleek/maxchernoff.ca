@@ -9,7 +9,7 @@ After=network-ready.target
 [Service]
 Type=oneshot
 User=tex
-Umask=0002
+UMask=0002
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
