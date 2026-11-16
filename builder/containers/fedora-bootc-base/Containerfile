@@ -122,7 +122,12 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     cp --archive --recursive --no-target-directory \
         /etc/systemd/user/ /usr/local/lib/systemd/user/
 
-    rm --force --recursive /etc/systemd/{system,user}/ || true
+    # Remove the files
+    rm --force --recursive \
+        /etc/systemd/{system,user}/ \
+        /usr/lib/systemd/{system,user}-preset/ \
+        /usr/local/lib/systemd/{system,user}-preset/ \
+    || true
 
     # Remove FIPS stuff
     rpm --query --list crypto-policies | grep -i fips | xargs rm -rf || true
@@ -206,12 +211,16 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     mkdir --parents \
         '/usr/share/empty.sshd/' \
         '/usr/share/empty/' \
-        '/boot/'
+        '/boot/' \
+        '/etc/upper/'
 
     # Add the bootc links
     systemd-tmpfiles --create --boot \
         /usr/local/lib/tmpfiles.d/bootc-build.conf \
         /usr/lib/tmpfiles.d/tmp.conf
+
+    # Mark the machine ID as uninitialized
+    echo "uninitialized" > /etc/machine-id
 
     # Only use the user database already committed to Git.
     rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*

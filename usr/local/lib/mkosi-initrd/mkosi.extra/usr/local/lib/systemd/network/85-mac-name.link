@@ -7,6 +7,6 @@ OriginalName=*
 
 [Link]
 NamePolicy=mac slot keep
-AlternativeNamesPolicy=mac slot keep
+AlternativeNamesPolicy=mac slot
 MACAddressPolicy=persistent
 Property=ID_NET_MANAGED_BY=io.systemd.Network
