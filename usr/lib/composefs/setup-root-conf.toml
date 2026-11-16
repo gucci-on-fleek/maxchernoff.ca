@@ -6,7 +6,7 @@
 transient = false
 
 [etc]
-mount = "overlay"
+mount = "none"
 
 [var]
 mount = "bind"

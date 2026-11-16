@@ -4,13 +4,13 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
 Description=OpenSSH ML-DSA Server Key Generation
-ConditionFileNotEmpty=|!/etc/ssh/ssh_host_mldsa44_ed25519_key
+ConditionFileNotEmpty=|!/var/etc/ssh/ssh_host_mldsa44_ed25519_key
 
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/ssh-keygen -q \
     -t mldsa44-ed25519 \
-    -f /etc/ssh/ssh_host_mldsa44_ed25519_key\
+    -f /var/etc/ssh/ssh_host_mldsa44_ed25519_key \
     -N ""
 
 [Install]

@@ -1,0 +1,17 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Unit]
+Description=OpenSSH Ed25519 Server Key Generation
+ConditionFileNotEmpty=|!/var/etc/ssh/ssh_host_ed25519_key
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ssh-keygen -q \
+    -t ed25519 \
+    -f /var/etc/ssh/ssh_host_ed25519_key \
+    -N ""
+
+[Install]
+WantedBy=sshd-keygen.target

@@ -1339,6 +1339,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
     with Containerfile(source=in_path, config=config) as containerfile:
         containerfile.metadata.image_reference = f"{config.tag_domain}/{tag}"
         args = containerfile.podman_args | {
+            CmdlineOption("no-hostname"),
             CmdlineOption("created-annotation", "false"),
             CmdlineOption("format", "oci"),
             CmdlineOption("no-cache"),
@@ -1373,6 +1374,7 @@ def build(source_dir: Path, config: BuildConfig, tag: str) -> None:
                 "run",
                 *CmdlineOptionBase.convert(
                     CmdlineOption("rm"),
+                    CmdlineOption("no-hostname"),
                     CmdlineOption("pull", "newer"),
                     CmdlineOption("userns", "host"),
                     CmdlineOption("env", "SOURCE_DATE_EPOCH=0"),

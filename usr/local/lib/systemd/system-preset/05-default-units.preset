@@ -4,7 +4,6 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 disable auditd.service
 disable btrfs-balance.timer
-disable sshd.service
 disable systemd-boot-update.service
 disable systemd-homed.service
 disable systemd-homed*.service
@@ -26,6 +25,7 @@ enable chronyd.service
 enable console-colors.service
 enable dbus-broker.service
 enable dbus.socket
+enable etc-hostname.mount
 enable firewalld.service
 enable fstrim.timer
 enable fwupd-refresh.timer
@@ -38,6 +38,7 @@ enable qemu-guest-agent.service
 enable redboot-*.service
 enable rpm-ostree-countme.timer
 enable snapper-*.timer
+enable sshd-keygen@ed25519.service
 enable sshd-keygen@mldsa.service
 enable sshd.service
 enable systemd-journal-upload.service

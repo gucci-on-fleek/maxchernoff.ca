@@ -211,20 +211,33 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     mkdir --parents \
         '/usr/share/empty.sshd/' \
         '/usr/share/empty/' \
-        '/boot/' \
-        '/etc/upper/'
+        '/boot/'
 
     # Add the bootc links
     systemd-tmpfiles --create --boot \
         /usr/local/lib/tmpfiles.d/bootc-build.conf \
         /usr/lib/tmpfiles.d/tmp.conf
 
-    # Mark the machine ID as uninitialized
+    # Prepare for an immutable /etc/
     echo "uninitialized" > /etc/machine-id
+    cat <<'EOF' > /etc/ssh/sshd_config.d/00-immutable.conf
+        HostKey /var/etc/ssh/ssh_host_ed25519_key
+        HostKey /var/etc/ssh/ssh_host_mldsa44_ed25519_key
+    EOF
+    ldconfig
+    augenrules
+    echo localhost > /etc/hostname
+    ln --symbolic --force /var/etc/credstore /etc/credstore
 
     # Only use the user database already committed to Git.
-    rm --force /etc/passwd* /etc/group* /etc/shadow* /etc/gshadow*
-    rm --recursive --force /etc/sysusers.d/ /usr/lib/sysusers.d/
+    rm --recursive --force \
+        /etc/passwd* \
+        /etc/group* \
+        /etc/shadow* \
+        /etc/gshadow* \
+        /etc/.pwd.lock \
+        /etc/sysusers.d/ \
+        /usr/lib/sysusers.d/
 )
 
 # Set the metadata

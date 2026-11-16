@@ -70,7 +70,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/vic
 fcontext --add --seuser user_u --type container_ro_file_t '/var/home/web/caddy/context-wiki(/.*)?'
 
 # Set the file context equivalents
-fcontext --add '/etc/upper' --equal '/etc'
+fcontext --add '/var/etc' --equal '/etc'
 fcontext --add '/var/lib/repo/builder/.config' --equal '/var/home/builder/.config'
 fcontext --add '/var/lib/repo/max/.config' --equal '/var/home/max/.config'
 fcontext --add '/var/lib/repo/tex/.config' --equal '/var/lib/tex/.config'
