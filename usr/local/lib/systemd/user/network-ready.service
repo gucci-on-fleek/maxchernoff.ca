@@ -8,7 +8,4 @@ DefaultDependencies=no
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=sh -c 'until ping -c 2 -4 one.one.one.one && ping -c 2 -6 one.one.one.one; do sleep 1; done'
-
-[Install]
-WantedBy=default.target
+ExecStart=sh -c 'until ping -c 2 -4 one.one.one.one; do sleep 1; done'

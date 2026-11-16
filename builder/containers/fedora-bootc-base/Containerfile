@@ -68,7 +68,7 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     # TeX
     perl-File-Find  # Required by tlmgr
     perl-interpreter  # Required by tlmgr
-    perl-LWP-Protocol-https  # Recommended for tlmgr
+    aria2  # Recommended for tlmgr
     tar  # Required by tlmgr
     xz  # Required by tlmgr
     fontconfig  # Required by XeTeX
