@@ -91,6 +91,9 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     systemd-container  # /usr/bin/systemd-nspawn
     udica  # Extra SELinux rules for containers
     skopeo  # For copying container images
+
+    # TODO temporary workaround
+    fedora-repos-rawhide
 )
 
 # Copy over our custom configuration files
@@ -105,6 +108,10 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 # Run some custom configuration commands
 @with_commit_info()
 @run(
+    # TODO temporary workaround
+    dnf upgrade --assumeyes --enablerepo=rawhide kernel-modules-core
+    dnf remove --assumeyes $(dnf repoquery --installonly --latest-limit=-1)
+
     # Disable dracut
     rm --force --recursive \
         /usr/lib/kernel/install.conf.d \
