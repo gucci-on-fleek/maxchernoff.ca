@@ -2,8 +2,9 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
-
-enable clevis-luks-askpass.path
-enable bootc-root-setup.service
-enable console-colors.service
 disable *dracut*
+
+enable bootc-root-setup.service
+enable clevis-luks-askpass.path
+enable console-colors.service
+enable sysroot-etc-hostname.mount

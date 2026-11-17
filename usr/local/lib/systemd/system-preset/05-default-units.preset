@@ -25,7 +25,6 @@ enable chronyd.service
 enable console-colors.service
 enable dbus-broker.service
 enable dbus.socket
-enable etc-hostname.mount
 enable firewalld.service
 enable fstrim.timer
 enable fwupd-refresh.timer

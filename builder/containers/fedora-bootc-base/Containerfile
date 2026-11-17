@@ -109,8 +109,8 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 @with_commit_info()
 @run(
     # TODO temporary workaround
-    dnf upgrade --assumeyes --enablerepo=rawhide kernel-modules-core
-    dnf remove --assumeyes $(dnf repoquery --installonly --latest-limit=-1)
+    KERNEL_INSTALL_BYPASS=1 dnf upgrade --assumeyes --enablerepo=rawhide kernel-modules-core
+    KERNEL_INSTALL_BYPASS=1 dnf remove --assumeyes $(dnf repoquery --installonly --latest-limit=-1)
 
     # Disable dracut
     rm --force --recursive \
@@ -122,19 +122,12 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     systemctl --system preset-all
     systemctl --user --global preset-all
 
-    # Move the presets into /usr/local/
+    # Copy the presets into /usr/local/.
     cp --archive --recursive --no-target-directory \
         /etc/systemd/system/ /usr/local/lib/systemd/system/
 
     cp --archive --recursive --no-target-directory \
         /etc/systemd/user/ /usr/local/lib/systemd/user/
-
-    # Remove the files
-    rm --force --recursive \
-        /etc/systemd/{system,user}/ \
-        /usr/lib/systemd/{system,user}-preset/ \
-        /usr/local/lib/systemd/{system,user}-preset/ \
-    || true
 
     # Remove FIPS stuff
     rpm --query --list crypto-policies | grep -i fips | xargs rm -rf || true
@@ -233,7 +226,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     EOF
     ldconfig
     augenrules
-    echo localhost > /etc/hostname
+    touch /etc/hostname
     ln --symbolic --force /var/etc/credstore /etc/credstore
 
     # Only use the user database already committed to Git.

@@ -5,13 +5,16 @@
 
 [Unit]
 Description=Bind mount /var/etc/hostname to /etc/hostname
-Before=systemd-hostnamed.service
+ConditionPathExists=/etc/initrd-release
+
+DefaultDependencies=no
+After=initrd-root-fs.target
+Before=initrd-fs.target
 
 [Mount]
-What=/var/etc/hostname
-Where=/etc/hostname
+What=/sysroot/var/etc/hostname
+Where=/sysroot/etc/hostname
 Options=bind
 
 [Install]
-WantedBy=systemd-hostnamed.service
-WantedBy=local-fs.target
+WantedBy=initrd-fs.target
