@@ -25,6 +25,8 @@
 (typeattributeset cil_gen_require staff_t                    )
 (typeattributeset cil_gen_require sysadm_t                   )
 (typeattributeset cil_gen_require sysctl_vm_t                )
+(typeattributeset cil_gen_require syslogd_t                  )
+(typeattributeset cil_gen_require syslogd_var_run_t          )
 (typeattributeset cil_gen_require systemd_network_generator_t)
 (typeattributeset cil_gen_require systemd_networkd_t         )
 (typeattributeset cil_gen_require systemd_networkd_var_run_t )
@@ -70,6 +72,13 @@
 (dontaudit journalctl_t gconf_home_t    (dir  (add_name remove_name write)))
 (dontaudit journalctl_t user_home_t     (dir  (add_name remove_name write)))
 (dontaudit journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
+
+;; Needed for journalctl
+(allow journalctl_t self (unix_dgram_socket (create getattr setopt getopt setattr)))
+(allow journalctl_t sysadm_t (unix_dgram_socket (sendto)))
+(allow journalctl_t staff_t (unix_dgram_socket (sendto)))
+(allow journalctl_t syslogd_t (unix_stream_socket (connectto)))
+(allow journalctl_t syslogd_var_run_t (sock_file (write)))
 
 ;; Needed for run0 to stop complaining
 (dontaudit systemd_passwd_agent_t user_tmp_t (dir (add_name write watch read create)))
@@ -120,3 +129,10 @@
 
 ;; Needed for sshd
 (dontaudit sshd_auth_t self (unix_dgram_socket (setattr getattr)))
+
+;; Needed for polkit
+(optional polkit_optional
+    (typeattributeset cil_gen_require policykit_auth_t)
+
+    (allow policykit_auth_t self (capability (dac_read_search dac_override)))
+)
