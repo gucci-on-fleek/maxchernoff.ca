@@ -22,14 +22,15 @@ export PATH="/var/lib/tex/texlive/bin/x86_64-linux:/usr/local/bin:/usr/bin"
 
 # Download the installer
 cd "$temp_dir"
-curl -O \
-    'https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet/install-tl-unx.tar.gz'
+curl -fsSL -O \
+    'https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz'
 tar xf install-tl-unx.tar.gz
 
 # Install TeX Live
 # shellcheck disable=SC2211
 ./install-tl-*/install-tl \
-    --repository='https://ftp.math.utah.edu/pub/ctan/tex-archive/systems/texlive/tlnet' \
+    --no-interaction \
+    --repository='https://mirror.ctan.org/systems/texlive/tlnet' \
     --texdir='/var/home/tex/texlive' \
     --scheme='full' \
     --paper='letter' \
@@ -45,7 +46,7 @@ tlmgr repository add \
     tlcritical
 
 tlmgr repository add \
-    https://ctan.math.utah.edu/ctan/tex-archive/systems/texlive/tlcontrib \
+    https://mirror.ctan.org/systems/texlive/tlcontrib \
     tlcontrib
 
 tlmgr pinning add tlcontrib "*"
