@@ -9,7 +9,6 @@ After=network-online.target
 [Service]
 Type=oneshot
 User=tex
-UMask=0002
 
 CapabilityBoundingSet=
 NoNewPrivileges=true

@@ -3,8 +3,8 @@
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
-set -euo pipefail
-umask a=rx,og+w
+set -exuo pipefail
+umask a=rx,ug+w
 
 # Make sure that TL isn't already installed
 if [ -d "/var/lib/tex/texlive" ]; then
@@ -31,8 +31,8 @@ tar xf install-tl-unx.tar.gz
 ./install-tl-*/install-tl \
     --no-interaction \
     --repository='https://ctan.math.utah.edu/tex-archive/systems/texlive/tlnet' \
-    --texdir='/var/home/tex/texlive' \
-    --scheme='full' \
+    --texdir='/var/lib/tex/texlive' \
+    --scheme='scheme-full' \
     --paper='letter' \
     # (end of arguments)
 

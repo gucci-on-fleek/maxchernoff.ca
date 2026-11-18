@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 set -euo pipefail
-umask a=rx,og+w
+umask a=rx,ug+w
 
 # Make sure that ConTeXt isn't already installed
 if [ -d "/var/lib/tex/context" ]; then

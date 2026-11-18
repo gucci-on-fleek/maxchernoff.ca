@@ -40,9 +40,6 @@ module --add /usr/share/udica/templates/net_container.cil
 # Set the container file contexts
 fcontext --deleteall
 fcontext --add --seuser system_u --type lib_t '/sysroot/composefs(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '/var/lib/triggers(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '/var/lib/tex/context-installer/tex(/.*)?'
-fcontext --add --seuser user_u --type container_file_t    '/var/lib/tex/texlive(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/caddy/logs(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/dmarc-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/grafana/data(/.*)?'
@@ -53,7 +50,9 @@ fcontext --add --seuser user_u --type container_file_t    '/var/home/web/victori
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/victoria-metrics/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/web/woodpecker/data(/.*)?'
 fcontext --add --seuser user_u --type container_file_t    '/var/home/woodpecker/woodpecker/config(/.*)?'
+fcontext --add --seuser user_u --type container_file_t    '/var/lib/triggers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/etc/containers(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '/var/home/web/caddy/context-wiki(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/builder/containers(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/etc/common(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/usr(/.*)?'
@@ -67,7 +66,7 @@ fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/gra
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/knot(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/maddy(/.*)?'
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/victoria-metrics/config(/.*)?'
-fcontext --add --seuser user_u --type container_ro_file_t '/var/home/web/caddy/context-wiki(/.*)?'
+fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/tex(/.*)?'
 
 # Set the file context equivalents
 fcontext --add '/var/etc' --equal '/etc'

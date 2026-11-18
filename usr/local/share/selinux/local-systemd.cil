@@ -16,6 +16,7 @@
 (typeattributeset cil_gen_require hugetlbfs_t                )
 (typeattributeset cil_gen_require init_t                     )
 (typeattributeset cil_gen_require init_var_run_t             )
+(typeattributeset cil_gen_require initrc_tmp_t               )
 (typeattributeset cil_gen_require install_t                  )
 (typeattributeset cil_gen_require journalctl_t               )
 (typeattributeset cil_gen_require root_t                     )
@@ -86,6 +87,7 @@
 ;; Miscellaneous
 (allow container_domain   container_ro_file_t (file     (relabelto     )))
 (allow local_user_domains gpg_t               (process2 (nnp_transition)))
+(allow init_t             initrc_tmp_t        (file     (unlink        )))
 
 ;; Snapper
 (dontaudit snapperd_t file_context_t (file (map)))

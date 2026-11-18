@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 set -euo pipefail
-umask a=rx,og+w
+umask a=rx,ug+w
 
 # Set the environment variables
 export PATH="/var/lib/tex/context/texmf-linux-64/bin/:/usr/local/bin:/usr/bin"

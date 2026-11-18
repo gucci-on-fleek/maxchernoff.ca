@@ -23,5 +23,6 @@ PrivateDevices=true
 PrivateTmp=true
 PrivateUsers=true
 ProtectProc=invisible
-ProtectSystem=full
+ProtectSystem=strict
 ProtectHome=true
+ReadWritePaths=/var/lib/tex
