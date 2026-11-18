@@ -69,11 +69,11 @@
 (allow local_user_domains systemd_unit_file_t (lnk_file (create unlink                          )))
 
 ;; Needed for journalctl (with the "less" pager) to stop complaining
-(dontaudit journalctl_t gconf_home_t    (file (create getattr open rename setattr unlink write)))
-(dontaudit journalctl_t user_home_t     (file (create getattr open rename setattr unlink write)))
-(dontaudit journalctl_t gconf_home_t    (dir  (add_name remove_name write)))
-(dontaudit journalctl_t user_home_t     (dir  (add_name remove_name write)))
-(dontaudit journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
+(allow journalctl_t gconf_home_t    (file (create getattr open rename setattr unlink write)))
+(allow journalctl_t user_home_t     (file (create getattr open rename setattr unlink write)))
+(allow journalctl_t gconf_home_t    (dir  (add_name remove_name write)))
+(allow journalctl_t user_home_t     (dir  (add_name remove_name write)))
+(allow journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
 
 ;; Needed for journalctl
 (allow journalctl_t self (unix_dgram_socket (create getattr setopt getopt setattr)))
