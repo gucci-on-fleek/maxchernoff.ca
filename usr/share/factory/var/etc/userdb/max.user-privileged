@@ -1,6 +1,6 @@
 {
     "privileged": {
-        "hashedPassword": "",
+        "hashedPassword": "$y$jFT$N7XmkNISPOXO7bUNEbhjs/$cB1kNJtEzBr7sSgV5OijgtOCViYhRE2ivZhoj8pkBi8",
         "sshAuthorizedKeys": [
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbq1PJt4dk2RrtNmPdGmEi2Wv8StNeqHvZ1tKRdR54D max@max-new-laptop",
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICgYn8Jc18ch05fyMamq2HCl1IUWcDihPdCqt/cdFnjQ max@pixel-7a"
