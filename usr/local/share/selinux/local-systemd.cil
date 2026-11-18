@@ -21,6 +21,7 @@
 (typeattributeset cil_gen_require journalctl_t               )
 (typeattributeset cil_gen_require root_t                     )
 (typeattributeset cil_gen_require snapperd_t                 )
+(typeattributeset cil_gen_require ssh_keygen_t               )
 (typeattributeset cil_gen_require sshd_auth_t                )
 (typeattributeset cil_gen_require sshd_t                     )
 (typeattributeset cil_gen_require staff_t                    )
@@ -130,7 +131,8 @@
 (allow staff_t init_t (system (start)))
 
 ;; Needed for sshd
-(dontaudit sshd_auth_t self (unix_dgram_socket (setattr getattr)))
+(dontaudit sshd_auth_t  self (unix_dgram_socket (setattr getattr)))
+(allow     ssh_keygen_t self (capability        (dac_override   )))
 
 ;; Needed for polkit
 (optional polkit_optional

@@ -99,10 +99,10 @@ if ! command -v systemd-cryptenroll &> /dev/null; then
 	fail_with_help "systemd-cryptenroll is not installed."
 fi
 
-# Make sure that dbus-broker is running
-if ! systemctl is-active --quiet dbus-broker; then
-	fail_with_help "dbus-broker is not running."
-fi
+# # Make sure that dbus-broker is running
+# if ! systemctl is-active --quiet dbus-broker; then
+# 	fail_with_help "dbus-broker is not running."
+# fi
 
 
 ####################
@@ -189,11 +189,15 @@ mount \
 # We need some scratch space to pull the container, so we'll use the new swap
 # partition for this temporarily.
 mkfs.ext4 -F -L "scratch" "${disk}2"
+sync
 
 # Mount the scratch partition
 rm --recursive --force /var/lib/containers
 mkdir --parents /var/lib/containers
-mount "${disk}2" /var/lib/containers
+mount \
+	--onlyonce \
+	--source="${disk}2" \
+	--target="/var/lib/containers"
 
 # Create the EFI partition
 mkfs.fat -F32 -n "EFI" "${disk}1"
@@ -209,6 +213,7 @@ mount \
 podman run \
 	--pull="newer" \
 	--rm \
+	--network="host" \
 	--privileged \
 	--pid="host" \
 	--security-opt="label=disable" \
@@ -217,8 +222,9 @@ podman run \
 	--volume="/mnt/boot:/target/root/boot" \
 	--volume="/dev:/dev" \
 	"docker://maxchernoff.ca/fedora-bootc:latest" \
-		 bootc install to-filesystem \
-		 	--generic-image \
+		bootc install to-filesystem \
+			--source-imgref="containers-storage:maxchernoff.ca/fedora-bootc:latest" \
+			--generic-image \
 			--bootloader="systemd" \
 			--composefs-backend \
 			--enforce-container-sigpolicy \
@@ -235,6 +241,7 @@ podman run \
 ####################
 
 # Make /var/home a subvolume
+mount --options="remount,rw" /mnt/root
 rm --recursive --force /mnt/root/state/os/default/var/home/
 btrfs subvolume create /mnt/root/state/os/default/var/home/
 

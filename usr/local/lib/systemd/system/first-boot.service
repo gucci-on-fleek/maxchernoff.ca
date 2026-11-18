@@ -1,0 +1,14 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+[Unit]
+Description=First boot setup
+ConditionFileNotEmpty=|!/var/etc/first-boot-successful
+
+[Service]
+Type=oneshot
+ExecStart=restorecon -RDT0 /
+ExecStart=sh -c 'if [ -d /var/etc/hostname ]; then rmdir /var/etc/hostname; touch /var/etc/hostname; fi'
+ExecStart=touch /var/etc/first-boot-successful

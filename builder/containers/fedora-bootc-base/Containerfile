@@ -219,7 +219,8 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     # Add the bootc links
     systemd-tmpfiles --create --boot \
         /usr/local/lib/tmpfiles.d/bootc-build.conf \
-        /usr/lib/tmpfiles.d/tmp.conf
+        /usr/lib/tmpfiles.d/tmp.conf \
+        /usr/local/lib/tmpfiles.d/var-etc.conf
 
     # Prepare for an immutable /etc/
     echo "uninitialized" > /etc/machine-id
