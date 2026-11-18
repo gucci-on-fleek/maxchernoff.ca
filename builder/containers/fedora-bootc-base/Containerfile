@@ -112,6 +112,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     KERNEL_INSTALL_BYPASS=1 dnf upgrade --assumeyes --enablerepo=rawhide kernel-modules-core
     KERNEL_INSTALL_BYPASS=1 dnf remove --assumeyes $(dnf repoquery --installonly --latest-limit=-1)
 
+    # Update the CA certificates to work around a ctan.math.utah.edu bug
+    update-ca-trust
+
     # Disable dracut
     rm --force --recursive \
         /usr/lib/kernel/install.conf.d \

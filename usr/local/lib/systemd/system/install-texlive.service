@@ -23,5 +23,5 @@ PrivateDevices=true
 PrivateTmp=true
 PrivateUsers=true
 ProtectProc=invisible
-ProtectSystem=strict
+ProtectSystem=full
 ProtectHome=true
