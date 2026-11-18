@@ -6,6 +6,10 @@
 Name=enx*
 Host=lithium
 
+[Link]
+RequiredForOnline=routable
+RequiredFamilyForOnline=both
+
 [Network]
 Description=WAN Interface
 DHCP=no

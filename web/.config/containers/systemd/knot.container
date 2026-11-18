@@ -24,8 +24,8 @@ Entrypoint=/usr/sbin/knotd
 Exec=
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Restart=always

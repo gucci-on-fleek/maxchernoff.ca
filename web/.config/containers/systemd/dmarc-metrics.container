@@ -15,8 +15,8 @@ ReadOnlyTmpfs=false
 PublishPort=!!prometheus.hydrogen.dmarc-metrics.ip!!:!!prometheus.hydrogen.dmarc-metrics.port!!:!!prometheus.hydrogen.dmarc-metrics.port!!
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Restart=always

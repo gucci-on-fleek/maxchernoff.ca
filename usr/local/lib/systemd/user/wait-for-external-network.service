@@ -1,0 +1,15 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Unit]
+DefaultDependencies=no
+Before=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'until systemctl --system is-active network-online.target; do sleep 0.5; done'
+
+[Install]
+WantedBy=network-online.target

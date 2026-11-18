@@ -4,5 +4,5 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
 enable cleanup-containers.timer
-enable network-ready.service
+enable network-online.target
 enable podman-auto-update.timer

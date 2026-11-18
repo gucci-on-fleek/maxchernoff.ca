@@ -1,0 +1,16 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+[Unit]
+DefaultDependencies=no
+After=systemd-networkd-wait-online.service
+Before=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=sh -c 'until ping -c 2 -4 one.one.one.one && ping -c 2 -6 one.one.one.one; do sleep 1; done'
+
+[Install]
+WantedBy=network-online.target

@@ -42,8 +42,8 @@ LoadCredential=caddy_http_credentials
 !!priorities.high!!
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 Requires=caddy.socket
 After=caddy.socket
 

@@ -29,8 +29,8 @@ LoadCredential=woodpecker_agent_secret
 LoadCredential=woodpecker_github_secret
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Install]
 WantedBy=caddy.service

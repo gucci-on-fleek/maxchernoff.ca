@@ -6,8 +6,8 @@
 [Unit]
 Description=Prometheus exporter for machine metrics
 Documentation=https://github.com/prometheus/node_exporter
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 ExecReload=/bin/kill -HUP $MAINPID

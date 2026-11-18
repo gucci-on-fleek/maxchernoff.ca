@@ -6,7 +6,7 @@
 Network=overleaf.network
 
 [Unit]
-After=overleaf-network.service network-ready.service
+After=overleaf-network.service network-online.target
 
 [Install]
 WantedBy=caddy.service

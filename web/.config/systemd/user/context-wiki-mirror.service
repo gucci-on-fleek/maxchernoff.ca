@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
 Description=Update Context Wiki Mirror
-After=network-ready.service
+After=network-online.target
 
 [Service]
 Type=oneshot

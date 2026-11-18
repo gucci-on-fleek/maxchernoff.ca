@@ -24,8 +24,8 @@ LoadCredential=webhook_secret
 !!priorities.high!!
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 After=container-registry.service
 
 [Install]

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
-After=network-ready.service
+After=network-online.target
 After=container@fedora-bootc-base.service
 
 [Service]

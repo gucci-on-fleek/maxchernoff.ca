@@ -31,7 +31,7 @@ enable fwupd-refresh.timer
 enable get-status.path
 enable install-repo@credentials-repo.path
 enable install-repo@repo.path
-enable network-ready.service
+enable network-online.target
 enable prometheus-node-exporter.service
 enable qemu-guest-agent.service
 enable redboot-*.service
@@ -44,3 +44,4 @@ enable systemd-journal-upload.service
 enable systemd-networkd.service
 enable systemd-oomd.*
 enable update-texlive.timer
+enable wait-for-external-network.service

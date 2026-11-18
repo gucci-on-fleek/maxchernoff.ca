@@ -6,6 +6,10 @@
 Name=enx*
 Host=boron
 
+[Link]
+RequiredForOnline=routable
+RequiredFamilyForOnline=both
+
 [Network]
 Description=WAN Interface
 DHCP=no
@@ -16,7 +20,7 @@ Gateway=216.18.193.1
 DNS=1.1.1.1 1.0.0.1
 
 # IPv6
-Address=!!network.boron.ipv6!!/64
+Address=!!network.boron.ipv6!!/48
 Gateway=2607:f2d8:401b::1
 DNS=2606:4700:4700::1111 2606:4700:4700::1001
 

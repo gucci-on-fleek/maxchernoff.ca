@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
-After=podman.socket network-ready.service
+After=podman.socket network-online.target
 Requires=podman.socket
 
 [Service]

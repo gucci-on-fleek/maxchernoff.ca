@@ -31,8 +31,8 @@ LoadCredential=maddy-users.conf
 !!priorities.high!!
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Install]
 WantedBy=default.target

@@ -6,6 +6,10 @@
 Name=enx*
 Host=hydrogen
 
+[Link]
+RequiredForOnline=routable
+RequiredFamilyForOnline=both
+
 [Network]
 Description=WAN Interface
 DHCP=no

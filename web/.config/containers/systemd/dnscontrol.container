@@ -13,8 +13,8 @@ Exec=push --full
 [Unit]
 After=knot.service
 Wants=knot.service
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot

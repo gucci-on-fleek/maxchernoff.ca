@@ -5,8 +5,8 @@
 [Unit]
 Description=Pulls the files from the server Git repository
 
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 Wants=initialize-repo@%i.service
 After=initialize-repo@%i.service

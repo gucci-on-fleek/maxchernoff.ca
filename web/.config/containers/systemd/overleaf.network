@@ -7,5 +7,5 @@ Internal=true
 DisableDNS=false
 
 [Unit]
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target

@@ -6,8 +6,8 @@
 [Unit]
 Description=Initializes the server Git repository
 
-Wants=network-ready.service
-After=network-ready.service
+Wants=network-online.target
+After=network-online.target
 
 ConditionFileNotEmpty=!/var/lib/%i/install-rules.toml
 
