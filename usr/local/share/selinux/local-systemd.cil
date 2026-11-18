@@ -19,6 +19,8 @@
 (typeattributeset cil_gen_require initrc_tmp_t               )
 (typeattributeset cil_gen_require install_t                  )
 (typeattributeset cil_gen_require journalctl_t               )
+(typeattributeset cil_gen_require lib_t                      )
+(typeattributeset cil_gen_require nsfs_t                     )
 (typeattributeset cil_gen_require root_t                     )
 (typeattributeset cil_gen_require snapperd_t                 )
 (typeattributeset cil_gen_require ssh_keygen_t               )
@@ -76,9 +78,13 @@
 (allow journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
 
 ;; Needed for journalctl
+(allow journalctl_t init_t (process (signal)))
+(allow journalctl_t nsfs_t (file (getattr)))
+(allow journalctl_t self (capability (dac_read_search dac_override)))
 (allow journalctl_t self (unix_dgram_socket (create getattr setopt getopt setattr)))
-(allow journalctl_t sysadm_t (unix_dgram_socket (sendto)))
 (allow journalctl_t staff_t (unix_dgram_socket (sendto)))
+(allow journalctl_t user_t (unix_dgram_socket (sendto)))
+(allow journalctl_t sysadm_t (unix_dgram_socket (sendto)))
 (allow journalctl_t syslogd_t (unix_stream_socket (connectto)))
 (allow journalctl_t syslogd_var_run_t (sock_file (write)))
 
@@ -140,3 +146,11 @@
 
     (allow policykit_auth_t self (capability (dac_read_search dac_override)))
 )
+
+;; Allow listing service status
+(allow staff_t  lib_t (service (status)))
+(allow sysadm_t lib_t (service (status)))
+(allow user_t   lib_t (service (status)))
+
+;; Don't complain about disallowing executable memory
+(dontaudit staff_t self (process (execmem)))
