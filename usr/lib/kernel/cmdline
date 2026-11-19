@@ -8,6 +8,7 @@ module.sig_enforce=1
 page_alloc.shuffle=1
 pti=on
 randomize_kstack_offset=on
+rd.modules_load=softdog
 root=gpt-auto
 rootflags=compress=zstd:3,noatime,lazytime,nodev
 softdog.soft_active_on_boot=1
