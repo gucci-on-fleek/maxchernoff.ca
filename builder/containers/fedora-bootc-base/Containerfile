@@ -162,6 +162,11 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     mkdir --parents /etc/mkosi-initrd/mkosi.extra/usr/lib/
     cp --force /usr/lib/os-release /etc/mkosi-initrd/mkosi.extra/usr/lib/os-release
 
+    # Don't include the extension release files in the image itself.
+    rm --force \
+        /etc/extension-release.d/extension-release.repo
+        /usr/lib/extension-release.d/extension-release.repo
+
     # Make the alternatives static.
     find /usr/ -type l -printf '%l\t%p\n' \
         | grep '^/etc/alternatives' \

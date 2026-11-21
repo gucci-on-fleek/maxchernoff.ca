@@ -1,0 +1,17 @@
+# Source Code for maxchernoff.ca
+# https://github.com/gucci-on-fleek/maxchernoff.ca
+# SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
+# SPDX-FileCopyrightText: 2026 Max Chernoff
+
+# Only applicable to systems that match the following:
+ID=fedora
+IMAGE_ID=maxchernoff.ca-fedora-bootc
+ARCHITECTURE=x86-64
+
+# Extension metadata.
+CONFEXT_ID=repo
+CONFEXT_VERSION_ID=1.0
+
+# Extension settings.
+CONFEXT_SCOPE=system
+EXTENSION_RELOAD_MANAGER=1
