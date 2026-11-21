@@ -41,6 +41,10 @@ FROM quay.io/fedora/fedora-minimal:!!fedora.version!! AS build
     systemd-boot-unsigned
     systemd-ukify  # Creates a unified kernel image (UKI) for booting
 
+    # Microcode
+    amd-ucode-firmware
+    microcode_ctl
+
     # Command-line Utilities
     acl  # /usr/bin/{getfacl/setfacl}
     busybox

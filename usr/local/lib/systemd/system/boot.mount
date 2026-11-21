@@ -11,4 +11,4 @@ After=by-designator-udev.service
 [Mount]
 What=/dev/disk/by-designator/esp
 Where=/boot/
-Options=nosuid,nodev,noexec,lazytime
+Options=nosuid,nodev,noexec,lazytime,umask=0077
