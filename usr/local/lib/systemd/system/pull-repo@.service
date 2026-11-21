@@ -20,6 +20,7 @@ User=repo
 
 Type=oneshot
 WorkingDirectory=/var/lib/%i
+Environment="GNUPGHOME=/usr/local/share/gpg-keyring/"
 ExecStart=/usr/bin/git fetch --recurse-submodules=yes --jobs=4 --quiet
 ExecStart=/bin/bash -c "\
     set -euo pipefail && \
