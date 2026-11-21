@@ -16,7 +16,7 @@ UMask=0002
 
 ExecStart=/usr/local/bin/update-texlive.sh
 ExecStart=-/usr/local/bin/update-context.sh
-ExecStart=restorecon -RDT0 /var/lib/tex/texlive /var/lib/tex/context-installer/tex
+ExecStart=+restorecon -RDT0 /var/lib/tex/texlive /var/lib/tex/context-installer/tex
 
 CapabilityBoundingSet=
 NoNewPrivileges=true
