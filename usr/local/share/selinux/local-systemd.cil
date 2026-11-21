@@ -40,6 +40,7 @@
 (typeattributeset cil_gen_require systemd_tmpfiles_t         )
 (typeattributeset cil_gen_require systemd_unit_file_t        )
 (typeattributeset cil_gen_require tmpfs_t                    )
+(typeattributeset cil_gen_require unconfined_service_t       )
 (typeattributeset cil_gen_require user_home_dir_t            )
 (typeattributeset cil_gen_require user_home_t                )
 (typeattributeset cil_gen_require user_t                     )
@@ -71,11 +72,12 @@
 (allow local_user_domains systemd_unit_file_t (lnk_file (create unlink                          )))
 
 ;; Needed for journalctl (with the "less" pager) to stop complaining
-(allow journalctl_t gconf_home_t    (file (create getattr open rename setattr unlink write)))
-(allow journalctl_t user_home_t     (file (create getattr open rename setattr unlink write)))
-(allow journalctl_t gconf_home_t    (dir  (add_name remove_name write)))
-(allow journalctl_t user_home_t     (dir  (add_name remove_name write)))
-(allow journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
+(dontaudit journalctl_t gconf_home_t    (file (create getattr open rename setattr unlink write)))
+(dontaudit journalctl_t user_home_t     (file (create getattr open rename setattr unlink write)))
+(dontaudit journalctl_t user_home_dir_t (file (create getattr open rename setattr unlink write)))
+(dontaudit journalctl_t gconf_home_t    (dir  (add_name remove_name write)))
+(dontaudit journalctl_t user_home_t     (dir  (add_name remove_name write)))
+(dontaudit journalctl_t user_home_dir_t (dir  (add_name remove_name write)))
 
 ;; Needed for journalctl
 (allow journalctl_t init_t (process (signal)))
@@ -153,4 +155,5 @@
 (allow user_t   lib_t (service (status)))
 
 ;; Don't complain about disallowing executable memory
-(dontaudit staff_t self (process (execmem)))
+(dontaudit unconfined_service_t self (process (execmem)))
+(dontaudit staff_t              self (process (execmem)))
