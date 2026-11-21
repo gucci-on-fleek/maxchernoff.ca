@@ -6,7 +6,7 @@
         "tex"
     ],
     "locked": false,
-    "disposition": "regular",
+    "disposition": "system",
     "shell": "/usr/sbin/nologin",
     "umask": 2,
     "privileged": {

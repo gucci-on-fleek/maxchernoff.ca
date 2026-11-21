@@ -6,7 +6,7 @@
         "repo"
     ],
     "locked": false,
-    "disposition": "regular",
+    "disposition": "system",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
     "privileged": {
