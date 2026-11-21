@@ -1,0 +1,15 @@
+{
+    "userName": "prometheus",
+    "uid": 3,
+    "gid": 4,
+    "homeDirectory": "/var/adm",
+    "shell": "/sbin/nologin",
+    "privileged": {
+        "hashedPassword": "!*"
+    },
+    "locked": true,
+    "disposition": "system",
+    "memberOf": [
+        "adm"
+    ]
+}
