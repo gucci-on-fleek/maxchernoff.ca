@@ -29,4 +29,4 @@ ExecStart=/bin/bash -c "\
 ExecStart=-/usr/bin/git restore --source=FETCH_HEAD -- variables.toml
 ExecStart=/usr/bin/git reset --recurse-submodules --hard FETCH_HEAD
 ExecStart=/usr/bin/git submodule update --init --recursive --checkout --force --jobs=4 --quiet
-
+ExecStart=+/usr/sbin/restorecon -RDT0 /var/lib/%i
