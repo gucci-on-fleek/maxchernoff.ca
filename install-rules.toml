@@ -10,7 +10,6 @@
 [variables]
 builder = "/var/home/builder/"
 etc = "/etc/"
-max = "/var/home/max/"
 repo = "/var/lib/repo/"
 tex = "/var/lib/tex/"
 web = "/var/home/web/"
@@ -80,36 +79,6 @@ destination = "/usr/local/"
 paths = ["**/*"]
 owner = "root"
 permissions.other = "r"
-
-
-###########
-### max ###
-###########
-
-[[permissions]]
-base = "{max}"
-paths = ["*"]
-owner = "max"
-permissions.other = ""
-
-[[copy]]
-source = "{repo}/max/"
-destination = "{max}/"
-paths = [".ssh/known_hosts", ".config/fish/config.fish"]
-owner = "max"
-
-# Risky, so we keep this commented out most of the time
-# [[copy]]
-# source = "{repo}/max/"
-# destination = "{max}/"
-# paths = [".ssh/authorized_keys"]
-# owner = "max"
-
-[[link]]
-source = "{repo}/max/"
-destination = "{max}/"
-paths = [".config/containers/"]
-owner = "max"
 
 
 ###########

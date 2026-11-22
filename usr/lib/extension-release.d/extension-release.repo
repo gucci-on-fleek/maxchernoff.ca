@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2026 Max Chernoff
 
 # Only applicable to systems that match the following:
-ID=fedora
+ID=_any
 IMAGE_ID=maxchernoff.ca-fedora-bootc
 ARCHITECTURE=x86-64
 
