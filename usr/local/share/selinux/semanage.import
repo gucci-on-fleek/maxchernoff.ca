@@ -69,12 +69,13 @@ fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/repo/web/vic
 fcontext --add --seuser user_u --type container_ro_file_t '/var/lib/tex(/.*)?'
 
 # Set the file context equivalents
-fcontext --add '/var/etc' --equal '/etc'
-fcontext --add '/var/lib/repo/builder/.config' --equal '/var/home/builder/.config'
-fcontext --add '/var/lib/repo/max/.config' --equal '/var/home/max/.config'
-fcontext --add '/var/lib/repo/tex/.config' --equal '/var/lib/tex/.config'
-fcontext --add '/var/lib/repo/web/.config' --equal '/var/home/web/.config'
-fcontext --add '/var/lib/repo/woodpecker/.config' --equal '/var/home/woodpecker/.config'
+fcontext --add '/var/etc'                 --equal '/etc'
+fcontext --add '/var/lib/repo/builder'    --equal '/var/home/builder'
+fcontext --add '/var/lib/repo/etc'        --equal '/etc'
+fcontext --add '/var/lib/repo/max'        --equal '/var/home/max'
+fcontext --add '/var/lib/repo/usr'        --equal '/usr'
+fcontext --add '/var/lib/repo/web'        --equal '/var/home/web'
+fcontext --add '/var/lib/repo/woodpecker' --equal '/var/home/woodpecker'
 
 # Missing policy definition
 fcontext --add '/etc/systemd/user' --equal '/usr/lib/systemd/user'
