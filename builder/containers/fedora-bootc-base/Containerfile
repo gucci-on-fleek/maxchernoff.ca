@@ -164,7 +164,7 @@ COPY --chown=0:0 --from=build /mnt/build/ /
 
     # Don't include the extension release files in the image itself.
     rm --force \
-        /etc/extension-release.d/extension-release.repo
+        /etc/extension-release.d/extension-release.repo \
         /usr/lib/extension-release.d/extension-release.repo
 
     # Make the alternatives static.
