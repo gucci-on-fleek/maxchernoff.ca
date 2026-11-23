@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2025 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 
 #################
 ### Variables ###
@@ -111,17 +111,6 @@ paths                 = ["web/"]
 owner                 = "repo"
 permissions.web       = "r"
 recursive_permissions = true
-
-# [[link]]
-# if = { hostname = "maxchernoff.ca" }
-# source = "{repo}/web/"
-# destination = "{web}/"
-# paths = [
-#     ".config/systemd/user/",
-#     ".config/user-tmpfiles.d",
-# ]
-# permissions.web = "r"
-# owner = "root"
 
 [[link]]
 if = { hostname = "maxchernoff.ca" }
@@ -427,7 +416,7 @@ recursive_permissions = true
 if                  = { hostname = "maxchernoff.ca" }
 source              = "{repo}/builder/"
 destination         = "{builder}/"
-paths               = [".config/systemd/user/", "containers/"]
+paths               = ["containers/"]
 permissions.builder = "r"
 
 [[folder]]
