@@ -251,6 +251,9 @@ COPY --chown=0:0 --from=build /mnt/build/ /
         /etc/.pwd.lock \
         /etc/sysusers.d/ \
         /usr/lib/sysusers.d/
+
+    # Nothing in /usr/ is secret.
+    chmod --recursive a+rX /usr/
 )
 
 # Set the metadata
