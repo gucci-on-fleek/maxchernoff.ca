@@ -29,10 +29,10 @@ Network=prometheus.network
 Network=woodpecker.network
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_caddy_ip}!:9100:9100
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 TimeoutStopSec=15s
 
@@ -44,6 +44,7 @@ LoadCredential=caddy_http_credentials
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target

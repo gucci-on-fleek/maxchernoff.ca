@@ -16,4 +16,5 @@ TimeoutStartSec=300
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium

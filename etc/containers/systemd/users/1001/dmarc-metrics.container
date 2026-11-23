@@ -12,16 +12,17 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_dmarc_metrics_ip}:9100:9100
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 LoadCredential=dmarc-metrics-exporter.json
 

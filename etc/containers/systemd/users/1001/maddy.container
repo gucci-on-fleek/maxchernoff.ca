@@ -33,6 +33,7 @@ LoadCredential=maddy-users.conf
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target

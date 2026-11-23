@@ -23,7 +23,6 @@ Group=1000
 ReadOnly=true
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_victoria_logs_ip}:9100:!!victoria-logs.port!!
 
 # Allow access from the trusted networks so that we can append logs
@@ -34,6 +33,7 @@ PublishPort=!!wireguard.home.self.ipv4!!:!!victoria-logs.syslog!!:!!victoria-log
 
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 TimeoutStartSec=5min
 Restart=always
 
@@ -46,4 +46,5 @@ WantedBy=grafana.service
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium

@@ -48,6 +48,7 @@ Exec=\
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Description=Update Analytics Graphs
 After=update-analytics.target network-online.target

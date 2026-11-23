@@ -19,6 +19,7 @@ Restart=always
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 After=victoria-metrics.container
 Wants=victoria-metrics.container

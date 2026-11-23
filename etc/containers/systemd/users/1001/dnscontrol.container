@@ -12,6 +12,7 @@ Exec=push --full
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 After=knot.service
 Wants=knot.service

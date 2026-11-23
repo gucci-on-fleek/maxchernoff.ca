@@ -26,6 +26,7 @@ LoadCredential=woodpecker_agent_secret
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|lithium
 After=podman.socket
 Requires=podman.socket

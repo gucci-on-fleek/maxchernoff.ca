@@ -16,16 +16,17 @@ Environment="OTEL_METRICS_EXPORTER=none"
 Environment="OTEL_TRACES_EXPORTER=none"
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_registry_ip}:9100:9100
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 SuccessExitStatus=2
 RuntimeMaxSec=12.25h
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target

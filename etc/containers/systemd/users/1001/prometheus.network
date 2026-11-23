@@ -9,4 +9,5 @@ DisableDNS=false
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium

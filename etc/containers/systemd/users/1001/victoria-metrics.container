@@ -35,4 +35,5 @@ WantedBy=grafana.service
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium

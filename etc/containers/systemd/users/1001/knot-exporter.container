@@ -20,16 +20,17 @@ Exec=\
     --web-listen-addr=0.0.0.0 \
     --web-listen-port=9100
 
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_knot_ip}:9100:9100
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Wants=knot.service
 After=knot.service
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 SuccessExitStatus=130
 TimeoutStopSec=15s

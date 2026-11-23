@@ -49,16 +49,17 @@ Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
 EnvironmentFile=%d/overleaf_smtp_password
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_overleaf_ip}:9100:3000
 
 [Unit]
 ConditionHost=|hydrogen
+ConditionHost=|maxchernoff.ca
 ConditionHost=|helium
 Requires=overleaf-mongo.service overleaf-redis.service
 After=overleaf-mongo.service overleaf-redis.service
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 TimeoutStartSec=300s
 TimeoutStopSec=5s
