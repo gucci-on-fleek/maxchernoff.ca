@@ -1,7 +1,5 @@
 {
     "userName": "woodpecker",
-    "uid": 1003,
-    "gid": 1003,
     "memberOf": [
         "woodpecker"
     ],
@@ -9,6 +7,7 @@
     "disposition": "regular",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
+    "nice": 10,
     "privileged": {
         "hashedPassword": [
             "!"
@@ -17,10 +16,13 @@
     "perMachine": [
         {
             "matchHostname": [
-                "maxchernoff.ca"
+                "maxchernoff.ca",
+                "hydrogen",
+                "lithium"
             ],
-            "homeDirectory": "/var/home/woodpecker",
-            "nice": 10
+            "uid": 1003,
+            "gid": 1003,
+            "homeDirectory": "/var/home/woodpecker"
         }
     ]
 }

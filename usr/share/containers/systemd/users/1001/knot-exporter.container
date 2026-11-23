@@ -18,9 +18,10 @@ ReadOnlyTmpfs=false
 # Metrics
 Exec=\
     --web-listen-addr=0.0.0.0 \
-    --web-listen-port=!!prometheus.hydrogen.knot.port!!
+    --web-listen-port=9100
 
-PublishPort=!!prometheus.hydrogen.knot.ip!!:!!prometheus.hydrogen.knot.port!!:!!prometheus.hydrogen.knot.port!!
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_knot_ip}:9100:9100
 
 [Unit]
 Wants=knot.service

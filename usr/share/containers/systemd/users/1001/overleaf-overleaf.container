@@ -49,7 +49,8 @@ Environment="OVERLEAF_EMAIL_SMTP_SECURE=false"
 EnvironmentFile=%d/overleaf_smtp_password
 
 # Metrics
-PublishPort=!!prometheus.hydrogen.overleaf.ip!!:!!prometheus.hydrogen.overleaf.port!!:3000
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_overleaf_ip}:9100:3000
 
 [Unit]
 Requires=overleaf-mongo.service overleaf-redis.service

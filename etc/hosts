@@ -1,22 +1,40 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2025 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 
 # Loopback interface
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 # Prometheus metrics addresses
-!!prometheus.hydrogen.caddy.ip!!               caddy.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.dmarc-metrics.ip!!       dmarc.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.knot.ip!!                knot.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.maddy.ip!!               maddy.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.node.ip!!                node-exporter.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.overleaf.ip!!            overleaf.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.podman.web.ip!!          podman-web.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.podman.woodpecker.ip!!   podman-woodpecker.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.registry.ip!!            container-registry.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.victoria-logs.ip!!       victoria-logs.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.victoria-metrics.ip!!    victoria-metrics.metrics.maxchernoff.ca.
-!!prometheus.hydrogen.woodpecker.ip!!          woodpecker.metrics.maxchernoff.ca.
+!!metrics.hydrogen.caddy!!             caddy.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.dmarc-metrics!!     dmarc.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.knot!!              knot.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.maddy!!             maddy.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.node!!              node-exporter.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.overleaf!!          overleaf.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.podman.web!!        podman-web.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.podman.woodpecker!! podman-woodpecker.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.registry!!          container-registry.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.victoria-logs!!     victoria-logs.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.victoria-metrics!!  victoria-metrics.metrics.hydrogen.duck.tel.
+!!metrics.hydrogen.woodpecker!!        woodpecker.metrics.hydrogen.duck.tel.
+
+!!metrics.helium.caddy!!               caddy.metrics.helium.duck.tel.
+!!metrics.helium.dmarc-metrics!!       dmarc.metrics.helium.duck.tel.
+!!metrics.helium.knot!!                knot.metrics.helium.duck.tel.
+!!metrics.helium.maddy!!               maddy.metrics.helium.duck.tel.
+!!metrics.helium.node!!                node-exporter.metrics.helium.duck.tel.
+!!metrics.helium.overleaf!!            overleaf.metrics.helium.duck.tel.
+!!metrics.helium.podman!!              podman.metrics.helium.duck.tel.
+!!metrics.helium.registry!!            container-registry.metrics.helium.duck.tel.
+!!metrics.helium.victoria-logs!!       victoria-logs.metrics.helium.duck.tel.
+!!metrics.helium.victoria-metrics!!    victoria-metrics.metrics.helium.duck.tel.
+!!metrics.helium.woodpecker!!          woodpecker.metrics.helium.duck.tel.
+
+!!metrics.lithium.node!!               node-exporter.metrics.lithium.duck.tel.
+!!metrics.lithium.podman!!             podman.metrics.lithium.duck.tel.
+
+!!metrics.boron.node!!                 node-exporter.metrics.boron.duck.tel.
+!!metrics.boron.podman!!               podman.metrics.boron.duck.tel.

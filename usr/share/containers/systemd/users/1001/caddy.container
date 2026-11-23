@@ -29,7 +29,8 @@ Network=prometheus.network
 Network=woodpecker.network
 
 # Metrics
-PublishPort=!!prometheus.hydrogen.caddy.ip!!:!!prometheus.hydrogen.caddy.port!!:!!prometheus.hydrogen.caddy.port!!
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_caddy_ip}!:9100:9100
 
 [Service]
 Restart=always

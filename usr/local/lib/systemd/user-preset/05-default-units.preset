@@ -6,3 +6,4 @@
 enable cleanup-containers.timer
 enable network-online.target
 enable podman-auto-update.timer
+enable prometheus-podman-exporter.service

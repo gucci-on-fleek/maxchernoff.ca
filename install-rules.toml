@@ -8,11 +8,11 @@
 #################
 
 [variables]
-builder = "/var/home/builder/"
-etc = "/etc/"
-repo = "/var/lib/repo/"
-tex = "/var/lib/tex/"
-web = "/var/home/web/"
+builder    = "/var/home/builder/"
+etc        = "/etc/"
+repo       = "/var/lib/repo/"
+tex        = "/var/lib/tex/"
+web        = "/var/home/web/"
 woodpecker = "/var/home/woodpecker/"
 
 
@@ -29,31 +29,31 @@ path = "/usr/local/share/selinux/semanage.import"
 ############
 
 [[permissions]]
-base = "{repo}"
-paths = ["*"]
-owner = "repo"
-permissions.other = "r"
+base                  = "{repo}"
+paths                 = ["*"]
+owner                 = "repo"
+permissions.other     = "r"
 recursive_permissions = true
 
 [[permissions]]
-base = "{repo}/"
-paths = [".git*", "install-rules.toml"]
-owner = "repo"
-permissions.other = ""
+base                  = "{repo}/"
+paths                 = [".git*", "install-rules.toml"]
+owner                 = "repo"
+permissions.other     = ""
 recursive_permissions = true
 
 [[permissions]]
-base = "{repo}/"
-paths = [".git"]
-owner = "repo"
-permissions.other = "r"
+base                  = "{repo}/"
+paths                 = [".git"]
+owner                 = "repo"
+permissions.other     = "r"
 recursive_permissions = false
 
 [[permissions]]
-base = "{repo}/.git/"
-paths = ["packed-refs", "HEAD", "refs/", "config", "objects/"]
-owner = "repo"
-permissions.other = "r"
+base                  = "{repo}/.git/"
+paths                 = ["packed-refs", "HEAD", "refs/", "config", "objects/"]
+owner                 = "repo"
+permissions.other     = "r"
 recursive_permissions = true
 
 
@@ -62,10 +62,10 @@ recursive_permissions = true
 ###########
 
 [[copy]]
-source = "{repo}/etc/"
-destination = "{etc}/"
-paths = ["**/*"]
-owner = "root"
+source            = "{repo}/etc/"
+destination       = "{etc}/"
+paths             = ["**/*"]
+owner             = "root"
 permissions.other = "r"
 
 
@@ -74,10 +74,10 @@ permissions.other = "r"
 ###########
 
 [[copy]]
-source = "{repo}/usr/local/"
-destination = "/usr/local/"
-paths = ["**/*"]
-owner = "root"
+source            = "{repo}/usr/local/"
+destination       = "/usr/local/"
+paths             = ["**/*"]
+owner             = "root"
 permissions.other = "r"
 
 
@@ -86,11 +86,11 @@ permissions.other = "r"
 ###########
 
 [[permissions]]
-base = "{tex}"
-paths = ["texlive/", "context-installer/tex/", "context/"]
-owner = "tex"
-permissions.other = "r"
-recursive_permissions = false # Too slow to set permissions on all files
+base                  = "{tex}"
+paths                 = ["texlive/", "context-installer/tex/", "context/"]
+owner                 = "tex"
+permissions.other     = "r"
+recursive_permissions = false                                              # Too slow to set permissions on all files
 
 
 ###########
@@ -98,32 +98,30 @@ recursive_permissions = false # Too slow to set permissions on all files
 ###########
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}"
-paths = ["*"]
-owner = "web"
+if                = { hostname = "maxchernoff.ca" }
+base              = "{web}"
+paths             = ["*"]
+owner             = "web"
 permissions.other = ""
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}"
-paths = ["web/"]
-owner = "repo"
-permissions.web = "r"
+if                    = { hostname = "maxchernoff.ca" }
+base                  = "{repo}"
+paths                 = ["web/"]
+owner                 = "repo"
+permissions.web       = "r"
 recursive_permissions = true
 
-[[link]]
-if = { hostname = "maxchernoff.ca" }
-source = "{repo}/web/"
-destination = "{web}/"
-paths = [
-    ".config/containers/",
-    ".config/prometheus-podman-exporter",
-    ".config/systemd/user/",
-    ".config/user-tmpfiles.d",
-]
-permissions.web = "r"
-owner = "root"
+# [[link]]
+# if = { hostname = "maxchernoff.ca" }
+# source = "{repo}/web/"
+# destination = "{web}/"
+# paths = [
+#     ".config/systemd/user/",
+#     ".config/user-tmpfiles.d",
+# ]
+# permissions.web = "r"
+# owner = "root"
 
 [[link]]
 if = { hostname = "maxchernoff.ca" }
@@ -162,48 +160,48 @@ owner = "web/root"
 permissions.web = "rw"
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}"
-paths = ["overleaf/redis/", "overleaf/mongo/"]
-owner = "web/root"
-permissions."web/999" = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}"
+paths                  = ["overleaf/redis/", "overleaf/mongo/"]
+owner                  = "web/root"
+permissions."web/999"  = "rw"
 permissions."web/root" = "rw"
-permissions.web = "rw"
-recursive_permissions = true
+permissions.web        = "rw"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}"
-paths = ["overleaf/overleaf/"]
-owner = "web"
+if                   = { hostname = "maxchernoff.ca" }
+base                 = "{web}"
+paths                = ["overleaf/overleaf/"]
+owner                = "web"
 permissions."web/33" = "rw"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/caddy/"
-paths = ["etc/", "static/"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/caddy/"
+paths                  = ["etc/", "static/"]
 permissions."web/root" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
+permissions."web"      = "r"
+owner                  = "repo"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/caddy/static/tools/"
-paths = ["context-wiki/"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/caddy/static/tools/"
+paths                  = ["context-wiki/"]
 permissions."web/root" = "rw"
-permissions."web" = "rw"
-owner = "web"
-recursive_permissions = false
+permissions."web"      = "rw"
+owner                  = "web"
+recursive_permissions  = false
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/caddy/"
-paths = ["context-wiki/"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/caddy/"
+paths                  = ["context-wiki/"]
 permissions."web/root" = "r"
-permissions."web" = "rw"
-owner = "web"
-recursive_permissions = false
+permissions."web"      = "rw"
+owner                  = "web"
+recursive_permissions  = false
 
 [[touch]]
 if = { hostname = "maxchernoff.ca" }
@@ -219,163 +217,163 @@ permissions.max = "r"
 owner = "web/root"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/woodpecker/"
-paths = ["data/"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/woodpecker/"
+paths                  = ["data/"]
 permissions."web/1000" = "rw"
-permissions.web = "rw"
-owner = "web/1000"
-recursive_permissions = true
+permissions.web        = "rw"
+owner                  = "web/1000"
+recursive_permissions  = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/"
-paths = ["flask"]
-owner = "repo"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/"
+paths                  = ["flask"]
+owner                  = "repo"
 permissions."web/1000" = "r"
-permissions.web = "rw"
-recursive_permissions = true
+permissions.web        = "rw"
+recursive_permissions  = true
 
 [[permissions]] # For scp
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}"
-paths = ["web/caddy/static/files"]
-owner = "repo"
-permissions.max = "rw"
-permissions.web = "r"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{repo}"
+paths                  = ["web/caddy/static/files"]
+owner                  = "repo"
+permissions.max        = "rw"
+permissions.web        = "r"
 permissions."web/root" = "r"
-recursive_permissions = true
+recursive_permissions  = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/"
-paths = ["goaccess"]
-owner = "repo"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/"
+paths                  = ["goaccess"]
+owner                  = "repo"
 permissions."web/root" = "r"
-permissions.web = "r"
-recursive_permissions = true
+permissions.web        = "r"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}"
-paths = ["knot/storage/"]
-owner = "web"
-permissions.web = "rw"
-permissions."web/53" = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}"
+paths                  = ["knot/storage/"]
+owner                  = "web"
+permissions.web        = "rw"
+permissions."web/53"   = "rw"
 permissions."web/root" = "rw"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}/web/knot/"
-paths = ["config"]
-owner = "repo"
-permissions.web = "r"
-permissions."web/53" = "r"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{repo}/web/knot/"
+paths                  = ["config"]
+owner                  = "repo"
+permissions.web        = "r"
+permissions."web/53"   = "r"
 permissions."web/root" = "r"
-recursive_permissions = true
+recursive_permissions  = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/caddy/"
-paths = ["logs/"]
-owner = "web"
-permissions.web = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/caddy/"
+paths                  = ["logs/"]
+owner                  = "web"
+permissions.web        = "rw"
 permissions."web/root" = "rw"
-permissions.max = "r"
-recursive_permissions = true
+permissions.max        = "r"
+recursive_permissions  = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}/web/"
-paths = ["dnscontrol"]
-owner = "repo"
-permissions.web = "r"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{repo}/web/"
+paths                  = ["dnscontrol"]
+owner                  = "repo"
+permissions.web        = "r"
 permissions."web/root" = "r"
-recursive_permissions = true
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}"
-paths = ["maddy/data/"]
-owner = "web"
-permissions.web = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}"
+paths                  = ["maddy/data/"]
+owner                  = "web"
+permissions.web        = "rw"
 permissions."web/1000" = "rw"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/maddy/"
-paths = ["config"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/maddy/"
+paths                  = ["config"]
 permissions."web/1000" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
+permissions."web"      = "r"
+owner                  = "repo"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/grafana/"
-paths = ["data"]
-owner = "web"
-permissions.web = "rw"
+if                    = { hostname = "maxchernoff.ca" }
+base                  = "{web}/grafana/"
+paths                 = ["data"]
+owner                 = "web"
+permissions.web       = "rw"
 permissions."web/472" = "rw"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/grafana/"
-paths = ["config"]
+if                    = { hostname = "maxchernoff.ca" }
+base                  = "{web}/grafana/"
+paths                 = ["config"]
 permissions."web/472" = "r"
-permissions."web" = "r"
-owner = "repo"
+permissions."web"     = "r"
+owner                 = "repo"
 recursive_permissions = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/container-registry/"
-paths = ["config"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/container-registry/"
+paths                  = ["config"]
 permissions."web/root" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
+permissions."web"      = "r"
+owner                  = "repo"
+recursive_permissions  = true
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/dmarc-metrics/"
-paths = ["config"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/dmarc-metrics/"
+paths                  = ["config"]
 permissions."web/1000" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
+permissions."web"      = "r"
+owner                  = "repo"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/dmarc-metrics/"
-paths = ["data"]
-owner = "web"
-permissions.web = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/dmarc-metrics/"
+paths                  = ["data"]
+owner                  = "web"
+permissions.web        = "rw"
 permissions."web/1000" = "rw"
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/victoria-logs/"
-paths = ["data"]
-owner = "web"
-permissions.web = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/victoria-logs/"
+paths                  = ["data"]
+owner                  = "web"
+permissions.web        = "rw"
 permissions."web/1000" = "rw"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/victoria-metrics/"
-paths = ["config"]
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/victoria-metrics/"
+paths                  = ["config"]
 permissions."web/1000" = "r"
-permissions."web" = "r"
-owner = "repo"
-recursive_permissions = true
+permissions."web"      = "r"
+owner                  = "repo"
+recursive_permissions  = true
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{web}/victoria-metrics/"
-paths = ["data"]
-owner = "web"
-permissions.web = "rw"
+if                     = { hostname = "maxchernoff.ca" }
+base                   = "{web}/victoria-metrics/"
+paths                  = ["data"]
+owner                  = "web"
+permissions.web        = "rw"
 permissions."web/1000" = "rw"
 
 
@@ -384,45 +382,26 @@ permissions."web/1000" = "rw"
 ##################
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{woodpecker}"
-paths = ["*"]
-owner = "woodpecker"
+if                = { hostname = "maxchernoff.ca" }
+base              = "{woodpecker}"
+paths             = ["*"]
+owner             = "woodpecker"
 permissions.other = ""
 
-[[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}"
-paths = ["woodpecker/"]
-owner = "repo"
-permissions.woodpecker = "r"
-recursive_permissions = true
-
-[[link]]
-if = { hostname = "maxchernoff.ca" }
-source = "{repo}/woodpecker/"
-destination = "{woodpecker}/"
-paths = [
-    ".config/systemd/user/",
-    ".config/containers/",
-    ".config/prometheus-podman-exporter",
-]
-permissions.woodpecker = "r"
-
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{woodpecker}"
+if    = { hostname = "maxchernoff.ca" }
+base  = "{woodpecker}"
 paths = ["woodpecker/config/"]
 owner = "woodpecker"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{woodpecker}/woodpecker/"
-paths = ["config/"]
+if                            = { hostname = "maxchernoff.ca" }
+base                          = "{woodpecker}/woodpecker/"
+paths                         = ["config/"]
 permissions."woodpecker/1000" = "rw"
-permissions.woodpecker = "rw"
-owner = "woodpecker/1000"
-recursive_permissions = true
+permissions.woodpecker        = "rw"
+owner                         = "woodpecker/1000"
+recursive_permissions         = true
 
 
 ###############
@@ -430,42 +409,36 @@ recursive_permissions = true
 ###############
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{builder}"
-paths = ["*"]
-owner = "builder"
+if                = { hostname = "maxchernoff.ca" }
+base              = "{builder}"
+paths             = ["*"]
+owner             = "builder"
 permissions.other = ""
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{repo}"
-paths = ["builder/"]
-owner = "repo"
-permissions.builder = "r"
+if                    = { hostname = "maxchernoff.ca" }
+base                  = "{repo}"
+paths                 = ["builder/"]
+owner                 = "repo"
+permissions.builder   = "r"
 recursive_permissions = true
 
 [[link]]
-if = { hostname = "maxchernoff.ca" }
-source = "{repo}/builder/"
-destination = "{builder}/"
-paths = [
-    ".config/containers/",
-    ".config/prometheus-podman-exporter",
-    ".config/systemd/user/",
-    ".config/user-tmpfiles.d",
-    "containers/",
-]
+if                  = { hostname = "maxchernoff.ca" }
+source              = "{repo}/builder/"
+destination         = "{builder}/"
+paths               = [".config/systemd/user/", "containers/"]
 permissions.builder = "r"
 
 [[folder]]
-if = { hostname = "maxchernoff.ca" }
-base = "{builder}/.cache/"
+if    = { hostname = "maxchernoff.ca" }
+base  = "{builder}/.cache/"
 paths = ["podman-dnf/", "go-build/", "go-modules/", "rpm-ostree/"]
 owner = "builder"
 
 [[permissions]]
-if = { hostname = "maxchernoff.ca" }
-base = "{builder}/.cache/"
-paths = ["go-modules"]
+if                  = { hostname = "maxchernoff.ca" }
+base                = "{builder}/.cache/"
+paths               = ["go-modules"]
 permissions.builder = "rw"
-permissions.other = "r"
+permissions.other   = "r"

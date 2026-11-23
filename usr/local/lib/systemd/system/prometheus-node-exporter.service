@@ -10,6 +10,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 ExecReload=/bin/kill -HUP $MAINPID
 TimeoutStopSec=20s
 SendSIGKILL=no
@@ -24,7 +25,7 @@ ExecStart=/usr/bin/prometheus-node-exporter \
     --collector.systemd.enable-task-metrics \
     --collector.systemd.unit-exclude=".+\\.(device|mount|swap|automount|scope)" \
     --collector.tcpstat \
-    --web.listen-address="!!prometheus.hydrogen.node.ip!!:!!prometheus.hydrogen.node.port!!"
+    --web.listen-address="${metrics_node_ip}:9100"
 
 # Sandboxing
 User=prometheus
@@ -33,7 +34,7 @@ NoNewPrivileges=true
 
 RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
 IPAddressDeny=any
-IPAddressAllow=!!prometheus.hydrogen.node.ip!!
+IPAddressAllow=10.80.0.0/16
 
 ProtectSystem=strict
 PrivateTmp=true

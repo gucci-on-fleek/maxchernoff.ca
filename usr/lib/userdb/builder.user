@@ -1,7 +1,5 @@
 {
     "userName": "builder",
-    "uid": 1006,
-    "gid": 1006,
     "memberOf": [
         "builder"
     ],
@@ -9,6 +7,7 @@
     "disposition": "regular",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
+    "nice": 10,
     "privileged": {
         "hashedPassword": [
             "!"
@@ -17,10 +16,13 @@
     "perMachine": [
         {
             "matchHostname": [
-                "maxchernoff.ca"
+                "maxchernoff.ca",
+                "hydrogen",
+                "lithium"
             ],
-            "homeDirectory": "/var/home/builder",
-            "nice": 10
+            "uid": 1006,
+            "gid": 1006,
+            "homeDirectory": "/var/home/builder"
         }
     ]
 }

@@ -29,7 +29,7 @@ import base.caddyfile
 		protocols h3
 	}
 	admin localhost:2019 {
-		origins caddy.metrics.maxchernoff.ca:9117
+		origins caddy.metrics.hydrogen.duck.tel:9117
 	}
 
 	# Proxy DNS-over-TLS
@@ -262,7 +262,7 @@ ech.maxchernoff.ca {
 }
 
 # Victoria Metrics reverse proxy
-metrics.maxchernoff.ca {
+metrics.hydrogen.duck.tel {
 	import default
 
 	header {
@@ -273,7 +273,7 @@ metrics.maxchernoff.ca {
 		analytics {env.CADDY_ANALYTICS_PASSWORD}
 	}
 
-	reverse_proxy systemd-victoria-metrics:!!prometheus.hydrogen.victoria-metrics.port!!
+	reverse_proxy systemd-victoria-metrics:9090
 }
 
 # Grafana reverse proxy
@@ -361,7 +361,7 @@ duck.tel {
 }
 
 # Metrics
-http://caddy.metrics.maxchernoff.ca:!!prometheus.hydrogen.caddy.port!! {
+http://caddy.metrics.hydrogen.duck.tel:9100 {
 	bind 0.0.0.0
 
 	handle /metrics {

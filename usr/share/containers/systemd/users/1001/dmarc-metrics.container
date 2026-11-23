@@ -12,7 +12,8 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 
 # Metrics
-PublishPort=!!prometheus.hydrogen.dmarc-metrics.ip!!:!!prometheus.hydrogen.dmarc-metrics.port!!:!!prometheus.hydrogen.dmarc-metrics.port!!
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_dmarc_metrics_ip}:9100:9100
 
 [Unit]
 Wants=network-online.target

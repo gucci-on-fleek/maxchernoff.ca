@@ -21,7 +21,8 @@ Network=email.network
 PublishPort=!!email.ipv4!!:587:587
 
 # Metrics
-PublishPort=!!prometheus.hydrogen.maddy.ip!!:!!prometheus.hydrogen.maddy.port!!:!!prometheus.hydrogen.maddy.port!!
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_maddy_ip}:9100:9100
 
 [Service]
 Restart=always

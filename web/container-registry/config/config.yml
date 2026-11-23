@@ -24,7 +24,7 @@ storage:
 http:
     addr: ":8080"
     debug:
-        addr: "0.0.0.0:!!prometheus.hydrogen.registry.port!!"
+        addr: "0.0.0.0:9100"
         prometheus:
             enabled: true
             path: /metrics

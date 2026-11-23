@@ -1,7 +1,5 @@
 {
     "userName": "web",
-    "uid": 1001,
-    "gid": 1001,
     "memberOf": [
         "web"
     ],
@@ -9,6 +7,7 @@
     "disposition": "regular",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
+    "nice": 0,
     "privileged": {
         "hashedPassword": [
             "!"
@@ -17,10 +16,13 @@
     "perMachine": [
         {
             "matchHostname": [
-                "maxchernoff.ca"
+                "maxchernoff.ca",
+                "hydrogen",
+                "helium"
             ],
-            "homeDirectory": "/var/home/web",
-            "nice": 0
+            "uid": 1001,
+            "gid": 1001,
+            "homeDirectory": "/var/home/web"
         }
     ]
 }

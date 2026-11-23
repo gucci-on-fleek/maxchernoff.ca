@@ -20,8 +20,9 @@ Environment="WOODPECKER_GITHUB_CLIENT=Ov23lic6Reb0QglgDb6M"
 EnvironmentFile=%d/woodpecker_github_secret
 
 # Metrics
-PublishPort=!!prometheus.hydrogen.woodpecker.ip!!:!!prometheus.hydrogen.woodpecker.port!!:!!prometheus.hydrogen.woodpecker.port!!
-Environment="WOODPECKER_METRICS_SERVER_ADDR=:!!prometheus.hydrogen.woodpecker.port!!"
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
+PublishPort=${metrics_woodpecker_ip}:9100:9100
+Environment="WOODPECKER_METRICS_SERVER_ADDR=:9100"
 
 [Service]
 Restart=always
