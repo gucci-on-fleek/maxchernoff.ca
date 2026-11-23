@@ -24,6 +24,8 @@ Entrypoint=/usr/sbin/knotd
 Exec=
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 

@@ -43,3 +43,7 @@ Restart=always
 [Install]
 WantedBy=default.target
 WantedBy=grafana.service
+
+[Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium

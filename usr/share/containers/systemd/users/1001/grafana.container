@@ -18,6 +18,8 @@ Restart=always
 !!priorities.low!!
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 After=victoria-metrics.container
 Wants=victoria-metrics.container
 

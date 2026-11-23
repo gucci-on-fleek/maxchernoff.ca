@@ -32,6 +32,8 @@ LoadCredential=maddy-users.conf
 !!priorities.high!!
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 

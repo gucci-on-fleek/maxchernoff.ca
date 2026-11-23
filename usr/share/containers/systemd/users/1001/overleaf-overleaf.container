@@ -53,6 +53,8 @@ EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_overleaf_ip}:9100:3000
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Requires=overleaf-mongo.service overleaf-redis.service
 After=overleaf-mongo.service overleaf-redis.service
 

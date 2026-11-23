@@ -11,6 +11,8 @@ Volume=%h/dnscontrol:/dns:ro,z
 Exec=push --full
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 After=knot.service
 Wants=knot.service
 Wants=network-online.target

@@ -6,6 +6,8 @@
 Network=overleaf.network
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 After=overleaf-network.service network-online.target
 
 [Install]

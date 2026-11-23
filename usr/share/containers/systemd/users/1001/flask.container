@@ -24,6 +24,8 @@ LoadCredential=webhook_secret
 !!priorities.high!!
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 After=container-registry.service

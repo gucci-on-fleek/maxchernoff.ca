@@ -25,6 +25,8 @@ SuccessExitStatus=2
 RuntimeMaxSec=12.25h
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 

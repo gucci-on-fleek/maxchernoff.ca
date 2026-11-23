@@ -43,6 +43,8 @@ LoadCredential=caddy_http_credentials
 !!priorities.high!!
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 Requires=caddy.socket

@@ -25,6 +25,8 @@ RestartSteps=5
 LoadCredential=woodpecker_agent_secret
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|lithium
 After=podman.socket
 Requires=podman.socket
 StartLimitIntervalSec=300s

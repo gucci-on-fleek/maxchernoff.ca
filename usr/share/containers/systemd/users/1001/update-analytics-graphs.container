@@ -47,6 +47,8 @@ Exec=\
     /root/access.log
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Description=Update Analytics Graphs
 After=update-analytics.target network-online.target
 Upholds=update-analytics.target

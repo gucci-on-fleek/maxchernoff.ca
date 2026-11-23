@@ -13,3 +13,7 @@ AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID
 [Service]
 Restart=always
 TimeoutStartSec=300
+
+[Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium

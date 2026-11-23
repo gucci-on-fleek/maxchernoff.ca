@@ -30,6 +30,8 @@ LoadCredential=woodpecker_agent_secret
 LoadCredential=woodpecker_github_secret
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target
 

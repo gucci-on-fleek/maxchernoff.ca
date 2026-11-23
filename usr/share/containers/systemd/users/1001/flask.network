@@ -8,5 +8,7 @@ IPv6=true
 DisableDNS=false
 
 [Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
 Wants=network-online.target
 After=network-online.target

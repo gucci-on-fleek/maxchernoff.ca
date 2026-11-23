@@ -6,3 +6,7 @@
 Internal=false
 IPv6=true
 DisableDNS=false
+
+[Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium

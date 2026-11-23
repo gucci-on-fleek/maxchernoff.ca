@@ -23,3 +23,7 @@ HealthCmd=none
 [Service]
 Restart=always
 TimeoutStartSec=300
+
+[Unit]
+ConditionHost=|hydrogen
+ConditionHost=|helium
