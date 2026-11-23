@@ -148,7 +148,7 @@ recursive_permissions  = true
 [[folder]]
 if                     = { hostname = "maxchernoff.ca" }
 base                   = "/var/home/web/data/"
-paths                  = ["knot/storage/"]
+paths                  = ["knot/"]
 owner                  = "web"
 permissions.web        = "rw"
 permissions."web/53"   = "rw"
@@ -167,23 +167,23 @@ recursive_permissions  = true
 [[folder]]
 if                     = { hostname = "maxchernoff.ca" }
 base                   = "/var/home/web/data/"
-paths                  = ["maddy/data/"]
+paths                  = ["maddy/"]
 owner                  = "web"
 permissions.web        = "rw"
 permissions."web/1000" = "rw"
 
 [[folder]]
 if                    = { hostname = "maxchernoff.ca" }
-base                  = "/var/home/web/data/grafana/"
-paths                 = ["data"]
+base                  = "/var/home/web/data/"
+paths                 = ["grafana"]
 owner                 = "web"
 permissions.web       = "rw"
 permissions."web/472" = "rw"
 
 [[folder]]
 if                     = { hostname = "maxchernoff.ca" }
-base                   = "/var/home/web/data/dmarc-metrics/"
-paths                  = ["data"]
+base                   = "/var/home/web/data/"
+paths                  = ["dmarc-metrics"]
 owner                  = "web"
 permissions.web        = "rw"
 permissions."web/1000" = "rw"
@@ -198,8 +198,8 @@ permissions."web/1000" = "rw"
 
 [[folder]]
 if                     = { hostname = "maxchernoff.ca" }
-base                   = "/var/home/web/data/victoria-metrics/"
-paths                  = ["data"]
+base                   = "/var/home/web/data/"
+paths                  = ["victoria-metrics/"]
 owner                  = "web"
 permissions.web        = "rw"
 permissions."web/1000" = "rw"

@@ -7,7 +7,7 @@ Image=docker.io/library/registry:3
 Network=container-registry.network
 
 # Config
-Volume=%E/config/container-registry/config:/etc/distribution/:ro,noexec
+Volume=%E/config/container-registry:/etc/distribution/:ro,noexec
 
 # Image Storage
 Volume=container-registry.volume:/var/lib/registry:rw

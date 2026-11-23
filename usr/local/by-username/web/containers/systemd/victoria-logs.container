@@ -7,7 +7,7 @@ Image=maxchernoff.ca/victoria-logs:latest
 Network=prometheus.network
 
 # Configuration
-Volume=%h/data/victoria-logs/data/:/victoria-logs-data:rw,Z,noexec
+Volume=%h/data/victoria-logs/:/victoria-logs-data:rw,Z,noexec
 Exec=\
     --enableTCP6 \
     --httpListenAddr=:!!victoria-logs.port!! \
