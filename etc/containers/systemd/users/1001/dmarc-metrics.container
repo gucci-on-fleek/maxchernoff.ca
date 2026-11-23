@@ -12,7 +12,7 @@ ReadOnly=true
 ReadOnlyTmpfs=false
 
 # Metrics
-PublishPort=${metrics_dmarc_metrics_ip}:9100:9100
+PublishPort=${metrics_dmarc_metrics_ip}:9100:9797
 
 [Unit]
 ConditionHost=|hydrogen

@@ -29,7 +29,7 @@ import base.caddyfile
 		protocols h3
 	}
 	admin localhost:2019 {
-		origins caddy.metrics.hydrogen.duck.tel:9117
+		origins caddy.metrics.hydrogen.duck.tel:9100
 	}
 
 	# Proxy DNS-over-TLS
@@ -87,6 +87,9 @@ import base.caddyfile
 	metrics {
 		per_host
 	}
+
+	# Wait no longer than 5 seconds to shutdown
+	grace_period 5s
 }
 
 # Define the default options for all sites

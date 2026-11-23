@@ -21,10 +21,10 @@ Network=email.network
 PublishPort=!!email.ipv4!!:587:587
 
 # Metrics
-EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 PublishPort=${metrics_maddy_ip}:9100:9100
 
 [Service]
+EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
 Restart=always
 LoadCredential=maddy-users.conf
 
