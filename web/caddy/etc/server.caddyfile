@@ -262,7 +262,7 @@ ech.maxchernoff.ca {
 }
 
 # Victoria Metrics reverse proxy
-metrics.hydrogen.duck.tel {
+metrics.maxchernoff.ca {
 	import default
 
 	header {

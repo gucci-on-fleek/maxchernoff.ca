@@ -29,7 +29,7 @@ Network=prometheus.network
 Network=woodpecker.network
 
 # Metrics
-PublishPort=${metrics_caddy_ip}!:9100:9100
+PublishPort=${metrics_caddy_ip}:9100:9100
 
 [Service]
 EnvironmentFile=/usr/local/share/metrics-addresses/%H-%u.conf
