@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/assets/style.css" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="oklch(0.20 0.05 70)" media="not (prefers-color-scheme: light)" />
+    <meta name="theme-color" content="oklch(0.95 0.05 70)" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="text-scale" content="scale" />
+
+    <script type="module" src="testing.mjs" async></script>
+    <title>Testing</title>
+</head>
+
+<body>
+    <div hidden class="measure-sidebar"></div>
+
+    <header>
+        <h1>Testing</h1>
+        <p><time>2026-05-27</time></p>
+    </header>
+
+    <main>
+        <table id="item_table" aria-describedby="table_description">
+            <caption hidden="" aria-hidden="false">Items in your Stardew Valley inventory</caption>
+            <thead>
+                <tr class="header">
+                    <th tabindex="0" scope="col">Item Name</th>
+                    <th tabindex="0" scope="col">Quality</th>
+                    <th tabindex="0" scope="col">Price</th>
+                    <th tabindex="0" scope="col">Count</th>
+                    <th tabindex="0" scope="col">Stored in</th>
+                    <th tabindex="0" scope="col" aria-sort="descending">Stack Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th tabindex="0" scope="row">Ancient Fruit Wine</th>
+                    <td></td>
+                    <td>1 650</td>
+                    <td>482</td>
+                    <td>Chest (Deluxe Barn)</td>
+                    <td>795 300</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Ancient Fruit</th>
+                    <td></td>
+                    <td>605</td>
+                    <td>734</td>
+                    <td>Junimo Hut</td>
+                    <td>444 070</td>
+                </tr>
+                <!-- <tr class="item_description">
+                    <td colspan="6">The Ancient Fruit is a fruit crop that grows from Ancient Seeds after 28 days and
+                        continues
+                        to produce every 7 days after maturity.<a
+                            href="https://stardewvalleywiki.com/Ancient%20Fruit">See more
+                            on the <i>Stardew Valley Wiki</i></a></td>
+                </tr> -->
+                <tr>
+                    <th tabindex="0" scope="row">Starfruit Wine</th>
+                    <td></td>
+                    <td>2 250</td>
+                    <td>156</td>
+                    <td>Orange Chest (House)</td>
+                    <td>351 000</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Blobfish Roe</th>
+                    <td></td>
+                    <td>280</td>
+                    <td>604</td>
+                    <td>Chest (Farm)</td>
+                    <td>169 120</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Ancient Fruit</th>
+                    <td><img src="images/silver_star.png" class="icon" alt="Silver" title="Silver"></td>
+                    <td>756</td>
+                    <td>217</td>
+                    <td>Chest (Greenhouse)</td>
+                    <td>164 052</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Peach</th>
+                    <td></td>
+                    <td>154</td>
+                    <td>999</td>
+                    <td>Chest (Greenhouse)</td>
+                    <td>153 846</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Iridium Bar</th>
+                    <td></td>
+                    <td>1 000</td>
+                    <td>146</td>
+                    <td>Light Green Chest (House)</td>
+                    <td>146 000</td>
+                </tr>
+                <tr>
+                    <th tabindex="0" scope="row">Strawberry</th>
+                    <td><img src="images/silver_star.png" class="icon" alt="Silver" title="Silver"></td>
+                    <td>165</td>
+                    <td>873</td>
+                    <td>Orange Chest (House)</td>
+                    <td>144 045</td>
+                </tr>
+
+                <tr id="target"></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td></td>
+                    <td></td>
+                    <td>51 697</td>
+                    <td></td>
+                    <td>12 603 234</td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </main>
+
+    <footer>
+        <ul role="list">
+            <li><a href="/">Home</a></li>
+            <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></li>
+            <li><a href="https://github.com/gucci-on-fleek/maxchernoff.ca">Source</a></li>
+        </ul>
+    </footer>
+
+    <template id="item">
+        <style>
+            :host {
+                display: table-row;
+                contain: strict;
+                content-visibility: auto;
+                text-rendering: optimizeSpeed;
+            }
+            slot {
+                display: table-cell;
+            }
+        </style>
+        <slot name="name" role="rowheader" tabindex="0"></slot>
+        <slot name="quality" role="cell"></slot>
+        <slot name="unit_price" role="cell"></slot>
+        <slot name="count" role="cell"></slot>
+        <slot name="location" role="cell"></slot>
+        <slot name="stack_price" role="cell"></slot>
+    </template>
+</body>
+
+</html>

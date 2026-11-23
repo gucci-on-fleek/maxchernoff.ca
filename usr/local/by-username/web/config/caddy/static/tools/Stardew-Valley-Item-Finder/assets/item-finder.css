@@ -1,0 +1,59 @@
+/* Stardew Valley Item Finder
+ * https://gucci-on-fleek.github.io/Stardew-Valley-Item-Finder/
+ * SPDX-License-Identifier: MPL-2.0+ or CC-BY-SA-4.0+
+ * SPDX-FileCopyrightText: 2026 Max Chernoff
+ */
+
+@layer layout {
+    /* Reset the footer styling. */
+    body {
+        > footer {
+            position: initial;
+        }
+
+        > main > :last-child {
+            margin-bottom: initial;
+        }
+    }
+}
+
+@layer elements {
+    footer {
+        /* Make the footer a container so that we can measure it later. */
+        container-name: footer;
+        container-type: inline-size;
+
+        /* Hide the bullets when the details are open. */
+        > ul:has(details[open]) > li::after {
+            content: none !important;
+        }
+
+        details.license {
+            /* Hide the details marker. */
+            summary::marker {
+                content: none;
+            }
+
+            summary::-webkit-details-marker {
+                display: none;
+            }
+
+            @container footer {
+                &[open] {
+                    /* Make the license details take up the full width. */
+                    width: 100cqw;
+
+                    /* Remove the summary once it has been expanded */
+                    > summary {
+                        display: none;
+                    }
+
+                    /* Shrink the top margin. */
+                    > h2 {
+                        margin-top: var(--V);
+                    }
+                }
+            }
+        }
+    }
+}
