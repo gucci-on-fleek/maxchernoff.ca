@@ -14,12 +14,12 @@ Environment="GODEBUG=multipathtcp=1"
 EnvironmentFile=%d/caddy_tsig
 EnvironmentFile=%d/caddy_http_credentials
 
-Volume=%h/caddy/etc:/etc/caddy:ro,noexec
-Volume=%h/caddy/static:/srv:ro,noexec
-Volume=%h/caddy/data:/data:rw,Z,noexec
-Volume=%h/caddy/logs:/var/log/caddy/:rw,z,noexec
-Volume=%h/caddy/config:/config:rw,Z,noexec
-Volume=%h/caddy/context-wiki:/srv/tools/context-wiki:ro,noexec
+Volume=%E/config/caddy/etc:/etc/caddy:ro,noexec
+Volume=%E/config/caddy/static:/srv:ro,noexec
+Volume=%h/data/caddy/data:/data:rw,Z,noexec
+Volume=%h/data/caddy/logs:/var/log/caddy/:rw,z,noexec
+Volume=%h/data/caddy/config:/config:rw,Z,noexec
+Volume=%h/data/caddy/context-wiki:/srv/tools/context-wiki:ro,noexec
 
 Network=caddy.network
 Network=container-registry.network

@@ -8,7 +8,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-WorkingDirectory=%h/caddy/context-wiki/
+WorkingDirectory=%h/data/caddy/context-wiki/
 ExecStart=/var/lib/repo/web/caddy/update-context-wiki.sh
 
 [Install]

@@ -7,7 +7,7 @@ Description=Runs dnscontrol
 
 [Path]
 Unit=dnscontrol.service
-PathChanged=%h/dnscontrol/dnsconfig.js
+PathChanged=%E/config/dnscontrol/dnsconfig.js
 
 [Install]
 WantedBy=default.target

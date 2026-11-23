@@ -7,7 +7,7 @@ Image=maxchernoff.ca/flask:latest
 StopSignal=SIGINT
 Network=flask.network
 
-Volume=%h/flask/:/srv:ro,exec
+Volume=%E/config/flask/:/srv:ro,exec
 Volume=/var/lib/triggers/:/root/triggers:rw
 Exec=/srv/app.py
 EnvironmentFile=%d/webhook_secret

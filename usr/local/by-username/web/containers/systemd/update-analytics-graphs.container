@@ -6,9 +6,9 @@
 Image=docker.io/allinurl/goaccess:latest
 Network=none
 
-Volume=%h/caddy/logs/access.log:/root/access.log:ro,z
-Volume=%h/caddy/static/analytics/graphs:/root/out.html:rw,z
-Volume=%h/goaccess/GeoLite2-City.mmdb:/root/GeoLite2-City.mmdb:ro
+Volume=%E/config/caddy/logs/access.log:/root/access.log:ro,z
+Volume=%h/data/caddy/static/analytics/graphs:/root/out.html:rw,z
+Volume=%E/config/goaccess/GeoLite2-City.mmdb:/root/GeoLite2-City.mmdb:ro
 
 Exec=\
     --agent-list \

@@ -6,7 +6,7 @@
 Image=docker.io/woodpeckerci/woodpecker-server:v3
 Network=woodpecker.network
 
-Volume=%h/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec
+Volume=%h/data/woodpecker/data:/var/lib/woodpecker:rw,Z,noexec
 PublishPort=127.0.0.1:!!woodpecker.port!!:!!woodpecker.port!!
 
 Environment="WOODPECKER_ADMIN=gucci-on-fleek"

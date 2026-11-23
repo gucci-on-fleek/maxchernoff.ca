@@ -5,7 +5,7 @@
 [Container]
 Image=docker.io/jgosmann/dmarc-metrics-exporter:latest
 StopSignal=SIGINT
-Volume=%h/dmarc-metrics/data/:/var/lib/dmarc-metrics-exporter:rw,Z,noexec
+Volume=%h/data/dmarc-metrics/data/:/var/lib/dmarc-metrics-exporter:rw,Z,noexec
 Volume=%d/dmarc-metrics-exporter.json:/etc/dmarc-metrics-exporter.json:ro,noexec,U,Z
 
 ReadOnly=true

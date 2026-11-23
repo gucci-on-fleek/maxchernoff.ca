@@ -7,7 +7,7 @@ Image=ghcr.io/stackexchange/dnscontrol:latest
 
 EnvironmentFile=%d/dnscontrol_secrets
 Network=private
-Volume=%h/dnscontrol:/dns:ro,z
+Volume=%E/config/dnscontrol:/dns:ro,z
 Exec=push --full
 
 [Unit]

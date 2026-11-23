@@ -7,7 +7,7 @@ Image=docker.io/library/mongo:6
 Pod=overleaf.pod
 Network=overleaf.network
 
-Volume=%h/overleaf/mongo:/data/db:Z,noexec
+Volume=%h/data/overleaf/mongo:/data/db:Z,noexec,rw
 Tmpfs=/data/db/diagnostic.data/
 
 AddCapability=CAP_CHOWN CAP_SETGID CAP_SETUID

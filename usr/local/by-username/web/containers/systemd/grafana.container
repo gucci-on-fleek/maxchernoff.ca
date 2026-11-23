@@ -6,8 +6,8 @@
 Image=docker.io/grafana/grafana:latest
 Network=prometheus.network
 
-Volume=%h/grafana/config/:/etc/grafana/:ro,noexec
-Volume=%h/grafana/data/:/var/lib/grafana:rw,Z,exec
+Volume=%E/config/grafana/config/:/etc/grafana/:ro,noexec
+Volume=%h/data/grafana/data/:/var/lib/grafana:rw,Z,exec
 
 ReadOnly=true
 

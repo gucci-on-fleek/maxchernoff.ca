@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2025 Max Chernoff
 [Container]
 Image=docker.io/library/redis:6
-Volume=%h/overleaf/redis:/data:Z,noexec
+Volume=%h/data/overleaf/redis:/data:Z,noexec,rw
 Pod=overleaf.pod
 Network=overleaf.network
 

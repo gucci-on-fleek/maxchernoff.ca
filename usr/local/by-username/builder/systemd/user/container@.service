@@ -14,9 +14,9 @@ LoadCredential=containers-auth.json
 
 ExecStart=/usr/local/bin/build-container \
     --debug \
-    --directory=%h/containers/%i \
+    --directory=%E/config/%i \
     --tag=%i:latest \
-    --config=%h/containers/build-container.toml
+    --config=%E/config/build-container.toml
 
 Restart=on-failure
 RestartSec=5min
