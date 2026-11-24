@@ -12,14 +12,11 @@ User=root
 Type=oneshot
 RestrictSUIDSGID=false
 
-ExecStart=semanage import /usr/local/share/selinux/semanage.import
 ExecStart=systemd-confext refresh --always-refresh=yes
 ExecStart=systemd-sysext refresh --always-refresh=yes
 ExecStart=systemctl --system daemon-reload
-ExecStart=systemctl --user --machine="builder@" daemon-reload
-ExecStart=systemctl --user --machine="max@" daemon-reload
-ExecStart=systemctl --user --machine="repo@" daemon-reload
-ExecStart=systemctl --user --machine="tex@" daemon-reload
-ExecStart=systemctl --user --machine="web@" daemon-reload
-ExecStart=systemctl --user --machine="woodpecker@" daemon-reload
+ExecStart=-systemctl --user --machine="builder@" daemon-reload
+ExecStart=-systemctl --user --machine="max@" daemon-reload
+ExecStart=-systemctl --user --machine="web@" daemon-reload
+ExecStart=-systemctl --user --machine="woodpecker@" daemon-reload
 ExecStart=notify-all

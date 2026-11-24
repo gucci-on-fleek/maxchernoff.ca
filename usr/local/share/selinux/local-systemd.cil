@@ -46,6 +46,7 @@
 (typeattributeset cil_gen_require user_home_t                )
 (typeattributeset cil_gen_require user_t                     )
 (typeattributeset cil_gen_require user_tmp_t                 )
+(typeattributeset cil_gen_require var_lib_t                  )
 (typeattributeset cil_gen_require var_log_t                  )
 (typeattributeset cil_gen_require var_run_t                  )
 
@@ -160,5 +161,8 @@
 (dontaudit staff_t              self (process (execmem)))
 
 ;; Allow restorecon to set digests.
-(allow setfiles_t init_t (process (signal)))
-(allow setfiles_t self   (capability (sys_admin)))
+(allow setfiles_t init_t          (process    (signal   )))
+(allow setfiles_t self            (capability (sys_admin)))
+(allow setfiles_t user_home_dir_t (dir        (setattr  )))
+(allow setfiles_t user_home_t     (dir        (setattr  )))
+(allow setfiles_t var_lib_t       (dir        (setattr  )))
