@@ -16,7 +16,7 @@ PublishPort=[!!network.hydrogen.ipv6!!]:!!dns.altport!!:53
 PublishPort=!!network.hydrogen.ipv4!!:!!dns.altport!!:53
 
 Volume=%E/config/knot:/config:ro,z
-Volume=%h/data/knot:/storage:rw,Z
+Volume=%h/data/knot:/storage:rw,Z,U
 Volume=%t/knot:/rundir:rw,z,U
 Volume=%d/knot-secrets.conf:/config/knot-secrets.conf:ro,noexec,U,Z
 
