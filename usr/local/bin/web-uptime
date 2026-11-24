@@ -16,7 +16,6 @@ echo -n > "$output"
 
 # Get the unit statuses
 status="$(mktemp)"
-/usr/local/bin/web-status /var/lib/repo/unit-status.conf > "$status"
 
 # Successful units
 printf '\t%sSuccessful Units%s\n' "$STYLE_BOLD" "$STYLE_RESET" >> "$output"

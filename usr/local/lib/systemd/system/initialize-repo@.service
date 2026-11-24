@@ -9,7 +9,7 @@ Description=Initializes the server Git repository
 Wants=network-online.target
 After=network-online.target
 
-ConditionFileNotEmpty=!/var/lib/%i/install-rules.toml
+ConditionPathExists=/var/lib/%i/.git
 
 [Service]
 # Limit the permissions to the minimum necessary

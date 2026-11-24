@@ -1,7 +1,7 @@
 # Source Code for maxchernoff.ca
 # https://github.com/gucci-on-fleek/maxchernoff.ca
 # SPDX-License-Identifier: MPL-2.0+ OR CC-BY-SA-4.0+
-# SPDX-FileCopyrightText: 2024 Max Chernoff
+# SPDX-FileCopyrightText: 2026 Max Chernoff
 [Unit]
 Description=Install the files from the server Git repository
 After=pull-repo@%i.service
@@ -12,17 +12,14 @@ User=root
 Type=oneshot
 RestrictSUIDSGID=false
 
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/ /var/usrlocal/bin/
-ExecStart=/usr/local/bin/web-install /var/lib/%i/install-rules.toml
-ExecStart=/usr/bin/systemctl --system daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "builder@" daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "max@" daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "repo@" daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "tex@" daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "web@" daemon-reload
-ExecStart=/usr/bin/systemctl --user --machine "woodpecker@" daemon-reload
-# TODO: Hacks!
-ExecStart=/usr/sbin/restorecon -vr /var/usrlocal/lib/ /var/usrlocal/bin/  /var/usrlocal/bin/
-ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
-ExecStart=/usr/bin/chmod g+s /var/home/web/caddy/logs/
-ExecStart=/usr/local/bin/notify-all
+ExecStart=semanage import /usr/local/share/selinux/semanage.import
+ExecStart=systemd-confext refresh --always-refresh=yes
+ExecStart=systemd-sysext refresh --always-refresh=yes
+ExecStart=systemctl --system daemon-reload
+ExecStart=systemctl --user --machine="builder@" daemon-reload
+ExecStart=systemctl --user --machine="max@" daemon-reload
+ExecStart=systemctl --user --machine="repo@" daemon-reload
+ExecStart=systemctl --user --machine="tex@" daemon-reload
+ExecStart=systemctl --user --machine="web@" daemon-reload
+ExecStart=systemctl --user --machine="woodpecker@" daemon-reload
+ExecStart=notify-all
