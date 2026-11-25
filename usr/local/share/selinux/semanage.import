@@ -50,6 +50,7 @@ fcontext --add --seuser user_u   --type container_file_t    '/var/lib/triggers(/
 fcontext --add '/var/etc'          --equal '/etc'
 fcontext --add '/var/lib/repo/etc' --equal '/etc'
 fcontext --add '/var/lib/repo/usr' --equal '/usr'
+fcontext --add '/var/lib/credentials-repo/usr' --equal '/usr'
 
 # Missing policy definition
 fcontext --add '/etc/systemd/user' --equal '/usr/lib/systemd/user'

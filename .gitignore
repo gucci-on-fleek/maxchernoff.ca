@@ -4,3 +4,4 @@
 # SPDX-FileCopyrightText: 2024 Max Chernoff
 
 __pycache__
+.ssh/
