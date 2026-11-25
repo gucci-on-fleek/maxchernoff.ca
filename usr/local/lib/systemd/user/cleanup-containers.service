@@ -8,7 +8,7 @@ Description=Cleans up the Podman container files
 [Service]
 Type=oneshot
 ExecStart=podman system prune --external
-ExecStart=podman system prune --all --force
+ExecStart=podman system prune --force
 
 [Install]
 WantedBy=cleanup-containers.timer
