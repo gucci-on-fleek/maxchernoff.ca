@@ -5,6 +5,7 @@
     ],
     "locked": false,
     "disposition": "regular",
+    "homeDirectory": "/var/home/builder",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
     "nice": 10,
@@ -21,8 +22,7 @@
                 "lithium"
             ],
             "uid": 1006,
-            "gid": 1006,
-            "homeDirectory": "/var/home/builder"
+            "gid": 1006
         }
     ]
 }

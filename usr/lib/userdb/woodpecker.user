@@ -5,6 +5,7 @@
     ],
     "locked": false,
     "disposition": "regular",
+    "homeDirectory": "/var/home/woodpecker",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
     "nice": 10,
@@ -21,8 +22,7 @@
                 "lithium"
             ],
             "uid": 1003,
-            "gid": 1003,
-            "homeDirectory": "/var/home/woodpecker"
+            "gid": 1003
         }
     ]
 }

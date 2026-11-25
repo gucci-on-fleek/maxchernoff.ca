@@ -240,7 +240,6 @@ COPY --chown=0:0 --from=build /mnt/build/ /
     ldconfig
     augenrules
     touch /etc/hostname
-    ln --symbolic --force /var/etc/credstore /etc/credstore
 
     # Only use the user database already committed to Git.
     rm --recursive --force \

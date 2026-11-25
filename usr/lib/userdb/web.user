@@ -5,6 +5,7 @@
     ],
     "locked": false,
     "disposition": "regular",
+    "homeDirectory": "/var/home/web",
     "shell": "/usr/sbin/nologin",
     "umask": 54,
     "nice": 0,
@@ -21,8 +22,7 @@
                 "helium"
             ],
             "uid": 1001,
-            "gid": 1001,
-            "homeDirectory": "/var/home/web"
+            "gid": 1001
         }
     ]
 }
